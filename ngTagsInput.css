@@ -2,6 +2,7 @@ span.ngTagsInput {
     background-color: #dadada;
     margin: 2px;
     padding: 3px;
+    display: inline-block;
 }
 
 input.ngTagsInput {
