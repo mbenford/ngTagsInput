@@ -3,7 +3,7 @@ angular.module('ngTagsInput', []).directive('tagsInput', function() {
         restrict: 'A,E',
         scope: { tags: '=ngModel' },
         template: '<div class="ngTagsInput">' +
-                  '<span class="ngTagsInput" ng-repeat="tag in tags">{{ tag }}<button class="ngTagsInput" ng-click="remove($index)">x</button></span>' +
+                  '<span class="ngTagsInput" ng-repeat="tag in tags">{{ tag }}<button class="ngTagsInput" ng-click="remove($index)">&#10006;</button></span>' +
                   '<input class="ngTagsInput" placeholder="Add a tag" type="text" ng-model="newTag">' +
                   '</div>',
         controller: function($scope) {

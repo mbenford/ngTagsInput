@@ -16,8 +16,10 @@ button.ngTagsInput {
     padding-left: 5px;
     border: none;
     background: none;
+    color: #707070;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: normal;
+    font-size: 14px;
 }
 div.ngTagsInput {
     -moz-appearance: textfield;
