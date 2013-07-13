@@ -1,17 +1,17 @@
-span.ngTagsInput {
+.ngTagsInput span {
     background-color: #dadada;
     margin: 2px;
     padding: 3px;
     display: inline-block;
 }
 
-input.ngTagsInput {
+.ngTagsInput input {
     border: 0px;
     outline: none;
     margin: 2px;
 }
 
-button.ngTagsInput {
+.ngTagsInput button {
     padding-right: 3px;
     padding-left: 5px;
     border: none;
@@ -21,7 +21,8 @@ button.ngTagsInput {
     font-weight: normal;
     font-size: 14px;
 }
-div.ngTagsInput {
+
+.ngTagsInput {
     -moz-appearance: textfield;
     -webkit-appearance: textfield;
     background-color: white;
@@ -32,7 +33,7 @@ div.ngTagsInput {
     font: -webkit-small-control;
     margin-top: 5px;
     padding: 2px 3px;
-    width: 398px;
+    width: 500px;
     overflow-y: auto;
     word-wrap: break-word;
     cursor: text;
