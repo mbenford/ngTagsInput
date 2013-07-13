@@ -1,52 +1,58 @@
-angular.module('tagsinput', []).directive('tagsInput', function() {
+angular.module('tags-input', []).directive('tagsInput', function() {
     return {
-        restrict: 'A,E',
+        restrict: 'E',
         scope: {
             tags: '=ngModel',
             cssClass: '@class'
         },
+        replace: false,
         template: '<div class="ngTagsInput {{ cssClass }}">' +
                   '  <span ng-repeat="tag in tags">{{ tag }}<button ng-click="remove($index)">&#10006;</button></span>' +
                   '  <input type="text" placeholder="{{ placeholder }}" size="{{ placeholder.length }}"  ng-model="newTag">' +
                   '</div>',
-        controller: function($scope) {
+        controller: function($scope, $attrs) {
+            $scope.newTag = '';
+            $scope.placeholder = $attrs.placeholder || 'Add a tag';
+
+            $scope.add = function() {
+                if ($scope.newTag.length === 0) return;
+
+                if ($scope.tags.indexOf($scope.newTag) == -1) {
+                    $scope.tags.push($scope.newTag);
+                }
+
+                $scope.newTag = '';
+            };
+
             $scope.remove = function(index) {
                 $scope.tags.splice(index, 1);
             };
+
+            $scope.tryRemoveLast = function() {
+                if ($scope.newTag.length > 0) return;
+
+                $scope.tags.pop();
+            };
         },
-        link: function(scope, element, attributes) {
-            scope.newTag = '';
-            scope.placeholder = attributes.placeholder || 'Add a tag';
-
-            var addOnEnter = attributes.addOnEnter || true,
-                addOnSpace = attributes.addOnSpace || false,
-                addOnComma = attributes.addOnComma || true;
-
+        link: function(scope, element, attrs) {
             var ENTER = 13, COMMA = 188, SPACE = 32, BACKSPACE = 8;
 
-            element.find('input').bind('keydown', function(event) {
-                var key = event.keyCode;
+            var addOnEnter = attrs.addOnEnter || true,
+                addOnSpace = attrs.addOnSpace || false,
+                addOnComma = attrs.addOnComma || true;
 
-                var shouldAdd = (key == ENTER && addOnEnter) ||
-                                (key == COMMA && addOnComma) ||
-                                (key == SPACE && addOnSpace) &&
-                                scope.newTag.length > 0;
-
-                if (shouldAdd) {
-                    if (scope.tags.indexOf(scope.newTag) == -1) {
-                        scope.tags.push(scope.newTag);
-                    }
-                    scope.newTag = '';
+            element.find('input').bind('keydown', function(e) {
+                if (e.keyCode == ENTER && addOnEnter ||
+                    e.keyCode == COMMA && addOnComma ||
+                    e.keyCode == SPACE && addOnSpace) {
+                    scope.add();
                     scope.$apply();
+
                     event.preventDefault();
                 }
-                else {
-                    var shouldRemoveLast = key == BACKSPACE && scope.newTag.length === 0;
-
-                    if (shouldRemoveLast) {
-                        scope.tags.pop();
-                        scope.$apply();
-                    }
+                else if (e.keyCode == BACKSPACE) {
+                    scope.tryRemoveLast();
+                    scope.$apply();
                 }
             });
 
