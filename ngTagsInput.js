@@ -1,24 +1,26 @@
 angular.module('tags-input', []).directive('tagsInput', function() {
+    function toBool(value, defaultValue) {
+        return angular.isDefined(value) ? value === 'true' : defaultValue;
+    }
+
     return {
         restrict: 'E',
-        scope: {
-            tags: '=ngModel',
-            cssClass: '@class'
-        },
+        scope: { tags: '=ngModel', cssClass: '@class' },
         replace: false,
         template: '<div class="ngTagsInput {{ cssClass }}">' +
                   '  <span ng-repeat="tag in tags">{{ tag }}<button ng-click="remove($index)">{{ removeTagSymbol }}</button></span>' +
-                  '  <input type="text" placeholder="{{ placeholder }}" size="{{ placeholder.length }}"  ng-model="newTag">' +
+                  '  <input type="text" placeholder="{{ placeholder }}" size="{{ placeholder.length }}" maxlength="{{ maxLength }}" ng-model="newTag">' +
                   '</div>',
         controller: function($scope, $attrs) {
             $scope.newTag = '';
             $scope.placeholder = $attrs.placeholder || 'Add a tag';
             $scope.removeTagSymbol = $attrs.removeTagSymbol || String.fromCharCode(215);
+            $scope.replaceSpacesWithDashes = toBool($attrs.replaceSpacesWithDashes, true);
+            $scope.minLength = $attrs.minLength || 3;
+            $scope.maxLength = Math.max($attrs.maxLength || $scope.placeholder.length, $scope.minLength);
 
             $scope.add = function() {
-                if ($scope.newTag.length === 0) return;
-
-                if ($attrs.replaceSpacesWithDashes) {
+                if ($scope.replaceSpacesWithDashes) {
                     $scope.newTag = $scope.newTag.replace(/\s/g, '-');
                 }
 
@@ -29,37 +31,35 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                 $scope.newTag = '';
             };
 
-            $scope.remove = function(index) {
-                $scope.tags.splice(index, 1);
+            $scope.removeLast = function() {
+                $scope.tags.pop();
             };
 
-            $scope.tryRemoveLast = function() {
-                if ($scope.newTag.length > 0) return;
-
-                $scope.tags.pop();
+            $scope.remove = function(index) {
+                $scope.tags.splice(index, 1);
             };
         },
         link: function(scope, element, attrs) {
             var ENTER = 13, COMMA = 188, SPACE = 32, BACKSPACE = 8;
 
-            var addOnEnter = angular.isDefined(attrs.addOnEnter) ? attrs.addOnEnter === 'true' : true,
-                addOnSpace = angular.isDefined(attrs.addOnSpace) ? attrs.addOnSpace === 'true': false,
-                addOnComma = angular.isDefined(attrs.addOnComma) ? attrs.addOnComma === 'true': true;
+            var addOnEnter = toBool(attrs.addOnEnter, true),
+                addOnSpace = toBool(attrs.addOnSpace, false),
+                addOnComma = toBool(attrs.addOnComma, true);
 
             var allowedChars = new RegExp(attrs.allowedChars || '[A-Za-z0-9\\s]');
 
             element.find('input')
                 .bind('keydown', function(e) {
-                    if (e.keyCode == ENTER && addOnEnter ||
-                        e.keyCode == COMMA && addOnComma ||
-                        e.keyCode == SPACE && addOnSpace) {
+                    if ((e.keyCode == ENTER && addOnEnter ||
+                         e.keyCode == COMMA && addOnComma ||
+                         e.keyCode == SPACE && addOnSpace) && this.value.trim().length >= scope.minLength) {
                         scope.add();
                         scope.$apply();
 
-                        event.preventDefault();
+                        e.preventDefault();
                     }
-                    else if (e.keyCode == BACKSPACE) {
-                        scope.tryRemoveLast();
+                    else if (e.keyCode == BACKSPACE && this.value.length == 0) {
+                        scope.removeLast();
                         scope.$apply();
                     }
                 })
