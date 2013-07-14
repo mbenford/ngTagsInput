@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html ng-app="myApp">
+<html>
 <head>
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="ngTagsInput.css">
-
+    <title>ngTagsInput Demo</title>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="ngTagsInput.css">
 </head>
-<body ng-controller="ctrl">
-    <tags-input ng-model="tags" class="myClass"></tags-input>
+<body ng-app="myApp" ng-controller="ctrl">
+    <tags-input ng-model="tags"></tags-input>
     <h1 ng-cloak>{{ tags }}</h1>
 
     <script src="ngTagsInput.js"></script>
     <script>
-        angular.module('myApp', ['tagsinput']).controller('ctrl', function($scope) {
+        angular.module('myApp', ['tags-input']).controller('ctrl', function($scope) {
             $scope.tags = ['some','cool','tags'];
         });
     </script>

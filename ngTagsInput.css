@@ -47,11 +47,5 @@
     overflow-y: auto;
     overflow-x: hidden;
     word-wrap: break-word;
-    width: 150px;
     vertical-align: middle;
 }
-
-.myClass {
-    width: 500px;
-}
-
