@@ -8,8 +8,8 @@ angular.module('tags-input', []).directive('tagsInput', function() {
         scope: { tags: '=ngModel', cssClass: '@class' },
         replace: false,
         template: '<div class="ngTagsInput {{ cssClass }}">' +
-                  '  <span ng-repeat="tag in tags">{{ tag }}<button ng-click="remove($index)">{{ removeTagSymbol }}</button></span>' +
-                  '  <input type="text" placeholder="{{ placeholder }}" size="{{ placeholder.length }}" maxlength="{{ maxLength }}" ng-model="newTag">' +
+                  '  <span class="tag" ng-repeat="tag in tags">{{ tag }}<button class="removeTag" ng-click="remove($index)">{{ removeTagSymbol }}</button></span>' +
+                  '  <input class="newTag" type="text" placeholder="{{ placeholder }}" size="{{ placeholder.length }}" maxlength="{{ maxLength }}" ng-model="newTag">' +
                   '</div>',
         controller: function($scope, $attrs) {
             $scope.newTag = '';

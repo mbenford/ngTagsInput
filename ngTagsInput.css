@@ -1,4 +1,4 @@
-.ngTagsInput span {
+.ngTagsInput .tag {
     background-color: #aadfef;
     margin: 2px;
     padding-left: 4px;
@@ -9,14 +9,14 @@
     vertical-align: middle;
 }
 
-.ngTagsInput input {
+.ngTagsInput .newTag {
     border: 0px;
     outline: none;
     margin: 2px;
     height: 21px;
 }
 
-.ngTagsInput button {
+.ngTagsInput .removeTag {
     padding-right: 3px;
     padding-left: 5px;
     border: none;
@@ -29,7 +29,7 @@
     vertical-align: middle;
 }
 
-.ngTagsInput button:active {
+.ngTagsInput .removeTag:active {
     color: #ff0000;
 }
 
