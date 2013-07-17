@@ -9,7 +9,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
         replace: false,
         template: '<div class="ngTagsInput {{ cssClass }}">' +
                   '  <div class="tag" ng-repeat="tag in tags">' +
-                  '    <span>{{ tag }}</span><button class="removeTag" ng-click="remove($index)">{{ removeTagSymbol }}</button>' +
+                  '    <span>{{ tag }}</span><button type="button" class="removeTag" ng-click="remove($index)">{{ removeTagSymbol }}</button>' +
                   '  </div>' +
                   '  <input class="newTag" type="text" placeholder="{{ placeholder }}" size="{{ placeholder.length }}" maxlength="{{ maxLength }}" ng-model="newTag">' +
                   '</div>',
