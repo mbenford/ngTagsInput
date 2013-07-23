@@ -4,15 +4,32 @@
     <title>ngTagsInput Demo</title>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
     <link rel="stylesheet" type="text/css" href="ngTagsInput.css">
+    <style type="text/css">
+        body {
+            background-color: #cacaca;
+            font-family: Arial,sans-serif;
+        }
+
+        .container {
+            width: 1000px;
+            margin: 0 auto;
+            padding: 10px;
+            background-color: #ffffff;
+        }
+    </style>
 </head>
 <body ng-app="myApp" ng-controller="ctrl">
-    <tags-input ng-model="tags"></tags-input>
-    <h1 ng-cloak>{{ tags }}</h1>
+    <div class="container">
+        <h1>ngTagsInput Demo Page</h1>
+
+        <tags-input ng-model="tags"></tags-input>
+        <p ng-cloak>Model: {{ tags.join() }}</p>
+    </div>
 
     <script src="ngTagsInput.js"></script>
     <script>
         angular.module('myApp', ['tags-input']).controller('ctrl', function($scope) {
-            $scope.tags = ['some','cool','tags'];
+            $scope.tags = ['just','some','cool','tags'];
         });
     </script>
 </body>

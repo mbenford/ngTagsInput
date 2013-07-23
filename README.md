@@ -26,7 +26,7 @@ Download both `ngTagsInput.js` and `ngTagsInput.css` files and add them to your 
         <script src="ngTagsInput.js"></script>
         <script>
             angular.module('myApp', ['tags-input']).controller('MyCtrl', function($scope) {
-                    $scope.tags = ['some', 'cool', tags'];
+                    $scope.tags = ['just','some','cool','tags'];
                 });
         </script>
     </head>
@@ -40,12 +40,16 @@ Download both `ngTagsInput.js` and `ngTagsInput.css` files and add them to your 
 The `tags-input` directive comes with lots of options so you can fit it to your needs:
 
 - `class`: CSS class to be used by the control.
-- `placeholder`: Text placeholder for the new tag input box. Default: **Add a tag**
-- `remove-tag-symbol`: Character to be used to remove an existing tag. Default: **&times;**
-- `replace-spaces-with-dashes`: Flag to indicate that all spaces should be replaced with dashes (This behavior will be disabled if the `add-on-space` option is true). Default: **true**
-- `min-length`: Minimum length for a new tag. Default: **3**
-- `max-length`: Maximum length for a new tag. Default: **The** `placeholder` **length or the** `min-length` **value, whichever is greater.**
-- `add-on-enter`: Flag to indicate that a new tag will be added on pressing the ENTER key. Default: **true**
-- `add-on-space`: Flag to indicate that a new tag will be added on pressing the  SPACE key. Default: **false**
-- `add-on-comma`: Flag to indicate that a new tag will be added on pressing the  COMMA key. Default: **true**
-- `allowed-chars`: Regular expression to indicate what characters will be accepted for a new tag. Default: **[A-Za-z0-9\s]** (letters, numbers and spaces)
+- `placeholder`: Text placeholder for the new tag input box. Defaults to: **Add a tag**
+- `remove-tag-symbol`: Character to be used to remove an existing tag. Defaults to: **&times;**
+- `replace-spaces-with-dashes`: Flag to indicate that all spaces should be replaced with dashes (This behavior will be disabled if the `add-on-space` option is true). Defaults to: **true**
+- `min-length`: Minimum length for a new tag. Defaults to: **3**
+- `max-length`: Maximum length for a new tag. Defaults to: **The** `placeholder` **length or the** `min-length` **value, whichever is greater.**
+- `add-on-enter`: Flag to indicate that a new tag will be added on pressing the ENTER key. Defaults to: **true**
+- `add-on-space`: Flag to indicate that a new tag will be added on pressing the  SPACE key. Defaults to: **false**
+- `add-on-comma`: Flag to indicate that a new tag will be added on pressing the  COMMA key. Defaults to: **true**
+- `allowed-chars`: Regular expression to indicate what characters will be accepted for a new tag. Defaults to: **[A-Za-z0-9\s]** (letters, numbers and spaces)
+
+## Demo
+
+You can see the directive in action in the [demo page](http://rawgithub.com/mbenford/ngTagsInput/master/demo.html "").
