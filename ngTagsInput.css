@@ -4,12 +4,14 @@
     padding-left: 4px;
     display: inline-block;
     border-radius: 3px;
+    height: 21px;
 }
 
 .ngTagsInput .newTag {
     border: 0px;
     outline: none;
     margin: 2px;
+    height: 21px;
 }
 
 .ngTagsInput .removeTag {
