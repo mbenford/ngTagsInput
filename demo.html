@@ -23,7 +23,7 @@
         <h1>ngTagsInput Demo Page</h1>
 
         <tags-input ng-model="tags"></tags-input>
-        <p ng-cloak>Model: {{ tags.join() }}</p>
+        <p ng-cloak>Model: {{ tags.join(', ') }}</p>
     </div>
 
     <script src="ngTagsInput.js"></script>
