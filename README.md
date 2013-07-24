@@ -14,7 +14,7 @@ Download both `ngTagsInput.js` and `ngTagsInput.css` files and add them to your 
 ## Usage
 
  1. Add the `tags-input` module as a dependency in your AngularJS app;
- 2. Add the custom directive `<tags-input>` to the HTML file where you want to use an input tag control and bind it to a property of your model. That property, if exists, must be an array of strings;
+ 2. Add the custom directive `<tags-input>` to the HTML file where you want to use an input tag control and bind it to a property of your model. That property, if it exists, must be an array of strings;
  3. Set up the options that make sense to your application;
  4. Customize the CSS classes, if you want to.
  3. You're done!
@@ -46,8 +46,8 @@ The `tags-input` directive comes with lots of options so you can fit it to your 
 - `min-length`: Minimum length for a new tag. Defaults to: **3**
 - `max-length`: Maximum length for a new tag. Defaults to: **The** `placeholder` **length or the** `min-length` **value, whichever is greater.**
 - `add-on-enter`: Flag to indicate that a new tag will be added on pressing the ENTER key. Defaults to: **true**
-- `add-on-space`: Flag to indicate that a new tag will be added on pressing the  SPACE key. Defaults to: **false**
-- `add-on-comma`: Flag to indicate that a new tag will be added on pressing the  COMMA key. Defaults to: **true**
+- `add-on-space`: Flag to indicate that a new tag will be added on pressing the SPACE key. Defaults to: **false**
+- `add-on-comma`: Flag to indicate that a new tag will be added on pressing the COMMA key. Defaults to: **true**
 - `allowed-chars`: Regular expression to indicate what characters will be accepted for a new tag. Defaults to: **[A-Za-z0-9\s]** (letters, numbers and spaces)
 
 ## Demo
