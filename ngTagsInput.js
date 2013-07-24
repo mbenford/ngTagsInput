@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('tags-input', []).directive('tagsInput', function() {
     function toBool(value, defaultValue) {
         return angular.isDefined(value) ? value === 'true' : defaultValue;
