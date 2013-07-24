@@ -21,6 +21,10 @@ angular.module('tags-input', []).directive('tagsInput', function() {
             $scope.minLength = $attrs.minLength || 3;
             $scope.maxLength = Math.max($attrs.maxLength || $scope.placeholder.length, $scope.minLength);
 
+            if (!angular.isDefined($scope.tags)) {
+                $scope.tags = [];
+            }
+
             $scope.add = function() {
                 if ($scope.replaceSpacesWithDashes) {
                     $scope.newTag = $scope.newTag.replace(/\s/g, '-');
@@ -46,9 +50,8 @@ angular.module('tags-input', []).directive('tagsInput', function() {
 
             var addOnEnter = toBool(attrs.addOnEnter, true),
                 addOnSpace = toBool(attrs.addOnSpace, false),
-                addOnComma = toBool(attrs.addOnComma, true);
-
-            var allowedChars = new RegExp(attrs.allowedChars || '[A-Za-z0-9\\s]');
+                addOnComma = toBool(attrs.addOnComma, true),
+                allowedChars = new RegExp(attrs.allowedChars || '[A-Za-z0-9\\s]');
 
             element.find('input')
                 .bind('keydown', function(e) {
