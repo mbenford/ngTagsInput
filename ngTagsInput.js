@@ -13,7 +13,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                   '  </div>' +
                   '  <input class="newTag" type="text" placeholder="{{ placeholder }}" size="{{ placeholder.length }}" maxlength="{{ maxLength }}" ng-model="newTag">' +
                   '</div>',
-        controller: function($scope, $attrs) {
+        controller: ['$scope', '$attrs', function($scope, $attrs) {
             $scope.newTag = '';
             $scope.placeholder = $attrs.placeholder || 'Add a tag';
             $scope.removeTagSymbol = $attrs.removeTagSymbol || String.fromCharCode(215);
@@ -44,7 +44,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
             $scope.remove = function(index) {
                 $scope.tags.splice(index, 1);
             };
-        },
+        }],
         link: function(scope, element, attrs) {
             var ENTER = 13, COMMA = 188, SPACE = 32, BACKSPACE = 8;
 
