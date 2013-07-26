@@ -10,9 +10,9 @@ angular.module('tags-input', []).directive('tagsInput', function() {
         scope: { tags: '=ngModel', cssClass: '@class' },
         replace: false,
         template: '<div class="ngTagsInput {{ cssClass }}">' +
-                  '  <div class="tag" ng-repeat="tag in tags">' +
-                  '    <span>{{ tag }}</span><button type="button" class="removeTag" ng-click="remove($index)">{{ removeTagSymbol }}</button>' +
-                  '  </div>' +
+                  '  <ul class="tag" ng-repeat="tag in tags">' +
+                  '    <li><span>{{ tag }}</span><button type="button" class="removeTag" ng-click="remove($index)">{{ removeTagSymbol }}</button></li>' +
+                  '  </ul>' +
                   '  <input class="newTag" type="text" placeholder="{{ placeholder }}" size="{{ placeholder.length }}" maxlength="{{ maxLength }}">' +
                   '</div>',
         controller: ['$scope', '$attrs', function($scope, $attrs) {
@@ -21,6 +21,10 @@ angular.module('tags-input', []).directive('tagsInput', function() {
             $scope.replaceSpacesWithDashes = toBool($attrs.replaceSpacesWithDashes, true);
             $scope.minLength = $attrs.minLength || 3;
             $scope.maxLength = Math.max($attrs.maxLength || $scope.placeholder.length, $scope.minLength);
+            $scope.addOnEnter = toBool($attrs.addOnEnter, true);
+            $scope.addOnSpace = toBool($attrs.addOnSpace, false);
+            $scope.addOnComma = toBool($attrs.addOnComma, true);
+            $scope.allowedChars = new RegExp($attrs.allowedChars || '[A-Za-z0-9\\s]');
 
             if (!angular.isDefined($scope.tags)) {
                 $scope.tags = [];
@@ -44,19 +48,14 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                 $scope.tags.splice(index, 1);
             };
         }],
-        link: function(scope, element, attrs) {
+        link: function(scope, element) {
             var ENTER = 13, COMMA = 188, SPACE = 32, BACKSPACE = 8;
-
-            var addOnEnter = toBool(attrs.addOnEnter, true),
-                addOnSpace = toBool(attrs.addOnSpace, false),
-                addOnComma = toBool(attrs.addOnComma, true),
-                allowedChars = new RegExp(attrs.allowedChars || '[A-Za-z0-9\\s]');
 
             element.find('input')
                 .bind('keydown', function(e) {
-                    if ((e.keyCode == ENTER && addOnEnter ||
-                         e.keyCode == COMMA && addOnComma ||
-                         e.keyCode == SPACE && addOnSpace) && this.value.trim().length >= scope.minLength) {
+                    if ((e.keyCode == ENTER && scope.addOnEnter ||
+                         e.keyCode == COMMA && scope.addOnComma ||
+                         e.keyCode == SPACE && scope.addOnSpace) && this.value.trim().length >= scope.minLength) {
 
                         scope.add(this.value.trim());
                         scope.$apply();
@@ -70,7 +69,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                     }
                 })
                 .bind('keypress', function(e) {
-                    if (!allowedChars.test(String.fromCharCode(e.charCode))) {
+                    if (!scope.allowedChars.test(String.fromCharCode(e.charCode))) {
                         e.preventDefault();
                     }
                 });

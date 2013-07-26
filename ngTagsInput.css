@@ -5,6 +5,7 @@
     display: inline-block;
     border-radius: 3px;
     height: 21px;
+    list-style-type: none;
 }
 
 .ngTagsInput .newTag {
