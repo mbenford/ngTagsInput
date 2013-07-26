@@ -13,10 +13,9 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                   '  <div class="tag" ng-repeat="tag in tags">' +
                   '    <span>{{ tag }}</span><button type="button" class="removeTag" ng-click="remove($index)">{{ removeTagSymbol }}</button>' +
                   '  </div>' +
-                  '  <input class="newTag" type="text" placeholder="{{ placeholder }}" size="{{ placeholder.length }}" maxlength="{{ maxLength }}" ng-model="newTag">' +
+                  '  <input class="newTag" type="text" placeholder="{{ placeholder }}" size="{{ placeholder.length }}" maxlength="{{ maxLength }}">' +
                   '</div>',
         controller: ['$scope', '$attrs', function($scope, $attrs) {
-            $scope.newTag = '';
             $scope.placeholder = $attrs.placeholder || 'Add a tag';
             $scope.removeTagSymbol = $attrs.removeTagSymbol || String.fromCharCode(215);
             $scope.replaceSpacesWithDashes = toBool($attrs.replaceSpacesWithDashes, true);
@@ -27,16 +26,14 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                 $scope.tags = [];
             }
 
-            $scope.add = function() {
+            $scope.add = function(tag) {
                 if ($scope.replaceSpacesWithDashes) {
-                    $scope.newTag = $scope.newTag.replace(/\s/g, '-');
+                    tag = tag.replace(/\s/g, '-');
                 }
 
-                if ($scope.tags.indexOf($scope.newTag) == -1) {
-                    $scope.tags.push($scope.newTag);
+                if ($scope.tags.indexOf(tag) == -1) {
+                    $scope.tags.push(tag);
                 }
-
-                $scope.newTag = '';
             };
 
             $scope.removeLast = function() {
@@ -60,9 +57,11 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                     if ((e.keyCode == ENTER && addOnEnter ||
                          e.keyCode == COMMA && addOnComma ||
                          e.keyCode == SPACE && addOnSpace) && this.value.trim().length >= scope.minLength) {
-                        scope.add();
+
+                        scope.add(this.value.trim());
                         scope.$apply();
 
+                        this.value = '';
                         e.preventDefault();
                     }
                     else if (e.keyCode == BACKSPACE && this.value.length == 0) {
