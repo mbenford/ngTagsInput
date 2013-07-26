@@ -122,6 +122,24 @@ describe('tags-input-directive', function() {
         });
     });
 
+    describe('class option', function() {
+        it('adds a custom CSS class to the container div when cssClass option is provided', function() {
+            // Arrange/Act
+            compile('class="myClass"');
+
+            // Arrange
+            expect(element.find('div').attr('class').trim()).toBe('ngTagsInput myClass');
+        });
+
+        it('does not add a custom CSS class to the container div when cssClass option is not provided', function() {
+            // Arrange/Act
+            compile();
+
+            // Arrange
+            expect(element.find('div').attr('class').trim()).toBe('ngTagsInput');
+        });
+    });
+
     describe('add-on-enter option', function() {
         it('adds a new tag when the enter key is pressed and add-on-enter option is true', function() {
             // Arrange
@@ -143,7 +161,15 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect($rootScope.tags).toEqual([]);
-        })
+        });
+
+        it('initializes the option to true', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(element.scope().addOnEnter).toBe(true);
+        });
     });
 
     describe('add-on-space option', function() {
@@ -167,7 +193,15 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect($rootScope.tags).toEqual([]);
-        })
+        });
+
+        it('initializes the option to false', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(element.scope().addOnSpace).toBe(false);
+        });
     });
 
     describe('add-on-comma option', function() {
@@ -191,7 +225,15 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect($rootScope.tags).toEqual([]);
-        })
+        });
+
+        it('initializes the option to true', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(element.scope().addOnComma).toBe(true);
+        });
     });
 
     describe('placeholder option', function() {
@@ -210,6 +252,14 @@ describe('tags-input-directive', function() {
             // Assert
             expect(getInput().attr('size')).toBe('7');
         });
+
+        it('initializes the option to "Add a tag"', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(element.scope().placeholder).toBe('Add a tag');
+        });
     });
 
     describe('remove-tag-symbol option', function() {
@@ -222,6 +272,14 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect(element.find('button').html()).toBe('X');
+        });
+
+        it('initializes the option to charcode 215 (&times;)', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(element.scope().removeTagSymbol).toBe(String.fromCharCode(215));
         });
     });
 
@@ -237,7 +295,7 @@ describe('tags-input-directive', function() {
             expect($rootScope.tags).toEqual(['foo-bar']);
         });
 
-        it('does not replaces spaces with dashes when replaces-spaces-with-dashes option is true', function() {
+        it('does not replace spaces with dashes when replaces-spaces-with-dashes option is true', function() {
             // Arrange
             compile('replace-spaces-with-dashes="false"');
 
@@ -246,6 +304,14 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect($rootScope.tags).toEqual(['foo bar']);
+        });
+
+        it('initializes the option to true', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(element.scope().replaceSpacesWithDashes).toBe(true);
         });
     });
 
@@ -260,6 +326,14 @@ describe('tags-input-directive', function() {
             // Assert
             expect($rootScope.tags).toEqual(['foobar']);
         });
+
+        it('initializes the option to [A-Za-z0-9\\s]', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(element.scope().allowedChars.toString()).toBe('/[A-Za-z0-9\\s]/');
+        });
     });
 
     describe('min-length option', function() {
@@ -273,6 +347,14 @@ describe('tags-input-directive', function() {
             // Assert
             expect($rootScope.tags).toEqual([]);
         });
+
+        it('initializes the option to 3', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(element.scope().minLength).toBe(3);
+        });
     });
 
     describe('max-length option', function() {
@@ -283,5 +365,22 @@ describe('tags-input-directive', function() {
             // Assert
             expect(getInput().attr('maxlength')).toBe('10');
         });
+
+        it('initializes the option to min-length when it is greater than placeholder length', function() {
+            // Arrange/Act
+            compile('min-length="10" placeholder="New tag"');
+
+            // Assert
+            expect(element.scope().maxLength).toBe(10);
+        });
+
+        it('initializes the option to placeholder length when it is greater than min-length', function() {
+            // Arrange/Act
+            compile('min-length="3" placeholder="New tag"');
+
+            // Assert
+            expect(element.scope().maxLength).toBe(7);
+        });
+
     });
 });
