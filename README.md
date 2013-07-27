@@ -1,5 +1,6 @@
 ngTagsInput
 ===========
+[![Build Status](https://travis-ci.org/mbenford/ngTagsInput.png?branch=master)](https://travis-ci.org/mbenford/ngTagsInput)
 
 Simple input control with tag editing support for AngularJS.
 
