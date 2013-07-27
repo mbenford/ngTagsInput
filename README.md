@@ -9,7 +9,7 @@ Simple input control with tag editing support for AngularJS.
 
 ## Installing
 
-Download both `ngTagsInput.js` and `ngTagsInput.css` files and add them to your web application. Make sure the JavaScript file is included after the AngularJS script.
+Download both `ng-tags-input.min.js` and `ng-tags-input.css` files from the `build` folder and add them to your web application. Make sure the JavaScript file is included after the AngularJS script.
 
 ## Usage
 

@@ -3,7 +3,8 @@
 <head>
     <title>ngTagsInput Demo</title>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="ngTagsInput.css">
+    <script type="text/javascript" src="build/ng-tags-input.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="build/ng-tags-input.min.css">
     <style type="text/css">
         body {
             background-color: #cacaca;
@@ -26,7 +27,6 @@
         <p ng-cloak>Model: {{ tags.join(', ') }}</p>
     </div>
 
-    <script src="ngTagsInput.js"></script>
     <script>
         angular.module('myApp', ['tags-input']).controller('ctrl', function($scope) {
             $scope.tags = ['just','some','cool','tags'];

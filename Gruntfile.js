@@ -3,15 +3,8 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        uglify: {
-            dist: {
-                files: {
-                    '<%= pkg.name %>.min.js': ['ngTagsInput.js']
-                }
-            }
-        },
         jshint: {
-            files: ['Gruntfile.js', 'ngTagsInput.js', 'test/ngTagsInput.spec.js'],
+            files: ['Gruntfile.js', 'src/<%= pkg.name %>.js', 'test/<%= pkg.name %>.spec.js'],
             options: {
                 curly: true,
                 eqeqeq: true,
@@ -43,6 +36,20 @@ module.exports = function(grunt) {
                 browsers: ['PhantomJS']
             }
         },
+        uglify: {
+            dist: {
+                files: {
+                    'build/<%= pkg.name %>.min.js': ['src/<%= pkg.name %>.js']
+                }
+            }
+        },
+        cssmin: {
+            dist: {
+                files: {
+                    'build/<%= pkg.name %>.min.css': ['src/<%= pkg.name %>.css']
+                }
+            }
+        },
         watch: {
             files: ['<%= jshint.files %>'],
             tasks: ['jshint', 'karma']
@@ -50,10 +57,11 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
 
     grunt.registerTask('test', ['jshint', 'karma']);
-    grunt.registerTask('default', ['jshint', 'karma', 'uglify']);
+    grunt.registerTask('default', ['jshint', 'karma', 'uglify', 'cssmin']);
 };
