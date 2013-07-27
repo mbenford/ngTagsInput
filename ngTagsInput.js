@@ -1,3 +1,4 @@
+(function() {
 'use strict';
 
 angular.module('tags-input', []).directive('tagsInput', function() {
@@ -35,7 +36,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                     tag = tag.replace(/\s/g, '-');
                 }
 
-                if ($scope.tags.indexOf(tag) == -1) {
+                if ($scope.tags.indexOf(tag) === -1) {
                     $scope.tags.push(tag);
                 }
             };
@@ -53,9 +54,9 @@ angular.module('tags-input', []).directive('tagsInput', function() {
 
             element.find('input')
                 .bind('keydown', function(e) {
-                    if ((e.keyCode == ENTER && scope.addOnEnter ||
-                         e.keyCode == COMMA && scope.addOnComma ||
-                         e.keyCode == SPACE && scope.addOnSpace) && this.value.trim().length >= scope.minLength) {
+                    if ((e.keyCode === ENTER && scope.addOnEnter ||
+                         e.keyCode === COMMA && scope.addOnComma ||
+                         e.keyCode === SPACE && scope.addOnSpace) && this.value.trim().length >= scope.minLength) {
 
                         scope.add(this.value.trim());
                         scope.$apply();
@@ -63,7 +64,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                         this.value = '';
                         e.preventDefault();
                     }
-                    else if (e.keyCode == BACKSPACE && this.value.length == 0) {
+                    else if (e.keyCode === BACKSPACE && this.value.length === 0) {
                         scope.removeLast();
                         scope.$apply();
                     }
@@ -80,3 +81,4 @@ angular.module('tags-input', []).directive('tagsInput', function() {
         }
     };
 });
+}());

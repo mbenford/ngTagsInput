@@ -1,4 +1,5 @@
-'use strict';
+(function() {
+    'use strict';
 
 describe('tags-input-directive', function() {
     var ENTER = 13, COMMA = 188, SPACE = 32, BACKSPACE = 8;
@@ -14,7 +15,7 @@ describe('tags-input-directive', function() {
     }));
 
     function compile() {
-        var options = $.makeArray(arguments).join(' ');
+        var options = jQuery.makeArray(arguments).join(' ');
         var template = '<tags-input ng-model="tags" ' + options + '></tags-input>';
 
         element = $compile(template)($rootScope);
@@ -384,3 +385,4 @@ describe('tags-input-directive', function() {
 
     });
 });
+}());
