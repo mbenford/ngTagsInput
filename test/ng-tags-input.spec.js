@@ -57,7 +57,7 @@ describe('tags-input-directive', function() {
         getInput().trigger(jQuery.Event('keydown', { keyCode: keyCode }));
     }
 
-    describe('basic functionalities', function() {
+    describe('basic features', function() {
         it('renders the correct number of tags', function() {
             // Arrange
             $rootScope.tags = ['some','cool','tags'];
@@ -120,6 +120,18 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect(input.focus).toHaveBeenCalled();
+        });
+
+        it('does not allow duplicate tags', function() {
+            // Arrange
+            compile();
+
+            // Act
+            newTag('foo');
+            newTag('foo');
+
+            // Assert
+            expect($rootScope.tags).toEqual(['foo']);
         });
     });
 
