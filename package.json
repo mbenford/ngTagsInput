@@ -1,11 +1,21 @@
 {
-    "author": "Michael Benford",
+    "author": {
+        "name": "Michael Benford",
+        "email": "michael@michaelbenford.net"
+    },
     "name": "ng-tags-input",
     "version": "0.1.0",
+    "description": "Simple input control with tag editing support for AngularJS",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mbenford/ngTagsInput.git"
+    },
     "dependencies": {},
     "devDependencies": {
         "grunt": "~0.4.1",
         "grunt-contrib-uglify": "~0.2.0",
+        "grunt-contrib-cssmin": "~0.6.1",
         "grunt-contrib-watch": "~0.3.1",
         "grunt-contrib-jshint": "~0.4.0",
         "grunt-karma": "~0.4.4"
