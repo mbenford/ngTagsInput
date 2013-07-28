@@ -58,11 +58,11 @@ You can see the directive in action in the [demo page](http://rawgithub.com/mben
 
 ## Building from the source code
 
-If you want to build the directive yourself, follow the steps below:
+Building the directive is a four-step process:
 
 - Install Node.js;
 - Install PhantomJS;
 - Run `npm install` to install the development dependencies;
 - Run `grunt` to build the directive.
 
-While coding you can execute `grunt test` to run the tests, or you can execute `grunt watch` to run them automatically every time the source code files change.
+While coding you can execute `grunt test` to run the tests or `grunt watch` to run them automatically every time the source code files change.
