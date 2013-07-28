@@ -11,10 +11,10 @@ angular.module('tags-input', []).directive('tagsInput', function() {
         scope: { tags: '=ngModel', cssClass: '@class' },
         replace: false,
         template: '<div class="ngTagsInput {{ cssClass }}">' +
-                  '  <ul class="tag" ng-repeat="tag in tags">' +
-                  '    <li><span>{{ tag }}</span><button type="button" class="removeTag" ng-click="remove($index)">{{ removeTagSymbol }}</button></li>' +
+                  '  <ul>' +
+                  '    <li ng-repeat="tag in tags"><span>{{ tag }}</span><button type="button" ng-click="remove($index)">{{ removeTagSymbol }}</button></li>' +
                   '  </ul>' +
-                  '  <input class="newTag" type="text" placeholder="{{ placeholder }}" size="{{ placeholder.length }}" maxlength="{{ maxLength }}">' +
+                  '  <input type="text" placeholder="{{ placeholder }}" size="{{ placeholder.length }}" maxlength="{{ maxLength }}">' +
                   '</div>',
         controller: ['$scope', '$attrs', function($scope, $attrs) {
             $scope.placeholder = $attrs.placeholder || 'Add a tag';
