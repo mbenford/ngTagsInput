@@ -1,5 +1,5 @@
 (function() {
-    'use strict';
+'use strict';
 
 describe('tags-input-directive', function() {
     var ENTER = 13, COMMA = 188, SPACE = 32, BACKSPACE = 8;
