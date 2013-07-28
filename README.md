@@ -24,8 +24,9 @@ Download both `ng-tags-input.min.js` and `ng-tags-input.min.css` files from the 
 ## Example
     <html>
     <head>
-        <script src="angular.js"></script>
-        <script src="ng-tags-input.min.js"></script>
+        <script type="text/javascript" src="angular.min.js"></script>
+        <script type="text/javascript" src="ng-tags-input.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="ng-tags-input.min.css">               
         <script>
             angular.module('myApp', ['tags-input']).controller('MyCtrl', function($scope) {
                     $scope.tags = ['just','some','cool','tags'];
