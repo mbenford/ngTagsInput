@@ -58,7 +58,7 @@ You can see the directive in action in the [demo page](http://rawgithub.com/mben
 
 ## Building from the source code
 
-If you want to build the directive yourself, follow the steps below:
+Building the directive is a four-step process:
 
 - Install Node.js;
 - Install PhantomJS;
