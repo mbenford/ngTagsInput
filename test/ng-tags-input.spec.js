@@ -50,6 +50,7 @@ describe('tags-input-directive', function() {
         input.trigger(event);
         if (!event.isDefaultPrevented()) {
             input.val(input.val() + String.fromCharCode(charCode));
+            input.trigger('input');
         }
     }
 
