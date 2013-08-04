@@ -187,6 +187,16 @@ describe('tags-input-directive', function() {
         });
     });
 
+    describe('tabindex option', function() {
+        it('sets correctly the input box tab index', function() {
+            // Arrange/Act
+            compile('tabindex="1"');
+
+            // Assert
+            expect(getInput().attr('tabindex')).toBe('1');
+        });
+    });
+
     describe('add-on-enter option', function() {
         it('adds a new tag when the enter key is pressed and add-on-enter option is true', function() {
             // Arrange

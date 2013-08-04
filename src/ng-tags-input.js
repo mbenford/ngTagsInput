@@ -14,10 +14,11 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                   '  <ul>' +
                   '    <li ng-repeat="tag in tags" ng-class="getCssClass($index)"><span>{{ tag }}</span><button type="button" ng-click="remove($index)">{{ removeTagSymbol }}</button></li>' +
                   '  </ul>' +
-                  '  <input type="text" placeholder="{{ placeholder }}" size="{{ placeholder.length }}" maxlength="{{ maxLength }}" ng-model="newTag">' +
+                  '  <input type="text" placeholder="{{ placeholder }}" size="{{ placeholder.length }}" maxlength="{{ maxLength }}" tabindex="{{ tabindex }}" ng-model="newTag">' +
                   '</div>',
         controller: ['$scope', '$attrs', function($scope, $attrs) {
             $scope.placeholder = $attrs.placeholder || 'Add a tag';
+            $scope.tabindex= $attrs.tabindex;
             $scope.removeTagSymbol = $attrs.removeTagSymbol || String.fromCharCode(215);
             $scope.replaceSpacesWithDashes = toBool($attrs.replaceSpacesWithDashes, true);
             $scope.minLength = $attrs.minLength || 3;
