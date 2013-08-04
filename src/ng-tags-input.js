@@ -43,11 +43,10 @@ angular.module('tags-input', []).directive('tagsInput', function() {
 
                     if ($scope.tags.indexOf(tag) === -1) {
                         $scope.tags.push(tag);
-
-                        changed = true;
                     }
 
                     $scope.newTag = '';
+                    changed = true;
                 }
                 return changed;
             };
