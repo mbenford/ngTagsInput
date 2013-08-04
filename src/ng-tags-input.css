@@ -35,6 +35,10 @@
     float: left;
 }
 
+.ngTagsInput li.selected {
+    background-color: #ff4040;
+}
+
 .ngTagsInput span {
     position: relative;
 }

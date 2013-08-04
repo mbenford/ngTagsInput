@@ -8,11 +8,14 @@ describe('tags-input-directive', function() {
         $rootScope,
         element;
 
-    beforeEach(module('tags-input'));
-    beforeEach(inject(function(_$compile_, _$rootScope_) {
-        $compile = _$compile_;
-        $rootScope = _$rootScope_;
-    }));
+    beforeEach(function() {
+        module('tags-input');
+
+        inject(function(_$compile_, _$rootScope_) {
+            $compile = _$compile_;
+            $rootScope = _$rootScope_;
+        });
+    });
 
     function compile() {
         var options = jQuery.makeArray(arguments).join(' ');
@@ -23,11 +26,15 @@ describe('tags-input-directive', function() {
     }
 
     function getTags() {
-        return element.find('span');
+        return element.find('li');
     }
 
     function getTag(index) {
         return getTags().eq(index);
+    }
+
+    function getTagText(index) {
+        return getTag(index).find('span').html();
     }
 
     function getInput() {
@@ -68,9 +75,9 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect(getTags().length).toBe(3);
-            expect(getTag(0).html()).toBe('some');
-            expect(getTag(1).html()).toBe('cool');
-            expect(getTag(2).html()).toBe('tags');
+            expect(getTagText(0)).toBe('some');
+            expect(getTagText(1)).toBe('cool');
+            expect(getTagText(2)).toBe('tags');
         });
 
         it('updates correctly the model', function() {
@@ -98,12 +105,13 @@ describe('tags-input-directive', function() {
             expect($rootScope.tags).toEqual([]);
         });
 
-        it('removes the last tag when the backspace key is pressed and the input field is empty', function() {
+        it('removes the last tag when the backspace key is pressed twice and the input field is empty', function() {
             // Arrange
             $rootScope.tags = ['some','cool','tags'];
             compile();
 
             // Act
+            sendKeyDown(BACKSPACE);
             sendKeyDown(BACKSPACE);
 
             // Assert
@@ -133,6 +141,31 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect($rootScope.tags).toEqual(['foo']);
+        });
+
+        it('highlights the tag about to be removed when the backspace key is pressed once and the input box is empty', function() {
+            // Arrange
+            $rootScope.tags = ['some','cool','tags'];
+            compile();
+
+            // Act
+            sendKeyDown(BACKSPACE);
+
+            // Assert
+            expect(getTag(2).hasClass('selected')).toBe(true);
+        });
+
+        it('stops highlighting the last tag when the input box becomes non-empty', function() {
+            // Arrange
+            $rootScope.tags = ['some','cool','tags'];
+            compile();
+
+            // Act
+            sendKeyDown(BACKSPACE);
+            sendKeyPress(65);
+
+            // Assert
+            expect(getTag(2).hasClass('selected')).toBe(false);
         });
     });
 
