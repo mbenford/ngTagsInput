@@ -43,6 +43,7 @@ Download both `ng-tags-input.min.js` and `ng-tags-input.min.css` files from the 
 The `tags-input` directive comes with lots of options so you can fit it to your needs:
 
 - `class`: CSS class to be used by the control.
+- `tabindex`: Tab index for the new tag input box.
 - `placeholder`: Text placeholder for the new tag input box. Defaults to: **Add a tag**
 - `remove-tag-symbol`: Character to be used to remove an existing tag. Defaults to: **&times;**
 - `replace-spaces-with-dashes`: Flag to indicate that all spaces should be replaced with dashes (This behavior will be disabled if the `add-on-space` option is true). Defaults to: **true**
