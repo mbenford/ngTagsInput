@@ -20,16 +20,19 @@
     </style>
 </head>
 <body ng-app="myApp" ng-controller="ctrl">
-    <div class="container">
+    <div class="container" ng-init="reset()">
         <h1>ngTagsInput Demo Page</h1>
 
         <tags-input ng-model="tags"></tags-input>
         <p ng-cloak>Model: {{ tags.join(', ') }}</p>
+        <button ng-click="reset()">Reset</button>
     </div>
 
     <script>
         angular.module('myApp', ['tags-input']).controller('ctrl', function($scope) {
-            $scope.tags = ['just','some','cool','tags'];
+            $scope.reset = function() {
+                $scope.tags = ['just','some','cool','tags'];
+            };
         });
     </script>
 </body>
