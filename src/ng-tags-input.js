@@ -27,6 +27,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
             $scope.addOnSpace = toBool($attrs.addOnSpace, false);
             $scope.addOnComma = toBool($attrs.addOnComma, true);
             $scope.allowedChars = new RegExp($attrs.allowedChars || '[A-Za-z0-9\\s]');
+            $scope.pattern = new RegExp($attrs.pattern || '.*');
 
             $scope.newTag = '';
             $scope.tags = $scope.tags || [];
@@ -35,7 +36,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                 var changed = false;
                 var tag = $scope.newTag;
 
-                if (tag.length >= $scope.minLength) {
+                if (tag.length >= $scope.minLength && $scope.pattern.test(tag)) {
 
                     if ($scope.replaceSpacesWithDashes) {
                         tag = tag.replace(/\s/g, '-');
