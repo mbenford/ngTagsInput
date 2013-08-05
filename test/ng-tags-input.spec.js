@@ -167,12 +167,25 @@ describe('tags-input-directive', function() {
             // Assert
             expect(getTag(2).hasClass('selected')).toBe(false);
         });
+
+        it('once it removes the last tag when the backspace key is pressed twice, that tag is moved to the the input field', function() {
+            // Arrange
+            $rootScope.tags = ['some','cool','tags'];
+            compile();
+
+            // Act
+            sendKeyDown(BACKSPACE);
+            sendKeyDown(BACKSPACE);
+
+            // Assert
+            expect(getInput().val()).toEqual('tags');
+        });
     });
 
     describe('class option', function() {
         it('adds a custom CSS class to the container div when cssClass option is provided', function() {
             // Arrange/Act
-            compile('class="myClass"');
+            compile('classes="myClass"');
 
             // Arrange
             expect(element.find('div').attr('class').trim()).toBe('ngTagsInput myClass');
@@ -437,6 +450,31 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect(element.scope().maxLength).toBe(7);
+        });
+
+    });
+
+    describe('pattern option', function() {
+        it('allows only tags matching a regular expression to be added', function() {
+            // Arrange
+            compile('allowed-chars="[a-zA-Z0-9_]" pattern="^[a-z]\\w+_\\d{3}$"');
+
+            // Act
+           newTag('aPaeR_101');
+
+            // Assert
+           expect($rootScope.tags).toEqual(['aPaeR_101']);
+        });
+
+        it('rejects tags that do not match the regular expression', function() {
+            // Arrange
+            compile('allowed-chars="[a-zA-Z0-9_]" pattern="^[a-z]\\w+_\\d{3}$"');
+
+            // Act
+           newTag('aPaeR_101e');
+
+            // Assert
+           expect($rootScope.tags).toEqual([]);
         });
 
     });

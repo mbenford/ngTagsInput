@@ -8,7 +8,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
 
     return {
         restrict: 'E',
-        scope: { tags: '=ngModel', cssClass: '@class' },
+        scope: { tags: '=ngModel', cssClass: '@classes' },
         replace: false,
         template: '<div class="ngTagsInput {{ cssClass }}">' +
                   '  <ul>' +
@@ -27,6 +27,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
             $scope.addOnSpace = toBool($attrs.addOnSpace, false);
             $scope.addOnComma = toBool($attrs.addOnComma, true);
             $scope.allowedChars = new RegExp($attrs.allowedChars || '[A-Za-z0-9\\s]');
+            $scope.pattern = new RegExp($attrs.pattern || '.*');
 
             $scope.newTag = '';
             $scope.tags = $scope.tags || [];
@@ -35,7 +36,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                 var changed = false;
                 var tag = $scope.newTag;
 
-                if (tag.length >= $scope.minLength) {
+                if (tag.length >= $scope.minLength && $scope.pattern.test(tag)) {
 
                     if ($scope.replaceSpacesWithDashes) {
                         tag = tag.replace(/\s/g, '-');
@@ -55,7 +56,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                 var changed = false;
                 if ($scope.newTag.length === 0 && $scope.tags.length > 0) {
                     if ($scope.shouldRemoveLastTag) {
-                        $scope.tags.pop();
+                        $scope.newTag = $scope.tags.pop();
 
                         $scope.shouldRemoveLastTag = false;
                     }
