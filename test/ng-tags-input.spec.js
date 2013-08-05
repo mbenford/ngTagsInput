@@ -172,7 +172,7 @@ describe('tags-input-directive', function() {
     describe('class option', function() {
         it('adds a custom CSS class to the container div when cssClass option is provided', function() {
             // Arrange/Act
-            compile('class="myClass"');
+            compile('classes="myClass"');
 
             // Arrange
             expect(element.find('div').attr('class').trim()).toBe('ngTagsInput myClass');
