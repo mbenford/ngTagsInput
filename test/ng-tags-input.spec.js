@@ -167,6 +167,19 @@ describe('tags-input-directive', function() {
             // Assert
             expect(getTag(2).hasClass('selected')).toBe(false);
         });
+
+        it('once it removes the last tag when the backspace key is pressed twice, that tag is moved to the the input field', function() {
+            // Arrange
+            $rootScope.tags = ['some','cool','tags'];
+            compile();
+
+            // Act
+            sendKeyDown(BACKSPACE);
+            sendKeyDown(BACKSPACE);
+
+            // Assert
+            expect(getInput().val()).toEqual('tags');
+        });
     });
 
     describe('class option', function() {
