@@ -8,7 +8,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
 
     return {
         restrict: 'E',
-        scope: { tags: '=ngModel', cssClass: '@class' },
+        scope: { tags: '=ngModel', cssClass: '@classes' },
         replace: false,
         template: '<div class="ngTagsInput {{ cssClass }}">' +
                   '  <ul>' +
