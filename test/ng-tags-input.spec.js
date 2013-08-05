@@ -440,5 +440,30 @@ describe('tags-input-directive', function() {
         });
 
     });
+
+    describe('pattern option', function() {
+        it('allows only tags matching a regular expression to be added', function() {
+            // Arrange
+            compile('allowed-chars="[a-zA-Z0-9_]" pattern="^[a-z]\\w+_\\d{3}$"');
+
+            // Act
+           newTag('aPaeR_101');
+
+            // Assert
+           expect($rootScope.tags).toEqual(['aPaeR_101']);
+        });
+
+        it('rejects tags that do not match the regular expression', function() {
+            // Arrange
+            compile('allowed-chars="[a-zA-Z0-9_]" pattern="^[a-z]\\w+_\\d{3}$"');
+
+            // Act
+           newTag('aPaeR_101e');
+
+            // Assert
+           expect($rootScope.tags).toEqual([]);
+        });
+
+    });
 });
 }());
