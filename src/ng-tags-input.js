@@ -56,7 +56,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                 var changed = false;
                 if ($scope.newTag.length === 0 && $scope.tags.length > 0) {
                     if ($scope.shouldRemoveLastTag) {
-                        $scope.tags.pop();
+                        $scope.newTag = $scope.tags.pop();
 
                         $scope.shouldRemoveLastTag = false;
                     }
