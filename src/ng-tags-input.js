@@ -8,7 +8,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
 
     return {
         restrict: 'E',
-        scope: { tags: '=ngModel', cssClass: '@classes' },
+        scope: { tags: '=ngModel', cssClass: '@ngClass' },
         replace: false,
         template: '<div class="ngTagsInput {{ cssClass }}">' +
                   '  <ul>' +
@@ -26,8 +26,9 @@ angular.module('tags-input', []).directive('tagsInput', function() {
             $scope.addOnEnter = toBool($attrs.addOnEnter, true);
             $scope.addOnSpace = toBool($attrs.addOnSpace, false);
             $scope.addOnComma = toBool($attrs.addOnComma, true);
-            $scope.allowedChars = new RegExp($attrs.allowedChars || '[A-Za-z0-9\\s]');
-            $scope.pattern = new RegExp($attrs.pattern || '.*');
+            $scope.allowedCharsPattern = new RegExp($attrs.allowedCharsPattern || '[A-Za-z0-9\\s]');
+            $scope.allowedTagsPattern = new RegExp($attrs.allowedTagsPattern || '.*');
+            $scope.enableEditingLastTag = toBool($attrs.enableEditingLastTag, false);
 
             $scope.newTag = '';
             $scope.tags = $scope.tags || [];
@@ -36,7 +37,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                 var changed = false;
                 var tag = $scope.newTag;
 
-                if (tag.length >= $scope.minLength && $scope.pattern.test(tag)) {
+                if (tag.length >= $scope.minLength && $scope.allowedTagsPattern.test(tag)) {
 
                     if ($scope.replaceSpacesWithDashes) {
                         tag = tag.replace(/\s/g, '-');
@@ -55,13 +56,18 @@ angular.module('tags-input', []).directive('tagsInput', function() {
             $scope.tryRemoveLast = function() {
                 var changed = false;
                 if ($scope.newTag.length === 0 && $scope.tags.length > 0) {
-                    if ($scope.shouldRemoveLastTag) {
+                    if ($scope.enableEditingLastTag) {
                         $scope.newTag = $scope.tags.pop();
-
-                        $scope.shouldRemoveLastTag = false;
                     }
                     else {
-                        $scope.shouldRemoveLastTag = true;
+                        if ($scope.shouldRemoveLastTag) {
+                            $scope.tags.pop();
+
+                            $scope.shouldRemoveLastTag = false;
+                        }
+                        else {
+                            $scope.shouldRemoveLastTag = true;
+                        }
                     }
                     changed = true;
                 }
@@ -99,11 +105,13 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                     else if (e.keyCode === BACKSPACE) {
                         if (scope.tryRemoveLast()) {
                             scope.$apply();
+
+                            e.preventDefault();
                         }
                     }
                 })
                 .bind('keypress', function(e) {
-                    if (!scope.allowedChars.test(String.fromCharCode(e.charCode))) {
+                    if (!scope.allowedCharsPattern.test(String.fromCharCode(e.charCode))) {
                         e.preventDefault();
                     }
                 });
