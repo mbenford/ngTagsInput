@@ -42,17 +42,19 @@ Download both `ng-tags-input.min.js` and `ng-tags-input.min.css` files from the 
 
 The `tags-input` directive comes with lots of options so you can fit it to your needs:
 
-- `class`: CSS class to be used by the control.
+- `ng-class`: CSS class to style the control.
 - `tabindex`: Tab index for the new tag input box.
 - `placeholder`: Text placeholder for the new tag input box. Defaults to: **Add a tag**
-- `remove-tag-symbol`: Character to be used to remove an existing tag. Defaults to: **&times;**
-- `replace-spaces-with-dashes`: Flag to indicate that all spaces should be replaced with dashes (This behavior will be disabled if the `add-on-space` option is true). Defaults to: **true**
+- `remove-tag-symbol`: Character to remove an existing tag. Defaults to: **&times;**
+- `replace-spaces-with-dashes`: Flag indicating that all spaces will be replaced with dashes (This behavior will be disabled if the `add-on-space` option is true). Defaults to: **true**
 - `min-length`: Minimum length for a new tag. Defaults to: **3**
 - `max-length`: Maximum length for a new tag. Defaults to: **The** `placeholder` **length or the** `min-length` **value, whichever is greater.**
-- `add-on-enter`: Flag to indicate that a new tag will be added on pressing the ENTER key. Defaults to: **true**
-- `add-on-space`: Flag to indicate that a new tag will be added on pressing the SPACE key. Defaults to: **false**
-- `add-on-comma`: Flag to indicate that a new tag will be added on pressing the COMMA key. Defaults to: **true**
-- `allowed-chars`: Regular expression to indicate what characters will be accepted for a new tag. Defaults to: **[A-Za-z0-9\s]** (letters, numbers and spaces)
+- `add-on-enter`: Flag indicating that a new tag will be added on pressing the ENTER key. Defaults to: **true**
+- `add-on-space`: Flag indicating that a new tag will be added on pressing the SPACE key. Defaults to: **false**
+- `add-on-comma`: Flag indicating that a new tag will be added on pressing the COMMA key. Defaults to: **true**
+- `allowed-chars-pattern`: Regular expression that determines the pattern used to validate a character. Defaults to: **[A-Za-z0-9\s]** (letters, numbers and spaces)
+- `allowed-tags-pattern`: Regular expression that determines the pattern used to validate a tag. Defaults to **.*** (allows any tag)
+- `enable-editing-last-tag`: Flag indicating that the last tag will be moved back into the new tag input box instead of being removed when the backspace key is pressed and the input box is empty. Defaults to: **false**
 
 ## Demo
 
