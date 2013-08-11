@@ -26,21 +26,24 @@
 }
 
 .ngTagsInput li {
-    background-color: #aadfef;
     margin: 2px;
     padding-left: 4px;
     display: inline-block;
     border-radius: 3px;
-    height: 21px;
+    height: 19px;
+    border: 1px solid rgb(172, 172, 172);
+    background: linear-gradient(to bottom, rgba(240,249,255,1) 0%,rgba(203,235,255,1) 47%,rgba(161,219,255,1) 100%);
     float: left;
 }
 
 .ngTagsInput li.selected {
-    background-color: #ff8f91;
+    background: linear-gradient(to bottom, rgba(254,187,187,1) 0%,rgba(254,144,144,1) 45%,rgba(255,92,92,1) 100%);
 }
 
 .ngTagsInput span {
     position: relative;
+    font-size: 13px;
+    font-family: Arial, sans-serif;
 }
 
 .ngTagsInput button {
@@ -53,7 +56,6 @@
     font-family: Arial, sans-serif;
     height: 100%;
     position: relative;
-    top: 1px;
 }
 
 .ngTagsInput button:active {
@@ -66,4 +68,7 @@
     margin: 2px;
     padding: 0px 0px 0px 4px;
     height: 21px;
+    float: left;
+    font-size: 13px;
+    font-family: Arial, sans-serif;
 }

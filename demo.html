@@ -3,12 +3,17 @@
 <head>
     <title>ngTagsInput Demo</title>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-    <script type="text/javascript" src="build/ng-tags-input.min.js"></script>
+    <script type="text/javascript" src="src/ng-tags-input.js"></script>
     <link rel="stylesheet" type="text/css" href="build/ng-tags-input.min.css">
     <style type="text/css">
         body {
+            margin: 0px;
             background-color: #cacaca;
             font-family: Arial,sans-serif;
+        }
+
+        h1 {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
         .container {
@@ -17,21 +22,92 @@
             padding: 10px;
             background-color: #ffffff;
         }
+
+        .container .section {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+        }
+
+        .superheroes .section:last-child {
+            margin-bottom: 0px;
+            padding-bottom: 0px;
+        }
+
+        .superheroes li {
+            background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%);
+        }
+
+        .movies li {
+            background: linear-gradient(to bottom, rgba(230,240,163,1) 0%,rgba(210,230,56,1) 50%,rgba(195,216,37,1) 51%,rgba(219,240,67,1) 100%);
+        }
+
+        .movies li.selected {
+            background: linear-gradient(to bottom, rgba(157,213,58,1) 0%,rgba(161,213,79,1) 50%,rgba(128,194,23,1) 51%,rgba(124,188,10,1) 100%);
+        }
     </style>
 </head>
 <body ng-app="myApp" ng-controller="ctrl">
-    <div class="container" ng-init="reset()">
+    <div class="container" ng-init="init()">
         <h1>ngTagsInput Demo Page</h1>
-
-        <tags-input ng-model="tags"></tags-input>
-        <p ng-cloak>Model: {{ tags.join(', ') }}</p>
-        <button ng-click="reset()">Reset</button>
+        <div class="section">
+            <tags-input ng-model="tags"></tags-input>
+            <p ng-cloak>Model: {{ tags.join(', ') }}</p>
+            <button ng-click="resetTags()">Reset</button>
+        </div>
+        <div class="section">
+            <tags-input ng-model="superheroes" ng-class="superheroes"
+                        placeholder="Add a superhero"
+                        replace-spaces-with-dashes="false"
+                        enable-editing-last-tag="true"></tags-input>
+            <p ng-cloak>Model: {{ superheroes.join(', ') }}</p>
+            <button ng-click="resetSuperheroes()">Reset</button>
+        </div>
+        <div class="section">
+            <tags-input ng-model="movies" ng-class="movies" placeholder="Add a movie" replace-spaces-with-dashes="false"></tags-input>
+            <p ng-cloak>Model: {{ movies.join(', ') }}</p>
+            <button ng-click="resetMovies()">Reset</button>
+        </div>
     </div>
 
     <script>
         angular.module('myApp', ['tags-input']).controller('ctrl', function($scope) {
-            $scope.reset = function() {
+            $scope.init = function() {
+                $scope.resetTags();
+                $scope.resetSuperheroes();
+                $scope.resetMovies();
+            };
+
+            $scope.resetTags = function() {
                 $scope.tags = ['just','some','cool','tags'];
+            };
+
+            $scope.resetSuperheroes = function() {
+                $scope.superheroes = ['Batman', 'Superman', 'Flash', 'Iron Man', 'Hulk', 'Wolverine'];
+            };
+
+            $scope.resetMovies = function() {
+                $scope.movies = ['The Dark Knight',
+                    'Heat',
+                    'Inception',
+                    'The Dark Knight Rises',
+                    'Kill Bill: Vol. 1',
+                    'Terminator 2: Judgment Day',
+                    'The Matrix',
+                    'Minority Report',
+                    'The Bourne Ultimatum',
+                    'Kill Bill: Vol. 2',
+                    'Hot Fuzz',
+                    'Serpico',
+                    'The Fugitive',
+                    'Casino Royale',
+                    'Ghost Dog: The Way of the Samurai',
+                    'Mission: Impossible',
+                    'Die Hard',
+                    'Die Hard: With a Vengeance',
+                    'The Matrix Reloaded',
+                    'Face/Off',
+                    'Desperado',
+                    'RoboCop'];
             };
         });
     </script>
