@@ -55,7 +55,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
 
             $scope.tryRemoveLast = function() {
                 var changed = false;
-                if ($scope.newTag.length === 0 && $scope.tags.length > 0) {
+                if ($scope.tags.length > 0) {
                     if ($scope.enableEditingLastTag) {
                         $scope.newTag = $scope.tags.pop();
                     }
@@ -102,7 +102,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
                         }
                         e.preventDefault();
                     }
-                    else if (e.keyCode === BACKSPACE) {
+                    else if (e.keyCode === BACKSPACE && this.value.length === 0) {
                         if (scope.tryRemoveLast()) {
                             scope.$apply();
 

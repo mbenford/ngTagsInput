@@ -143,31 +143,6 @@ describe('tags-input-directive', function() {
             expect($rootScope.tags).toEqual(['foo']);
         });
 
-        it('highlights the tag about to be removed when the backspace key is pressed once and the input box is empty', function() {
-            // Arrange
-            $rootScope.tags = ['some','cool','tags'];
-            compile();
-
-            // Act
-            sendBackspace();
-
-            // Assert
-            expect(getTag(2).hasClass('selected')).toBe(true);
-        });
-
-        it('stops highlighting the last tag when the input box becomes non-empty', function() {
-            // Arrange
-            $rootScope.tags = ['some','cool','tags'];
-            compile();
-
-            // Act
-            sendBackspace();
-            sendKeyPress(65);
-
-            // Assert
-            expect(getTag(2).hasClass('selected')).toBe(false);
-        });
-
         it('adds a custom CSS class to the container div when ng-class option is provided', function() {
             // Arrange/Act
             compile('ng-class="myClass"');
@@ -463,31 +438,8 @@ describe('tags-input-directive', function() {
     });
 
     describe('enable-editing-last-tag option', function() {
-        it('moves the last tag back into the input field when the backspace key is pressed once and the input field is empty', function() {
-            // Arrange
+        beforeEach(function() {
             $rootScope.tags = ['some','cool','tags'];
-            compile('enable-editing-last-tag="true"');
-
-            // Act
-            sendBackspace();
-
-            // Assert
-            expect(getInput().val()).toBe('tags');
-            expect($rootScope.tags).toEqual(['some','cool']);
-        });
-
-        it('removes the last tag when the backspace key is pressed twice and the input field is empty', function() {
-            // Arrange
-            $rootScope.tags = ['some','cool','tags'];
-            compile('enable-editing-last-tag="false"');
-
-            // Act
-            sendBackspace();
-            sendBackspace();
-
-            // Assert
-            expect(getInput().val()).toBe('');
-            expect($rootScope.tags).toEqual(['some','cool']);
         });
 
         it('initializes the option to false', function() {
@@ -496,6 +448,88 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect(element.scope().enableEditingLastTag).toBe(false);
+        });
+
+        describe('option is on', function() {
+            beforeEach(function() {
+                compile('enable-editing-last-tag="true"');
+            });
+
+            describe('backspace is pressed once', function() {
+                it('moves the last tag back into the input field when the input field is empty', function() {
+                    // Act
+                    sendBackspace();
+
+                    // Assert
+                    expect(getInput().val()).toBe('tags');
+                    expect($rootScope.tags).toEqual(['some','cool']);
+                });
+
+                it('does nothing when the input field is not empty', function() {
+                    // Act
+                    sendKeyPress(65);
+                    sendBackspace();
+
+                    // Assert
+                    expect($rootScope.tags).toEqual(['some','cool','tags']);
+                });
+            });
+        });
+
+        describe('option is off', function() {
+            beforeEach(function() {
+                compile('enable-editing-last-tag="false"');
+            });
+
+            describe('backspace is pressed once', function() {
+                it('highlights the tag about to be removed when the input box is empty', function() {
+                    // Act
+                    sendBackspace();
+
+                    // Assert
+                    expect(getTag(2).hasClass('selected')).toBe(true);
+                });
+
+                it('does nothing when the input field is not empty', function() {
+                    // Act
+                    sendKeyPress(65);
+                    sendBackspace();
+
+                    // Assert
+                    expect($rootScope.tags).toEqual(['some','cool','tags']);
+                });
+
+                it('stops highlighting the last tag when the input box becomes non-empty', function() {
+                    // Act
+                    sendBackspace();
+                    sendKeyPress(65);
+
+                    // Assert
+                    expect(getTag(2).hasClass('selected')).toBe(false);
+                });
+            });
+
+            describe('backspace is pressed twice', function() {
+                it('removes the last tag when the input field is empty', function() {
+                    // Act
+                    sendBackspace();
+                    sendBackspace();
+
+                    // Assert
+                    expect(getInput().val()).toBe('');
+                    expect($rootScope.tags).toEqual(['some','cool']);
+                });
+
+                it('does nothing when the input field is not empty', function() {
+                    // Act
+                    sendKeyPress(65);
+                    sendBackspace();
+                    sendBackspace();
+
+                    // Assert
+                    expect($rootScope.tags).toEqual(['some','cool','tags']);
+                });
+            });
         });
     });
 });
