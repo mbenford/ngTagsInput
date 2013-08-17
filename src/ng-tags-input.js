@@ -26,7 +26,6 @@ angular.module('tags-input', []).directive('tagsInput', function() {
             $scope.addOnEnter = toBool($attrs.addOnEnter, true);
             $scope.addOnSpace = toBool($attrs.addOnSpace, false);
             $scope.addOnComma = toBool($attrs.addOnComma, true);
-            $scope.allowedCharsPattern = new RegExp($attrs.allowedCharsPattern || '[A-Za-z0-9\\s]');
             $scope.allowedTagsPattern = new RegExp($attrs.allowedTagsPattern || '.*');
             $scope.enableEditingLastTag = toBool($attrs.enableEditingLastTag, false);
 
@@ -108,11 +107,6 @@ angular.module('tags-input', []).directive('tagsInput', function() {
 
                             e.preventDefault();
                         }
-                    }
-                })
-                .bind('keypress', function(e) {
-                    if (!scope.allowedCharsPattern.test(String.fromCharCode(e.charCode))) {
-                        e.preventDefault();
                     }
                 });
 

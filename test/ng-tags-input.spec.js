@@ -337,27 +337,6 @@ describe('tags-input-directive', function() {
         });
     });
 
-    describe('allowed-chars-pattern option', function() {
-        it('allows only the characters matching the regular expression in allowed-chars-pattern option', function() {
-            // Arrange
-            compile('allowed-chars-pattern="[a-z]"');
-
-            // Act
-            newTag('foo_123_bar_456');
-
-            // Assert
-            expect($rootScope.tags).toEqual(['foobar']);
-        });
-
-        it('initializes the option to [A-Za-z0-9\\s]', function() {
-            // Arrange/Act
-            compile();
-
-            // Assert
-            expect(element.scope().allowedCharsPattern.toString()).toBe('/[A-Za-z0-9\\s]/');
-        });
-    });
-
     describe('allowed-tags-pattern option', function() {
         it('allows only tags matching a regular expression to be added', function() {
             // Arrange

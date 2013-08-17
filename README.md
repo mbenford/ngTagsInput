@@ -28,7 +28,8 @@ Download both `ng-tags-input.min.js` and `ng-tags-input.min.css` files from the 
         <script type="text/javascript" src="ng-tags-input.min.js"></script>
         <link rel="stylesheet" type="text/css" href="ng-tags-input.min.css">               
         <script>
-            angular.module('myApp', ['tags-input']).controller('MyCtrl', function($scope) {
+            angular.module('myApp', ['tags-input'])
+                .controller('MyCtrl', function($scope) {
                     $scope.tags = ['just','some','cool','tags'];
                 });
         </script>
@@ -52,7 +53,6 @@ The `tags-input` directive comes with lots of options so you can fit it to your 
 - `add-on-enter`: Flag indicating that a new tag will be added on pressing the ENTER key. Defaults to: **true**
 - `add-on-space`: Flag indicating that a new tag will be added on pressing the SPACE key. Defaults to: **false**
 - `add-on-comma`: Flag indicating that a new tag will be added on pressing the COMMA key. Defaults to: **true**
-- `allowed-chars-pattern`: Regular expression that determines the pattern used to validate a character. Defaults to: **[A-Za-z0-9\s]** (letters, numbers and spaces)
 - `allowed-tags-pattern`: Regular expression that determines the pattern used to validate a tag. Defaults to **.*** (allows any tag)
 - `enable-editing-last-tag`: Flag indicating that the last tag will be moved back into the new tag input box instead of being removed when the backspace key is pressed and the input box is empty. Defaults to: **false**
 
