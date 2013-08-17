@@ -70,3 +70,11 @@ Building the directive is a four-step process:
 - Run `grunt` to build the directive.
 
 While coding you can execute `grunt test` to run the tests or `grunt watch` to run them automatically every time the source code files change.
+
+## License
+
+See the [LICENSE](https://github.com/mbenford/ngTagsInput/blob/master/LICENSE "") file.
+
+## Changelog
+
+See the [ChangeLog](https://github.com/mbenford/ngTagsInput/blob/master/ChangeLog) file.
