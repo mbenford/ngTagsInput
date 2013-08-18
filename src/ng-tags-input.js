@@ -26,7 +26,7 @@ angular.module('tags-input', []).directive('tagsInput', function() {
             $scope.addOnEnter = toBool($attrs.addOnEnter, true);
             $scope.addOnSpace = toBool($attrs.addOnSpace, false);
             $scope.addOnComma = toBool($attrs.addOnComma, true);
-            $scope.allowedTagsPattern = new RegExp($attrs.allowedTagsPattern || '.*');
+            $scope.allowedTagsPattern = new RegExp($attrs.allowedTagsPattern || '^[a-zA-Z0-9\\s]+$');
             $scope.enableEditingLastTag = toBool($attrs.enableEditingLastTag, false);
 
             $scope.newTag = '';

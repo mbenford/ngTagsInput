@@ -53,7 +53,7 @@ The `tags-input` directive comes with lots of options so you can fit it to your 
 - `add-on-enter`: Flag indicating that a new tag will be added on pressing the ENTER key. Defaults to: **true**
 - `add-on-space`: Flag indicating that a new tag will be added on pressing the SPACE key. Defaults to: **false**
 - `add-on-comma`: Flag indicating that a new tag will be added on pressing the COMMA key. Defaults to: **true**
-- `allowed-tags-pattern`: Regular expression that determines the pattern used to validate a tag. Defaults to **.*** (allows any tag)
+- `allowed-tags-pattern`: Regular expression that determines the pattern used to validate a tag. Defaults to **^[a-zA-Z0-9\s]+$*** (letters, numbers and spaces)
 - `enable-editing-last-tag`: Flag indicating that the last tag will be moved back into the new tag input box instead of being removed when the backspace key is pressed and the input box is empty. Defaults to: **false**
 
 ## Demo

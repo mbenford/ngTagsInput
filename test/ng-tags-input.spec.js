@@ -360,12 +360,12 @@ describe('tags-input-directive', function() {
             expect($rootScope.tags).toEqual([]);
         });
 
-        it('initializes the option to .*', function() {
+        it('initializes the option to ^[a-zA-Z0-9\\s]+$', function() {
             // Arrange/Act
             compile();
 
             // Assert
-            expect(element.scope().allowedTagsPattern.toString()).toBe('/.*/');
+            expect(element.scope().allowedTagsPattern.toString()).toBe('/^[a-zA-Z0-9\\s]+$/');
         });
     });
 
