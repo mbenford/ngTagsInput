@@ -2,8 +2,17 @@ body {
     padding-top: 10px;
 }
 
-.demo-col {
-    padding-top: 40px;
+.col-outer {
+    height: 175px;
+    position: relative;
+}
+
+.col-inner {
+    position: absolute;
+    top: 50%;
+    height: 110px;
+    margin-top: -55px;
+    width: 100%;
 }
 
 .tags-input-home li {
