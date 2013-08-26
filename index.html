@@ -1,90 +1,50 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>ngTagsInput - Tags input control for AngularJS</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/ng-tags-input.min.css">
-  <link rel="stylesheet" href="css/styles.css">
-</head>
-<body ng-app="ngTagsInputSite" ng-controller="MainCtrl">
-<div class="container">
-<nav class="navbar navbar-default navbar-inverse" role="navigation">
-    <div class="container">
-      <div class="navbar-header">
-        <a href="#" class="navbar-brand">ngTagsInput</a>
-      </div>
-
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <li><a href="download.html">Download</a></li>
-          <li><a href="gettingstarted.html">Getting started</a></li>
-          <li><a href="demos.html">Demos</a></li>
-          <li><a href="documenation.html">Documentation</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="http://github.com/mbenford/ngTagsInput"><i class="icon-github"></i> View on GitHub</a></li>
-        </ul>
-      </div>
-
+---
+layout: default
+---
+<div class="jumbotron">
+  <div class="row">
+    <div class="col-md-6">
+      <h1>ngTagsInput</h1>
+      <p><small><strong>Tags input</strong> control for <strong>AngularJS</strong></small></p>
+      <p>
+        <button type="button" class="btn btn-primary"><i class="icon-download-alt"></i> Download <small>v0.1.1</small></button>
+        <button type="button" class="btn btn-default"><i class="icon-github"></i> View on GitHub</button>
+      </p>
     </div>
-  </nav>
-</div>
-  <div class="container">
-    <div class="jumbotron">
-      <div class="row">
-        <div class="col-md-6">
-          <h1>ngTagsInput</h1>
-          <p><small><strong>Tags input</strong> control for <strong>AngularJS</strong></small></p>
-          <p>
-            <button type="button" class="btn btn-primary"><i class="icon-download-alt"></i> Download <small>v0.1.1</small></button>
-            <button type="button" class="btn btn-default"><i class="icon-github"></i> View on GitHub</button>
-          </p>
-        </div>
-        <div class="col-md-6">
-          <div class="col-outer">
-            <div class="col-inner">
-              <p>Try it yourself!</p>
-              <tags-input ng-class="tags-input-home" ng-model="tags"></tags-input>
-              <p class="text-right"><small>Check out the <a href="demos.html">demos page</a> to see more examples.</small></p>
-            </div>
-          </div>
+    <div class="col-md-6">
+      <div class="col-outer">
+        <div class="col-inner">
+          <p>Try it yourself!</p>
+          <tags-input ng-class="tags-input-home" ng-model="tags"></tags-input>
+          <p class="text-right"><small>Check out the <a href="demos.html">demos page</a> to see more examples.</small></p>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-4">
-        <h3>What is a tags input control?</h3>
-        <p>
-          A tags input is an input box that automatically creates tags &ndash; also called tokens &ndash; out of typed
-          text every time a certain key is pressed. It's useful for tagging and highlighting information right on the
-          input box.
-        </p>
-      </div>
-      <div class="col-md-4">
-        <h3>What is ngTagsInput?</h3>
-        <p>
-          ngTagsInput is a highly customizable tags input directive built for the AngularJS framework, with no external
-          dependencies. It provides a &lt;tags-input&gt; element so you can semantically express you're using an input
-          with tagging capabilities.
-        </p>
-      </div>
-      <div class="col-md-4">
-        <h3>Where should I use it?</h3>
-        <p>
-          You can benefit from an input with tagging support when you want to let users enter tags for a post,
-          select multiples contacts from a list, or any other situation where it's appropriate to have an inline,
-          as-you-type list of items.
-        </p>
-      </div>
-    </div>
-    <footer>
-      <p>&copy; 2013 Michael Benford </p>
-    </footer>
   </div>
-
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-  <script type="text/javascript" src="js/ng-tags-input.min.js"></script>
-  <script type="text/javascript" src="js/app.js"></script>
-</body>
-</html>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <h3>What is a tags input control?</h3>
+    <p>
+      A tags input is an input box that automatically creates tags &ndash; also called tokens &ndash; out of typed
+      text every time a certain key is pressed. It's useful for tagging and highlighting information right on the
+      input box.
+    </p>
+  </div>
+  <div class="col-md-4">
+    <h3>What is ngTagsInput?</h3>
+    <p>
+      ngTagsInput is a highly customizable tags input directive built for the AngularJS framework, with no external
+      dependencies. It provides a &lt;tags-input&gt; element so you can semantically express you're using an input
+      with tagging capabilities.
+    </p>
+  </div>
+  <div class="col-md-4">
+    <h3>Where should I use it?</h3>
+    <p>
+      You can benefit from an input with tagging support when you want to let users enter tags for a post,
+      select multiples contacts from a list, or any other situation where it's appropriate to have an inline,
+      as-you-type list of items.
+    </p>
+  </div>
+</div>
