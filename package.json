@@ -5,7 +5,7 @@
     },
     "name": "ng-tags-input",
     "version": "0.1.0",
-    "description": "Simple input control with tag editing support for AngularJS",
+    "description": "Tags input control for AngularJS",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -17,11 +17,11 @@
     },
     "dependencies": {},
     "devDependencies": {
-        "grunt": "~0.4.1",
-        "grunt-contrib-uglify": "~0.2.0",
-        "grunt-contrib-cssmin": "~0.6.1",
-        "grunt-contrib-watch": "~0.3.1",
-        "grunt-contrib-jshint": "~0.4.0",
-        "grunt-karma": "~0.4.4"
+        "grunt": "=0.4.1",
+        "grunt-contrib-uglify": "=0.2.2",
+        "grunt-contrib-cssmin": "=0.6.1",
+        "grunt-contrib-watch": "=0.5.3",
+        "grunt-contrib-jshint": "=0.6.3",
+        "grunt-karma": "=0.6.2"
     }
 }
