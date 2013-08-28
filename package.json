@@ -12,7 +12,6 @@
         "url": "https://github.com/mbenford/ngTagsInput.git"
     },
     "scripts": {
-        "preinstall": "npm install -g grunt-cli karma",
         "test": "grunt test"
     },
     "dependencies": {},
