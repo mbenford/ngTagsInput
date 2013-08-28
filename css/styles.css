@@ -15,6 +15,14 @@ body {
     width: 100%;
 }
 
+.row-download {
+    margin-top: 10px;
+}
+
+.btn-download {
+    width: 140px;
+}
+
 .tags-input-home li {
     height: 30px;
     background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%);

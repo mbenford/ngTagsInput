@@ -2,3 +2,30 @@
 layout: default
 ---
 <h1>Getting started</h1>
+
+<h2>Installing</h2>
+<p>
+  Installing ngTagsInput is a 3-step process:
+  <ol>
+    <li>
+      Add the ngTagsInput script file to your page &ndash; make sure it's added after the Angular script:
+      <pre>&lt;script type="text/javascript" src="path/to/angular.min.js"&gt;&lt;/script&gt;
+<strong>&lt;script type="text/javascript" src="path/to/ng-tags-input.min.js"&gt;&lt;/script&gt;</strong></pre>
+    </li>
+    <li>
+      Add the ngTagsInput style file to your page:
+      <pre>&lt;head&gt;
+  <strong>&lt;link rel="stylesheet" href="path/to/ng-tags-input.min.css"&gt;</strong>
+&lt;/head&gt;</pre>
+    </li>
+    <li>
+      Add the tags-input module as a dependency in your Angular application:
+      <pre>angular.module('myApp', [<strong>'tags-input'</strong>]);</pre>
+    </li>
+  </ol>
+</p>
+<h2>Basic usage</h2>
+<p>
+  ngTagsInput provides a new HTML element called &lt;tags-input&gt; which can be bind to a property of a scope:
+  <pre>&lt;tags-input ng-model="tags"&gt;&lt;/tags-input&gt;</pre>
+</p>
