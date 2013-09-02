@@ -1,4 +1,110 @@
 ---
 layout: default
 ---
-<h1>Documentation</h1>
+<h2>Documentation</h2>
+
+<h3><code>tagsInput <small>(directive in module <strong>tags-input</strong>)</small></code></h3>
+<h4>Description</h4>
+<p>ngTagsInput is an Angular directive that renders an input control with tag editing support.</p>
+<h4>Usage</h4>
+{% highlight html %}
+<ANY tags-input
+        ng-model="{string}"
+        [ng-class="{string}"]
+        [tabindex="{number}"]
+        [placeholder="{string}"]
+        [remove-tag-symbol="{string}"]
+        [min-length="{number}"]
+        [max-length="{number}"]
+        [add-on-enter="{boolean}"]
+        [add-on-space="{boolean}"]
+        [add-on-comma="{boolean}"]
+        [allowed-tags-pattern="{string}"]
+        [enable-editing-last-tag="{boolean">]
+</ANY>
+{% endhighlight %}
+<h4>Parameters</h4>
+<table class="table table-bordered table-striped table-hover">
+  <thead>
+    <tr>
+      <th>Param</th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Defaults to</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ngModel <em>(required)</em></td>
+      <td><span class="label label-primary">string</span></td>
+      <td>Assignable angular expression to data-bind to.</td>
+      <td>&ndash;</td>
+    </tr>
+    <tr>
+      <td>ngClass</td>
+      <td><span class="label label-primary">string</span></td>
+      <td>CSS class to style the control.</td>
+      <td>&ndash;</td>
+    </tr>
+    <tr>
+      <td>tabindex</td>
+      <td><span class="label label-success">number</span></td>
+      <td>Tab index for the new tag input box.</td>
+      <td>&ndash;</td>
+    </tr>
+    <tr>
+      <td>placeholder</td>
+      <td><span class="label label-primary">string</span></td>
+      <td>Text placeholder for the new tag input box.</td>
+      <td>Add a tag</td>
+    </tr>
+    <tr>
+      <td>removeTagSymbol</td>
+      <td><span class="label label-primary">string</span></td>
+      <td>Character to remove an existing tag.</td>
+      <td>&times;</td>
+    </tr>
+    <tr>
+      <td>minLength</td>
+      <td><span class="label label-success">number</span></td>
+      <td>Minimum length for a new tag.</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>maxLength</td>
+      <td><span class="label label-success">number</span></td>
+      <td>Maximum length for a new tag.</td>
+      <td>The placeholder length or the min-length value, whichever is greater.</td>
+    </tr>
+    <tr>
+      <td>addOnEnter</td>
+      <td><span class="label label-danger">boolean</span></td>
+      <td>Flag indicating that a new tag will be added on pressing the ENTER key.</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>addOnSpace</td>
+      <td><span class="label label-danger">boolean</span></td>
+      <td>Flag indicating that a new tag will be added on pressing the SPACE key.</td>
+      <td>false</td>
+    </tr>
+    <tr>
+      <td>addOnComma</td>
+      <td><span class="label label-danger">boolean</span></td>
+      <td>Flag indicating that a new tag will be added on pressing the COMMA key.</td>
+      <td>true</td>
+    </tr>
+    <tr>
+      <td>allowedTagsPattern</td>
+      <td><span class="label label-primary">string</span></td>
+      <td>Regular expression that determines the pattern used to validate a tag.</td>
+      <td>^[a-zA-Z0-9\s]+$*</td>
+    </tr>
+    <tr>
+      <td>enableEditingLastTag</td>
+      <td><span class="label label-primary">string</span></td>
+      <td>Flag indicating that the last tag will be moved back into the new tag input box instead of being removed when the backspace key is pressed and the input box is empty.</td>
+      <td>false</td>
+    </tr>
+  </tbody>
+</table>

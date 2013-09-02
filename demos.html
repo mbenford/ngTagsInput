@@ -1,4 +1,61 @@
 ---
 layout: default
 ---
-<h1>Demos</h1>
+<h2>Demos</h2>
+
+<div ng-controller="DemoCtrl">
+  <div class="row">
+    <div class="col-md-6">
+      <h4>HTML</h4>
+{% highlight html %}
+<tags-input ng-model="tags"></tags-input>
+{% endhighlight %}
+    </div>
+    <div class="col-md-6">
+      <h4>Output</h4>
+      <tags-input ng-model="tags"></tags-input>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <h4>HTML</h4>
+{% highlight html %}
+<tags-input ng-model="superheroes" ng-class="superheroes"
+            placeholder="Add a superhero"
+            replace-spaces-with-dashes="false"
+            enable-editing-last-tag="true"></tags-input>
+{% endhighlight %}
+    </div>
+    <div class="col-md-6">
+      <h4>Output</h4>
+      <tags-input ng-model="superheroes" ng-class="superheroes"
+                     placeholder="Add a superhero"
+                     replace-spaces-with-dashes="false"
+                     enable-editing-last-tag="true"></tags-input>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <h4>HTML</h4>
+{% highlight html %}
+<tags-input ng-model="movies" ng-class="movies"
+            placeholder="Add a movie"
+            replace-spaces-with-dashes="false"
+            add-on-comma="true"
+            add-on-space="false"
+            max-length="20"></tags-input>
+{% endhighlight %}
+    </div>
+    <div class="col-md-6">
+      <h4>Output</h4>
+      <tags-input ng-model="movies" ng-class="movies"
+                  placeholder="Add a movie"
+                  replace-spaces-with-dashes="false"
+                  add-on-comma="true"
+                  add-on-space="false"
+                  max-length="20"></tags-input>
+    </div>
+  </div>
+</div>
