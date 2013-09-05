@@ -3,8 +3,13 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        files: {
+            js: 'src/<%= pkg.name %>.js',
+            css: 'src/<%= pkg.name %>.css',
+            spec: 'test/<%= pkg.name %>.spec.js'
+        },
         jshint: {
-            files: ['Gruntfile.js', 'src/<%= pkg.name %>.js', 'test/<%= pkg.name %>.spec.js'],
+            files: ['Gruntfile.js', '<%= files.js %>', '<%= files.spec %>'],
             options: {
                 curly: true,
                 eqeqeq: true,
@@ -36,18 +41,43 @@ module.exports = function(grunt) {
                 browsers: ['PhantomJS']
             }
         },
+        clean: {
+            build: ['build/'],
+            tmp: ['tmp/']
+        },
         uglify: {
-            dist: {
+            build: {
                 files: {
-                    'build/<%= pkg.name %>.min.js': ['src/<%= pkg.name %>.js']
+                    'tmp/<%= pkg.name %>.min.js': ['<%= files.js %>']
                 }
             }
         },
         cssmin: {
-            dist: {
+            build: {
                 files: {
-                    'build/<%= pkg.name %>.min.css': ['src/<%= pkg.name %>.css']
+                    'tmp/<%= pkg.name %>.min.css': ['<%= files.css %>']
                 }
+            }
+        },
+        compress: {
+            options: {
+                mode: 'zip'
+            },
+            minified: {
+                options: {
+                    archive: 'build/<%= pkg.name %>.min.zip'
+                },
+                files : [
+                    { expand: true, src : '**/*', cwd : 'tmp/' }
+                ]
+            },
+            unminified: {
+                options: {
+                    archive: 'build/<%= pkg.name %>.zip'
+                },
+                files : [
+                    { expand: true, src : '**/*', cwd : 'src/' }
+                ]
             }
         },
         watch: {
@@ -60,8 +90,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-compress');
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-karma');
 
     grunt.registerTask('test', ['jshint', 'karma']);
-    grunt.registerTask('default', ['jshint', 'karma', 'uglify', 'cssmin']);
+    grunt.registerTask('default', ['jshint', 'karma', 'clean', 'uglify', 'cssmin', 'compress', 'clean:tmp']);
 };
