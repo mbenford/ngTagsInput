@@ -1,5 +1,8 @@
-.ngTagsInput * {
+.ngTagsInput *, *:before, *:after {
     vertical-align: middle;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 .ngTagsInput {
@@ -30,7 +33,7 @@
     padding-left: 4px;
     display: inline-block;
     border-radius: 3px;
-    height: 19px;
+    height: 21px;
     border: 1px solid rgb(172, 172, 172);
     background: linear-gradient(to bottom, rgba(240,249,255,1) 0%,rgba(203,235,255,1) 47%,rgba(161,219,255,1) 100%);
     float: left;
