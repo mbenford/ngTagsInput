@@ -25,12 +25,13 @@ body {
 
 .tags-input-home li {
     height: 30px;
-    line-height: 30px;
+    line-height: 2;
     background: linear-gradient(to bottom, rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%);
 }
 
 .tags-input-home input {
     height: 30px;
+    padding-top: 1px;
 }
 
 .superheroes li {
