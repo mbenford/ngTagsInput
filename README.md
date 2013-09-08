@@ -2,7 +2,7 @@ ngTagsInput
 ===========
 [![Build Status](https://travis-ci.org/mbenford/ngTagsInput.png?branch=master)](https://travis-ci.org/mbenford/ngTagsInput)
 
-Simple input control with tag editing support for AngularJS.
+Simple input control with tag editing support for AngularJS. Check out the [ngTagsInput website](http://mbenford.github.io/ngTagsInput) for more information.
 
 ## Requirements
 
@@ -11,7 +11,7 @@ Simple input control with tag editing support for AngularJS.
 
 ## Installing
 
-Download both `ng-tags-input.min.js` and `ng-tags-input.min.css` files from the `build` folder and add them to your web application. Make sure the JavaScript file is included after the AngularJS script.
+Download either `ng-tags-input.min.zip` or `ng-tags-input.zip` from the `build` folder and add its content files to your web application. Make sure the JavaScript script is included after the AngularJS script.
 
 ## Usage
 
@@ -41,31 +41,19 @@ Download both `ng-tags-input.min.js` and `ng-tags-input.min.css` files from the 
 
 ## Options
 
-The `tags-input` directive comes with lots of options so you can fit it to your needs:
-
-- `ng-class`: CSS class to style the control.
-- `tabindex`: Tab index for the new tag input box.
-- `placeholder`: Text placeholder for the new tag input box. Defaults to: **Add a tag**
-- `remove-tag-symbol`: Character to remove an existing tag. Defaults to: **&times;**
-- `replace-spaces-with-dashes`: Flag indicating that all spaces will be replaced with dashes (This behavior will be disabled if the `add-on-space` option is true). Defaults to: **true**
-- `min-length`: Minimum length for a new tag. Defaults to: **3**
-- `max-length`: Maximum length for a new tag. Defaults to: **The** `placeholder` **length or the** `min-length` **value, whichever is greater.**
-- `add-on-enter`: Flag indicating that a new tag will be added on pressing the ENTER key. Defaults to: **true**
-- `add-on-space`: Flag indicating that a new tag will be added on pressing the SPACE key. Defaults to: **false**
-- `add-on-comma`: Flag indicating that a new tag will be added on pressing the COMMA key. Defaults to: **true**
-- `allowed-tags-pattern`: Regular expression that determines the pattern used to validate a tag. Defaults to **^[a-zA-Z0-9\s]+$*** (letters, numbers and spaces)
-- `enable-editing-last-tag`: Flag indicating that the last tag will be moved back into the new tag input box instead of being removed when the backspace key is pressed and the input box is empty. Defaults to: **false**
+Check out the [documentation](http://mbenford.github.io/ngTagsInput/documentation.html) page for a detailed view of all available options.
 
 ## Demo
 
-You can see the directive in action in the [demo page](http://rawgithub.com/mbenford/ngTagsInput/master/demo.html "").
+You can see the directive in action in the [demo page](http://mbenford.github.io/ngTagsInput/demos.html).
 
 ## Building from the source code
 
-Building the directive is a four-step process:
+Building the directive is a five-step process:
 
 - Install Node.js;
 - Install PhantomJS;
+- Run `npm install -g grunt-cli karma` to install grunt-cli and karma globally;
 - Run `npm install` to install the development dependencies;
 - Run `grunt` to build the directive.
 
