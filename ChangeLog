@@ -1,3 +1,7 @@
+Version 0.1.2 - 2013-09-08
+
+- Fixed the CSS classes so the directive gets rendered consistently across different browsers
+
 Version 0.1.1 - 2013-08-17
 
 - Removed allowed-chars-pattern option since it wouldn't prevent invalid chars from being inserted by pasting data from the clipboard. The allowed-tags-pattern optiin is the correct way to validate input from now on
