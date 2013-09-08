@@ -1,14 +1,6 @@
 angular.module("ngTagsInputSite", ['tags-input'])
-    .controller('HomeCtrl', function($scope, $window) {
+    .controller('HomeCtrl', function($scope) {
         $scope.tags = ['some', 'cool', 'tags'];
-
-        $scope.goToDownload = function() {
-            $window.location = 'download.html';
-        };
-
-        $scope.goToGitHub = function() {
-            $window.location = 'http://github.com/mbenford/ngTagsInput';
-        };
     })
     .controller('DemoCtrl', function($scope) {
         $scope.tags = ['just','some','cool','tags'];
