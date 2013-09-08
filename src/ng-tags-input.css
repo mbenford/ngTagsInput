@@ -1,5 +1,4 @@
 .ngTagsInput *, *:before, *:after {
-    vertical-align: middle;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -12,13 +11,12 @@
     background-color: -moz-field;
     border: 1px solid darkgray;
     box-shadow: 1px 1px 1px 0 lightgray inset;
-    font: -moz-field;
-    font: -webkit-small-control;
     margin-top: 5px;
     padding: 2px 2px;
     overflow-y: auto;
     overflow-x: hidden;
     word-wrap: break-word;
+    font-size: 14px;
 }
 
 .ngTagsInput ul {
@@ -34,6 +32,7 @@
     display: inline-block;
     border-radius: 3px;
     height: 21px;
+    line-height: 21px;
     border: 1px solid rgb(172, 172, 172);
     background: linear-gradient(to bottom, rgba(240,249,255,1) 0%,rgba(203,235,255,1) 47%,rgba(161,219,255,1) 100%);
     float: left;
@@ -44,21 +43,17 @@
 }
 
 .ngTagsInput span {
-    position: relative;
-    font-size: 13px;
-    font-family: Arial, sans-serif;
+    font: 13px Arial, sans-serif;
 }
 
 .ngTagsInput button {
+    margin: 0px;
     border: none;
     background: none;
     color: #585858;
     cursor: pointer;
-    font-weight: bold;
-    font-size: 16px;
-    font-family: Arial, sans-serif;
-    height: 100%;
-    position: relative;
+    font: bold 16px Arial, sans-serif;
+    vertical-align: middle;
 }
 
 .ngTagsInput button:active {
@@ -69,9 +64,12 @@
     border: 0px;
     outline: none;
     margin: 2px;
-    padding: 0px 0px 0px 4px;
+    padding: 2px 0px 0px 4px;
     height: 21px;
     float: left;
-    font-size: 13px;
-    font-family: Arial, sans-serif;
+    font: 13px Arial, sans-serif;
+}
+
+.ngTagsInput input::-ms-clear {
+    display: none;
 }
