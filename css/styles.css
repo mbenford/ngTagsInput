@@ -2,6 +2,12 @@ body {
     padding-top: 10px;
 }
 
+h1.page-title {
+    font-size: 32px;
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+
 .footer {
     margin-top: 20px;
     margin-bottom: 20px;
