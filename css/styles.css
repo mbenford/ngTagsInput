@@ -2,6 +2,13 @@ body {
     padding-top: 10px;
 }
 
+.footer {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #dbdbdb;
+}
+
 .col-outer {
     height: 175px;
     position: relative;
@@ -20,7 +27,7 @@ body {
 }
 
 .btn-download {
-    width: 140px;
+    width: 100px;
 }
 
 .tags-input-home li {
@@ -31,6 +38,22 @@ body {
 .tags-input-home input {
     height: 30px;
     padding-top: 1px;
+}
+
+.deleted-text {
+    text-decoration: line-through;
+}
+
+.type-string {
+    background-color: #428bca;
+}
+
+.type-number {
+    background-color: #d9534f;
+}
+
+.type-boolean {
+    background-color: #5cb85c;
 }
 
 .superheroes li {

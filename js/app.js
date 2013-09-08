@@ -20,4 +20,21 @@ angular.module("ngTagsInputSite", ['tags-input'])
             'The Fugitive',
             'Casino Royale',
             'Ghost Dog: The Way of the Samurai'];
+    })
+    .controller('NavCtrl', function($scope, $location) {
+        function Link(url, text) {
+            this.url = url;
+            this.text = text;
+            this.cssClass = $location.absUrl().lastIndexOf(url) > -1 ? 'active' : '';
+
+        }
+        console.log($location.absUrl());
+        $scope.navbar = {
+            links: [
+                new Link('download.html', 'Download'),
+                new Link('gettingstarted.html', 'Getting started'),
+                new Link('demos.html', 'Demos'),
+                new Link('documentation.html', 'Documentation')
+            ]
+        };
     });

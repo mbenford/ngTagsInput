@@ -1,22 +1,20 @@
-<div class="container">
+<div class="container" ng-controller="NavCtrl">
   <nav class="navbar navbar-default navbar-inverse" role="navigation">
     <div class="container">
       <div class="navbar-header">
-        <a href="index.html" class="navbar-brand">ngTagsInput</a>
+        <a href="/" class="navbar-brand">ngTagsInput</a>
       </div>
 
       <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <li><a href="download.html">Download</a></li>
-          <li><a href="gettingstarted.html">Getting started</a></li>
-          <li><a href="demos.html">Demos</a></li>
-          <li><a href="documentation.html">Documentation</a></li>
+        <ul class="nav navbar-nav" ng-cloak>
+          {% raw %}
+          <li ng-repeat="link in navbar.links" ng-class="link.cssClass"><a ng-href="{{ link.url }}">{{ link.text }}</a></li>
+          {% endraw %}
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><a href="http://github.com/mbenford/ngTagsInput"><i class="icon-github"></i> View on GitHub</a></li>
         </ul>
       </div>
-
     </div>
   </nav>
 </div>
