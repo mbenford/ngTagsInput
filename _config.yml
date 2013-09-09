@@ -3,4 +3,3 @@ markdown: redcarpet
 pygments: true
 exclude: ['node_modules','*.log']
 stable_version: 0.1.2
-latest_version: 0.1.2

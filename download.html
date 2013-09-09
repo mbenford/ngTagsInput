@@ -1,11 +1,11 @@
 ---
 layout: default
 ---
-<h1 class="page-title">Download ngTagsInput</h1>
+<h1 class="page-title">Download ngTagsInput <small>{{ site.stable_version }}</small></h1>
 
 <div class="row">
   <div class="col-md-6">
-    <h3>Stable version: {{ site.stable_version }}</h3>
+    <h3>Production version</h3>
     <div class="row">
       <div class="col-md-12">
         You can either download a package with the source code directly <span class="deleted-text">or tell Bower to do that for you</span>.
@@ -15,8 +15,8 @@ layout: default
     <div class="row row-download">
       <div class="col-md-12">
         <h4>Source code</h4>
-        <a href="https://github.com/mbenford/ngTagsInput/releases/download/v0.1.2/ng-tags-input.min.zip" class="btn btn-primary btn-download">Minified</a>
-        <a href="https://github.com/mbenford/ngTagsInput/releases/download/v0.1.2/ng-tags-input.zip" class="btn btn-default btn-download">Unminified</a>
+        <a href="https://github.com/mbenford/ngTagsInput/releases/download/v{{ site.stable_version }}/ng-tags-input.min.zip" class="btn btn-primary btn-download">Minified</a>
+        <a href="https://github.com/mbenford/ngTagsInput/releases/download/v{{ site.stable_version }}/ng-tags-input.zip" class="btn btn-default btn-download">Unminified</a>
       </div>
     </div>
 
@@ -29,19 +29,19 @@ layout: default
   </div>
 
   <div class="col-md-6">
-    <h3>Development version: {{ site.latest_version }}</h3>
+    <h3>Development version</h3>
     <div class="row">
       <div class="col-md-12">
-        If you want to grab the latest bits, you can either download a compressed version of the repository
-        or you can clone it directly from GitHub.
+        If you want to grab the development version, you can either download a compressed version of the repository or
+        you can clone it directly from GitHub.
       </div>
     </div>
 
     <div class="row row-download">
       <div class="col-md-12">
         <h4>Source code</h4>
-        <a href="https://github.com/mbenford/ngTagsInput/archive/v0.1.2.tar.gz" class="btn btn-primary btn-download">.tar.gz</a>
-        <a href="https://github.com/mbenford/ngTagsInput/archive/v0.1.2.zip" class="btn btn-default btn-download">.zip</a>
+        <a href="https://github.com/mbenford/ngTagsInput/archive/v{{ site.stable_version }}.tar.gz" class="btn btn-primary btn-download">.tar.gz</a>
+        <a href="https://github.com/mbenford/ngTagsInput/archive/v{{ site.stable_version }}.zip" class="btn btn-default btn-download">.zip</a>
       </div>
     </div>
 
@@ -49,6 +49,15 @@ layout: default
       <div class="col-md-12">
         <h4>GitHub</h4>
         <pre>git clone https://github.com/mbenford/ngTagsInput.git</pre>
+      </div>
+    </div>
+
+    <div class="row row-download">
+      <div class="col-md-12">
+        <p>
+          Additionally, in case you're interested in contributing to the development of this project, you can
+          <a href="https://github.com/mbenford/ngTagsInput">fork the repository</a> on Github and send your pull request.
+        </p>
       </div>
     </div>
   </div>
