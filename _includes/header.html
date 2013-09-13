@@ -1,5 +1,12 @@
 <head>
-  <title>ngTagsInput - Tags input control for AngularJS</title>
+  {% assign title = site.title %}
+  {% if page.title %}
+  {% assign title = page.title | append:' - ' | append:title %}
+  {% endif %}
+  <title>{{ title }}</title>
+  <meta name="description" content="{{ site.description }}"/>
+  <meta charset="utf-8">
+
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/font-awesome.min.css">

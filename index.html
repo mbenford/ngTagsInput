@@ -1,52 +1,60 @@
 ---
 layout: default
+title:
 ---
 <div ng-controller="HomeCtrl">
-  <div class="jumbotron">
-    <div class="row">
-      <div class="col-md-6">
-        <h1>ngTagsInput</h1>
-        <p><small><strong>Tags input</strong> control for <strong>AngularJS</strong></small></p>
-        <p>
-          <a href="download.html" class="btn btn-primary"><i class="icon-download-alt"></i> Download <small>v{{ site.stable_version }}</small></a>
-          <a href="http://github.com/mbenford/ngTagsInput" class="btn btn-default"><i class="icon-github"></i> View on GitHub</a>
-        </p>
-      </div>
-      <div class="col-md-6">
-        <div class="col-outer">
-          <div class="col-inner">
-            <p>Try it yourself!</p>
-            <tags-input ng-class="tags-input-home" ng-model="tags"></tags-input>
-            <p class="text-right"><small>Check out the <a href="demos.html">demos page</a> to see more examples.</small></p>
+  <section>
+    <div class="jumbotron">
+      <div class="row">
+        <div class="col-md-6">
+          <header>
+            <h1>ngTagsInput</h1>
+            <p class="tagline"><strong>Tags input</strong> control for <strong>AngularJS</strong></small></p>
+          </header>
+          <p>
+            <a href="download.html" class="btn btn-primary"><i class="icon-download-alt"></i> Download <small>v{{ site.stable_version }}</small></a>
+            <a href="http://github.com/mbenford/ngTagsInput" class="btn btn-default"><i class="icon-github"></i> View on GitHub</a>
+          </p>
+        </div>
+        <div class="col-md-6">
+          <div class="col-outer">
+            <div class="col-inner">
+              <p>Try it yourself!</p>
+              <tags-input ng-class="tags-input-home" ng-model="tags"></tags-input>
+              <p class="text-right"><small>Check out the <a href="demos.html">demos page</a> to see more examples.</small></p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-4">
-      <h3>What is a tags input control?</h3>
-      <p>
-        A tags input is an input box that automatically creates tags &ndash; also called tokens &ndash; out of typed
-        text every time a certain key is pressed. It's useful for tagging and highlighting information right on the
-        input box.
-      </p>
+  </section>
+
+  <section>
+    <div class="row">
+      <div class="col-md-4">
+        <h2>What is a tags input control?</h2>
+        <p>
+          A tags input is an input box that automatically creates tags &ndash; also called tokens &ndash; out of typed
+          text every time a certain key is pressed. It's useful for tagging and highlighting information right on the
+          input box.
+        </p>
+      </div>
+      <div class="col-md-4">
+        <h2>What is ngTagsInput?</h2>
+        <p>
+          ngTagsInput is a highly customizable tags input directive built for the AngularJS framework, with no external
+          dependencies. It provides a &lt;tags-input&gt; element so you can semantically express you're using an input
+          with tagging capabilities.
+        </p>
+      </div>
+      <div class="col-md-4">
+        <h2>Where should I use it?</h2>
+        <p>
+          You can benefit from an input with tagging support when you want to let users enter tags for a post,
+          select multiples contacts from a list, or any other situation where it's appropriate to have an inline,
+          as-you-type list of items.
+        </p>
+      </div>
     </div>
-    <div class="col-md-4">
-      <h3>What is ngTagsInput?</h3>
-      <p>
-        ngTagsInput is a highly customizable tags input directive built for the AngularJS framework, with no external
-        dependencies. It provides a &lt;tags-input&gt; element so you can semantically express you're using an input
-        with tagging capabilities.
-      </p>
-    </div>
-    <div class="col-md-4">
-      <h3>Where should I use it?</h3>
-      <p>
-        You can benefit from an input with tagging support when you want to let users enter tags for a post,
-        select multiples contacts from a list, or any other situation where it's appropriate to have an inline,
-        as-you-type list of items.
-      </p>
-    </div>
-  </div>
+  </section>
 </div>
