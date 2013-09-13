@@ -2,7 +2,7 @@ ngTagsInput
 ===========
 [![Build Status](https://travis-ci.org/mbenford/ngTagsInput.png?branch=master)](https://travis-ci.org/mbenford/ngTagsInput)
 
-Simple input control with tag editing support for AngularJS. Check out the [ngTagsInput website](http://mbenford.github.io/ngTagsInput) for more information.
+Tags input control for AngularJS. Check out the [ngTagsInput website](http://mbenford.github.io/ngTagsInput) for more information.
 
 ## Requirements
 
