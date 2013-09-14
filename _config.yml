@@ -3,3 +3,4 @@ markdown: redcarpet
 pygments: true
 exclude: ['node_modules','*.log']
 stable_version: 0.1.2
+production_url: http://mbenford.github.io/ngTagsInput
