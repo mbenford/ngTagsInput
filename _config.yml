@@ -4,4 +4,4 @@ pygments: true
 exclude: ['node_modules','*.log']
 stable_version: 0.1.2
 title: ngTagsInput - Tags input control for AngularJS
-description: ngTagsInput is a highly customizable tags input directive built for the AngularJS framework, with no external dependencies. It provides a <tags-input> element so you can semantically express you're using an input with tagging capabilities.
+description: Highly customizable tags input directive built for the AngularJS framework, with no external dependencies.
