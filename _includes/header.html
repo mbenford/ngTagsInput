@@ -1,10 +1,6 @@
 <head>
-  {% assign title = site.title %}
-  {% if page.title %}
-  {% assign title = page.title | append:' - ' | append:title %}
-  {% endif %}
-  <title>{{ title }}</title>
-  <meta name="description" content="{{ site.description }}"/>
+  <title>{{ page.title }}</title>
+  <meta name="description" content="{{ page.description }}"/>
   <meta charset="utf-8">
 
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>

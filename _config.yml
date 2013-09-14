@@ -3,5 +3,3 @@ markdown: redcarpet
 pygments: true
 exclude: ['node_modules','*.log']
 stable_version: 0.1.2
-title: ngTagsInput - Tags input control for AngularJS
-description: Highly customizable tags input directive built for the AngularJS framework, with no external dependencies.
