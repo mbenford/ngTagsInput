@@ -190,7 +190,7 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().addOnEnter).toBe(true);
+            expect(element.scope().options.addOnEnter).toBe(true);
         });
     });
 
@@ -222,7 +222,7 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().addOnSpace).toBe(false);
+            expect(element.scope().options.addOnSpace).toBe(false);
         });
     });
 
@@ -254,7 +254,7 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().addOnComma).toBe(true);
+            expect(element.scope().options.addOnComma).toBe(true);
         });
     });
 
@@ -280,7 +280,7 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().placeholder).toBe('Add a tag');
+            expect(element.scope().options.placeholder).toBe('Add a tag');
         });
     });
 
@@ -301,7 +301,7 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().removeTagSymbol).toBe(String.fromCharCode(215));
+            expect(element.scope().options.removeTagSymbol).toBe(String.fromCharCode(215));
         });
     });
 
@@ -333,7 +333,7 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().replaceSpacesWithDashes).toBe(true);
+            expect(element.scope().options.replaceSpacesWithDashes).toBe(true);
         });
     });
 
@@ -365,7 +365,7 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().allowedTagsPattern.toString()).toBe('/^[a-zA-Z0-9\\s]+$/');
+            expect(element.scope().options.allowedTagsPattern.toString()).toBe('/^[a-zA-Z0-9\\s]+$/');
         });
     });
 
@@ -386,7 +386,7 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().minLength).toBe(3);
+            expect(element.scope().options.minLength).toBe(3);
         });
     });
 
@@ -399,20 +399,12 @@ describe('tags-input-directive', function() {
             expect(getInput().attr('maxlength')).toBe('10');
         });
 
-        it('initializes the option to min-length when it is greater than placeholder length', function() {
+        it('initializes the option to empty', function() {
             // Arrange/Act
-            compile('min-length="10" placeholder="New tag"');
+            compile();
 
             // Assert
-            expect(element.scope().maxLength).toBe(10);
-        });
-
-        it('initializes the option to placeholder length when it is greater than min-length', function() {
-            // Arrange/Act
-            compile('min-length="3" placeholder="New tag"');
-
-            // Assert
-            expect(element.scope().maxLength).toBe(7);
+            expect(getInput().attr('maxlength')).toBe('');
         });
     });
 
@@ -426,7 +418,7 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().enableEditingLastTag).toBe(false);
+            expect(element.scope().options.enableEditingLastTag).toBe(false);
         });
 
         describe('option is on', function() {
