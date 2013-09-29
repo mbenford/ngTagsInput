@@ -152,6 +152,54 @@ describe('tags-input-directive', function() {
         });
     });
 
+    describe('callback functions', function() {
+        it('calls onTagAdded when a new tag is added', function() {
+            
+            // Arrange
+            $rootScope.myAddCallback = function(tag){};
+            compile('tabindex="1" on-tag-added="myAddCallback(tag)"');
+            spyOn($rootScope, 'myAddCallback');
+
+            // Act
+            newTag('foo', ENTER);
+            
+            // Assert
+            expect($rootScope.myAddCallback).toHaveBeenCalledWith('foo');
+        });
+        
+        it('calls onTagRemoved when a tag is removed by clicking button', function() {
+            
+            // Arrange
+            $rootScope.tags = ['some','cool','tags'];
+            $rootScope.myRemoveCallback = function(tag){};
+            compile('tabindex="1" on-tag-removed="myRemoveCallback(tag)"');
+            spyOn($rootScope, 'myRemoveCallback');
+
+            // Act
+            element.find('button').click();
+            
+            // Assert
+            expect($rootScope.myRemoveCallback).toHaveBeenCalledWith('some');
+            expect($rootScope.myRemoveCallback).toHaveBeenCalledWith('cool');
+            expect($rootScope.myRemoveCallback).toHaveBeenCalledWith('tags');
+        });
+        
+        it('calls onTagRemoved when last tag is removed using backspace', function() {
+            
+            // Arrange
+            $rootScope.tags = ['some','cool','tags'];
+            $rootScope.myRemoveCallback = function(tag){};
+            compile('tabindex="1" enable-editing-last-tag="true" on-tag-removed="myRemoveCallback(tag)"');
+            spyOn($rootScope, 'myRemoveCallback');
+
+            // Act
+            sendBackspace();
+            
+            // Assert
+            expect($rootScope.myRemoveCallback).toHaveBeenCalledWith('tags');
+        });         
+    });    
+    
     describe('tabindex option', function() {
         it('sets correctly the input box tab index', function() {
             // Arrange/Act
