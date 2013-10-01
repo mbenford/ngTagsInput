@@ -153,7 +153,26 @@ describe('tags-input-directive', function() {
     });
 
     describe('tabindex option', function() {
-        it('sets the input box tab index', function() {
+        it('sets the tabindex option given a static string', function() {
+            // Arrange/Act
+            compile('tabindex="1"');
+
+            // Assert
+            expect(element.scope().options.tabindex).toBe(1);
+        });
+
+        it('sets the tabindex option given an interpolated string', function() {
+            // Arrange
+            $scope.value = 1;
+
+            // Act
+            compile('tabindex="{{ value }}"');
+
+            // Assert
+            expect(element.scope().options.tabindex).toBe(1);
+        });
+
+        it('sets the input field tab index', function() {
             // Arrange/Act
             compile('tabindex="1"');
 
@@ -275,7 +294,7 @@ describe('tags-input-directive', function() {
             expect(getInput().attr('size')).toBe('7');
         });
 
-        it('sets placeholder option given a static string', function() {
+        it('sets the placeholder option given a static string', function() {
             // Arrange/Act
             compile('placeholder="New tag"');
 
@@ -283,7 +302,7 @@ describe('tags-input-directive', function() {
             expect(element.scope().options.placeholder).toBe('New tag');
         });
 
-        it('sets placeholder option given an interpolated string', function() {
+        it('sets the placeholder option given an interpolated string', function() {
             // Arrange
             $scope.value = 'New tag';
 

@@ -37,7 +37,7 @@ angular.module('tags-input', []).directive('tagsInput', function($interpolate) {
 
         scope.options = {
             placeholder: get('placeholder', 'Add a tag'),
-            tabindex: attrs.tabindex,
+            tabindex: parseInt(get('tabindex')),
             removeTagSymbol: get('removeTagSymbol', String.fromCharCode(215)),
             replaceSpacesWithDashes: toBool(attrs.replaceSpacesWithDashes, true),
             minLength: attrs.minLength || 3,
