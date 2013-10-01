@@ -25,16 +25,20 @@
  *                                             is pressed and the input box is empty.
  */
 
-angular.module('tags-input', []).directive('tagsInput', function() {
+angular.module('tags-input', []).directive('tagsInput', function($interpolate) {
     function toBool(value, defaultValue) {
         return angular.isDefined(value) ? value === 'true' : defaultValue;
     }
-    
+
     function loadOptions(scope, attrs) {
+        function get(name, defaultValue) {
+            return attrs[name] ? $interpolate(attrs[name])(scope.$parent) : defaultValue;
+        }
+
         scope.options = {
-            placeholder: attrs.placeholder || 'Add a tag',
+            placeholder: get('placeholder', 'Add a tag'),
             tabindex: attrs.tabindex,
-            removeTagSymbol: attrs.removeTagSymbol || String.fromCharCode(215),
+            removeTagSymbol: get('removeTagSymbol', String.fromCharCode(215)),
             replaceSpacesWithDashes: toBool(attrs.replaceSpacesWithDashes, true),
             minLength: attrs.minLength || 3,
             maxLength: attrs.maxLength || '',

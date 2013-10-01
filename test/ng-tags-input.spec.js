@@ -93,7 +93,7 @@ describe('tags-input-directive', function() {
             expect(getTagText(2)).toBe('tags');
         });
 
-        it('updates correctly the model', function() {
+        it('updates the model', function() {
             // Arrange
             compile();
 
@@ -153,7 +153,7 @@ describe('tags-input-directive', function() {
     });
 
     describe('tabindex option', function() {
-        it('sets correctly the input box tab index', function() {
+        it('sets the input box tab index', function() {
             // Arrange/Act
             compile('tabindex="1"');
 
@@ -259,7 +259,7 @@ describe('tags-input-directive', function() {
     });
 
     describe('placeholder option', function() {
-        it('sets correctly the input field placeholder text', function() {
+        it('sets the input field placeholder text', function() {
             // Arrange/Act
             compile('placeholder="New tag"');
 
@@ -275,6 +275,25 @@ describe('tags-input-directive', function() {
             expect(getInput().attr('size')).toBe('7');
         });
 
+        it('sets placeholder option given a static string', function() {
+            // Arrange/Act
+            compile('placeholder="New tag"');
+
+            // Assert
+            expect(element.scope().options.placeholder).toBe('New tag');
+        });
+
+        it('sets placeholder option given an interpolated string', function() {
+            // Arrange
+            $scope.value = 'New tag';
+
+            // Act
+            compile('placeholder="{{ value }}"');
+
+            // Assert
+            expect(element.scope().options.placeholder).toBe('New tag');
+        });
+
         it('initializes the option to "Add a tag"', function() {
             // Arrange/Act
             compile();
@@ -285,7 +304,7 @@ describe('tags-input-directive', function() {
     });
 
     describe('remove-tag-symbol option', function() {
-        it('sets correctly the remove button text', function() {
+        it('sets the remove button text', function() {
             // Arrange/Act
             $scope.tags = ['foo'];
 
@@ -294,6 +313,25 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect(element.find('button').html()).toBe('X');
+        });
+
+        it('sets the remove button option given a static string', function() {
+            // Arrange/Act
+            compile('remove-tag-symbol="X"');
+
+            // Assert
+            expect(element.scope().options.removeTagSymbol).toBe('X');
+        });
+
+        it('sets the remove button option given an interpolated string', function() {
+            // Arrange
+            $scope.value = 'X';
+
+            // Act
+            compile('remove-tag-symbol="{{ value }}"');
+
+            // Assert
+            expect(element.scope().options.removeTagSymbol).toBe('X');
         });
 
         it('initializes the option to charcode 215 (&times;)', function() {
