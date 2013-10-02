@@ -23,6 +23,7 @@
         "grunt-contrib-jshint": "=0.6.3",
         "grunt-contrib-compress": "=0.5.2",
         "grunt-contrib-clean": "=0.5.0",
+        "grunt-ngmin": "=0.0.3",
         "grunt-karma": "=0.6.2"
     }
 }

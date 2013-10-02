@@ -74,7 +74,7 @@ angular.module('tags-input', []).directive('tagsInput', function($interpolate) {
                   '  </ul>' +
                   '  <input type="text" placeholder="{{ options.placeholder }}" size="{{ options.placeholder.length }}" maxlength="{{ options.maxLength }}" tabindex="{{ options.tabindex }}" ng-model="newTag">' +
                   '</div>',
-        controller: ['$scope', '$attrs', function($scope, $attrs) {
+        controller: function($scope, $attrs) {
             loadOptions($scope, $attrs);
 
             $scope.newTag = '';
@@ -134,7 +134,7 @@ angular.module('tags-input', []).directive('tagsInput', function($interpolate) {
                 $scope.shouldRemoveLastTag = false;
             });
 
-        }],
+        },
         link: function(scope, element) {
             var ENTER = 13, COMMA = 188, SPACE = 32, BACKSPACE = 8;
 
