@@ -48,14 +48,14 @@ module.exports = function(grunt) {
         ngmin: {
             directives: {
                 files: {
-                    'tmp/<%= pkg.name %>.js.tmp': ['<%= files.js %>']
+                    'tmp/<%= files.js %>.tmp': ['<%= files.js %>']
                 }
             }
         },
         uglify: {
             build: {
                 files: {
-                    'tmp/<%= pkg.name %>.min.js': ['tmp/<%= pkg.name %>.js.tmp']
+                    'tmp/<%= pkg.name %>.min.js': ['tmp/<%= files.js %>.tmp']
                 }
             }
         },
