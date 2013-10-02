@@ -31,30 +31,41 @@ angular.module('tags-input', []).directive('tagsInput', function($interpolate) {
     }
 
     function loadOptions(scope, attrs) {
-        function get(name, defaultValue) {
+        function getStr(name, defaultValue) {
             return attrs[name] ? $interpolate(attrs[name])(scope.$parent) : defaultValue;
         }
 
+        function getInt(name, defaultValue) {
+            var value = getStr(name, null);
+            return value ? parseInt(value, 10) : defaultValue;
+        }
+
+        function getBool(name, defaultValue) {
+            var value = getStr(name, null);
+            return value ? value === 'true' : defaultValue;
+        }
+
         scope.options = {
-            placeholder: get('placeholder', 'Add a tag'),
-            tabindex: parseInt(get('tabindex'), 10),
-            removeTagSymbol: get('removeTagSymbol', String.fromCharCode(215)),
-            replaceSpacesWithDashes: toBool(attrs.replaceSpacesWithDashes, true),
-            minLength: attrs.minLength || 3,
-            maxLength: attrs.maxLength || '',
-            addOnEnter: toBool(attrs.addOnEnter, true),
-            addOnSpace: toBool(attrs.addOnSpace, false),
-            addOnComma: toBool(attrs.addOnComma, true),
-            allowedTagsPattern: new RegExp(attrs.allowedTagsPattern || '^[a-zA-Z0-9\\s]+$'),
-            enableEditingLastTag: toBool(attrs.enableEditingLastTag, false)
+            cssClass: getStr('ngClass', ''),
+            placeholder: getStr('placeholder', 'Add a tag'),
+            tabindex: getInt('tabindex', ''),
+            removeTagSymbol: getStr('removeTagSymbol', String.fromCharCode(215)),
+            replaceSpacesWithDashes: getBool('replaceSpacesWithDashes', true),
+            minLength: getInt('minLength', 3),
+            maxLength: getInt('maxLength', ''),
+            addOnEnter: getBool('addOnEnter', true),
+            addOnSpace: getBool('addOnSpace', false),
+            addOnComma: getBool('addOnComma', true),
+            allowedTagsPattern: new RegExp(getStr('allowedTagsPattern', '^[a-zA-Z0-9\\s]+$')),
+            enableEditingLastTag: getBool('enableEditingLastTag', false)
         };
     }
 
     return {
         restrict: 'A,E',
-        scope: { tags: '=ngModel', cssClass: '@ngClass' },
+        scope: { tags: '=ngModel' },
         replace: false,
-        template: '<div class="ngTagsInput {{ cssClass }}">' +
+        template: '<div class="ngTagsInput {{ options.cssClass }}">' +
                   '  <ul>' +
                   '    <li ng-repeat="tag in tags" ng-class="getCssClass($index)">' +
                   '      <span>{{ tag }}</span>' +
