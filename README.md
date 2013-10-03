@@ -2,7 +2,7 @@ ngTagsInput
 ===========
 [![Build Status](https://travis-ci.org/mbenford/ngTagsInput.png?branch=master)](https://travis-ci.org/mbenford/ngTagsInput)
 
-Tags input control for AngularJS. Check out the [ngTagsInput website](http://mbenford.github.io/ngTagsInput) for more information.
+Tags input directive for AngularJS. Check out the [ngTagsInput website](http://mbenford.github.io/ngTagsInput) for more information.
 
 ## Requirements
 
@@ -11,7 +11,7 @@ Tags input control for AngularJS. Check out the [ngTagsInput website](http://mbe
 
 ## Installing
 
-Download either `ng-tags-input.min.zip` or `ng-tags-input.zip` from the `build` folder and add its content files to your web application. Make sure the JavaScript script is included after the AngularJS script.
+Download either `ng-tags-input.min.zip` or `ng-tags-input.zip` from the [Releases page](https://github.com/mbenford/ngTagsInput/releases) and add its content files to your web application. Make sure the JavaScript file is included after the AngularJS script.
 
 ## Usage
 

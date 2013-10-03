@@ -26,10 +26,6 @@
  */
 
 angular.module('tags-input', []).directive('tagsInput', function($interpolate) {
-    function toBool(value, defaultValue) {
-        return angular.isDefined(value) ? value === 'true' : defaultValue;
-    }
-
     function loadOptions(scope, attrs) {
         function getStr(name, defaultValue) {
             return attrs[name] ? $interpolate(attrs[name])(scope.$parent) : defaultValue;

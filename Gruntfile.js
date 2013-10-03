@@ -11,25 +11,7 @@ module.exports = function(grunt) {
         jshint: {
             files: ['Gruntfile.js', '<%= files.js %>', '<%= files.spec %>'],
             options: {
-                curly: true,
-                eqeqeq: true,
-                immed: true,
-                noempty: true,
-                noarg: true,
-                quotmark: 'single',
-                undef: true,
-                eqnull: true,
-                globals: {
-                    angular: true,
-                    module: true,
-                    inject: true,
-                    jQuery: true,
-                    beforeEach: true,
-                    describe: true,
-                    it: true,
-                    expect: true,
-                    spyOn: true
-                }
+                jshintrc: '.jshintrc'
             }
         },
         karma: {
