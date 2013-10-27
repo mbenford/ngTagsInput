@@ -25,7 +25,9 @@
  *                                             is pressed and the input box is empty.
  */
 
-angular.module('tags-input', []).directive('tagsInput', function($interpolate) {
+var tagsInput = angular.module('tags-input', []);
+
+tagsInput.directive('tagsInput', function($interpolate) {
     function loadOptions(scope, attrs) {
         function getStr(name, defaultValue) {
             return attrs[name] ? $interpolate(attrs[name])(scope.$parent) : defaultValue;
@@ -61,16 +63,21 @@ angular.module('tags-input', []).directive('tagsInput', function($interpolate) {
         restrict: 'A,E',
         scope: { tags: '=ngModel' },
         replace: false,
-        template: '<div class="ngTagsInput {{ options.cssClass }}">' +
-                  '  <ul>' +
-                  '    <li ng-repeat="tag in tags" ng-class="getCssClass($index)">' +
-                  '      <span>{{ tag }}</span>' +
-                  '      <button type="button" ng-click="remove($index)">{{ options.removeTagSymbol }}</button>' +
-                  '    </li>' +
-                  '  </ul>' +
-                  '  <input type="text" placeholder="{{ options.placeholder }}" size="{{ options.placeholder.length }}" maxlength="{{ options.maxLength }}" tabindex="{{ options.tabindex }}" ng-model="newTag">' +
+        transclude: true,
+        template: '<div class="ngTagsInput {{ options.cssClass }}" ng-transclude>' +
+                  '  <div class="tags">' +
+                  '    <ul>' +
+                  '      <li ng-repeat="tag in tags" ng-class="getCssClass($index)">' +
+                  '        <span>{{ tag }}</span>' +
+                  '        <button type="button" ng-click="remove($index)">{{ options.removeTagSymbol }}</button>' +
+                  '      </li>' +
+                  '    </ul>' +
+                  '    <input type="text" placeholder="{{ options.placeholder }}" size="{{ options.placeholder.length }}" maxlength="{{ options.maxLength }}" tabindex="{{ options.tabindex }}" ng-model="newTag" ng-change="change()">' +
+                  '  </div>' +
                   '</div>',
-        controller: function($scope, $attrs) {
+        controller: function($scope, $attrs, $element) {
+            var notifyAutocomplete = angular.noop;
+
             loadOptions($scope, $attrs);
 
             $scope.newTag = '';
@@ -130,6 +137,21 @@ angular.module('tags-input', []).directive('tagsInput', function($interpolate) {
                 $scope.shouldRemoveLastTag = false;
             });
 
+            $scope.change = function () {
+                notifyAutocomplete($scope.newTag);
+            };
+
+            this.getNewTagInput = function() {
+                return $element.find('input');
+            };
+
+            this.setInputValue = function(value) {
+                $scope.newTag = value;
+            };
+
+            this.registerCallback = function(callback) {
+                notifyAutocomplete = callback;
+            };
         },
         link: function(scope, element) {
             var ENTER = 13, COMMA = 188, SPACE = 32, BACKSPACE = 8;
@@ -160,4 +182,162 @@ angular.module('tags-input', []).directive('tagsInput', function($interpolate) {
         }
     };
 });
+
+tagsInput.directive('autocomplete', function($document) {
+
+    function Suggestions(loadFn) {
+        var self = this;
+
+        self.reset = function() {
+            self.items = [];
+            self.visible = false;
+            self.index = -1;
+            self.selected = null;
+        };
+        self.show = function() {
+            self.select(0);
+            self.visible = true;
+        };
+        self.hide = function() {
+            self.visible = false;
+        };
+        self.load = function(text) {
+            loadFn(text).then(function(items) {
+                self.items = items;
+                if (items.length > 0) {
+                    self.show();
+                }
+            });
+        };
+        self.next = function() {
+            self.select(++self.index);
+        };
+        self.prior = function() {
+            self.select(--self.index);
+        };
+        self.select = function(index) {
+            if (index < 0) {
+                index = self.items.length - 1;
+            }
+            else if (index >= self.items.length) {
+                index = 0;
+            }
+            self.index = index;
+            self.selected = self.items[index];
+        };
+
+        self.reset();
+    }
+
+    var hotkeys = {
+        9: { name: 'tab' },
+        13: { name: 'enter' },
+        27: { name: 'escape' },
+        38: { name: 'up' },
+        40: { name: 'down' }
+    };
+
+    return {
+        restrict: 'A,E',
+        require: '?^tagsInput',
+        scope: { source: '&'},
+        template: '<div class="autocomplete" ng-show="suggestions.visible">' +
+                  '  <ul class="suggestions">' +
+                  '    <li class="suggestion" ng-repeat="item in suggestions.items"' +
+                  '                           ng-class="{selected: item == suggestions.selected}"' +
+                  '                           ng-click="addSuggestion()"' +
+                  '                           ng-mouseenter="selectSuggestion($index)">{{ item }}</li>' +
+                  '  </ul>' +
+                  '</div>',
+        controller: function() {
+        },
+        link: function(scope, element, attrs, tagsInput) {
+            tagsInput.registerCallback(function(value) {
+                if (value) {
+                    scope.loadSuggestions(value);
+                } else {
+                    scope.hideSuggestions();
+                }
+            });
+
+            var input = tagsInput.getNewTagInput();
+
+            scope.suggestions = new Suggestions(scope.source());
+
+            scope.loadSuggestions = function(text) {
+                if (scope.suggestions.selected === text) {
+                    return;
+                }
+                scope.suggestions.load(text);
+            };
+
+            scope.showSuggestions = function () {
+                scope.suggestions.show();
+            };
+
+            scope.hideSuggestions = function() {
+                scope.suggestions.reset();
+            };
+
+            scope.nextSuggestion = function() {
+                if (scope.suggestions.visible) {
+                    scope.suggestions.next();
+                }
+                else {
+                    scope.loadSuggestions('');
+                }
+            };
+
+            scope.priorSuggestion = function() {
+                scope.suggestions.prior();
+            };
+
+            scope.selectSuggestion = function(index) {
+                scope.suggestions.select(index);
+            };
+
+            scope.addSuggestion = function() {
+                tagsInput.setInputValue(scope.suggestions.selected);
+                scope.hideSuggestions();
+
+                input[0].focus();
+            };
+
+            input.bind('keydown', function(e) {
+                var key = hotkeys[e.keyCode];
+
+                if (!key) {
+                    return;
+                }
+
+                if (key.name === 'down') {
+                    scope.nextSuggestion();
+                    e.preventDefault();
+                    scope.$apply();
+                }
+                else if (scope.suggestions.visible) {
+                    if (key.name === 'up') {
+                        scope.priorSuggestion();
+                    }
+                    else if (key.name === 'escape') {
+                        scope.hideSuggestions();
+                    }
+                    else if (key.name === 'enter' || key.name === 'tab') {
+                        scope.addSuggestion();
+                    }
+                    e.preventDefault();
+                    scope.$apply();
+                }
+            });
+
+            $document.bind('click', function(e) {
+                if (scope.suggestions.visible) {
+                    scope.hideSuggestions();
+                    scope.$apply();
+                }
+            });
+        }
+    };
+});
+
 }());

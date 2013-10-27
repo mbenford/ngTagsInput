@@ -15,6 +15,7 @@ module.exports = function(config) {
       'test/lib/angular.js',
       'test/lib/angular-mocks.js',
       'test/ng-tags-input.spec.js',
+      'test/autocomplete.spec.js',
       'src/ng-tags-input.js'
     ],
 
