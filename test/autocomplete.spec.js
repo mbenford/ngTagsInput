@@ -5,7 +5,7 @@ describe('', function () {
     var ENTER = 13, TAB = 9, BACKSPACE = 8, ESCAPE = 27, DOWN_ARROW = 40, UP_ARROW = 38;
 
     var $compile, $scope, $q,
-        parentCtrl, element, input, inputCallback, deferred;
+        parentCtrl, element, input, changeHandler, deferred;
 
     beforeEach(function () {
         module('tags-input');
@@ -24,13 +24,13 @@ describe('', function () {
 
     function compile() {
         input = angular.element('<input type="text">');
+        input.changeValue = jasmine.createSpy();
+        input.change = jasmine.createSpy().andCallFake(function(handler) { changeHandler = handler; });
 
         var parent = $compile('<tags-input ng-model="whatever"></tags-input>')($scope);
         parentCtrl = parent.controller('tagsInput');
 
-        spyOn(parentCtrl, 'getNewTagInput').andReturn(input);
-        spyOn(parentCtrl, 'setInputValue').andCallFake(function(value) { input.val(value); });
-        spyOn(parentCtrl, 'registerCallback').andCallFake(function(callback) { inputCallback = callback; });
+        spyOn(parentCtrl, 'getInputWrapper').andReturn(input);
 
         element = angular.element('<autocomplete source="loadItems"></autocomplete>');
         parent.append(element);
@@ -51,17 +51,8 @@ describe('', function () {
         return event;
     }
 
-    function sendBackspace() {
-        var event = sendKeyDown(BACKSPACE);
-        if (!event.isDefaultPrevented()) {
-            var value = input.val();
-            changeInputValue(value.substr(0, value.length - 1));
-        }
-    }
-
     function changeInputValue(value) {
-        input.val(value);
-        inputCallback(value);
+        changeHandler(value);
         $scope.$digest();
     }
 
@@ -165,7 +156,7 @@ describe('', function () {
             sendKeyDown(ENTER);
 
             // Assert
-            expect(input.val()).toBe('Item1');
+            expect(input.changeValue).toHaveBeenCalledWith('Item1');
         });
 
         it('adds the selected suggestion to the input field when the tab key is pressed and there is a suggestion selected', function() {
@@ -178,7 +169,20 @@ describe('', function () {
             sendKeyDown(TAB);
 
             // Assert
-            expect(input.val()).toBe('Item1');
+            expect(input.changeValue).toHaveBeenCalledWith('Item1');
+        });
+
+        it('does not change the input value when the enter key is pressed and there is nothing selected', function () {
+            // Arrange
+            input.val('abc');
+            loadSuggestions(['Item1', 'Item2']);
+            element.scope().showSuggestions();
+
+            // Act
+            sendKeyDown(ENTER);
+
+            // Assert
+            expect(input.val()).toBe('abc');
         });
 
         it('sets the selected suggestion to null after adding it to the input field', function () {
@@ -254,22 +258,12 @@ describe('', function () {
             expect(getSuggestion(2).hasClass('selected')).toBe(false);
         });
 
-        it('selects the first item after the suggestion box is shown', function () {
+        it('selects no suggestion after the suggestion box is shown', function () {
             // Arrange/Act
             loadSuggestions(['Item1', 'Item2']);
 
             // Assert
-            expect(element.scope().suggestions.selected).toBe('Item1');
-        });
-
-        describe('suggestion box size and position', function() {
-            beforeEach(function () {
-                var container = angular.element('<div style="text-align: center;"></div>');
-                $(document.body).append(container);
-                var template = angular.element('<input type="text" ng-model="value" auto-complete="loadItems">');
-                container.append(template);
-                compile(template);
-            });
+            expect(element.scope().suggestions.selected).toBeNull();
         });
     });
 
@@ -355,7 +349,7 @@ describe('', function () {
                 getSuggestion(1).click();
 
                 // Assert
-                expect(input.val()).toBe('Item2');
+                expect(input.changeValue).toHaveBeenCalledWith('Item2');
             });
 
             it('focuses the input field when a suggestion is added via a mouse click', function() {

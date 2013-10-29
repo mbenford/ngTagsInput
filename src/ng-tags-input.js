@@ -72,12 +72,10 @@ tagsInput.directive('tagsInput', function($interpolate) {
                   '        <button type="button" ng-click="remove($index)">{{ options.removeTagSymbol }}</button>' +
                   '      </li>' +
                   '    </ul>' +
-                  '    <input type="text" placeholder="{{ options.placeholder }}" size="{{ options.placeholder.length }}" maxlength="{{ options.maxLength }}" tabindex="{{ options.tabindex }}" ng-model="newTag" ng-change="change()">' +
+                  '    <input type="text" placeholder="{{ options.placeholder }}" size="{{ options.placeholder.length }}" maxlength="{{ options.maxLength }}" tabindex="{{ options.tabindex }}" ng-model="newTag" ng-change="newTagChange()">' +
                   '  </div>' +
                   '</div>',
         controller: function($scope, $attrs, $element) {
-            var notifyAutocomplete = angular.noop;
-
             loadOptions($scope, $attrs);
 
             $scope.newTag = '';
@@ -137,20 +135,21 @@ tagsInput.directive('tagsInput', function($interpolate) {
                 $scope.shouldRemoveLastTag = false;
             });
 
-            $scope.change = function () {
-                notifyAutocomplete($scope.newTag);
-            };
+            $scope.newTagChange = angular.noop;
 
-            this.getNewTagInput = function() {
-                return $element.find('input');
-            };
+            this.getInputWrapper = function() {
+                var input = $element.find('input');
+                input.changeValue = function(value) {
+                    $scope.newTag = value;
+                };
 
-            this.setInputValue = function(value) {
-                $scope.newTag = value;
-            };
+                input.change = function(handler) {
+                    $scope.newTagChange = function() {
+                        handler($scope.newTag);
+                    };
+                };
 
-            this.registerCallback = function(callback) {
-                notifyAutocomplete = callback;
+                return input;
             };
         },
         link: function(scope, element) {
@@ -195,7 +194,7 @@ tagsInput.directive('autocomplete', function($document) {
             self.selected = null;
         };
         self.show = function() {
-            self.select(0);
+            self.selected = null;
             self.visible = true;
         };
         self.hide = function() {
@@ -252,15 +251,14 @@ tagsInput.directive('autocomplete', function($document) {
         controller: function() {
         },
         link: function(scope, element, attrs, tagsInput) {
-            tagsInput.registerCallback(function(value) {
+            var input = tagsInput.getInputWrapper();
+            input.change(function(value) {
                 if (value) {
                     scope.loadSuggestions(value);
                 } else {
                     scope.hideSuggestions();
                 }
             });
-
-            var input = tagsInput.getNewTagInput();
 
             scope.suggestions = new Suggestions(scope.source());
 
@@ -297,7 +295,9 @@ tagsInput.directive('autocomplete', function($document) {
             };
 
             scope.addSuggestion = function() {
-                tagsInput.setInputValue(scope.suggestions.selected);
+                if (scope.suggestions.selected) {
+                    input.changeValue(scope.suggestions.selected);
+                }
                 scope.hideSuggestions();
 
                 input[0].focus();
