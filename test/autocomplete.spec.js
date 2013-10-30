@@ -174,7 +174,6 @@ describe('', function () {
 
         it('does not change the input value when the enter key is pressed and there is nothing selected', function () {
             // Arrange
-            input.val('abc');
             loadSuggestions(['Item1', 'Item2']);
             element.scope().showSuggestions();
 
@@ -182,7 +181,7 @@ describe('', function () {
             sendKeyDown(ENTER);
 
             // Assert
-            expect(input.val()).toBe('abc');
+            expect(input.changeValue).not.toHaveBeenCalled();
         });
 
         it('sets the selected suggestion to null after adding it to the input field', function () {
@@ -273,10 +272,6 @@ describe('', function () {
         });
 
         describe('downward', function() {
-            beforeEach(function() {
-                element.scope().showSuggestions();
-            });
-
             it('selects the next suggestion when the down arrow key is pressed and there\'s something selected', function() {
                 // Arrange
                 loadSuggestions(['Item1', 'Item2']);
