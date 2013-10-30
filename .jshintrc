@@ -12,10 +12,13 @@
         "module": true,
         "inject": true,
         "jQuery": true,
+        "document": true,
+        "$": true,
         "beforeEach": true,
         "describe": true,
         "it": true,
         "expect": true,
+        "jasmine": true,
         "spyOn": true
     }
 }

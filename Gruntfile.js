@@ -6,7 +6,7 @@ module.exports = function(grunt) {
         files: {
             js: 'src/<%= pkg.name %>.js',
             css: 'src/<%= pkg.name %>.css',
-            spec: 'test/<%= pkg.name %>.spec.js'
+            spec: 'test/*.spec.js'
         },
         jshint: {
             files: ['Gruntfile.js', '<%= files.js %>', '<%= files.spec %>'],
