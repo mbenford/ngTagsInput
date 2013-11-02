@@ -73,7 +73,7 @@ describe('', function () {
     }
 
     function loadSuggestions(items) {
-        element.scope().loadSuggestions('');
+        element.scope().suggestions.load('');
         resolve(items);
     }
 
@@ -112,7 +112,7 @@ describe('', function () {
         it('hides the suggestion box when the input field becomes empty', function() {
             // Arrange
             changeInputValue('foobar');
-            element.scope().showSuggestions();
+            element.scope().suggestions.show();
             $scope.$digest();
 
             // Act
@@ -124,7 +124,7 @@ describe('', function () {
 
         it('hides the suggestion box when the escape key is pressed', function() {
             // Arrange
-            element.scope().showSuggestions();
+            element.scope().suggestions.show();
             $scope.$digest();
 
             // Act
@@ -136,7 +136,7 @@ describe('', function () {
 
         it('hides the suggestion box when the user clicks elsewhere on the page', function() {
             // Arrange
-            element.scope().showSuggestions();
+            element.scope().suggestions.show();
             $scope.$digest();
 
             // Act
@@ -149,7 +149,7 @@ describe('', function () {
         it('adds the selected suggestion to the input field when the enter key is pressed and the suggestions box is visible', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
-            element.scope().showSuggestions();
+            element.scope().suggestions.show();
             element.scope().selectSuggestion(0);
 
             // Act
@@ -162,7 +162,7 @@ describe('', function () {
         it('adds the selected suggestion to the input field when the tab key is pressed and there is a suggestion selected', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
-            element.scope().showSuggestions();
+            element.scope().suggestions.show();
             element.scope().selectSuggestion(0);
 
             // Act
@@ -175,7 +175,7 @@ describe('', function () {
         it('does not change the input value when the enter key is pressed and there is nothing selected', function () {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
-            element.scope().showSuggestions();
+            element.scope().suggestions.show();
 
             // Act
             sendKeyDown(ENTER);
@@ -199,7 +199,7 @@ describe('', function () {
         it('hides the suggestion box after adding the selected suggestion to the input field', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
-            element.scope().showSuggestions();
+            element.scope().suggestions.show();
             element.scope().selectSuggestion(0);
 
             // Act
@@ -225,7 +225,7 @@ describe('', function () {
         it('does not call the load function after adding the selected suggestion to the input field', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
-            element.scope().showSuggestions();
+            element.scope().suggestions.show();
             element.scope().selectSuggestion(0);
 
             // Act
@@ -268,7 +268,7 @@ describe('', function () {
 
     describe('navigation through suggestions', function() {
         beforeEach(function() {
-            element.scope().showSuggestions();
+            element.scope().suggestions.show();
         });
 
         describe('downward', function() {
@@ -363,7 +363,7 @@ describe('', function () {
 
     describe('hotkeys propagation handling - suggestion box is visible', function () {
         beforeEach(function () {
-            element.scope().showSuggestions();
+            element.scope().suggestions.show();
         });
 
         it('prevents the down arrow keydown event from being propagated', function () {
@@ -389,7 +389,7 @@ describe('', function () {
 
     describe('hotkeys propagation handling - suggestion box is hidden', function () {
         beforeEach(function () {
-            element.scope().hideSuggestions();
+            element.scope().suggestions.reset();
         });
 
         it('prevents the down arrow keydown event from being propagated', function () {

@@ -183,9 +183,8 @@ tagsInput.directive('tagsInput', function($interpolate) {
 });
 
 tagsInput.directive('autocomplete', function($document) {
-
-    function Suggestions(loadFn) {
-        var self = this;
+    var suggestions = function(loadFn) {
+        var self = {};
 
         self.reset = function() {
             self.items = [];
@@ -201,6 +200,10 @@ tagsInput.directive('autocomplete', function($document) {
             self.visible = false;
         };
         self.load = function(text) {
+            if (self.selected === text) {
+                return;
+            }
+
             loadFn(text).then(function(items) {
                 self.items = items;
                 if (items.length > 0) {
@@ -226,7 +229,9 @@ tagsInput.directive('autocomplete', function($document) {
         };
 
         self.reset();
-    }
+
+        return self;
+    };
 
     var hotkeys = {
         9: { name: 'tab' },
@@ -251,44 +256,16 @@ tagsInput.directive('autocomplete', function($document) {
         controller: function() {
         },
         link: function(scope, element, attrs, tagsInput) {
-            var input = tagsInput.getInputWrapper();
+            var input = tagsInput.getInputWrapper();            
             input.change(function(value) {
                 if (value) {
-                    scope.loadSuggestions(value);
+                    scope.suggestions.load(value);
                 } else {
-                    scope.hideSuggestions();
+                    scope.suggestions.reset();
                 }
             });
 
-            scope.suggestions = new Suggestions(scope.source());
-
-            scope.loadSuggestions = function(text) {
-                if (scope.suggestions.selected === text) {
-                    return;
-                }
-                scope.suggestions.load(text);
-            };
-
-            scope.showSuggestions = function () {
-                scope.suggestions.show();
-            };
-
-            scope.hideSuggestions = function() {
-                scope.suggestions.reset();
-            };
-
-            scope.nextSuggestion = function() {
-                if (scope.suggestions.visible) {
-                    scope.suggestions.next();
-                }
-                else {
-                    scope.loadSuggestions('');
-                }
-            };
-
-            scope.priorSuggestion = function() {
-                scope.suggestions.prior();
-            };
+            scope.suggestions = suggestions(scope.source());
 
             scope.selectSuggestion = function(index) {
                 scope.suggestions.select(index);
@@ -298,7 +275,7 @@ tagsInput.directive('autocomplete', function($document) {
                 if (scope.suggestions.selected) {
                     input.changeValue(scope.suggestions.selected);
                 }
-                scope.hideSuggestions();
+                scope.suggestions.reset();
 
                 input[0].focus();
             };
@@ -311,16 +288,21 @@ tagsInput.directive('autocomplete', function($document) {
                 }
 
                 if (key.name === 'down') {
-                    scope.nextSuggestion();
+                    if (!scope.suggestions.visible) {
+                        scope.suggestions.load('');
+                    }
+                    else {
+                        scope.suggestions.next();
+                    }
                     e.preventDefault();
                     scope.$apply();
                 }
                 else if (scope.suggestions.visible) {
                     if (key.name === 'up') {
-                        scope.priorSuggestion();
+                        scope.suggestions.prior();
                     }
                     else if (key.name === 'escape') {
-                        scope.hideSuggestions();
+                        scope.suggestions.reset();
                     }
                     else if (key.name === 'enter' || key.name === 'tab') {
                         scope.addSuggestion();
@@ -330,9 +312,9 @@ tagsInput.directive('autocomplete', function($document) {
                 }
             });
 
-            $document.bind('click', function(e) {
+            $document.bind('click', function() {
                 if (scope.suggestions.visible) {
-                    scope.hideSuggestions();
+                    scope.suggestions.reset();
                     scope.$apply();
                 }
             });
