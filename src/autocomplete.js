@@ -57,13 +57,13 @@ angular.module('tags-input').directive('autocomplete', function($document) {
         require: '?^tagsInput',
         scope: { source: '&'},
         template: '<div class="autocomplete" ng-show="suggestionList.visible">' +
-            '  <ul class="suggestions">' +
-            '    <li class="suggestion" ng-repeat="item in suggestionList.items"' +
-            '                           ng-class="{selected: item == suggestionList.selected}"' +
-            '                           ng-click="addSuggestion()"' +
-            '                           ng-mouseenter="suggestionList.select($index)">{{ item }}</li>' +
-            '  </ul>' +
-            '</div>',
+                  '  <ul class="suggestions">' +
+                  '    <li class="suggestion" ng-repeat="item in suggestionList.items"' +
+                  '                           ng-class="{selected: item == suggestionList.selected}"' +
+                  '                           ng-click="addSuggestion()"' +
+                  '                           ng-mouseenter="suggestionList.select($index)">{{ item }}</li>' +
+                  '  </ul>' +
+                  '</div>',
         link: function(scope, element, attrs, tagsInput) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down];
             var suggestionList = new SuggestionList(scope.source());

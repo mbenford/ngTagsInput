@@ -25,7 +25,7 @@ module.exports = function(grunt) {
         },
         // Validates the JS file with JSHint
         jshint: {
-            files: ['Gruntfile.js', ['<%= files.js.out %>'], ['<%= files.spec.src %>']],
+            files: ['Gruntfile.js', ['<%= files.js.src %>'], ['<%= files.spec.src %>']],
             options: {
                 jshintrc: '.jshintrc'
             }
@@ -51,9 +51,11 @@ module.exports = function(grunt) {
                     banner: '(function() {\n\'use strict\';\n\n',
                     footer: '\n}());',
                     process: function(src) {
-                        // Remove all (function() {'use strict'; and }()) from the code
-                        return src.replace(/\(function\(\) \{\n'use strict';/g, '')
-                            .replace(/\}\(\)\);/g, '');
+                        // Remove all (function() {'use strict'; and }()) from the code and
+                        // replaces all double blank lines with one
+                        return src.replace(/\(function\(\) \{\n'use strict';\n\s*/g, '')
+                                  .replace(/\n\}\(\)\);/g, '')
+                                  .replace(/\n\n\s*\n/g, '\n\n');
                     }
                 },
                 files: {
