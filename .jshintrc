@@ -19,6 +19,7 @@
         "it": true,
         "expect": true,
         "jasmine": true,
-        "spyOn": true
+        "spyOn": true,
+        "KEYS": true
     }
 }

@@ -1,6 +1,19 @@
 (function() {
 'use strict';
 
+var KEYS = {
+    backspace: 8,
+    tab: 9,
+    enter: 13,
+    escape: 27,
+    space: 32,
+    up: 38,
+    down: 40,
+    comma: 188
+};
+
+var tagsInput = angular.module('tags-input', []);
+
 /**
  * @ngdoc directive
  * @name tagsInput.directive:tagsInput
@@ -24,9 +37,6 @@
  *                                             the new tag input box instead of being removed when the backspace key
  *                                             is pressed and the input box is empty.
  */
-
-var tagsInput = angular.module('tags-input', []);
-
 tagsInput.directive('tagsInput', function($interpolate) {
     function loadOptions(scope, attrs) {
         function getStr(name, defaultValue) {
@@ -137,7 +147,7 @@ tagsInput.directive('tagsInput', function($interpolate) {
 
             $scope.newTagChange = angular.noop;
 
-            this.getInputWrapper = function() {
+            this.getNewTagInput = function() {
                 var input = $element.find('input');
                 input.changeValue = function(value) {
                     $scope.newTag = value;
@@ -153,37 +163,45 @@ tagsInput.directive('tagsInput', function($interpolate) {
             };
         },
         link: function(scope, element) {
-            var ENTER = 13, COMMA = 188, SPACE = 32, BACKSPACE = 8;
+            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace];
+            var input = element.find('input');
 
-            element.find('input')
-                .bind('keydown', function(e) {
-                    if (e.keyCode === ENTER && scope.options.addOnEnter ||
-                        e.keyCode === COMMA && scope.options.addOnComma ||
-                        e.keyCode === SPACE && scope.options.addOnSpace) {
+            input.bind('keydown', function(e) {
+                var key;
 
-                        if (scope.tryAdd()) {
-                            scope.$apply();
-                        }
+                if (hotkeys.indexOf(e.keyCode) === -1) {
+                    return;
+                }
+
+                key = e.keyCode;
+
+                if (key === KEYS.enter && scope.options.addOnEnter ||
+                    key === KEYS.comma && scope.options.addOnComma ||
+                    key === KEYS.space && scope.options.addOnSpace) {
+
+                    if (scope.tryAdd()) {
+                        scope.$apply();
+                    }
+                    e.preventDefault();
+                }
+                else if (key === KEYS.backspace && this.value.length === 0) {
+                    if (scope.tryRemoveLast()) {
+                        scope.$apply();
+
                         e.preventDefault();
                     }
-                    else if (e.keyCode === BACKSPACE && this.value.length === 0) {
-                        if (scope.tryRemoveLast()) {
-                            scope.$apply();
-
-                            e.preventDefault();
-                        }
-                    }
-                });
+                }
+            });
 
             element.find('div').bind('click', function() {
-                element.find('input')[0].focus();
+                input[0].focus();
             });
         }
     };
 });
 
 tagsInput.directive('autocomplete', function($document) {
-    var suggestions = function(loadFn) {
+    function SuggestionList(loadFn) {
         var self = {};
 
         self.reset = function() {
@@ -211,10 +229,10 @@ tagsInput.directive('autocomplete', function($document) {
                 }
             });
         };
-        self.next = function() {
+        self.selectNext = function() {
             self.select(++self.index);
         };
-        self.prior = function() {
+        self.selectPrior = function() {
             self.select(--self.index);
         };
         self.select = function(index) {
@@ -231,80 +249,71 @@ tagsInput.directive('autocomplete', function($document) {
         self.reset();
 
         return self;
-    };
-
-    var hotkeys = {
-        9: { name: 'tab' },
-        13: { name: 'enter' },
-        27: { name: 'escape' },
-        38: { name: 'up' },
-        40: { name: 'down' }
-    };
+    }
 
     return {
         restrict: 'A,E',
         require: '?^tagsInput',
         scope: { source: '&'},
-        template: '<div class="autocomplete" ng-show="suggestions.visible">' +
+        template: '<div class="autocomplete" ng-show="suggestionList.visible">' +
                   '  <ul class="suggestions">' +
-                  '    <li class="suggestion" ng-repeat="item in suggestions.items"' +
-                  '                           ng-class="{selected: item == suggestions.selected}"' +
+                  '    <li class="suggestion" ng-repeat="item in suggestionList.items"' +
+                  '                           ng-class="{selected: item == suggestionList.selected}"' +
                   '                           ng-click="addSuggestion()"' +
-                  '                           ng-mouseenter="selectSuggestion($index)">{{ item }}</li>' +
+                  '                           ng-mouseenter="suggestionList.select($index)">{{ item }}</li>' +
                   '  </ul>' +
                   '</div>',
-        controller: function() {
-        },
         link: function(scope, element, attrs, tagsInput) {
-            var input = tagsInput.getInputWrapper();            
-            input.change(function(value) {
-                if (value) {
-                    scope.suggestions.load(value);
-                } else {
-                    scope.suggestions.reset();
-                }
-            });
+            var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down];
+            var suggestionList = new SuggestionList(scope.source());
+            var input = tagsInput.getNewTagInput();
 
-            scope.suggestions = suggestions(scope.source());
-
-            scope.selectSuggestion = function(index) {
-                scope.suggestions.select(index);
-            };
+            scope.suggestionList = suggestionList;
 
             scope.addSuggestion = function() {
-                if (scope.suggestions.selected) {
-                    input.changeValue(scope.suggestions.selected);
+                if (suggestionList.selected) {
+                    input.changeValue(suggestionList.selected);
                 }
-                scope.suggestions.reset();
+                suggestionList.reset();
 
                 input[0].focus();
             };
 
-            input.bind('keydown', function(e) {
-                var key = hotkeys[e.keyCode];
+            input.change(function(value) {
+                if (value) {
+                    suggestionList.load(value);
+                } else {
+                    suggestionList.reset();
+                }
+            });
 
-                if (!key) {
+            input.bind('keydown', function(e) {
+                var key;
+
+                if (hotkeys.indexOf(e.keyCode) === -1) {
                     return;
                 }
 
-                if (key.name === 'down') {
-                    if (!scope.suggestions.visible) {
-                        scope.suggestions.load('');
+                key = e.keyCode;
+
+                if (key === KEYS.down) {
+                    if (!suggestionList.visible) {
+                        suggestionList.load('');
                     }
                     else {
-                        scope.suggestions.next();
+                        suggestionList.selectNext();
                     }
                     e.preventDefault();
                     scope.$apply();
                 }
-                else if (scope.suggestions.visible) {
-                    if (key.name === 'up') {
-                        scope.suggestions.prior();
+                else if (suggestionList.visible) {
+                    if (key === KEYS.up) {
+                        suggestionList.selectPrior();
                     }
-                    else if (key.name === 'escape') {
-                        scope.suggestions.reset();
+                    else if (key === KEYS.escape) {
+                        suggestionList.reset();
                     }
-                    else if (key.name === 'enter' || key.name === 'tab') {
+                    else if (key === KEYS.enter || key === KEYS.tab) {
                         scope.addSuggestion();
                     }
                     e.preventDefault();
@@ -313,8 +322,8 @@ tagsInput.directive('autocomplete', function($document) {
             });
 
             $document.bind('click', function() {
-                if (scope.suggestions.visible) {
-                    scope.suggestions.reset();
+                if (suggestionList.visible) {
+                    suggestionList.reset();
                     scope.$apply();
                 }
             });

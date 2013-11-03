@@ -2,10 +2,8 @@
 'use strict';
 
 describe('', function () {
-    var ENTER = 13, TAB = 9, BACKSPACE = 8, ESCAPE = 27, DOWN_ARROW = 40, UP_ARROW = 38;
-
     var $compile, $scope, $q,
-        parentCtrl, element, input, changeHandler, deferred;
+        parentCtrl, element, input, suggestionList, changeHandler, deferred;
 
     beforeEach(function () {
         module('tags-input');
@@ -30,13 +28,15 @@ describe('', function () {
         var parent = $compile('<tags-input ng-model="whatever"></tags-input>')($scope);
         parentCtrl = parent.controller('tagsInput');
 
-        spyOn(parentCtrl, 'getInputWrapper').andReturn(input);
+        spyOn(parentCtrl, 'getNewTagInput').andReturn(input);
 
         element = angular.element('<autocomplete source="loadItems"></autocomplete>');
         parent.append(element);
 
         $compile(element)($scope);
         $scope.$digest();
+        
+        suggestionList = element.scope().suggestionList;
     }
 
     function resolve(items) {
@@ -73,7 +73,7 @@ describe('', function () {
     }
 
     function loadSuggestions(items) {
-        element.scope().suggestions.load('');
+        suggestionList.load('');
         resolve(items);
     }
 
@@ -112,7 +112,7 @@ describe('', function () {
         it('hides the suggestion box when the input field becomes empty', function() {
             // Arrange
             changeInputValue('foobar');
-            element.scope().suggestions.show();
+            suggestionList.show();
             $scope.$digest();
 
             // Act
@@ -124,11 +124,11 @@ describe('', function () {
 
         it('hides the suggestion box when the escape key is pressed', function() {
             // Arrange
-            element.scope().suggestions.show();
+            suggestionList.show();
             $scope.$digest();
 
             // Act
-            sendKeyDown(ESCAPE);
+            sendKeyDown(KEYS.escape);
 
             // Assert
             expect(getSuggestionsBox().css('display')).toBe('none');
@@ -136,7 +136,7 @@ describe('', function () {
 
         it('hides the suggestion box when the user clicks elsewhere on the page', function() {
             // Arrange
-            element.scope().suggestions.show();
+            suggestionList.show();
             $scope.$digest();
 
             // Act
@@ -149,11 +149,10 @@ describe('', function () {
         it('adds the selected suggestion to the input field when the enter key is pressed and the suggestions box is visible', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
-            element.scope().suggestions.show();
-            element.scope().selectSuggestion(0);
+            suggestionList.select(0);
 
             // Act
-            sendKeyDown(ENTER);
+            sendKeyDown(KEYS.enter);
 
             // Assert
             expect(input.changeValue).toHaveBeenCalledWith('Item1');
@@ -162,11 +161,10 @@ describe('', function () {
         it('adds the selected suggestion to the input field when the tab key is pressed and there is a suggestion selected', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
-            element.scope().suggestions.show();
-            element.scope().selectSuggestion(0);
+            suggestionList.select(0);
 
             // Act
-            sendKeyDown(TAB);
+            sendKeyDown(KEYS.tab);
 
             // Assert
             expect(input.changeValue).toHaveBeenCalledWith('Item1');
@@ -175,10 +173,9 @@ describe('', function () {
         it('does not change the input value when the enter key is pressed and there is nothing selected', function () {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
-            element.scope().suggestions.show();
 
             // Act
-            sendKeyDown(ENTER);
+            sendKeyDown(KEYS.enter);
 
             // Assert
             expect(input.changeValue).not.toHaveBeenCalled();
@@ -187,23 +184,22 @@ describe('', function () {
         it('sets the selected suggestion to null after adding it to the input field', function () {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
-            element.scope().selectSuggestion(0);
+            suggestionList.select(0);
 
             // Act
             element.scope().addSuggestion();
 
             // Assert
-            expect(element.scope().suggestions.selected).toBeNull();
+            expect(suggestionList.selected).toBeNull();
         });
 
         it('hides the suggestion box after adding the selected suggestion to the input field', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
-            element.scope().suggestions.show();
-            element.scope().selectSuggestion(0);
+            suggestionList.select(0);
 
             // Act
-            sendKeyDown(ENTER);
+            sendKeyDown(KEYS.enter);
 
             // Assert
             expect(getSuggestionsBox().css('display')).toBe('none');
@@ -225,11 +221,10 @@ describe('', function () {
         it('does not call the load function after adding the selected suggestion to the input field', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
-            element.scope().suggestions.show();
-            element.scope().selectSuggestion(0);
+            suggestionList.select(0);
 
             // Act
-            sendKeyDown(ENTER);
+            sendKeyDown(KEYS.enter);
 
             // Assert
             expect($scope.loadItems.callCount).toBe(1);
@@ -237,7 +232,7 @@ describe('', function () {
 
         it('calls the load function passing the current input content when the down arrow key is pressed and the suggestions box is hidden', function() {
             // Act
-            sendKeyDown(DOWN_ARROW);
+            sendKeyDown(KEYS.down);
 
             // Assert
             expect($scope.loadItems).toHaveBeenCalledWith('');
@@ -248,7 +243,7 @@ describe('', function () {
             loadSuggestions(['Item1', 'Item2', 'Item3']);
 
             // Act
-            element.scope().selectSuggestion(1);
+            suggestionList.select(1);
             $scope.$digest();
 
             // Assert
@@ -262,38 +257,34 @@ describe('', function () {
             loadSuggestions(['Item1', 'Item2']);
 
             // Assert
-            expect(element.scope().suggestions.selected).toBeNull();
+            expect(suggestionList.selected).toBeNull();
         });
     });
 
     describe('navigation through suggestions', function() {
-        beforeEach(function() {
-            element.scope().suggestions.show();
-        });
-
         describe('downward', function() {
             it('selects the next suggestion when the down arrow key is pressed and there\'s something selected', function() {
                 // Arrange
                 loadSuggestions(['Item1', 'Item2']);
-                element.scope().selectSuggestion(0);
+                suggestionList.select(0);
 
                 // Act
-                sendKeyDown(DOWN_ARROW);
+                sendKeyDown(KEYS.down);
 
                 // Assert
-                expect(element.scope().suggestions.selected).toBe('Item2');
+                expect(suggestionList.selected).toBe('Item2');
             });
 
             it('selects the first suggestion when the down arrow key is pressed and the last item is selected', function() {
                 // Arrange
                 loadSuggestions(['Item1', 'Item2']);
-                element.scope().selectSuggestion(1);
+                suggestionList.select(1);
 
                 // Act
-                sendKeyDown(DOWN_ARROW);
+                sendKeyDown(KEYS.down);
 
                 // Assert
-                expect(element.scope().suggestions.selected).toBe('Item1');
+                expect(suggestionList.selected).toBe('Item1');
             });
         });
 
@@ -301,25 +292,25 @@ describe('', function () {
             it('selects the prior suggestion when the down up key is pressed and there\'s something selected', function() {
                 // Arrange
                 loadSuggestions(['Item1', 'Item2']);
-                element.scope().selectSuggestion(1);
+                suggestionList.select(1);
 
                 // Act
-                sendKeyDown(UP_ARROW);
+                sendKeyDown(KEYS.up);
 
                 // Assert
-                expect(element.scope().suggestions.selected).toBe('Item1');
+                expect(suggestionList.selected).toBe('Item1');
             });
 
             it('selects the last suggestion when the up arrow key is pressed and the first item is selected', function() {
                 // Arrange
                 loadSuggestions(['Item1', 'Item2']);
-                element.scope().selectSuggestion(0);
+                suggestionList.select(0);
 
                 // Act
-                sendKeyDown(UP_ARROW);
+                sendKeyDown(KEYS.up);
 
                 // Assert
-                expect(element.scope().suggestions.selected).toBe('Item2');
+                expect(suggestionList.selected).toBe('Item2');
             });
         });
 
@@ -332,7 +323,7 @@ describe('', function () {
                 getSuggestion(1).mouseenter();
 
                 // Assert
-                expect(element.scope().suggestions.selected).toBe('Item2');
+                expect(suggestionList.selected).toBe('Item2');
             });
 
             it('adds the selected suggestion to the input field when a mouse click is triggered', function() {
@@ -363,53 +354,53 @@ describe('', function () {
 
     describe('hotkeys propagation handling - suggestion box is visible', function () {
         beforeEach(function () {
-            element.scope().suggestions.show();
+            suggestionList.show();
         });
 
         it('prevents the down arrow keydown event from being propagated', function () {
-            expect(sendKeyDown(DOWN_ARROW).isDefaultPrevented()).toBe(true);
+            expect(sendKeyDown(KEYS.down).isDefaultPrevented()).toBe(true);
         });
 
         it('prevents the up arrow keydown event from being propagated', function () {
-            expect(sendKeyDown(UP_ARROW).isDefaultPrevented()).toBe(true);
+            expect(sendKeyDown(KEYS.up).isDefaultPrevented()).toBe(true);
         });
 
         it('prevents the enter keydown event from being propagated', function () {
-            expect(sendKeyDown(ENTER).isDefaultPrevented()).toBe(true);
+            expect(sendKeyDown(KEYS.enter).isDefaultPrevented()).toBe(true);
         });
 
         it('prevents the tab keydown event from being propagated', function () {
-            expect(sendKeyDown(TAB).isDefaultPrevented()).toBe(true);
+            expect(sendKeyDown(KEYS.tab).isDefaultPrevented()).toBe(true);
         });
 
         it('prevents the escape keydown event from being propagated', function () {
-            expect(sendKeyDown(ESCAPE).isDefaultPrevented()).toBe(true);
+            expect(sendKeyDown(KEYS.escape).isDefaultPrevented()).toBe(true);
         });
     });
 
     describe('hotkeys propagation handling - suggestion box is hidden', function () {
         beforeEach(function () {
-            element.scope().suggestions.reset();
+            suggestionList.reset();
         });
 
         it('prevents the down arrow keydown event from being propagated', function () {
-            expect(sendKeyDown(DOWN_ARROW).isDefaultPrevented()).toBe(true);
+            expect(sendKeyDown(KEYS.down).isDefaultPrevented()).toBe(true);
         });
 
         it('does not prevent the up arrow keydown event from being propagated', function () {
-            expect(sendKeyDown(UP_ARROW).isDefaultPrevented()).toBe(false);
+            expect(sendKeyDown(KEYS.up).isDefaultPrevented()).toBe(false);
         });
 
         it('does not prevent the enter keydown event from being propagated', function () {
-            expect(sendKeyDown(ENTER).isDefaultPrevented()).toBe(false);
+            expect(sendKeyDown(KEYS.enter).isDefaultPrevented()).toBe(false);
         });
 
         it('does not prevent the tab keydown event from being propagated', function () {
-            expect(sendKeyDown(TAB).isDefaultPrevented()).toBe(false);
+            expect(sendKeyDown(KEYS.tab).isDefaultPrevented()).toBe(false);
         });
 
         it('does not prevent the escape keydown event from being propagated', function () {
-            expect(sendKeyDown(ESCAPE).isDefaultPrevented()).toBe(false);
+            expect(sendKeyDown(KEYS.escape).isDefaultPrevented()).toBe(false);
         });
     });
 });

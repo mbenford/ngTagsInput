@@ -2,8 +2,6 @@
 'use strict';
 
 describe('tags-input-directive', function() {
-    var ENTER = 13, COMMA = 188, SPACE = 32, BACKSPACE = 8;
-
     var $compile,
         $scope,
         element;
@@ -42,7 +40,7 @@ describe('tags-input-directive', function() {
     }
 
     function newTag(tag, key) {
-        key = key || ENTER;
+        key = key || KEYS.enter;
 
         for(var i = 0; i < tag.length; i++) {
             sendKeyPress(tag.charCodeAt(i));
@@ -69,7 +67,7 @@ describe('tags-input-directive', function() {
     }
 
     function sendBackspace() {
-        var event = sendKeyDown(BACKSPACE);
+        var event = sendKeyDown(KEYS.backspace);
         if (!event.isDefaultPrevented()) {
             var input = getInput();
             var value = input.val();
@@ -187,7 +185,7 @@ describe('tags-input-directive', function() {
             compile('add-on-enter="true"');
 
             // Act
-            newTag('foo', ENTER);
+            newTag('foo', KEYS.enter);
 
             // Assert
             expect($scope.tags).toEqual(['foo']);
@@ -198,7 +196,7 @@ describe('tags-input-directive', function() {
             compile('add-on-enter="false"');
 
             // Act
-            newTag('foo', ENTER);
+            newTag('foo', KEYS.enter);
 
             // Assert
             expect($scope.tags).toEqual([]);
@@ -238,7 +236,7 @@ describe('tags-input-directive', function() {
             compile('add-on-space="true"');
 
             // Act
-            newTag('foo', SPACE);
+            newTag('foo', KEYS.space);
 
             // Assert
             expect($scope.tags).toEqual(['foo']);
@@ -249,7 +247,7 @@ describe('tags-input-directive', function() {
             compile('add-on-space="false"');
 
             // Act
-            newTag('foo', SPACE);
+            newTag('foo', KEYS.space);
 
             // Assert
             expect($scope.tags).toEqual([]);
@@ -289,7 +287,7 @@ describe('tags-input-directive', function() {
             compile('add-on-comma="true"');
 
             // Act
-            newTag('foo', COMMA);
+            newTag('foo', KEYS.comma);
 
             // Assert
             expect($scope.tags).toEqual(['foo']);
@@ -300,7 +298,7 @@ describe('tags-input-directive', function() {
             compile('add-on-comma="false"');
 
             // Act
-            newTag('foo', COMMA);
+            newTag('foo', KEYS.comma);
 
             // Assert
             expect($scope.tags).toEqual([]);
