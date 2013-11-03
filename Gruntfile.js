@@ -8,12 +8,12 @@ module.exports = function(grunt) {
             js: {
                 src: ['src/keycodes.js', 'src/tags-input.js', 'src/autocomplete.js'],
                 out: 'build/<%= pkg.name %>.js',
-                outMin: 'build/<%= pkg.name %>.min.js'
+                outMin: 'tmp/<%= pkg.name %>.min.js'
             },
             css: {
-                src: ['src/tags-input.css', 'src/autocomplete.css'],
+                src: ['css/tags-input.css', 'css/autocomplete.css'],
                 out: 'build/<%= pkg.name %>.css',
-                outMin: 'build/<%= pkg.name %>.min.css'
+                outMin: 'tmp/<%= pkg.name %>.min.css'
             },
             zip: {
                 unminified: 'build/<%= pkg.name %>.zip',
@@ -42,7 +42,8 @@ module.exports = function(grunt) {
         },
         // Cleans the build folder
         clean: {
-            build: ['build/']
+            build: ['build/'],
+            tmp: ['tmp/']
         },
         // Concats all source files into one JS file and one CSS file
         concat: {
@@ -139,6 +140,19 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-ng-annotate');
     grunt.loadNpmTasks('grunt-karma');
 
-    grunt.registerTask('test', ['jshint', 'karma']);
-    grunt.registerTask('default', ['jshint', 'karma', 'clean', 'concat', 'ngAnnotate', 'uglify', 'cssmin', 'compress']);
+    grunt.registerTask('test', [
+        'jshint',
+        'karma'
+    ]);
+    grunt.registerTask('default', [
+        'jshint',
+        'karma',
+        'clean',
+        'concat',
+        'ngAnnotate',
+        'uglify',
+        'cssmin',
+        'compress',
+        'clean:tmp'
+    ]);
 };
