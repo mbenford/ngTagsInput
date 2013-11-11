@@ -3,35 +3,34 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        // Sets all files used by the script
         files: {
-            js: 'src/<%= pkg.name %>.js',
-            css: 'src/<%= pkg.name %>.css',
-            spec: 'test/<%= pkg.name %>.spec.js'
-        },
-        jshint: {
-            files: ['Gruntfile.js', '<%= files.js %>', '<%= files.spec %>'],
-            options: {
-                curly: true,
-                eqeqeq: true,
-                immed: true,
-                noempty: true,
-                noarg: true,
-                quotmark: 'single',
-                undef: true,
-                eqnull: true,
-                globals: {
-                    angular: true,
-                    module: true,
-                    inject: true,
-                    jQuery: true,
-                    beforeEach: true,
-                    describe: true,
-                    it: true,
-                    expect: true,
-                    spyOn: true
-                }
+            js: {
+                src: ['src/keycodes.js', 'src/tags-input.js', 'src/autocomplete.js'],
+                out: 'build/<%= pkg.name %>.js',
+                outMin: 'tmp/<%= pkg.name %>.min.js'
+            },
+            css: {
+                src: ['css/tags-input.css', 'css/autocomplete.css'],
+                out: 'build/<%= pkg.name %>.css',
+                outMin: 'tmp/<%= pkg.name %>.min.css'
+            },
+            zip: {
+                unminified: 'build/<%= pkg.name %>.zip',
+                minified: 'build/<%= pkg.name %>.min.zip'
+            },
+            spec: {
+                src: 'test/*.spec.js'
             }
         },
+        // Validates the JS file with JSHint
+        jshint: {
+            files: ['Gruntfile.js', ['<%= files.js.src %>'], ['<%= files.spec.src %>']],
+            options: {
+                jshintrc: '.jshintrc'
+            }
+        },
+        // Runs all unit tests with Karma
         karma: {
             options: {
                 configFile: 'karma.conf.js'
@@ -41,47 +40,92 @@ module.exports = function(grunt) {
                 browsers: ['PhantomJS']
             }
         },
+        // Cleans the build folder
         clean: {
             build: ['build/'],
             tmp: ['tmp/']
         },
+        // Concats all source files into one JS file and one CSS file
+        concat: {
+            js: {
+                options: {
+                    banner: '(function() {\n\'use strict\';\n\n',
+                    footer: '\n}());',
+                    process: function(src) {
+                        // Remove all (function() {'use strict'; and }()) from the code and
+                        // replaces all double blank lines with one
+                        return src.replace(/\(function\(\) \{\n'use strict';\n\s*/g, '')
+                                  .replace(/\n\}\(\)\);/g, '')
+                                  .replace(/\n\n\s*\n/g, '\n\n');
+                    }
+                },
+                files: {
+                    '<%= files.js.out %>': ['<%= files.js.src %>']
+                }
+            },
+            css: {
+                files: {
+                    '<%= files.css.out %>': ['<%= files.css.src %>']
+                }
+            }
+        },
+        // Adds AngularJS dependency injection annotations
+        ngAnnotate: {
+            directives: {
+                files: {
+                    '<%= files.js.out %>': ['<%= files.js.out %>']
+                }
+            }
+        },
+        // Minifies the JS file
         uglify: {
             build: {
                 files: {
-                    'tmp/<%= pkg.name %>.min.js': ['<%= files.js %>']
+                    '<%= files.js.outMin %>': ['<%= files.js.out %>']
                 }
             }
         },
+        // Minifies the CSS file
         cssmin: {
             build: {
                 files: {
-                    'tmp/<%= pkg.name %>.min.css': ['<%= files.css %>']
+                    '<%= files.css.outMin %>': ['<%= files.css.out %>']
                 }
             }
         },
+        // Packs the JS and CSS files in one ZIP file
         compress: {
             options: {
                 mode: 'zip'
             },
             minified: {
                 options: {
-                    archive: 'build/<%= pkg.name %>.min.zip'
+                    archive: '<%= files.zip.minified %>'
                 },
                 files : [
-                    { expand: true, src : '**/*', cwd : 'tmp/' }
+                    {
+                        expand: true,
+                        src : ['<%= files.js.outMin %>', '<%= files.css.outMin %>'],
+                        flatten: true
+                    }
                 ]
             },
             unminified: {
                 options: {
-                    archive: 'build/<%= pkg.name %>.zip'
+                    archive: '<%= files.zip.unminified %>'
                 },
                 files : [
-                    { expand: true, src : '**/*', cwd : 'src/' }
+                    {
+                        expand: true,
+                        src : ['<%= files.js.out %>', '<%= files.css.out %>'],
+                        flatten: true
+                    }
                 ]
             }
         },
+        // Watches the JS files for changes and runs unit tests
         watch: {
-            files: ['<%= jshint.files %>'],
+            files: ['<%= files.js.src %>'],
             tasks: ['test']
         }
     });
@@ -92,8 +136,23 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-ng-annotate');
     grunt.loadNpmTasks('grunt-karma');
 
-    grunt.registerTask('test', ['jshint', 'karma']);
-    grunt.registerTask('default', ['jshint', 'karma', 'clean', 'uglify', 'cssmin', 'compress', 'clean:tmp']);
+    grunt.registerTask('test', [
+        'jshint',
+        'karma'
+    ]);
+    grunt.registerTask('default', [
+        'jshint',
+        'karma',
+        'clean',
+        'concat',
+        'ngAnnotate',
+        'uglify',
+        'cssmin',
+        'compress',
+        'clean:tmp'
+    ]);
 };

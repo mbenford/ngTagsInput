@@ -5,7 +5,7 @@
     },
     "name": "ng-tags-input",
     "version": "0.1.0",
-    "description": "Tags input control for AngularJS",
+    "description": "Tags input directive for AngularJS",
     "license": "MIT",
     "repository": {
         "type": "git",
@@ -23,6 +23,8 @@
         "grunt-contrib-jshint": "=0.6.3",
         "grunt-contrib-compress": "=0.5.2",
         "grunt-contrib-clean": "=0.5.0",
+        "grunt-contrib-concat": "=0.3.0",
+        "grunt-ng-annotate": "=0.0.4",
         "grunt-karma": "=0.6.2"
     }
 }

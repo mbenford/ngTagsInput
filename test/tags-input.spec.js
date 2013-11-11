@@ -2,10 +2,8 @@
 'use strict';
 
 describe('tags-input-directive', function() {
-    var ENTER = 13, COMMA = 188, SPACE = 32, BACKSPACE = 8;
-
     var $compile,
-        $rootScope,
+        $scope,
         element;
 
     beforeEach(function() {
@@ -13,7 +11,7 @@ describe('tags-input-directive', function() {
 
         inject(function(_$compile_, _$rootScope_) {
             $compile = _$compile_;
-            $rootScope = _$rootScope_;
+            $scope = _$rootScope_;
         });
     });
 
@@ -21,8 +19,8 @@ describe('tags-input-directive', function() {
         var options = jQuery.makeArray(arguments).join(' ');
         var template = '<tags-input ng-model="tags" ' + options + '></tags-input>';
 
-        element = $compile(template)($rootScope);
-        $rootScope.$digest();
+        element = $compile(template)($scope);
+        $scope.$digest();
     }
 
     function getTags() {
@@ -42,7 +40,7 @@ describe('tags-input-directive', function() {
     }
 
     function newTag(tag, key) {
-        key = key || ENTER;
+        key = key || KEYS.enter;
 
         for(var i = 0; i < tag.length; i++) {
             sendKeyPress(tag.charCodeAt(i));
@@ -69,7 +67,7 @@ describe('tags-input-directive', function() {
     }
 
     function sendBackspace() {
-        var event = sendKeyDown(BACKSPACE);
+        var event = sendKeyDown(KEYS.backspace);
         if (!event.isDefaultPrevented()) {
             var input = getInput();
             var value = input.val();
@@ -81,7 +79,7 @@ describe('tags-input-directive', function() {
     describe('basic features', function() {
         it('renders the correct number of tags', function() {
             // Arrange
-            $rootScope.tags = ['some','cool','tags'];
+            $scope.tags = ['some','cool','tags'];
 
             // Act
             compile();
@@ -93,7 +91,7 @@ describe('tags-input-directive', function() {
             expect(getTagText(2)).toBe('tags');
         });
 
-        it('updates correctly the model', function() {
+        it('updates the model', function() {
             // Arrange
             compile();
 
@@ -103,19 +101,19 @@ describe('tags-input-directive', function() {
             newTag('tags');
 
             // Assert
-            expect($rootScope.tags).toEqual(['some','cool','tags']);
+            expect($scope.tags).toEqual(['some','cool','tags']);
         });
 
         it('removes a tag when the remove button is clicked', function() {
             // Arrange
-            $rootScope.tags = ['some','cool','tags'];
+            $scope.tags = ['some','cool','tags'];
             compile();
 
             // Act
             element.find('button').click();
 
             // Assert
-            expect($rootScope.tags).toEqual([]);
+            expect($scope.tags).toEqual([]);
         });
 
         it('sets focus on the input field when the container div is clicked', function() {
@@ -140,7 +138,7 @@ describe('tags-input-directive', function() {
             newTag('foo');
 
             // Assert
-            expect($rootScope.tags).toEqual(['foo']);
+            expect($scope.tags).toEqual(['foo']);
         });
 
         it('adds a custom CSS class to the container div when ng-class option is provided', function() {
@@ -156,57 +154,76 @@ describe('tags-input-directive', function() {
         it('calls onTagAdded when a new tag is added', function() {
             
             // Arrange
-            $rootScope.myAddCallback = function(tag){};
+            $scope.myAddCallback = function(tag){};
             compile('tabindex="1" on-tag-added="myAddCallback(tag)"');
-            spyOn($rootScope, 'myAddCallback');
+            spyOn($scope, 'myAddCallback');
 
             // Act
-            newTag('foo', ENTER);
+            newTag('foo', KEYS.enter);
             
             // Assert
-            expect($rootScope.myAddCallback).toHaveBeenCalledWith('foo');
+            expect($scope.myAddCallback).toHaveBeenCalledWith('foo');
         });
         
         it('calls onTagRemoved when a tag is removed by clicking button', function() {
             
             // Arrange
-            $rootScope.tags = ['some','cool','tags'];
-            $rootScope.myRemoveCallback = function(tag){};
+            $scope.tags = ['some','cool','tags'];
+            $scope.myRemoveCallback = function(tag){};
             compile('tabindex="1" on-tag-removed="myRemoveCallback(tag)"');
-            spyOn($rootScope, 'myRemoveCallback');
+            spyOn($scope, 'myRemoveCallback');
 
             // Act
             element.find('button').click();
             
             // Assert
-            expect($rootScope.myRemoveCallback).toHaveBeenCalledWith('some');
-            expect($rootScope.myRemoveCallback).toHaveBeenCalledWith('cool');
-            expect($rootScope.myRemoveCallback).toHaveBeenCalledWith('tags');
+            expect($scope.myRemoveCallback).toHaveBeenCalledWith('some');
+            expect($scope.myRemoveCallback).toHaveBeenCalledWith('cool');
+            expect($scope.myRemoveCallback).toHaveBeenCalledWith('tags');
         });
         
         it('calls onTagRemoved when last tag is removed using backspace', function() {
             
             // Arrange
-            $rootScope.tags = ['some','cool','tags'];
-            $rootScope.myRemoveCallback = function(tag){};
+            $scope.tags = ['some','cool','tags'];
+            $scope.myRemoveCallback = function(tag){};
             compile('tabindex="1" enable-editing-last-tag="true" on-tag-removed="myRemoveCallback(tag)"');
-            spyOn($rootScope, 'myRemoveCallback');
+            spyOn($scope, 'myRemoveCallback');
 
             // Act
             sendBackspace();
             
             // Assert
-            expect($rootScope.myRemoveCallback).toHaveBeenCalledWith('tags');
+            expect($scope.myRemoveCallback).toHaveBeenCalledWith('tags');
         });         
     });    
     
     describe('tabindex option', function() {
-        it('sets correctly the input box tab index', function() {
+        it('sets the input field tab index', function() {
             // Arrange/Act
             compile('tabindex="1"');
 
             // Assert
             expect(getInput().attr('tabindex')).toBe('1');
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('tabindex="1"');
+
+            // Assert
+            expect(element.scope().options.tabindex).toBe(1);
+        });
+
+        it('sets the option given an interpolated string', function() {
+            // Arrange
+            $scope.value = 1;
+
+            // Act
+            compile('tabindex="{{ value }}"');
+
+            // Assert
+            expect(element.scope().options.tabindex).toBe(1);
         });
     });
 
@@ -216,10 +233,10 @@ describe('tags-input-directive', function() {
             compile('add-on-enter="true"');
 
             // Act
-            newTag('foo', ENTER);
+            newTag('foo', KEYS.enter);
 
             // Assert
-            expect($rootScope.tags).toEqual(['foo']);
+            expect($scope.tags).toEqual(['foo']);
         });
 
         it('does not add a new tag when the enter key is pressed and add-on-enter option is false', function() {
@@ -227,10 +244,10 @@ describe('tags-input-directive', function() {
             compile('add-on-enter="false"');
 
             // Act
-            newTag('foo', ENTER);
+            newTag('foo', KEYS.enter);
 
             // Assert
-            expect($rootScope.tags).toEqual([]);
+            expect($scope.tags).toEqual([]);
         });
 
         it('initializes the option to true', function() {
@@ -238,7 +255,26 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().addOnEnter).toBe(true);
+            expect(element.scope().options.addOnEnter).toBe(true);
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('add-on-enter="true"');
+
+            // Assert
+            expect(element.scope().options.addOnEnter).toBe(true);
+        });
+
+        it('sets the option given an interpolated string', function() {
+            // Arrange
+            $scope.value = true;
+
+            // Act
+            compile('add-on-enter="{{ value }}"');
+
+            // Assert
+            expect(element.scope().options.addOnEnter).toBe(true);
         });
     });
 
@@ -248,10 +284,10 @@ describe('tags-input-directive', function() {
             compile('add-on-space="true"');
 
             // Act
-            newTag('foo', SPACE);
+            newTag('foo', KEYS.space);
 
             // Assert
-            expect($rootScope.tags).toEqual(['foo']);
+            expect($scope.tags).toEqual(['foo']);
         });
 
         it('does not add a new tag when the space key is pressed and add-on-space option is false', function() {
@@ -259,10 +295,10 @@ describe('tags-input-directive', function() {
             compile('add-on-space="false"');
 
             // Act
-            newTag('foo', SPACE);
+            newTag('foo', KEYS.space);
 
             // Assert
-            expect($rootScope.tags).toEqual([]);
+            expect($scope.tags).toEqual([]);
         });
 
         it('initializes the option to false', function() {
@@ -270,7 +306,26 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().addOnSpace).toBe(false);
+            expect(element.scope().options.addOnSpace).toBe(false);
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('add-on-space="true"');
+
+            // Assert
+            expect(element.scope().options.addOnSpace).toBe(true);
+        });
+
+        it('sets the option given an interpolated string', function() {
+            // Arrange
+            $scope.value = true;
+
+            // Act
+            compile('add-on-space="{{ value }}"');
+
+            // Assert
+            expect(element.scope().options.addOnSpace).toBe(true);
         });
     });
 
@@ -280,10 +335,10 @@ describe('tags-input-directive', function() {
             compile('add-on-comma="true"');
 
             // Act
-            newTag('foo', COMMA);
+            newTag('foo', KEYS.comma);
 
             // Assert
-            expect($rootScope.tags).toEqual(['foo']);
+            expect($scope.tags).toEqual(['foo']);
         });
 
         it('does not add a new tag when the space key is pressed and add-on-comma option is false', function() {
@@ -291,10 +346,10 @@ describe('tags-input-directive', function() {
             compile('add-on-comma="false"');
 
             // Act
-            newTag('foo', COMMA);
+            newTag('foo', KEYS.comma);
 
             // Assert
-            expect($rootScope.tags).toEqual([]);
+            expect($scope.tags).toEqual([]);
         });
 
         it('initializes the option to true', function() {
@@ -302,12 +357,31 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().addOnComma).toBe(true);
+            expect(element.scope().options.addOnComma).toBe(true);
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('add-on-comma="true"');
+
+            // Assert
+            expect(element.scope().options.addOnComma).toBe(true);
+        });
+
+        it('sets the option given an interpolated string', function() {
+            // Arrange
+            $scope.value = true;
+
+            // Act
+            compile('add-on-comma="{{ value }}"');
+
+            // Assert
+            expect(element.scope().options.addOnComma).toBe(true);
         });
     });
 
     describe('placeholder option', function() {
-        it('sets correctly the input field placeholder text', function() {
+        it('sets the input field placeholder text', function() {
             // Arrange/Act
             compile('placeholder="New tag"');
 
@@ -323,19 +397,38 @@ describe('tags-input-directive', function() {
             expect(getInput().attr('size')).toBe('7');
         });
 
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('placeholder="New tag"');
+
+            // Assert
+            expect(element.scope().options.placeholder).toBe('New tag');
+        });
+
+        it('sets the option given an interpolated string', function() {
+            // Arrange
+            $scope.value = 'New tag';
+
+            // Act
+            compile('placeholder="{{ value }}"');
+
+            // Assert
+            expect(element.scope().options.placeholder).toBe('New tag');
+        });
+
         it('initializes the option to "Add a tag"', function() {
             // Arrange/Act
             compile();
 
             // Assert
-            expect(element.scope().placeholder).toBe('Add a tag');
+            expect(element.scope().options.placeholder).toBe('Add a tag');
         });
     });
 
     describe('remove-tag-symbol option', function() {
-        it('sets correctly the remove button text', function() {
+        it('sets the remove button text', function() {
             // Arrange/Act
-            $rootScope.tags = ['foo'];
+            $scope.tags = ['foo'];
 
             // Act
             compile('remove-tag-symbol="X"');
@@ -344,12 +437,31 @@ describe('tags-input-directive', function() {
             expect(element.find('button').html()).toBe('X');
         });
 
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('remove-tag-symbol="X"');
+
+            // Assert
+            expect(element.scope().options.removeTagSymbol).toBe('X');
+        });
+
+        it('sets the option given an interpolated string', function() {
+            // Arrange
+            $scope.value = 'X';
+
+            // Act
+            compile('remove-tag-symbol="{{ value }}"');
+
+            // Assert
+            expect(element.scope().options.removeTagSymbol).toBe('X');
+        });
+
         it('initializes the option to charcode 215 (&times;)', function() {
             // Arrange/Act
             compile();
 
             // Assert
-            expect(element.scope().removeTagSymbol).toBe(String.fromCharCode(215));
+            expect(element.scope().options.removeTagSymbol).toBe(String.fromCharCode(215));
         });
     });
 
@@ -362,7 +474,7 @@ describe('tags-input-directive', function() {
             newTag('foo bar');
 
             // Assert
-            expect($rootScope.tags).toEqual(['foo-bar']);
+            expect($scope.tags).toEqual(['foo-bar']);
         });
 
         it('does not replace spaces with dashes when replaces-spaces-with-dashes option is true', function() {
@@ -373,7 +485,7 @@ describe('tags-input-directive', function() {
             newTag('foo bar');
 
             // Assert
-            expect($rootScope.tags).toEqual(['foo bar']);
+            expect($scope.tags).toEqual(['foo bar']);
         });
 
         it('initializes the option to true', function() {
@@ -381,31 +493,50 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().replaceSpacesWithDashes).toBe(true);
+            expect(element.scope().options.replaceSpacesWithDashes).toBe(true);
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('replace-spaces-with-dashes="true"');
+
+            // Assert
+            expect(element.scope().options.replaceSpacesWithDashes).toBe(true);
+        });
+
+        it('sets the option given a interpolated string', function() {
+            // Arrange
+            $scope.value = true;
+
+            // Act
+            compile('replace-spaces-with-dashes="{{ value }}"');
+
+            // Assert
+            expect(element.scope().options.replaceSpacesWithDashes).toBe(true);
         });
     });
 
     describe('allowed-tags-pattern option', function() {
         it('allows only tags matching a regular expression to be added', function() {
             // Arrange
-            compile('allowed-chars-pattern="[a-z@\\.]" allowed-tags-pattern="^[a-z]+@[a-z]+\\.com$"');
+            compile('allowed-tags-pattern="^[a-z]+@[a-z]+\\.com$"');
 
             // Act
             newTag('foo@bar.com');
 
             // Assert
-            expect($rootScope.tags).toEqual(['foo@bar.com']);
+            expect($scope.tags).toEqual(['foo@bar.com']);
         });
 
         it('rejects tags that do not match the regular expression', function() {
             // Arrange
-            compile('allowed-chars-pattern="[a-z@\\.]" allowed-tags-pattern="^[a-z]+@[a-z]+\\.com$"');
+            compile('allowed-tags-pattern="^[a-z]+@[a-z]+\\.com$"');
 
             // Act
             newTag('foobar.com');
 
             // Assert
-            expect($rootScope.tags).toEqual([]);
+            expect($scope.tags).toEqual([]);
         });
 
         it('initializes the option to ^[a-zA-Z0-9\\s]+$', function() {
@@ -413,7 +544,26 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().allowedTagsPattern.toString()).toBe('/^[a-zA-Z0-9\\s]+$/');
+            expect(element.scope().options.allowedTagsPattern.toString()).toBe('/^[a-zA-Z0-9\\s]+$/');
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('allowed-tags-pattern=".*"');
+
+            // Assert
+            expect(element.scope().options.allowedTagsPattern.toString()).toBe('/.*/');
+        });
+
+        it('sets the option given a interpolated string', function() {
+            // Arrange
+            $scope.value = '.*';
+
+            // Act
+            compile('allowed-tags-pattern="{{ value }}"');
+
+            // Assert
+            expect(element.scope().options.allowedTagsPattern.toString()).toBe('/.*/');
         });
     });
 
@@ -426,7 +576,7 @@ describe('tags-input-directive', function() {
             newTag('foo');
 
             // Assert
-            expect($rootScope.tags).toEqual([]);
+            expect($scope.tags).toEqual([]);
         });
 
         it('initializes the option to 3', function() {
@@ -434,7 +584,26 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().minLength).toBe(3);
+            expect(element.scope().options.minLength).toBe(3);
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('min-length="5"');
+
+            // Assert
+            expect(element.scope().options.minLength).toBe(5);
+        });
+
+        it('sets the option given a interpolated string', function() {
+            // Arrange
+            $scope.value = 5;
+
+            // Act
+            compile('min-length="{{ value }}"');
+
+            // Assert
+            expect(element.scope().options.minLength).toBe(5);
         });
     });
 
@@ -447,26 +616,37 @@ describe('tags-input-directive', function() {
             expect(getInput().attr('maxlength')).toBe('10');
         });
 
-        it('initializes the option to min-length when it is greater than placeholder length', function() {
+        it('initializes the option to empty', function() {
             // Arrange/Act
-            compile('min-length="10" placeholder="New tag"');
+            compile();
 
             // Assert
-            expect(element.scope().maxLength).toBe(10);
+            expect(getInput().attr('maxlength')).toBe('');
         });
 
-        it('initializes the option to placeholder length when it is greater than min-length', function() {
+        it('sets the option given a static string', function() {
             // Arrange/Act
-            compile('min-length="3" placeholder="New tag"');
+            compile('max-length="5"');
 
             // Assert
-            expect(element.scope().maxLength).toBe(7);
+            expect(element.scope().options.maxLength).toBe(5);
+        });
+
+        it('sets the option given a interpolated string', function() {
+            // Arrange
+            $scope.value = 5;
+
+            // Act
+            compile('max-length="{{ value }}"');
+
+            // Assert
+            expect(element.scope().options.maxLength).toBe(5);
         });
     });
 
     describe('enable-editing-last-tag option', function() {
         beforeEach(function() {
-            $rootScope.tags = ['some','cool','tags'];
+            $scope.tags = ['some','cool','tags'];
         });
 
         it('initializes the option to false', function() {
@@ -474,7 +654,26 @@ describe('tags-input-directive', function() {
             compile();
 
             // Assert
-            expect(element.scope().enableEditingLastTag).toBe(false);
+            expect(element.scope().options.enableEditingLastTag).toBe(false);
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('enable-editing-last-tag="true"');
+
+            // Assert
+            expect(element.scope().options.enableEditingLastTag).toBe(true);
+        });
+
+        it('sets the option given an interpolated string', function() {
+            // Arrange
+            $scope.value = true;
+
+            // Act
+            compile('enable-editing-last-tag="{{ value }}"');
+
+            // Assert
+            expect(element.scope().options.enableEditingLastTag).toBe(true);
         });
 
         describe('option is on', function() {
@@ -489,7 +688,7 @@ describe('tags-input-directive', function() {
 
                     // Assert
                     expect(getInput().val()).toBe('tags');
-                    expect($rootScope.tags).toEqual(['some','cool']);
+                    expect($scope.tags).toEqual(['some','cool']);
                 });
 
                 it('does nothing when the input field is not empty', function() {
@@ -498,7 +697,7 @@ describe('tags-input-directive', function() {
                     sendBackspace();
 
                     // Assert
-                    expect($rootScope.tags).toEqual(['some','cool','tags']);
+                    expect($scope.tags).toEqual(['some','cool','tags']);
                 });
             });
         });
@@ -523,7 +722,7 @@ describe('tags-input-directive', function() {
                     sendBackspace();
 
                     // Assert
-                    expect($rootScope.tags).toEqual(['some','cool','tags']);
+                    expect($scope.tags).toEqual(['some','cool','tags']);
                 });
 
                 it('stops highlighting the last tag when the input box becomes non-empty', function() {
@@ -544,7 +743,7 @@ describe('tags-input-directive', function() {
 
                     // Assert
                     expect(getInput().val()).toBe('');
-                    expect($rootScope.tags).toEqual(['some','cool']);
+                    expect($scope.tags).toEqual(['some','cool']);
                 });
 
                 it('does nothing when the input field is not empty', function() {
@@ -554,7 +753,7 @@ describe('tags-input-directive', function() {
                     sendBackspace();
 
                     // Assert
-                    expect($rootScope.tags).toEqual(['some','cool','tags']);
+                    expect($scope.tags).toEqual(['some','cool','tags']);
                 });
             });
         });

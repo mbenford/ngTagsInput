@@ -1,0 +1,34 @@
+.ngTagsInput .autocomplete {
+    margin-top: 5px;
+    position: absolute;
+    padding: 8px 0;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    box-shadow: 0 5px 10px rgba(0,0,0,.2);
+    width: 100%;
+}
+
+.ngTagsInput .autocomplete ul.suggestions {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.ngTagsInput .autocomplete li.suggestion {
+    padding: 3px 20px;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    line-height: 22px;
+    cursor: pointer;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ngTagsInput .autocomplete li.selected {
+    color: #fff;
+    background-color: #0097cf
+}

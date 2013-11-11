@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+  <title>ngTagsInput Test Page</title>
+  <script type="text/javascript" src="lib/angular.js"></script>
+  <script type="text/javascript" src="../build/ng-tags-input.js"></script>
+  <link rel="stylesheet" href="../build/ng-tags-input.css"/>
+</head>
+<body ng-controller="Ctrl">
+  <tags-input ng-model="tags" placeholder="{{ placeholder.value }}">
+    <autocomplete source="loadItems"></autocomplete>
+  </tags-input>
+
+  <script type="text/javascript">
+    angular.module('app', ['tags-input'])
+        .controller('Ctrl', function($scope, $q) {
+            $scope.tags = ['some', 'cool', 'tags'];
+            $scope.placeholder = {value: "New tag" };
+            $scope.loadItems = function(text) {
+              var deferred = $q.defer();
+              deferred.resolve(['Item1', 'Item2', 'Item3']);
+              return deferred.promise;
+            };
+        });
+  </script>
+</body>
+</html>
