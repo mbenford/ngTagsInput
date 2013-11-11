@@ -25,6 +25,8 @@ angular.module('tags-input', []);
  * @param {boolean=false} enableEditingLastTag Flag indicating that the last tag will be moved back into
  *                                             the new tag input box instead of being removed when the backspace key
  *                                             is pressed and the input box is empty.
+ * @param {function=null} onTagAdded Callback function called whenever a tag is added.
+ * @param {function=null} onTagRemoved Callback function called whenever a tag is removed.
  */
 angular.module('tags-input').directive('tagsInput', function($interpolate) {
     function loadOptions(scope, attrs) {
@@ -60,7 +62,7 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
 
     return {
         restrict: 'A,E',
-        scope: { tags: '=ngModel' },
+        scope: { tags: '=ngModel', onTagAdded: '&', onTagRemoved: '&' },
         replace: false,
         transclude: true,
         template: '<div class="ngTagsInput {{ options.cssClass }}" ng-transclude>' +
@@ -80,6 +82,17 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
             $scope.newTag = '';
             $scope.tags = $scope.tags || [];
 
+            var onTagAdded = function(tag){
+                if ($scope.onTagAdded){
+                    $scope.onTagAdded({tag: tag});
+                }
+            };
+            var onTagRemoved = function(tag){
+                if ($scope.onTagRemoved){
+                    $scope.onTagRemoved({tag: tag});
+                }
+            };
+            
             $scope.tryAdd = function() {
                 var changed = false;
                 var tag = $scope.newTag;
@@ -92,6 +105,7 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
 
                     if ($scope.tags.indexOf(tag) === -1) {
                         $scope.tags.push(tag);
+                        onTagAdded(tag);
                     }
 
                     $scope.newTag = '';
@@ -102,13 +116,15 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
 
             $scope.tryRemoveLast = function() {
                 var changed = false;
+                var tagRemoved;
                 if ($scope.tags.length > 0) {
                     if ($scope.options.enableEditingLastTag) {
-                        $scope.newTag = $scope.tags.pop();
+                        tagRemoved = $scope.tags.pop();
+                        $scope.newTag = tagRemoved;
                     }
                     else {
                         if ($scope.shouldRemoveLastTag) {
-                            $scope.tags.pop();
+                            tagRemoved = $scope.tags.pop();
 
                             $scope.shouldRemoveLastTag = false;
                         }
@@ -117,12 +133,18 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
                         }
                     }
                     changed = true;
+                    
+                    if (tagRemoved){
+                        onTagRemoved(tagRemoved);
+                    }
                 }
                 return changed;
             };
 
             $scope.remove = function(index) {
+                var tagToRemove = $scope.tags[index];
                 $scope.tags.splice(index, 1);
+                onTagRemoved(tagToRemove);
             };
 
             $scope.getCssClass = function(index) {
