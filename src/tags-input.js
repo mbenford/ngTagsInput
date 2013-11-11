@@ -75,6 +75,8 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
                   '  </div>' +
                   '</div>',
         controller: function($scope, $attrs, $element) {
+            var shouldRemoveLastTag;
+
             loadOptions($scope, $attrs);
 
             $scope.newTag = '';
@@ -107,13 +109,13 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
                         $scope.newTag = $scope.tags.pop();
                     }
                     else {
-                        if ($scope.shouldRemoveLastTag) {
+                        if (shouldRemoveLastTag) {
                             $scope.tags.pop();
 
-                            $scope.shouldRemoveLastTag = false;
+                            shouldRemoveLastTag = false;
                         }
                         else {
-                            $scope.shouldRemoveLastTag = true;
+                            shouldRemoveLastTag = true;
                         }
                     }
                     changed = true;
@@ -127,11 +129,11 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
 
             $scope.getCssClass = function(index) {
                 var isLastTag = index === $scope.tags.length - 1;
-                return $scope.shouldRemoveLastTag && isLastTag ? 'selected' : '';
+                return shouldRemoveLastTag && isLastTag ? 'selected' : '';
             };
 
             $scope.$watch(function() { return $scope.newTag.length > 0; }, function() {
-                $scope.shouldRemoveLastTag = false;
+                shouldRemoveLastTag = false;
             });
 
             $scope.newTagChange = angular.noop;
@@ -157,6 +159,13 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
 
             input.bind('keydown', function(e) {
                 var key;
+
+                // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.
+                // I've sent a PR to Angular addressing this issue and hopefully it'll be fixed soon.
+                // https://github.com/angular/angular.js/pull/4833
+                if (e.isImmediatePropagationStopped && e.isImmediatePropagationStopped()) {
+                    return;
+                }
 
                 if (hotkeys.indexOf(e.keyCode) === -1) {
                     return;

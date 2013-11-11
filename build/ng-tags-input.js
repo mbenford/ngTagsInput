@@ -86,6 +86,8 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
                   '  </div>' +
                   '</div>',
         controller: ["$scope","$attrs","$element", function($scope, $attrs, $element) {
+            var shouldRemoveLastTag;
+
             loadOptions($scope, $attrs);
 
             $scope.newTag = '';
@@ -118,13 +120,13 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
                         $scope.newTag = $scope.tags.pop();
                     }
                     else {
-                        if ($scope.shouldRemoveLastTag) {
+                        if (shouldRemoveLastTag) {
                             $scope.tags.pop();
 
-                            $scope.shouldRemoveLastTag = false;
+                            shouldRemoveLastTag = false;
                         }
                         else {
-                            $scope.shouldRemoveLastTag = true;
+                            shouldRemoveLastTag = true;
                         }
                     }
                     changed = true;
@@ -138,11 +140,11 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
 
             $scope.getCssClass = function(index) {
                 var isLastTag = index === $scope.tags.length - 1;
-                return $scope.shouldRemoveLastTag && isLastTag ? 'selected' : '';
+                return shouldRemoveLastTag && isLastTag ? 'selected' : '';
             };
 
             $scope.$watch(function() { return $scope.newTag.length > 0; }, function() {
-                $scope.shouldRemoveLastTag = false;
+                shouldRemoveLastTag = false;
             });
 
             $scope.newTagChange = angular.noop;
@@ -168,6 +170,13 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
 
             input.bind('keydown', function(e) {
                 var key;
+
+                // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.
+                // I've sent a PR to Angular addressing this issue and hopefully it'll be fixed soon.
+                // https://github.com/angular/angular.js/pull/4833
+                if (e.isImmediatePropagationStopped && e.isImmediatePropagationStopped()) {
+                    return;
+                }
 
                 if (hotkeys.indexOf(e.keyCode) === -1) {
                     return;
@@ -200,6 +209,16 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
     };
 }]);
 
+/**
+ * @ngdoc directive
+ * @name tagsInput.directive:autocomplete
+ *
+ * @description
+ * Provides autocomplete support for the tagsInput directive.
+ *
+ * @param {expression} source Callback that will be called for every keystroke and will be provided with the current
+ *                            input's value. Must return a promise.
+ */
 angular.module('tags-input').directive('autocomplete', ["$document", function($document) {
     function SuggestionList(loadFn) {
         var self = {};
@@ -254,7 +273,7 @@ angular.module('tags-input').directive('autocomplete', ["$document", function($d
     return {
         restrict: 'A,E',
         require: '?^tagsInput',
-        scope: { source: '&'},
+        scope: { source: '&' },
         template: '<div class="autocomplete" ng-show="suggestionList.visible">' +
                   '  <ul class="suggestions">' +
                   '    <li class="suggestion" ng-repeat="item in suggestionList.items"' +
@@ -271,12 +290,16 @@ angular.module('tags-input').directive('autocomplete', ["$document", function($d
             scope.suggestionList = suggestionList;
 
             scope.addSuggestion = function() {
+                var added = false;
+
                 if (suggestionList.selected) {
                     input.changeValue(suggestionList.selected);
-                }
-                suggestionList.reset();
+                    suggestionList.reset();
+                    input[0].focus();
 
-                input[0].focus();
+                    added = true;
+                }
+                return added;
             };
 
             input.change(function(value) {
@@ -288,36 +311,49 @@ angular.module('tags-input').directive('autocomplete', ["$document", function($d
             });
 
             input.bind('keydown', function(e) {
-                var key;
+                var key, handled;
 
                 if (hotkeys.indexOf(e.keyCode) === -1) {
                     return;
                 }
 
-                key = e.keyCode;
+                // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.
+                // I've sent a PR to Angular addressing this issue and hopefully it'll be fixed soon.
+                // https://github.com/angular/angular.js/pull/4833
+                var immediatePropagationStopped = false;
+                e.stopImmediatePropagation = function() {
+                    immediatePropagationStopped = true;
+                    e.stopPropagation();
+                };
+                e.isImmediatePropagationStopped = function() {
+                    return immediatePropagationStopped;
+                };
 
-                if (key === KEYS.down) {
-                    if (!suggestionList.visible) {
-                        suggestionList.load('');
-                    }
-                    else {
+                if (suggestionList.visible) {
+                    key = e.keyCode;
+                    handled = false;
+
+                    if (key === KEYS.down) {
                         suggestionList.selectNext();
+                        handled = true;
                     }
-                    e.preventDefault();
-                    scope.$apply();
-                }
-                else if (suggestionList.visible) {
-                    if (key === KEYS.up) {
+                    else if (key === KEYS.up) {
                         suggestionList.selectPrior();
+                        handled = true;
                     }
                     else if (key === KEYS.escape) {
                         suggestionList.reset();
+                        handled = true;
                     }
                     else if (key === KEYS.enter || key === KEYS.tab) {
-                        scope.addSuggestion();
+                        handled = scope.addSuggestion();
                     }
-                    e.preventDefault();
-                    scope.$apply();
+
+                    if (handled) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        scope.$apply();
+                    }
                 }
             });
 

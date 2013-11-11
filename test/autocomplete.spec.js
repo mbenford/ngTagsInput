@@ -1,7 +1,7 @@
 (function() {
 'use strict';
 
-describe('', function () {
+describe('autocomplete-directive', function () {
     var $compile, $scope, $q,
         parentCtrl, element, input, suggestionList, changeHandler, deferred;
 
@@ -230,14 +230,6 @@ describe('', function () {
             expect($scope.loadItems.callCount).toBe(1);
         });
 
-        it('calls the load function passing the current input content when the down arrow key is pressed and the suggestions box is hidden', function() {
-            // Act
-            sendKeyDown(KEYS.down);
-
-            // Assert
-            expect($scope.loadItems).toHaveBeenCalledWith('');
-        });
-
         it('highlights the selected suggestion only', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2', 'Item3']);
@@ -341,6 +333,7 @@ describe('', function () {
             it('focuses the input field when a suggestion is added via a mouse click', function() {
                 // Arrange
                 loadSuggestions(['Item1', 'Item2', 'Item3']);
+                suggestionList.select(0);
                 spyOn(input[0], 'focus');
 
                 // Act
@@ -358,23 +351,78 @@ describe('', function () {
         });
 
         it('prevents the down arrow keydown event from being propagated', function () {
-            expect(sendKeyDown(KEYS.down).isDefaultPrevented()).toBe(true);
+            // Act
+            var event = sendKeyDown(KEYS.down);
+
+            // Assert
+            expect(event.isDefaultPrevented()).toBe(true);
+            expect(event.isPropagationStopped()).toBe(true);
         });
 
         it('prevents the up arrow keydown event from being propagated', function () {
-            expect(sendKeyDown(KEYS.up).isDefaultPrevented()).toBe(true);
+            // Act
+            var event = sendKeyDown(KEYS.up);
+
+            // Assert
+            expect(event.isDefaultPrevented()).toBe(true);
+            expect(event.isPropagationStopped()).toBe(true);
         });
 
-        it('prevents the enter keydown event from being propagated', function () {
-            expect(sendKeyDown(KEYS.enter).isDefaultPrevented()).toBe(true);
+        it('prevents the enter keydown event from being propagated if there is a suggestion selected', function () {
+            // Arrange
+            suggestionList.selected = 'suggestion';
+
+            // Act
+            var event = sendKeyDown(KEYS.enter);
+
+            // Assert
+            expect(event.isDefaultPrevented()).toBe(true);
+            expect(event.isPropagationStopped()).toBe(true);
         });
 
-        it('prevents the tab keydown event from being propagated', function () {
-            expect(sendKeyDown(KEYS.tab).isDefaultPrevented()).toBe(true);
+        it('does not prevent the enter keydown event from begin propagated if there is no suggestion selected', function () {
+            // Arrange
+            suggestionList.selected = null;
+
+            // Act
+            var event = sendKeyDown(KEYS.enter);
+
+            // Assert
+            expect(event.isDefaultPrevented()).toBe(false);
+            expect(event.isPropagationStopped()).toBe(false);
+        });
+
+        it('prevents the tab keydown event from being propagated if there is a suggestion selected', function () {
+            // Arrange
+            suggestionList.selected = 'suggestion';
+
+            // Act
+            var event = sendKeyDown(KEYS.tab);
+
+            // Assert
+            expect(event.isDefaultPrevented()).toBe(true);
+            expect(event.isPropagationStopped()).toBe(true);
+        });
+
+        it('does not prevent the tab keydown event from being propagated if there is no suggestion selected', function () {
+            // Arrange
+            suggestionList.selected = null;
+
+            // Act
+            var event = sendKeyDown(KEYS.tab);
+
+            // Assert
+            expect(event.isDefaultPrevented()).toBe(false);
+            expect(event.isPropagationStopped()).toBe(false);
         });
 
         it('prevents the escape keydown event from being propagated', function () {
-            expect(sendKeyDown(KEYS.escape).isDefaultPrevented()).toBe(true);
+            // Act
+            var event = sendKeyDown(KEYS.escape);
+
+            // Assert
+            expect(event.isDefaultPrevented()).toBe(true);
+            expect(event.isPropagationStopped()).toBe(true);
         });
     });
 
@@ -383,24 +431,49 @@ describe('', function () {
             suggestionList.reset();
         });
 
-        it('prevents the down arrow keydown event from being propagated', function () {
-            expect(sendKeyDown(KEYS.down).isDefaultPrevented()).toBe(true);
+        it('does not prevent the down arrow keydown event from being propagated', function () {
+            // Act
+            var event = sendKeyDown(KEYS.down);
+
+            // Assert
+            expect(event.isDefaultPrevented()).toBe(false);
+            expect(event.isPropagationStopped()).toBe(false);
         });
 
         it('does not prevent the up arrow keydown event from being propagated', function () {
-            expect(sendKeyDown(KEYS.up).isDefaultPrevented()).toBe(false);
+            // Act
+            var event = sendKeyDown(KEYS.up);
+
+            // Assert
+            expect(event.isDefaultPrevented()).toBe(false);
+            expect(event.isPropagationStopped()).toBe(false);
         });
 
         it('does not prevent the enter keydown event from being propagated', function () {
-            expect(sendKeyDown(KEYS.enter).isDefaultPrevented()).toBe(false);
+            // Act
+            var event = sendKeyDown(KEYS.enter);
+
+            // Assert
+            expect(event.isDefaultPrevented()).toBe(false);
+            expect(event.isPropagationStopped()).toBe(false);
         });
 
         it('does not prevent the tab keydown event from being propagated', function () {
-            expect(sendKeyDown(KEYS.tab).isDefaultPrevented()).toBe(false);
+            // Act
+            var event = sendKeyDown(KEYS.tab);
+
+            // Assert
+            expect(event.isDefaultPrevented()).toBe(false);
+            expect(event.isPropagationStopped()).toBe(false);
         });
 
         it('does not prevent the escape keydown event from being propagated', function () {
-            expect(sendKeyDown(KEYS.escape).isDefaultPrevented()).toBe(false);
+            // Act
+            var event = sendKeyDown(KEYS.escape);
+
+            // Assert
+            expect(event.isDefaultPrevented()).toBe(false);
+            expect(event.isPropagationStopped()).toBe(false);
         });
     });
 });
