@@ -81,23 +81,14 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
                   '  </div>' +
                   '</div>',
         controller: function($scope, $attrs, $element) {
-            var shouldRemoveLastTag;
+            var shouldRemoveLastTag,
+                onTagAdded = ($scope.onTagAdded && $scope.onTagAdded()) || angular.noop,
+                onTagRemoved = ($scope.onTagRemoved && $scope.onTagRemoved()) || angular.noop;
 
             loadOptions($scope, $attrs);
 
             $scope.newTag = '';
             $scope.tags = $scope.tags || [];
-
-            var onTagAdded = function(tag){
-                if ($scope.onTagAdded){
-                    $scope.onTagAdded({tag: tag});
-                }
-            };
-            var onTagRemoved = function(tag){
-                if ($scope.onTagRemoved){
-                    $scope.onTagRemoved({tag: tag});
-                }
-            };
             
             $scope.tryAdd = function() {
                 var changed = false;
@@ -111,6 +102,7 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
 
                     if ($scope.tags.indexOf(tag) === -1) {
                         $scope.tags.push(tag);
+
                         onTagAdded(tag);
                     }
 
@@ -122,15 +114,14 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
 
             $scope.tryRemoveLast = function() {
                 var changed = false;
-                var tagRemoved;
+
                 if ($scope.tags.length > 0) {
                     if ($scope.options.enableEditingLastTag) {
-                        tagRemoved = $scope.tags.pop();
-                        $scope.newTag = tagRemoved;
+                        $scope.newTag = $scope.remove($scope.tags.length - 1);
                     }
                     else {
                         if (shouldRemoveLastTag) {
-                            tagRemoved = $scope.tags.pop();
+                            $scope.remove($scope.tags.length - 1);
 
                             shouldRemoveLastTag = false;
                         }
@@ -139,18 +130,14 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
                         }
                     }
                     changed = true;
-                    
-                    if (tagRemoved){
-                        onTagRemoved(tagRemoved);
-                    }
                 }
                 return changed;
             };
 
             $scope.remove = function(index) {
-                var tagToRemove = $scope.tags[index];
-                $scope.tags.splice(index, 1);
-                onTagRemoved(tagToRemove);
+                var removedTag = $scope.tags.splice(index, 1)[0];
+                onTagRemoved(removedTag);
+                return removedTag;
             };
 
             $scope.getCssClass = function(index) {

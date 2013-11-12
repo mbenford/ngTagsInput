@@ -71,7 +71,7 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
 
     return {
         restrict: 'A,E',
-        scope: { tags: '=ngModel' },
+        scope: { tags: '=ngModel', onTagAdded: '&', onTagRemoved: '&' },
         replace: false,
         transclude: true,
         template: '<div class="ngTagsInput {{ options.cssClass }}" ng-transclude>' +
@@ -82,17 +82,25 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
                   '        <button type="button" ng-click="remove($index)">{{ options.removeTagSymbol }}</button>' +
                   '      </li>' +
                   '    </ul>' +
-                  '    <input type="text" placeholder="{{ options.placeholder }}" size="{{ options.placeholder.length }}" maxlength="{{ options.maxLength }}" tabindex="{{ options.tabindex }}" ng-model="newTag" ng-change="newTagChange()">' +
+                  '    <input type="text"' +
+                  '           placeholder="{{ options.placeholder }}"' +
+                  '           size="{{ options.placeholder.length }}"' +
+                  '           maxlength="{{ options.maxLength }}"' +
+                  '           tabindex="{{ options.tabindex }}"' +
+                  '           ng-model="newTag"' +
+                  '           ng-change="newTagChange()">' +
                   '  </div>' +
                   '</div>',
         controller: ["$scope","$attrs","$element", function($scope, $attrs, $element) {
-            var shouldRemoveLastTag;
+            var shouldRemoveLastTag,
+                onTagAdded = ($scope.onTagAdded && $scope.onTagAdded()) || angular.noop,
+                onTagRemoved = ($scope.onTagRemoved && $scope.onTagRemoved()) || angular.noop;
 
             loadOptions($scope, $attrs);
 
             $scope.newTag = '';
             $scope.tags = $scope.tags || [];
-
+            
             $scope.tryAdd = function() {
                 var changed = false;
                 var tag = $scope.newTag;
@@ -105,6 +113,8 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
 
                     if ($scope.tags.indexOf(tag) === -1) {
                         $scope.tags.push(tag);
+
+                        onTagAdded(tag);
                     }
 
                     $scope.newTag = '';
@@ -115,13 +125,14 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
 
             $scope.tryRemoveLast = function() {
                 var changed = false;
+
                 if ($scope.tags.length > 0) {
                     if ($scope.options.enableEditingLastTag) {
-                        $scope.newTag = $scope.tags.pop();
+                        $scope.newTag = $scope.remove($scope.tags.length - 1);
                     }
                     else {
                         if (shouldRemoveLastTag) {
-                            $scope.tags.pop();
+                            $scope.remove($scope.tags.length - 1);
 
                             shouldRemoveLastTag = false;
                         }
@@ -135,7 +146,9 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
             };
 
             $scope.remove = function(index) {
-                $scope.tags.splice(index, 1);
+                var removedTag = $scope.tags.splice(index, 1)[0];
+                onTagRemoved(removedTag);
+                return removedTag;
             };
 
             $scope.getCssClass = function(index) {
