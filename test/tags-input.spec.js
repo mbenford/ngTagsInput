@@ -150,6 +150,54 @@ describe('tags-input-directive', function() {
         });
     });
 
+    describe('callback functions', function() {
+        it('calls onTagAdded when a new tag is added', function() {
+            
+            // Arrange
+            $scope.myAddCallback = function(tag){};
+            compile('tabindex="1" on-tag-added="myAddCallback(tag)"');
+            spyOn($scope, 'myAddCallback');
+
+            // Act
+            newTag('foo', KEYS.enter);
+            
+            // Assert
+            expect($scope.myAddCallback).toHaveBeenCalledWith('foo');
+        });
+        
+        it('calls onTagRemoved when a tag is removed by clicking button', function() {
+            
+            // Arrange
+            $scope.tags = ['some','cool','tags'];
+            $scope.myRemoveCallback = function(tag){};
+            compile('tabindex="1" on-tag-removed="myRemoveCallback(tag)"');
+            spyOn($scope, 'myRemoveCallback');
+
+            // Act
+            element.find('button').click();
+            
+            // Assert
+            expect($scope.myRemoveCallback).toHaveBeenCalledWith('some');
+            expect($scope.myRemoveCallback).toHaveBeenCalledWith('cool');
+            expect($scope.myRemoveCallback).toHaveBeenCalledWith('tags');
+        });
+        
+        it('calls onTagRemoved when last tag is removed using backspace', function() {
+            
+            // Arrange
+            $scope.tags = ['some','cool','tags'];
+            $scope.myRemoveCallback = function(tag){};
+            compile('tabindex="1" enable-editing-last-tag="true" on-tag-removed="myRemoveCallback(tag)"');
+            spyOn($scope, 'myRemoveCallback');
+
+            // Act
+            sendBackspace();
+            
+            // Assert
+            expect($scope.myRemoveCallback).toHaveBeenCalledWith('tags');
+        });         
+    });    
+    
     describe('tabindex option', function() {
         it('sets the input field tab index', function() {
             // Arrange/Act
