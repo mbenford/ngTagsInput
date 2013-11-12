@@ -71,7 +71,13 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
                   '        <button type="button" ng-click="remove($index)">{{ options.removeTagSymbol }}</button>' +
                   '      </li>' +
                   '    </ul>' +
-                  '    <input type="text" placeholder="{{ options.placeholder }}" size="{{ options.placeholder.length }}" maxlength="{{ options.maxLength }}" tabindex="{{ options.tabindex }}" ng-model="newTag" ng-change="newTagChange()">' +
+                  '    <input type="text"' +
+                  '           placeholder="{{ options.placeholder }}"' +
+                  '           size="{{ options.placeholder.length }}"' +
+                  '           maxlength="{{ options.maxLength }}"' +
+                  '           tabindex="{{ options.tabindex }}"' +
+                  '           ng-model="newTag"' +
+                  '           ng-change="newTagChange()">' +
                   '  </div>' +
                   '</div>',
         controller: function($scope, $attrs, $element) {
