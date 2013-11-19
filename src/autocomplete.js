@@ -74,10 +74,12 @@ angular.module('tags-input').directive('autocomplete', function($document) {
                   '                           ng-mouseenter="suggestionList.select($index)">{{ item }}</li>' +
                   '  </ul>' +
                   '</div>',
-        link: function(scope, element, attrs, tagsInput) {
+        link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down];
             var suggestionList = new SuggestionList(scope.source());
-            var input = tagsInput.getNewTagInput();
+
+            var tagsInput = tagsInputCtrl.registerAutocomplete();
+            var input = tagsInput.input;
 
             scope.suggestionList = suggestionList;
 

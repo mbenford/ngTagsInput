@@ -151,7 +151,7 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
 
             $scope.newTagChange = angular.noop;
 
-            this.getNewTagInput = function() {
+            this.registerAutocomplete = function() {
                 var input = $element.find('input');
                 input.changeValue = function(value) {
                     $scope.newTag = value;
@@ -163,7 +163,9 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
                     };
                 };
 
-                return input;
+                return {
+                    input: input
+                };
             };
         },
         link: function(scope, element) {
