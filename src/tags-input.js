@@ -58,6 +58,24 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
         };
     }
 
+    function SimplePubSub() {
+        var events = {};
+
+        return {
+            on: function(name, handler) {
+                if (!events[name]) {
+                    events[name] = [];
+                }
+                events[name].push(handler);
+            },
+            trigger: function(name, args) {
+                angular.forEach(events[name], function(handler) {
+                   handler(args);
+                });
+            }
+        };
+    }
+
     return {
         restrict: 'A,E',
         scope: { tags: '=ngModel', onTagAdded: '&', onTagRemoved: '&' },
@@ -82,10 +100,12 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
                   '</div>',
         controller: function($scope, $attrs, $element) {
             var shouldRemoveLastTag,
-                onTagAdded = ($scope.onTagAdded && $scope.onTagAdded()) || angular.noop,
-                onTagRemoved = ($scope.onTagRemoved && $scope.onTagRemoved()) || angular.noop;
+                events = new SimplePubSub();
 
             loadOptions($scope, $attrs);
+
+            events.on('tag-added', $scope.onTagAdded() || angular.noop);
+            events.on('tag-removed', $scope.onTagRemoved() || angular.noop);
 
             $scope.newTag = '';
             $scope.tags = $scope.tags || [];
@@ -103,7 +123,7 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
                     if ($scope.tags.indexOf(tag) === -1) {
                         $scope.tags.push(tag);
 
-                        onTagAdded(tag);
+                        events.trigger('tag-added', tag);
                     }
 
                     $scope.newTag = '';
@@ -136,7 +156,7 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
 
             $scope.remove = function(index) {
                 var removedTag = $scope.tags.splice(index, 1)[0];
-                onTagRemoved(removedTag);
+                events.trigger('tag-removed', removedTag);
                 return removedTag;
             };
 
@@ -164,7 +184,8 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
                 };
 
                 return {
-                    input: input
+                    input: input,
+                    events: events
                 };
             };
         },

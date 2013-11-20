@@ -75,11 +75,11 @@ angular.module('tags-input').directive('autocomplete', function($document) {
                   '  </ul>' +
                   '</div>',
         link: function(scope, element, attrs, tagsInputCtrl) {
-            var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down];
-            var suggestionList = new SuggestionList(scope.source());
+            var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
+                suggestionList = new SuggestionList(scope.source()),
 
-            var tagsInput = tagsInputCtrl.registerAutocomplete();
-            var input = tagsInput.input;
+                tagsInput = tagsInputCtrl.registerAutocomplete(),
+                input = tagsInput.input;
 
             scope.suggestionList = suggestionList;
 
@@ -156,6 +156,10 @@ angular.module('tags-input').directive('autocomplete', function($document) {
                     suggestionList.reset();
                     scope.$apply();
                 }
+            });
+
+            tagsInput.events.on('tag-added', function() {
+                suggestionList.reset();
             });
         }
     };

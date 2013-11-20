@@ -3,7 +3,7 @@
 
 describe('autocomplete-directive', function () {
     var $compile, $scope, $q,
-        parentCtrl, element, input, suggestionList, changeHandler, deferred;
+        parentCtrl, element, input, suggestionList, deferred, inputChangeHandler, onTagAddedHandler;
 
     beforeEach(function () {
         module('tags-input');
@@ -21,14 +21,23 @@ describe('autocomplete-directive', function () {
     });
 
     function compile() {
+        var parent, tagsInput;
+
         input = angular.element('<input type="text">');
         input.changeValue = jasmine.createSpy();
-        input.change = jasmine.createSpy().andCallFake(function(handler) { changeHandler = handler; });
+        input.change = jasmine.createSpy().andCallFake(function(handler) { inputChangeHandler = handler; });
 
-        var parent = $compile('<tags-input ng-model="whatever"></tags-input>')($scope);
+        tagsInput = {
+            input: input,
+            events: {
+                on: jasmine.createSpy().andCallFake(function(name, handler) { onTagAddedHandler = handler; })
+            }
+        };
+
+        parent = $compile('<tags-input ng-model="whatever"></tags-input>')($scope);
         parentCtrl = parent.controller('tagsInput');
 
-        spyOn(parentCtrl, 'registerAutocomplete').andReturn({ input: input });
+        spyOn(parentCtrl, 'registerAutocomplete').andReturn(tagsInput);
 
         element = angular.element('<autocomplete source="loadItems"></autocomplete>');
         parent.append(element);
@@ -52,7 +61,7 @@ describe('autocomplete-directive', function () {
     }
 
     function changeInputValue(value) {
-        changeHandler(value);
+        inputChangeHandler(value);
         $scope.$digest();
     }
 
@@ -146,6 +155,29 @@ describe('autocomplete-directive', function () {
             expect(getSuggestionsBox().css('display')).toBe('none');
         });
 
+        it('hides the suggestion box after adding the selected suggestion to the input field', function() {
+            // Arrange
+            loadSuggestions(['Item1', 'Item2']);
+            suggestionList.select(0);
+
+            // Act
+            sendKeyDown(KEYS.enter);
+
+            // Assert
+            expect(getSuggestionsBox().css('display')).toBe('none');
+        });
+
+        it('hides the suggestion box when a tag is added', function() {
+            // Arrange
+            suggestionList.show();
+
+            // Act
+            onTagAddedHandler();
+
+            // Assert
+            expect(getSuggestionsBox().css('display')).toBe('none');
+        });
+
         it('adds the selected suggestion to the input field when the enter key is pressed and the suggestions box is visible', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
@@ -191,18 +223,6 @@ describe('autocomplete-directive', function () {
 
             // Assert
             expect(suggestionList.selected).toBeNull();
-        });
-
-        it('hides the suggestion box after adding the selected suggestion to the input field', function() {
-            // Arrange
-            loadSuggestions(['Item1', 'Item2']);
-            suggestionList.select(0);
-
-            // Act
-            sendKeyDown(KEYS.enter);
-
-            // Assert
-            expect(getSuggestionsBox().css('display')).toBe('none');
         });
 
         it('calls the load function for every key pressed passing the input content', function() {
