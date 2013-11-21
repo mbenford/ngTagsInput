@@ -25,6 +25,8 @@ angular.module('tags-input', []);
  * @param {boolean=false} enableEditingLastTag Flag indicating that the last tag will be moved back into
  *                                             the new tag input box instead of being removed when the backspace key
  *                                             is pressed and the input box is empty.
+ * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
+ * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
 angular.module('tags-input').directive('tagsInput', function($interpolate) {
     function loadOptions(scope, attrs) {
@@ -104,8 +106,8 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
 
             loadOptions($scope, $attrs);
 
-            events.on('tag-added', $scope.onTagAdded() || angular.noop);
-            events.on('tag-removed', $scope.onTagRemoved() || angular.noop);
+            events.on('tag-added', $scope.onTagAdded);
+            events.on('tag-removed', $scope.onTagRemoved);
 
             $scope.newTag = '';
             $scope.tags = $scope.tags || [];
@@ -123,7 +125,7 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
                     if ($scope.tags.indexOf(tag) === -1) {
                         $scope.tags.push(tag);
 
-                        events.trigger('tag-added', tag);
+                        events.trigger('tag-added', { $tag: tag });
                     }
 
                     $scope.newTag = '';
@@ -156,7 +158,7 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
 
             $scope.remove = function(index) {
                 var removedTag = $scope.tags.splice(index, 1)[0];
-                events.trigger('tag-removed', removedTag);
+                events.trigger('tag-removed', { $tag: removedTag });
                 return removedTag;
             };
 

@@ -715,7 +715,7 @@ describe('tags-input-directive', function() {
         it('calls the provided callback when a new tag is added', function() {
             // Arrange
             $scope.callback = jasmine.createSpy();
-            compile('on-tag-added="callback"');
+            compile('on-tag-added="callback($tag)"');
 
             // Act
             newTag('foo');
@@ -730,7 +730,7 @@ describe('tags-input-directive', function() {
             // Arrange
             $scope.tags = ['some','cool','tags'];
             $scope.callback = jasmine.createSpy();
-            compile('on-tag-removed="callback"');
+            compile('on-tag-removed="callback($tag)"');
 
             // Act
             element.find('button')[0].click();
@@ -743,7 +743,7 @@ describe('tags-input-directive', function() {
             // Arrange
             $scope.tags = ['some','cool','tags'];
             $scope.callback = jasmine.createSpy();
-            compile('on-tag-removed="callback"');
+            compile('on-tag-removed="callback($tag)"');
 
             // Act
             sendBackspace();
