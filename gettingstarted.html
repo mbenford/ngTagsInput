@@ -14,6 +14,9 @@ priority: 0.80
       Add the ngTagsInput script file to your page &ndash; make sure it's added after the Angular script:
 <pre>&lt;script type="text/javascript" src="path/to/angular.min.js"&gt;&lt;/script&gt;
 <strong>&lt;script type="text/javascript" src="path/to/ng-tags-input.min.js"&gt;&lt;/script&gt;</strong></pre>
+      <div class="alert alert-danger">
+          <strong>Important: </strong>ngTagsInput is currently incompatible with Angular 1.2+. That issue will be addressed soon.
+      </div>
     </li>
     <li>
       Add the ngTagsInput style file to your page:
@@ -34,5 +37,18 @@ priority: 0.80
   <p>
     The property bound to the directive must be an array of strings, if it exists. Otherwise the directive will create the
     property and initialize it as an empty array.
+  </p>
+</section>
+<section>
+  <h2>Autocomplete</h2>
+  <p>ngTagsInput provides basic support for autocompletion through the &lt;autocomplete&gt; tag:</p>
+<pre>&lt;tags-input ng-model="tags"&gt;
+  <strong>&lt;autocomplete source="loadItems"&gt;&lt;/autocomplete&gt;</strong>
+&lt;/tags-input&gt;
+</pre>
+  <p>
+    You should pass a function of the scope to the <em>source</em> attribute. That function will be called for every
+    keystroke on the input field and will be provided with its current value. That function also must return a promise which
+    eventually resolves to an array of strings.
   </p>
 </section>
