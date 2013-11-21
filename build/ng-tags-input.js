@@ -36,6 +36,8 @@ angular.module('tags-input', []);
  * @param {boolean=false} enableEditingLastTag Flag indicating that the last tag will be moved back into
  *                                             the new tag input box instead of being removed when the backspace key
  *                                             is pressed and the input box is empty.
+ * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
+ * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
 angular.module('tags-input').directive('tagsInput', ["$interpolate", function($interpolate) {
     function loadOptions(scope, attrs) {
@@ -69,6 +71,24 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
         };
     }
 
+    function SimplePubSub() {
+        var events = {};
+
+        return {
+            on: function(name, handler) {
+                if (!events[name]) {
+                    events[name] = [];
+                }
+                events[name].push(handler);
+            },
+            trigger: function(name, args) {
+                angular.forEach(events[name], function(handler) {
+                   handler(args);
+                });
+            }
+        };
+    }
+
     return {
         restrict: 'A,E',
         scope: { tags: '=ngModel', onTagAdded: '&', onTagRemoved: '&' },
@@ -93,10 +113,12 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
                   '</div>',
         controller: ["$scope","$attrs","$element", function($scope, $attrs, $element) {
             var shouldRemoveLastTag,
-                onTagAdded = ($scope.onTagAdded && $scope.onTagAdded()) || angular.noop,
-                onTagRemoved = ($scope.onTagRemoved && $scope.onTagRemoved()) || angular.noop;
+                events = new SimplePubSub();
 
             loadOptions($scope, $attrs);
+
+            events.on('tag-added', $scope.onTagAdded);
+            events.on('tag-removed', $scope.onTagRemoved);
 
             $scope.newTag = '';
             $scope.tags = $scope.tags || [];
@@ -114,7 +136,7 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
                     if ($scope.tags.indexOf(tag) === -1) {
                         $scope.tags.push(tag);
 
-                        onTagAdded(tag);
+                        events.trigger('tag-added', { $tag: tag });
                     }
 
                     $scope.newTag = '';
@@ -147,7 +169,7 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
 
             $scope.remove = function(index) {
                 var removedTag = $scope.tags.splice(index, 1)[0];
-                onTagRemoved(removedTag);
+                events.trigger('tag-removed', { $tag: removedTag });
                 return removedTag;
             };
 
@@ -162,7 +184,7 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
 
             $scope.newTagChange = angular.noop;
 
-            this.getNewTagInput = function() {
+            this.registerAutocomplete = function() {
                 var input = $element.find('input');
                 input.changeValue = function(value) {
                     $scope.newTag = value;
@@ -174,7 +196,10 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
                     };
                 };
 
-                return input;
+                return {
+                    input: input,
+                    events: events
+                };
             };
         }],
         link: function(scope, element) {
@@ -295,10 +320,12 @@ angular.module('tags-input').directive('autocomplete', ["$document", function($d
                   '                           ng-mouseenter="suggestionList.select($index)">{{ item }}</li>' +
                   '  </ul>' +
                   '</div>',
-        link: function(scope, element, attrs, tagsInput) {
-            var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down];
-            var suggestionList = new SuggestionList(scope.source());
-            var input = tagsInput.getNewTagInput();
+        link: function(scope, element, attrs, tagsInputCtrl) {
+            var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
+                suggestionList = new SuggestionList(scope.source()),
+
+                tagsInput = tagsInputCtrl.registerAutocomplete(),
+                input = tagsInput.input;
 
             scope.suggestionList = suggestionList;
 
@@ -375,6 +402,10 @@ angular.module('tags-input').directive('autocomplete', ["$document", function($d
                     suggestionList.reset();
                     scope.$apply();
                 }
+            });
+
+            tagsInput.events.on('tag-added', function() {
+                suggestionList.reset();
             });
         }
     };
