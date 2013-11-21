@@ -1,6 +1,21 @@
 angular.module("ngTagsInputSite", ['tags-input'])
-    .controller('HomeCtrl', function($scope) {
-        $scope.tags = ['some', 'cool', 'tags'];
+    .controller('HomeCtrl', function($scope, $http, $q) {
+        var superheroes;
+        $http.get('/superheroes.json').success(function(data) {
+            superheroes = data;
+        });
+        $scope.tags = ['Batman', 'Superman', 'Flash'];
+        $scope.loadItems = function(text) {
+            var items, deferred = $q.defer();
+
+            items = _.chain(superheroes)
+                .filter(function(x) { return x.toLowerCase().indexOf(text.toLowerCase()) > -1; })
+                .take(10)
+                .value();
+
+            deferred.resolve(items);
+            return deferred.promise;
+        }
     })
     .controller('DemoCtrl', function($scope) {
         $scope.tags = ['just','some','cool','tags'];

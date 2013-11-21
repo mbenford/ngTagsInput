@@ -55,12 +55,12 @@ h3 {
     width: 100px;
 }
 
-.tags-input-home li {
+.tags-input-home .tags li {
     height: 30px;
     line-height: 2;
 }
 
-.tags-input-home input {
+.tags-input-home .tags input {
     height: 30px;
     padding-top: 1px;
 }
