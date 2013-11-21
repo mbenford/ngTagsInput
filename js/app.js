@@ -1,7 +1,7 @@
 angular.module("ngTagsInputSite", ['tags-input'])
     .controller('HomeCtrl', function($scope, $http, $q) {
         var superheroes;
-        $http.get('/superheroes.json').success(function(data) {
+        $http.get('superheroes.json').success(function(data) {
             superheroes = data;
         });
         $scope.tags = ['Batman', 'Superman', 'Flash'];
