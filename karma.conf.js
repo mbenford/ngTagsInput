@@ -16,9 +16,11 @@ module.exports = function(config) {
       'test/lib/angular-mocks.js',
       'test/tags-input.spec.js',
       'test/auto-complete.spec.js',
+      'test/transclude-append.spec.js',
       'src/keycodes.js',
       'src/tags-input.js',
-      'src/auto-complete.js'
+      'src/auto-complete.js',
+      'src/transclude-append.js'
     ],
 
 

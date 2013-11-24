@@ -104,7 +104,7 @@ angular.module('tags-input').directive('autoComplete', function($document) {
                 }
             });
 
-            input.bind('keydown', function(e) {
+            input.on('keydown', function(e) {
                 var key, handled;
 
                 if (hotkeys.indexOf(e.keyCode) === -1) {
@@ -151,7 +151,7 @@ angular.module('tags-input').directive('autoComplete', function($document) {
                 }
             });
 
-            $document.bind('click', function() {
+            $document.on('click', function() {
                 if (suggestionList.visible) {
                     suggestionList.reset();
                     scope.$apply();

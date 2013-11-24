@@ -94,7 +94,7 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
         scope: { tags: '=ngModel', onTagAdded: '&', onTagRemoved: '&' },
         replace: false,
         transclude: true,
-        template: '<div class="ngTagsInput {{ options.cssClass }}" ng-transclude>' +
+        template: '<div class="ngTagsInput {{ options.cssClass }}" transclude-append>' +
                   '  <div class="tags">' +
                   '    <ul>' +
                   '      <li ng-repeat="tag in tags" ng-class="getCssClass($index)">' +
@@ -112,8 +112,8 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
                   '  </div>' +
                   '</div>',
         controller: ["$scope","$attrs","$element", function($scope, $attrs, $element) {
-            var shouldRemoveLastTag,
-                events = new SimplePubSub();
+            var events = new SimplePubSub(),
+                shouldRemoveLastTag;
 
             loadOptions($scope, $attrs);
 
@@ -206,7 +206,7 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
             var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace];
             var input = element.find('input');
 
-            input.bind('keydown', function(e) {
+            input.on('keydown', function(e) {
                 var key;
 
                 // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.
@@ -240,7 +240,7 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
                 }
             });
 
-            element.find('div').bind('click', function() {
+            element.find('div').on('click', function() {
                 input[0].focus();
             });
         }
@@ -350,7 +350,7 @@ angular.module('tags-input').directive('autoComplete', ["$document", function($d
                 }
             });
 
-            input.bind('keydown', function(e) {
+            input.on('keydown', function(e) {
                 var key, handled;
 
                 if (hotkeys.indexOf(e.keyCode) === -1) {
@@ -397,7 +397,7 @@ angular.module('tags-input').directive('autoComplete', ["$document", function($d
                 }
             });
 
-            $document.bind('click', function() {
+            $document.on('click', function() {
                 if (suggestionList.visible) {
                     suggestionList.reset();
                     scope.$apply();
@@ -410,5 +410,20 @@ angular.module('tags-input').directive('autoComplete', ["$document", function($d
         }
     };
 }]);
+
+/**
+ * @ngdoc directive
+ * @name tagsInput.directive:transcludeAppend
+ *
+ * @description
+ * Re-creates the old behavior of ng-transclude.
+ */
+angular.module('tags-input').directive('transcludeAppend', function() {
+    return function(scope, element, attrs, ctrl, transcludeFn) {
+        transcludeFn(function(clone) {
+            element.append(clone);
+        });
+    };
+});
 
 }());

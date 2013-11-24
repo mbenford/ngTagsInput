@@ -45,7 +45,7 @@ describe('autocomplete-directive', function () {
         $compile(element)($scope);
         $scope.$digest();
         
-        suggestionList = element.scope().suggestionList;
+        suggestionList = element.isolateScope().suggestionList;
     }
 
     function resolve(items) {
@@ -81,6 +81,10 @@ describe('autocomplete-directive', function () {
         return getSuggestion(index).html();
     }
 
+    function isSuggestionsBoxVisible() {
+        return !getSuggestionsBox().hasClass('ng-hide');
+    }
+
     function loadSuggestions(items) {
         suggestionList.load('');
         resolve(items);
@@ -88,7 +92,7 @@ describe('autocomplete-directive', function () {
 
     describe('basic features', function() {
         it('ensures that the suggestions list is hidden by default', function() {
-            expect(getSuggestionsBox().css('display')).toBe('none');
+            expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
         it('renders all elements returned by the load function', function() {
@@ -107,7 +111,7 @@ describe('autocomplete-directive', function () {
             loadSuggestions(['Item1']);
 
             // Assert
-            expect(getSuggestionsBox().css('display')).toBe('');
+            expect(isSuggestionsBoxVisible()).toBe(true);
         });
 
         it('hides the suggestions list when there is no items to show', function() {
@@ -115,7 +119,7 @@ describe('autocomplete-directive', function () {
             loadSuggestions([]);
 
             // Assert
-            expect(getSuggestionsBox().css('display')).toBe('none');
+            expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
         it('hides the suggestion box when the input field becomes empty', function() {
@@ -128,7 +132,7 @@ describe('autocomplete-directive', function () {
             changeInputValue('');
 
             // Assert
-            expect(getSuggestionsBox().css('display')).toBe('none');
+            expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
         it('hides the suggestion box when the escape key is pressed', function() {
@@ -140,7 +144,7 @@ describe('autocomplete-directive', function () {
             sendKeyDown(KEYS.escape);
 
             // Assert
-            expect(getSuggestionsBox().css('display')).toBe('none');
+            expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
         it('hides the suggestion box when the user clicks elsewhere on the page', function() {
@@ -152,7 +156,7 @@ describe('autocomplete-directive', function () {
             $(document).trigger('click');
 
             // Assert
-            expect(getSuggestionsBox().css('display')).toBe('none');
+            expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
         it('hides the suggestion box after adding the selected suggestion to the input field', function() {
@@ -164,7 +168,7 @@ describe('autocomplete-directive', function () {
             sendKeyDown(KEYS.enter);
 
             // Assert
-            expect(getSuggestionsBox().css('display')).toBe('none');
+            expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
         it('hides the suggestion box when a tag is added', function() {
@@ -175,7 +179,7 @@ describe('autocomplete-directive', function () {
             onTagAddedHandler();
 
             // Assert
-            expect(getSuggestionsBox().css('display')).toBe('none');
+            expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
         it('adds the selected suggestion to the input field when the enter key is pressed and the suggestions box is visible', function() {
@@ -219,7 +223,7 @@ describe('autocomplete-directive', function () {
             suggestionList.select(0);
 
             // Act
-            element.scope().addSuggestion();
+            element.isolateScope().addSuggestion();
 
             // Assert
             expect(suggestionList.selected).toBeNull();

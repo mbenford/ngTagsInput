@@ -83,7 +83,7 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
         scope: { tags: '=ngModel', onTagAdded: '&', onTagRemoved: '&' },
         replace: false,
         transclude: true,
-        template: '<div class="ngTagsInput {{ options.cssClass }}" ng-transclude>' +
+        template: '<div class="ngTagsInput {{ options.cssClass }}" transclude-append>' +
                   '  <div class="tags">' +
                   '    <ul>' +
                   '      <li ng-repeat="tag in tags" ng-class="getCssClass($index)">' +
@@ -101,8 +101,8 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
                   '  </div>' +
                   '</div>',
         controller: function($scope, $attrs, $element) {
-            var shouldRemoveLastTag,
-                events = new SimplePubSub();
+            var events = new SimplePubSub(),
+                shouldRemoveLastTag;
 
             loadOptions($scope, $attrs);
 
@@ -195,7 +195,7 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
             var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace];
             var input = element.find('input');
 
-            input.bind('keydown', function(e) {
+            input.on('keydown', function(e) {
                 var key;
 
                 // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.
@@ -229,7 +229,7 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
                 }
             });
 
-            element.find('div').bind('click', function() {
+            element.find('div').on('click', function() {
                 input[0].focus();
             });
         }
