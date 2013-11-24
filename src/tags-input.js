@@ -11,20 +11,20 @@ angular.module('tags-input', []);
  * ngTagsInput is an Angular directive that renders an input box with tag editing support.
  *
  * @param {string} ngModel Assignable angular expression to data-bind to.
- * @param {string} ngClass CSS class to style the control.
- * @param {number} tabindex Tab order of the control.
- * @param {string=Add a tag} placeholder Placeholder text for the control.
- * @param {number=3} minLength Minimum length for a new tag.
+ * @param {string=} ngClass CSS class to style the control.
+ * @param {number=} tabindex Tab order of the control.
+ * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
+ * @param {number=} [minLength=3] Minimum length for a new tag.
  * @param {number=} maxLength Maximum length allowed for a new tag.
- * @param {string=×} removeTagSymbol Symbol character for the remove tag button.
- * @param {boolean=true} addOnEnter Flag indicating that a new tag will be added on pressing the ENTER key.
- * @param {boolean=false} addOnSpace Flag indicating that a new tag will be added on pressing the SPACE key.
- * @param {boolean=true} addOnComma Flag indicating that a new tag will be added on pressing the COMMA key.
- * @param {boolean=true} replaceSpacesWithDashes Flag indicating that spaces will be replaced with dashes.
- * @param {string=^[a-zA-Z0-9\s]+$*} allowedTagsPattern Regular expression that determines whether a new tag is valid.
- * @param {boolean=false} enableEditingLastTag Flag indicating that the last tag will be moved back into
- *                                             the new tag input box instead of being removed when the backspace key
- *                                             is pressed and the input box is empty.
+ * @param {string=} [removeTagSymbol=×] Symbol character for the remove tag button.
+ * @param {boolean=} [addOnEnter=true] Flag indicating that a new tag will be added on pressing the ENTER key.
+ * @param {boolean=} [addOnSpace=false] Flag indicating that a new tag will be added on pressing the SPACE key.
+ * @param {boolean=} [addOnComma=true] Flag indicating that a new tag will be added on pressing the COMMA key.
+ * @param {boolean=} [replaceSpacesWithDashes=true] Flag indicating that spaces will be replaced with dashes.
+ * @param {string=} [allowedTagsPattern=^[a-zA-Z0-9\s]+$*] Regular expression that determines whether a new tag is valid.
+ * @param {boolean=} [enableEditingLastTag=false] Flag indicating that the last tag will be moved back into
+ *                                                the new tag input box instead of being removed when the backspace key
+ *                                                is pressed and the input box is empty.
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
