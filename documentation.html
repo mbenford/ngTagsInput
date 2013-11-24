@@ -16,7 +16,7 @@ priority: 0.50
   <section>
     <h3>Usage</h3>
 {% highlight html %}
-<ANY tags-input
+<tags-input
         ng-model="{string}"
        [ng-class="{string}"]
        [tabindex="{number}"]
@@ -31,7 +31,7 @@ priority: 0.50
        [enable-editing-last-tag="{boolean}"]
        [on-tag-added="{expression}"
        [on-tag-removed="{expression}">
-</ANY>
+</tags-input>
 {% endhighlight %}
   </section>
   <section>
@@ -136,7 +136,7 @@ priority: 0.50
 </section>
 
 <section>
-  <h2><code>autocomplete <small>(directive in module <strong>tags-input</strong>)</small></code></h2>
+  <h2><code>autoComplete <small>(directive in module <strong>tags-input</strong>)</small></code></h2>
   <section>
     <h3>Description</h3>
     <p>Provides autocomplete support for the tagsInput directive.</p>
@@ -145,9 +145,11 @@ priority: 0.50
   <section>
     <h3>Usage</h3>
 {% highlight html %}
-<autocomplete
-  source="{expression}">
-</autocomplete>
+<tags-input>
+  <auto-complete
+    source="{expression}">
+  </auto-complete>
+</tags-input>
 {% endhighlight %}
   </section>
   <h3>Parameters</h3>
