@@ -79,7 +79,7 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
     }
 
     return {
-        restrict: 'A,E',
+        restrict: 'E',
         scope: { tags: '=ngModel', onTagAdded: '&', onTagRemoved: '&' },
         replace: false,
         transclude: true,

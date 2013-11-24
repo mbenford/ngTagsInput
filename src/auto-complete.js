@@ -3,7 +3,7 @@
 
 /**
  * @ngdoc directive
- * @name tagsInput.directive:autocomplete
+ * @name tagsInput.directive:autoComplete
  *
  * @description
  * Provides autocomplete support for the tagsInput directive.
@@ -11,7 +11,7 @@
  * @param {expression} source Callback that will be called for every keystroke and will be provided with the current
  *                            input's value. Must return a promise.
  */
-angular.module('tags-input').directive('autocomplete', function($document) {
+angular.module('tags-input').directive('autoComplete', function($document) {
     function SuggestionList(loadFn) {
         var self = {};
 
@@ -63,7 +63,7 @@ angular.module('tags-input').directive('autocomplete', function($document) {
     }
 
     return {
-        restrict: 'A,E',
+        restrict: 'E',
         require: '?^tagsInput',
         scope: { source: '&' },
         template: '<div class="autocomplete" ng-show="suggestionList.visible">' +

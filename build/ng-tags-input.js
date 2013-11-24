@@ -90,7 +90,7 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
     }
 
     return {
-        restrict: 'A,E',
+        restrict: 'E',
         scope: { tags: '=ngModel', onTagAdded: '&', onTagRemoved: '&' },
         replace: false,
         transclude: true,
@@ -249,7 +249,7 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
 
 /**
  * @ngdoc directive
- * @name tagsInput.directive:autocomplete
+ * @name tagsInput.directive:autoComplete
  *
  * @description
  * Provides autocomplete support for the tagsInput directive.
@@ -257,7 +257,7 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
  * @param {expression} source Callback that will be called for every keystroke and will be provided with the current
  *                            input's value. Must return a promise.
  */
-angular.module('tags-input').directive('autocomplete', ["$document", function($document) {
+angular.module('tags-input').directive('autoComplete', ["$document", function($document) {
     function SuggestionList(loadFn) {
         var self = {};
 
@@ -309,7 +309,7 @@ angular.module('tags-input').directive('autocomplete', ["$document", function($d
     }
 
     return {
-        restrict: 'A,E',
+        restrict: 'E',
         require: '?^tagsInput',
         scope: { source: '&' },
         template: '<div class="autocomplete" ng-show="suggestionList.visible">' +

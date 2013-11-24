@@ -39,7 +39,7 @@ describe('autocomplete-directive', function () {
 
         spyOn(parentCtrl, 'registerAutocomplete').andReturn(tagsInput);
 
-        element = angular.element('<autocomplete source="loadItems"></autocomplete>');
+        element = angular.element('<auto-complete source="loadItems"></auto-complete>');
         parent.append(element);
 
         $compile(element)($scope);
