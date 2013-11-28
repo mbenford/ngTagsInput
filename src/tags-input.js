@@ -29,35 +29,21 @@ angular.module('tags-input', []);
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
 angular.module('tags-input').directive('tagsInput', function($interpolate) {
-    function loadOptions(scope, attrs) {
-        function getStr(name, defaultValue) {
-            return attrs[name] ? $interpolate(attrs[name])(scope.$parent) : defaultValue;
-        }
+    function initializeOptions(scope, attrs, options) {
+        var converters = {};
+        converters[String] = function(value) { return value; };
+        converters[Number] = function(value) { return parseInt(value, 10); };
+        converters[Boolean] = function(value) { return value === 'true'; };
+        converters[RegExp] = function(value) { return new RegExp(value); };
 
-        function getInt(name, defaultValue) {
-            var value = getStr(name, null);
-            return value ? parseInt(value, 10) : defaultValue;
-        }
+        scope.options = {};
 
-        function getBool(name, defaultValue) {
-            var value = getStr(name, null);
-            return value ? value === 'true' : defaultValue;
-        }
+        angular.forEach(options, function(value, key) {
+            var interpolatedValue = attrs[key] && $interpolate(attrs[key])(scope.$parent),
+                converter = converters[options[key].type];
 
-        scope.options = {
-            cssClass: getStr('ngClass', ''),
-            placeholder: getStr('placeholder', 'Add a tag'),
-            tabindex: getInt('tabindex', ''),
-            removeTagSymbol: getStr('removeTagSymbol', String.fromCharCode(215)),
-            replaceSpacesWithDashes: getBool('replaceSpacesWithDashes', true),
-            minLength: getInt('minLength', 3),
-            maxLength: getInt('maxLength', ''),
-            addOnEnter: getBool('addOnEnter', true),
-            addOnSpace: getBool('addOnSpace', false),
-            addOnComma: getBool('addOnComma', true),
-            allowedTagsPattern: new RegExp(getStr('allowedTagsPattern', '^[a-zA-Z0-9\\s]+$')),
-            enableEditingLastTag: getBool('enableEditingLastTag', false)
-        };
+            scope.options[key] = interpolatedValue ? converter(interpolatedValue) : options[key].defaultValue;
+        });
     }
 
     function SimplePubSub() {
@@ -80,10 +66,14 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
 
     return {
         restrict: 'E',
-        scope: { tags: '=ngModel', onTagAdded: '&', onTagRemoved: '&' },
+        scope: {
+            tags: '=ngModel',
+            onTagAdded: '&',
+            onTagRemoved: '&'
+        },
         replace: false,
         transclude: true,
-        template: '<div class="ngTagsInput {{ options.cssClass }}" transclude-append>' +
+        template: '<div class="ngTagsInput" ng-class="options.customClass" transclude-append>' +
                   '  <div class="tags">' +
                   '    <ul>' +
                   '      <li ng-repeat="tag in tags" ng-class="getCssClass($index)">' +
@@ -104,14 +94,27 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
             var events = new SimplePubSub(),
                 shouldRemoveLastTag;
 
-            loadOptions($scope, $attrs);
+            initializeOptions($scope, $attrs, {
+                customClass: { type: String, defaultValue: '' },
+                placeholder: { type: String, defaultValue: 'Add a tag' },
+                tabindex: { type: Number },
+                removeTagSymbol: { type: String, defaultValue: String.fromCharCode(215) },
+                replaceSpacesWithDashes: { type: Boolean, defaultValue: true },
+                minLength: { type: Number, defaultValue: 3 },
+                maxLength: { type: Number },
+                addOnEnter: { type: Boolean, defaultValue: true },
+                addOnSpace: { type: Boolean, defaultValue: false },
+                addOnComma: { type: Boolean, defaultValue: true },
+                allowedTagsPattern: { type: RegExp, defaultValue: /^[a-zA-Z0-9\s]+$/ },
+                enableEditingLastTag: { type: Boolean, defaultValue: false }
+            });
 
             events.on('tag-added', $scope.onTagAdded);
             events.on('tag-removed', $scope.onTagRemoved);
 
             $scope.newTag = '';
             $scope.tags = $scope.tags || [];
-            
+
             $scope.tryAdd = function() {
                 var changed = false;
                 var tag = $scope.newTag;

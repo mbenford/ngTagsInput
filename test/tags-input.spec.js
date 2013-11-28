@@ -141,9 +141,9 @@ describe('tags-input-directive', function() {
             expect($scope.tags).toEqual(['foo']);
         });
 
-        it('adds a custom CSS class to the container div when ng-class option is provided', function() {
+        it('adds a custom CSS class to the container div when custom-class option is provided', function() {
             // Arrange/Act
-            compile('ng-class="myClass"');
+            compile('custom-class="myClass"');
 
             // Arrange
             expect(element.find('div').hasClass('myClass')).toBe(true);
