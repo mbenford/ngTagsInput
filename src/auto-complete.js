@@ -33,7 +33,7 @@ angular.module('tags-input').directive('autoComplete', function($document) {
                 return;
             }
 
-            loadFn(text).then(function(items) {
+            loadFn({ $text: text }).then(function(items) {
                 self.items = items;
                 if (items.length > 0) {
                     self.show();
@@ -76,7 +76,7 @@ angular.module('tags-input').directive('autoComplete', function($document) {
                   '</div>',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList = new SuggestionList(scope.source()),
+                suggestionList = new SuggestionList(scope.source),
 
                 tagsInput = tagsInputCtrl.registerAutocomplete(),
                 input = tagsInput.input;
