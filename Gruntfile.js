@@ -45,7 +45,7 @@ module.exports = function(grunt) {
             build: ['build/'],
             tmp: ['tmp/']
         },
-        // Concats all source files into one JS file and one CSS file
+        // Concatenates all source files into one JS file and one CSS file
         concat: {
             js: {
                 options: {
@@ -130,15 +130,7 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-cssmin');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-contrib-compress');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-ng-annotate');
-    grunt.loadNpmTasks('grunt-karma');
+    require('load-grunt-tasks')(grunt);
 
     grunt.registerTask('test', [
         'jshint',
