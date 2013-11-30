@@ -8,18 +8,37 @@
  * @description
  * Provides autocomplete support for the tagsInput directive.
  *
- * @param {expression} source Callback that will be called for every keystroke and will be provided with the current
- *                            input's value. Must return a promise.
+ * @param {expression} source Expression to evaluate upon changing the input content. The input value is available as $text.
+ *                            The result of the expression must be a promise that resolves to an array of strings.
  */
-angular.module('tags-input').directive('autoComplete', function($document) {
-    function SuggestionList(loadFn) {
-        var self = {};
+angular.module('tags-input').directive('autoComplete', function($document, $interpolate, $timeout) {
+    function initializeOptions(scope, attrs, options) {
+        var converters = {};
+        converters[String] = function(value) { return value; };
+        converters[Number] = function(value) { return parseInt(value, 10); };
+        converters[Boolean] = function(value) { return value === 'true'; };
+        converters[RegExp] = function(value) { return new RegExp(value); };
+
+        scope.options = {};
+
+        angular.forEach(options, function(value, key) {
+            var interpolatedValue = attrs[key] && $interpolate(attrs[key])(scope.$parent),
+                converter = converters[options[key].type];
+
+            scope.options[key] = interpolatedValue ? converter(interpolatedValue) : options[key].defaultValue;
+        });
+    }
+
+    function SuggestionList(loadFn, options) {
+        var self = {}, debouncedLoadId;
 
         self.reset = function() {
             self.items = [];
             self.visible = false;
             self.index = -1;
             self.selected = null;
+
+            $timeout.cancel(debouncedLoadId);
         };
         self.show = function() {
             self.selected = null;
@@ -29,16 +48,15 @@ angular.module('tags-input').directive('autoComplete', function($document) {
             self.visible = false;
         };
         self.load = function(text) {
-            if (self.selected === text) {
-                return;
-            }
-
-            loadFn({ $text: text }).then(function(items) {
-                self.items = items;
-                if (items.length > 0) {
-                    self.show();
-                }
-            });
+            $timeout.cancel(debouncedLoadId);
+            debouncedLoadId = $timeout(function() {
+                loadFn({ $text: text }).then(function(items) {
+                    self.items = items;
+                    if (items.length > 0) {
+                        self.show();
+                    }
+                });
+            }, options.debounceDelay, false);
         };
         self.selectNext = function() {
             self.select(++self.index);
@@ -76,10 +94,15 @@ angular.module('tags-input').directive('autoComplete', function($document) {
                   '</div>',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList = new SuggestionList(scope.source),
+                suggestionList, tagsInput, input;
 
-                tagsInput = tagsInputCtrl.registerAutocomplete(),
-                input = tagsInput.input;
+            initializeOptions(scope, attrs, {
+                debounceDelay: { type: Number, defaultValue: 100 }
+            });
+
+            suggestionList = new SuggestionList(scope.source, scope.options);
+            tagsInput = tagsInputCtrl.registerAutocomplete();
+            input = tagsInput.input;
 
             scope.suggestionList = suggestionList;
 

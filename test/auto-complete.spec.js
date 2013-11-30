@@ -2,16 +2,17 @@
 'use strict';
 
 describe('autocomplete-directive', function () {
-    var $compile, $scope, $q,
-        parentCtrl, element, input, suggestionList, deferred, inputChangeHandler, onTagAddedHandler;
+    var $compile, $scope, $q, $timeout,
+        parentCtrl, element, isolateScope, input, suggestionList, deferred, inputChangeHandler, onTagAddedHandler;
 
     beforeEach(function () {
         module('tags-input');
 
-        inject(function($rootScope, _$compile_, _$q_) {
+        inject(function($rootScope, _$compile_, _$q_, _$timeout_) {
             $scope = $rootScope;
             $compile = _$compile_;
             $q = _$q_;
+            $timeout = _$timeout_;
         });
 
         deferred = $q.defer();
@@ -21,7 +22,7 @@ describe('autocomplete-directive', function () {
     });
 
     function compile() {
-        var parent, tagsInput;
+        var parent, tagsInput, options;
 
         input = angular.element('<input type="text">');
         input.changeValue = jasmine.createSpy();
@@ -39,13 +40,15 @@ describe('autocomplete-directive', function () {
 
         spyOn(parentCtrl, 'registerAutocomplete').andReturn(tagsInput);
 
-        element = angular.element('<auto-complete source="loadItems($text)"></auto-complete>');
+        options = jQuery.makeArray(arguments).join(' ');
+        element = angular.element('<auto-complete source="loadItems($text)" ' + options + '></auto-complete>');
         parent.append(element);
 
         $compile(element)($scope);
         $scope.$digest();
-        
-        suggestionList = element.isolateScope().suggestionList;
+
+        isolateScope = element.isolateScope();
+        suggestionList = isolateScope.suggestionList;
     }
 
     function resolve(items) {
@@ -87,6 +90,7 @@ describe('autocomplete-directive', function () {
 
     function loadSuggestions(items) {
         suggestionList.load('');
+        $timeout.flush();
         resolve(items);
     }
 
@@ -223,23 +227,10 @@ describe('autocomplete-directive', function () {
             suggestionList.select(0);
 
             // Act
-            element.isolateScope().addSuggestion();
+            isolateScope.addSuggestion();
 
             // Assert
             expect(suggestionList.selected).toBeNull();
-        });
-
-        it('calls the load function for every key pressed passing the input content', function() {
-            // Act
-            changeInputValue('A');
-            changeInputValue('AB');
-            changeInputValue('ABC');
-
-            // Assert
-            expect($scope.loadItems.callCount).toBe(3);
-            expect($scope.loadItems.calls[0].args[0]).toBe('A');
-            expect($scope.loadItems.calls[1].args[0]).toBe('AB');
-            expect($scope.loadItems.calls[2].args[0]).toBe('ABC');
         });
 
         it('does not call the load function after adding the selected suggestion to the input field', function() {
@@ -498,6 +489,75 @@ describe('autocomplete-directive', function () {
             // Assert
             expect(event.isDefaultPrevented()).toBe(false);
             expect(event.isPropagationStopped()).toBe(false);
+        });
+    });
+
+    describe('debounce-delay option', function () {
+        it('doesn\'t call the load function immediately', function () {
+            // Arrange
+            compile('debounce-delay="100"');
+
+            // Act
+            changeInputValue('A');
+            changeInputValue('AB');
+            changeInputValue('ABC');
+
+            // Assert
+            expect($scope.loadItems).not.toHaveBeenCalled();
+        });
+
+        it('calls the load function only after a delay has passed', function() {
+            // Arrange
+            compile('debounce-delay="100"');
+
+            // Act
+            changeInputValue('A');
+            changeInputValue('AB');
+            changeInputValue('ABC');
+
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).toHaveBeenCalledWith('ABC');
+        });
+
+        it('doesn\'t call the load function when the reset method is called', function() {
+            // Arrange
+            compile();
+            changeInputValue('A');
+
+            // Act
+            suggestionList.reset();
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).not.toHaveBeenCalled();
+
+        });
+
+        it('initializes the option to 100 milliseconds', function () {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.debounceDelay).toBe(100);
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('debounce-delay="1000"');
+
+            // Assert
+            expect(isolateScope.options.debounceDelay).toBe(1000);
+        });
+
+        it('sets the option given an interpolated string', function() {
+            // Arrange/Act
+            $scope.value = 1000;
+            compile('debounce-delay="{{ value }}"');
+
+            // Assert
+            expect(isolateScope.options.debounceDelay).toBe(1000);
         });
     });
 });

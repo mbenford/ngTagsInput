@@ -8,7 +8,7 @@
 </head>
 <body ng-controller="Ctrl">
   <tags-input ng-model="tags" placeholder="{{ placeholder.value }}">
-    <auto-complete source="loadItems"></auto-complete>
+    <auto-complete source="loadItems($text)" debounce-delay="100"></auto-complete>
   </tags-input>
 
   <script type="text/javascript">
@@ -17,6 +17,7 @@
             $scope.tags = ['some', 'cool', 'tags'];
             $scope.placeholder = {value: "New tag" };
             $scope.loadItems = function(text) {
+              console.log(text);
               var deferred = $q.defer();
               deferred.resolve(['Item1', 'Item2', 'Item3']);
               return deferred.promise;
