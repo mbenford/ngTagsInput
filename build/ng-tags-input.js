@@ -240,14 +240,16 @@ angular.module('tags-input').directive('tagsInput', ["configuration", function(c
  * @description
  * Provides autocomplete support for the tagsInput directive.
  *
- * @param {expression} source Expression to evaluate upon changing the input content. The input value is available as $text.
- *                            The result of the expression must be a promise that resolves to an array of strings.
- * @param {number=} [debounceDelay=100] Amount of time, in milliseconds, to wait after the last keystroke before evaluating
- *                                      the expression in the source option.
- * @param {number=3} [minLength=3] Minimum number of characters that must be entered before evaluating the expression
+ * @param {expression} source Expression to evaluate upon changing the input content. The input value is available as
+ *                            $query. The result of the expression must be a promise that resolves to an array of strings.
+ * @param {number=} [debounceDelay=100] Amount of time, in milliseconds, to wait after the last keystroke before
+ *                                      evaluating the expression in the source option.
+ * @param {number=} [minLength=3] Minimum number of characters that must be entered before evaluating the expression
  *                                 in the source option.
+ * @param {boolean=} [highlightMatchedText=true] Flag indicating that the matched text will be highlighted in the
+ *                                               suggestions list.
  */
-angular.module('tags-input').directive('autoComplete', ["$document","$timeout","configuration", function($document, $timeout, configuration) {
+angular.module('tags-input').directive('autoComplete', ["$document","$timeout","$sce","configuration", function($document, $timeout, $sce, configuration) {
     function SuggestionList(loadFn, options) {
         var self = {}, debouncedLoadId;
 
@@ -256,6 +258,7 @@ angular.module('tags-input').directive('autoComplete', ["$document","$timeout","
             self.visible = false;
             self.index = -1;
             self.selected = null;
+            self.query = null;
 
             $timeout.cancel(debouncedLoadId);
         };
@@ -266,15 +269,16 @@ angular.module('tags-input').directive('autoComplete', ["$document","$timeout","
         self.hide = function() {
             self.visible = false;
         };
-        self.load = function(text) {
-            if (text.length < options.minLength) {
+        self.load = function(query) {
+            if (query.length < options.minLength) {
                 self.reset();
                 return;
             }
 
             $timeout.cancel(debouncedLoadId);
             debouncedLoadId = $timeout(function() {
-                loadFn({ $text: text }).then(function(items) {
+                self.query = query;
+                loadFn({ $query: query }).then(function(items) {
                     self.items = items;
                     if (items.length > 0) {
                         self.show();
@@ -313,21 +317,35 @@ angular.module('tags-input').directive('autoComplete', ["$document","$timeout","
                   '    <li class="suggestion" ng-repeat="item in suggestionList.items"' +
                   '                           ng-class="{selected: item == suggestionList.selected}"' +
                   '                           ng-click="addSuggestion()"' +
-                  '                           ng-mouseenter="suggestionList.select($index)">{{ item }}</li>' +
+                  '                           ng-mouseenter="suggestionList.select($index)"' +
+                  '                           ng-bind-html="highlight(item)"></li>' +
                   '  </ul>' +
                   '</div>',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList, tagsInput, input;
+                suggestionList, tagsInput, input, highlight;
 
             configuration.load(scope, attrs, {
                 debounceDelay: { type: Number, defaultValue: 100 },
-                minLength: { type: Number, defaultValue: 3 }
+                minLength: { type: Number, defaultValue: 3 },
+                highlightMatchedText: { type: Boolean, defaultValue: true }
             });
 
             suggestionList = new SuggestionList(scope.source, scope.options);
             tagsInput = tagsInputCtrl.registerAutocomplete();
             input = tagsInput.input;
+
+            if (scope.options.highlightMatchedText) {
+                highlight = function(item, text) {
+                    var expression = new RegExp(text, 'gi');
+                    return item.replace(expression, '<em>$&</em>');
+                };
+            }
+            else {
+                highlight = function(item) {
+                    return item;
+                };
+            }
 
             scope.suggestionList = suggestionList;
 
@@ -342,6 +360,10 @@ angular.module('tags-input').directive('autoComplete', ["$document","$timeout","
                     added = true;
                 }
                 return added;
+            };
+
+            scope.highlight = function(item) {
+                return $sce.trustAsHtml(highlight(item, suggestionList.query));
             };
 
             input.change(function(value) {
