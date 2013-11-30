@@ -20,7 +20,8 @@ module.exports = function(config) {
       'src/keycodes.js',
       'src/tags-input.js',
       'src/auto-complete.js',
-      'src/transclude-append.js'
+      'src/transclude-append.js',
+      'src/configuration.js'
     ],
 
 

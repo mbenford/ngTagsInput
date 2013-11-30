@@ -10,25 +10,10 @@
  *
  * @param {expression} source Expression to evaluate upon changing the input content. The input value is available as $text.
  *                            The result of the expression must be a promise that resolves to an array of strings.
+ * @param {number=} [debounceDelay=100] Amount of time, in milliseconds, to wait after the last keystroke before evaluating
+ *                                      the expression in the source option.
  */
-angular.module('tags-input').directive('autoComplete', function($document, $interpolate, $timeout) {
-    function initializeOptions(scope, attrs, options) {
-        var converters = {};
-        converters[String] = function(value) { return value; };
-        converters[Number] = function(value) { return parseInt(value, 10); };
-        converters[Boolean] = function(value) { return value === 'true'; };
-        converters[RegExp] = function(value) { return new RegExp(value); };
-
-        scope.options = {};
-
-        angular.forEach(options, function(value, key) {
-            var interpolatedValue = attrs[key] && $interpolate(attrs[key])(scope.$parent),
-                converter = converters[options[key].type];
-
-            scope.options[key] = interpolatedValue ? converter(interpolatedValue) : options[key].defaultValue;
-        });
-    }
-
+angular.module('tags-input').directive('autoComplete', function($document, $timeout, configuration) {
     function SuggestionList(loadFn, options) {
         var self = {}, debouncedLoadId;
 
@@ -96,7 +81,7 @@ angular.module('tags-input').directive('autoComplete', function($document, $inte
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
                 suggestionList, tagsInput, input;
 
-            initializeOptions(scope, attrs, {
+            configuration.load(scope, attrs, {
                 debounceDelay: { type: Number, defaultValue: 100 }
             });
 

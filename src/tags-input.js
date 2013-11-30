@@ -28,24 +28,7 @@ angular.module('tags-input', []);
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
-angular.module('tags-input').directive('tagsInput', function($interpolate) {
-    function initializeOptions(scope, attrs, options) {
-        var converters = {};
-        converters[String] = function(value) { return value; };
-        converters[Number] = function(value) { return parseInt(value, 10); };
-        converters[Boolean] = function(value) { return value === 'true'; };
-        converters[RegExp] = function(value) { return new RegExp(value); };
-
-        scope.options = {};
-
-        angular.forEach(options, function(value, key) {
-            var interpolatedValue = attrs[key] && $interpolate(attrs[key])(scope.$parent),
-                converter = converters[options[key].type];
-
-            scope.options[key] = interpolatedValue ? converter(interpolatedValue) : options[key].defaultValue;
-        });
-    }
-
+angular.module('tags-input').directive('tagsInput', function(configuration) {
     function SimplePubSub() {
         var events = {};
 
@@ -94,7 +77,7 @@ angular.module('tags-input').directive('tagsInput', function($interpolate) {
             var events = new SimplePubSub(),
                 shouldRemoveLastTag;
 
-            initializeOptions($scope, $attrs, {
+            configuration.load($scope, $attrs, {
                 customClass: { type: String, defaultValue: '' },
                 placeholder: { type: String, defaultValue: 'Add a tag' },
                 tabindex: { type: Number },
