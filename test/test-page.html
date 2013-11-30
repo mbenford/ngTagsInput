@@ -8,7 +8,7 @@
 </head>
 <body ng-controller="Ctrl">
   <tags-input ng-model="tags" placeholder="{{ placeholder.value }}">
-    <auto-complete source="loadItems($text)" debounce-delay="100"></auto-complete>
+    <auto-complete source="loadItems($text)" debounce-delay="100" min-length="10"></auto-complete>
   </tags-input>
 
   <script type="text/javascript">

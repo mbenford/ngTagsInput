@@ -1,11 +1,11 @@
 (function() {
 'use strict';
 
-describe('autocomplete-directive', function () {
+describe('autocomplete-directive', function() {
     var $compile, $scope, $q, $timeout,
         parentCtrl, element, isolateScope, input, suggestionList, deferred, inputChangeHandler, onTagAddedHandler;
 
-    beforeEach(function () {
+    beforeEach(function() {
         module('tags-input');
 
         inject(function($rootScope, _$compile_, _$q_, _$timeout_) {
@@ -89,7 +89,7 @@ describe('autocomplete-directive', function () {
     }
 
     function loadSuggestions(items) {
-        suggestionList.load('');
+        suggestionList.load('foobar');
         $timeout.flush();
         resolve(items);
     }
@@ -210,7 +210,7 @@ describe('autocomplete-directive', function () {
             expect(input.changeValue).toHaveBeenCalledWith('Item1');
         });
 
-        it('does not change the input value when the enter key is pressed and there is nothing selected', function () {
+        it('does not change the input value when the enter key is pressed and there is nothing selected', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
 
@@ -221,7 +221,7 @@ describe('autocomplete-directive', function () {
             expect(input.changeValue).not.toHaveBeenCalled();
         });
 
-        it('sets the selected suggestion to null after adding it to the input field', function () {
+        it('sets the selected suggestion to null after adding it to the input field', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
             suggestionList.select(0);
@@ -259,7 +259,7 @@ describe('autocomplete-directive', function () {
             expect(getSuggestion(2).hasClass('selected')).toBe(false);
         });
 
-        it('selects no suggestion after the suggestion box is shown', function () {
+        it('selects no suggestion after the suggestion box is shown', function() {
             // Arrange/Act
             loadSuggestions(['Item1', 'Item2']);
 
@@ -360,12 +360,12 @@ describe('autocomplete-directive', function () {
         });
     });
 
-    describe('hotkeys propagation handling - suggestion box is visible', function () {
-        beforeEach(function () {
+    describe('hotkeys propagation handling - suggestion box is visible', function() {
+        beforeEach(function() {
             suggestionList.show();
         });
 
-        it('prevents the down arrow keydown event from being propagated', function () {
+        it('prevents the down arrow keydown event from being propagated', function() {
             // Act
             var event = sendKeyDown(KEYS.down);
 
@@ -374,7 +374,7 @@ describe('autocomplete-directive', function () {
             expect(event.isPropagationStopped()).toBe(true);
         });
 
-        it('prevents the up arrow keydown event from being propagated', function () {
+        it('prevents the up arrow keydown event from being propagated', function() {
             // Act
             var event = sendKeyDown(KEYS.up);
 
@@ -383,7 +383,7 @@ describe('autocomplete-directive', function () {
             expect(event.isPropagationStopped()).toBe(true);
         });
 
-        it('prevents the enter keydown event from being propagated if there is a suggestion selected', function () {
+        it('prevents the enter keydown event from being propagated if there is a suggestion selected', function() {
             // Arrange
             suggestionList.selected = 'suggestion';
 
@@ -395,7 +395,7 @@ describe('autocomplete-directive', function () {
             expect(event.isPropagationStopped()).toBe(true);
         });
 
-        it('does not prevent the enter keydown event from begin propagated if there is no suggestion selected', function () {
+        it('does not prevent the enter keydown event from begin propagated if there is no suggestion selected', function() {
             // Arrange
             suggestionList.selected = null;
 
@@ -407,7 +407,7 @@ describe('autocomplete-directive', function () {
             expect(event.isPropagationStopped()).toBe(false);
         });
 
-        it('prevents the tab keydown event from being propagated if there is a suggestion selected', function () {
+        it('prevents the tab keydown event from being propagated if there is a suggestion selected', function() {
             // Arrange
             suggestionList.selected = 'suggestion';
 
@@ -419,7 +419,7 @@ describe('autocomplete-directive', function () {
             expect(event.isPropagationStopped()).toBe(true);
         });
 
-        it('does not prevent the tab keydown event from being propagated if there is no suggestion selected', function () {
+        it('does not prevent the tab keydown event from being propagated if there is no suggestion selected', function() {
             // Arrange
             suggestionList.selected = null;
 
@@ -431,7 +431,7 @@ describe('autocomplete-directive', function () {
             expect(event.isPropagationStopped()).toBe(false);
         });
 
-        it('prevents the escape keydown event from being propagated', function () {
+        it('prevents the escape keydown event from being propagated', function() {
             // Act
             var event = sendKeyDown(KEYS.escape);
 
@@ -441,12 +441,12 @@ describe('autocomplete-directive', function () {
         });
     });
 
-    describe('hotkeys propagation handling - suggestion box is hidden', function () {
-        beforeEach(function () {
+    describe('hotkeys propagation handling - suggestion box is hidden', function() {
+        beforeEach(function() {
             suggestionList.reset();
         });
 
-        it('does not prevent the down arrow keydown event from being propagated', function () {
+        it('does not prevent the down arrow keydown event from being propagated', function() {
             // Act
             var event = sendKeyDown(KEYS.down);
 
@@ -455,7 +455,7 @@ describe('autocomplete-directive', function () {
             expect(event.isPropagationStopped()).toBe(false);
         });
 
-        it('does not prevent the up arrow keydown event from being propagated', function () {
+        it('does not prevent the up arrow keydown event from being propagated', function() {
             // Act
             var event = sendKeyDown(KEYS.up);
 
@@ -464,7 +464,7 @@ describe('autocomplete-directive', function () {
             expect(event.isPropagationStopped()).toBe(false);
         });
 
-        it('does not prevent the enter keydown event from being propagated', function () {
+        it('does not prevent the enter keydown event from being propagated', function() {
             // Act
             var event = sendKeyDown(KEYS.enter);
 
@@ -473,7 +473,7 @@ describe('autocomplete-directive', function () {
             expect(event.isPropagationStopped()).toBe(false);
         });
 
-        it('does not prevent the tab keydown event from being propagated', function () {
+        it('does not prevent the tab keydown event from being propagated', function() {
             // Act
             var event = sendKeyDown(KEYS.tab);
 
@@ -482,7 +482,7 @@ describe('autocomplete-directive', function () {
             expect(event.isPropagationStopped()).toBe(false);
         });
 
-        it('does not prevent the escape keydown event from being propagated', function () {
+        it('does not prevent the escape keydown event from being propagated', function() {
             // Act
             var event = sendKeyDown(KEYS.escape);
 
@@ -492,50 +492,8 @@ describe('autocomplete-directive', function () {
         });
     });
 
-    describe('debounce-delay option', function () {
-        it('doesn\'t call the load function immediately', function () {
-            // Arrange
-            compile('debounce-delay="100"');
-
-            // Act
-            changeInputValue('A');
-            changeInputValue('AB');
-            changeInputValue('ABC');
-
-            // Assert
-            expect($scope.loadItems).not.toHaveBeenCalled();
-        });
-
-        it('calls the load function only after a delay has passed', function() {
-            // Arrange
-            compile('debounce-delay="100"');
-
-            // Act
-            changeInputValue('A');
-            changeInputValue('AB');
-            changeInputValue('ABC');
-
-            $timeout.flush();
-
-            // Assert
-            expect($scope.loadItems).toHaveBeenCalledWith('ABC');
-        });
-
-        it('doesn\'t call the load function when the reset method is called', function() {
-            // Arrange
-            compile();
-            changeInputValue('A');
-
-            // Act
-            suggestionList.reset();
-            $timeout.flush();
-
-            // Assert
-            expect($scope.loadItems).not.toHaveBeenCalled();
-
-        });
-
-        it('initializes the option to 100 milliseconds', function () {
+    describe('debounce-delay option', function() {
+        it('initializes the option to 100 milliseconds', function() {
             // Arrange/Act
             compile();
 
@@ -558,6 +516,117 @@ describe('autocomplete-directive', function () {
 
             // Assert
             expect(isolateScope.options.debounceDelay).toBe(1000);
+        });
+
+        it('doesn\'t call the load function immediately', function() {
+            // Arrange
+            compile('debounce-delay="100"');
+
+            // Act
+            changeInputValue('A');
+            changeInputValue('AB');
+            changeInputValue('ABC');
+
+            // Assert
+            expect($scope.loadItems).not.toHaveBeenCalled();
+        });
+
+        it('calls the load function only after a delay has passed', function() {
+            // Arrange
+            compile('debounce-delay="100"');
+
+            // Act
+            changeInputValue('A');
+            changeInputValue('AB');
+            changeInputValue('ABC');
+
+            $timeout.flush(100);
+
+            // Assert
+            expect($scope.loadItems).toHaveBeenCalledWith('ABC');
+        });
+
+        it('doesn\'t call the load function when the reset method is called', function() {
+            // Arrange
+            compile();
+            changeInputValue('A');
+
+            // Act
+            suggestionList.reset();
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).not.toHaveBeenCalled();
+
+        });
+    });
+
+    describe('min-length option', function() {
+        it('initializes the option to 3', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.minLength).toBe(3);
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('min-length="5"');
+
+            // Assert
+            expect(isolateScope.options.minLength).toBe(5);
+        });
+
+        it('sets the option given an interpolated string', function() {
+            // Arrange/Act
+            $scope.value = 5;
+            compile('min-length="{{ value }}"');
+
+            // Assert
+            expect(isolateScope.options.minLength).toBe(5);
+        });
+
+        it('calls the load function only after the minimum amount of characters has been entered', function() {
+            // Arrange
+            compile('min-length="3"');
+
+            // Act
+            changeInputValue('A');
+            changeInputValue('AB');
+            changeInputValue('ABC');
+
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems.calls.length).toBe(1);
+            expect($scope.loadItems.calls[0].args[0]).toBe('ABC');
+        });
+
+        it('doesn\'t call the load function when the minimum amount of characters isn\'t entered', function() {
+            // Arrange
+            compile('min-length="3"');
+
+            // Act
+            changeInputValue('A');
+            changeInputValue('AB');
+
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).not.toHaveBeenCalled();
+        });
+
+        it('hides the suggestion box when the number of entered characters is less than the option value', function() {
+            // Arrange
+            compile('min-length="5"');
+            suggestionList.show();
+
+            // Act
+            changeInputValue('ABCD');
+
+            // Assert
+            expect(isSuggestionsBoxVisible()).toBe(false);
         });
     });
 });
