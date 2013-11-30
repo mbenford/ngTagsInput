@@ -41,7 +41,7 @@ describe('autocomplete-directive', function() {
         spyOn(parentCtrl, 'registerAutocomplete').andReturn(tagsInput);
 
         options = jQuery.makeArray(arguments).join(' ');
-        element = angular.element('<auto-complete source="loadItems($text)" ' + options + '></auto-complete>');
+        element = angular.element('<auto-complete source="loadItems($query)" ' + options + '></auto-complete>');
         parent.append(element);
 
         $compile(element)($scope);
@@ -88,8 +88,8 @@ describe('autocomplete-directive', function() {
         return !getSuggestionsBox().hasClass('ng-hide');
     }
 
-    function loadSuggestions(items) {
-        suggestionList.load('foobar');
+    function loadSuggestions(items, text) {
+        suggestionList.load(text || 'foobar');
         $timeout.flush();
         resolve(items);
     }
@@ -627,6 +627,63 @@ describe('autocomplete-directive', function() {
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(false);
+        });
+    });
+
+    describe('highlight-matched-text option', function() {
+        it('initializes the option to true', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.highlightMatchedText).toBe(true);
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('highlight-matched-text="false"');
+
+            // Assert
+            expect(isolateScope.options.highlightMatchedText).toBe(false);
+        });
+
+        it('sets the option given an interpolated string', function() {
+            // Arrange/Act
+            $scope.value = false;
+            compile('highlight-matched-text="{{ value }}"');
+
+            // Assert
+            expect(isolateScope.options.highlightMatchedText).toBe(false);
+        });
+
+        it('highlights the matched text in the suggestions list', function() {
+            // Arrange
+            compile('highlight-matched-text="true"', 'min-length="1"');
+
+            // Act
+            loadSuggestions(['a', 'ab', 'ba', 'aba', 'bab'], 'a');
+
+            // Assert
+            expect(getSuggestionText(0)).toBe('<em>a</em>');
+            expect(getSuggestionText(1)).toBe('<em>a</em>b');
+            expect(getSuggestionText(2)).toBe('b<em>a</em>');
+            expect(getSuggestionText(3)).toBe('<em>a</em>b<em>a</em>');
+            expect(getSuggestionText(4)).toBe('b<em>a</em>b');
+        });
+
+        it('doesn\'t highlight the matched text in the suggestions list whe the option is false', function() {
+            // Arrange
+            compile('highlight-matched-text="false"', 'min-length="1"');
+
+            // Act
+            loadSuggestions(['a', 'ab', 'ba', 'aba', 'bab'], 'a');
+
+            // Assert
+            expect(getSuggestionText(0)).toBe('a');
+            expect(getSuggestionText(1)).toBe('ab');
+            expect(getSuggestionText(2)).toBe('ba');
+            expect(getSuggestionText(3)).toBe('aba');
+            expect(getSuggestionText(4)).toBe('bab');
         });
     });
 });

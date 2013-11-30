@@ -8,18 +8,18 @@
 </head>
 <body ng-controller="Ctrl">
   <tags-input ng-model="tags" placeholder="{{ placeholder.value }}">
-    <auto-complete source="loadItems($text)" debounce-delay="100" min-length="10"></auto-complete>
+    <auto-complete source="loadItems($query)" debounce-delay="0" min-length="1" highlight-matched-text="true"></auto-complete>
   </tags-input>
 
   <script type="text/javascript">
     angular.module('app', ['tags-input'])
         .controller('Ctrl', function($scope, $q) {
-            $scope.tags = ['some', 'cool', 'tags'];
+            $scope.tags = ['Batman', 'Superman', 'Flash'];
             $scope.placeholder = {value: "New tag" };
             $scope.loadItems = function(text) {
               console.log(text);
               var deferred = $q.defer();
-              deferred.resolve(['Item1', 'Item2', 'Item3']);
+              deferred.resolve(['Batman', 'Superman', 'Flash', 'Iron Man', 'Hulk', 'Wolverine', "Green Lantern", "Green Arrow", "Spiderman"]);
               return deferred.promise;
             };
         });

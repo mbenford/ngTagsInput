@@ -59,7 +59,7 @@
 }
 
 .ngTagsInput .tags span {
-    font: 13px Arial, sans-serif;
+    font: 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .ngTagsInput .tags button {
@@ -83,7 +83,7 @@
     padding: 0px 0px 0px 4px;
     height: 21px;
     float: left;
-    font: 13px Arial, sans-serif;
+    font: 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .ngTagsInput .tags input::-ms-clear {
