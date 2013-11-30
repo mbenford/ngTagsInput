@@ -244,6 +244,8 @@ angular.module('tags-input').directive('tagsInput', ["configuration", function(c
  *                            The result of the expression must be a promise that resolves to an array of strings.
  * @param {number=} [debounceDelay=100] Amount of time, in milliseconds, to wait after the last keystroke before evaluating
  *                                      the expression in the source option.
+ * @param {number=3} [minLength=3] Minimum number of characters that must be entered before evaluating the expression
+ *                                 in the source option.
  */
 angular.module('tags-input').directive('autoComplete', ["$document","$timeout","configuration", function($document, $timeout, configuration) {
     function SuggestionList(loadFn, options) {
@@ -265,6 +267,11 @@ angular.module('tags-input').directive('autoComplete', ["$document","$timeout","
             self.visible = false;
         };
         self.load = function(text) {
+            if (text.length < options.minLength) {
+                self.reset();
+                return;
+            }
+
             $timeout.cancel(debouncedLoadId);
             debouncedLoadId = $timeout(function() {
                 loadFn({ $text: text }).then(function(items) {
@@ -314,7 +321,8 @@ angular.module('tags-input').directive('autoComplete', ["$document","$timeout","
                 suggestionList, tagsInput, input;
 
             configuration.load(scope, attrs, {
-                debounceDelay: { type: Number, defaultValue: 100 }
+                debounceDelay: { type: Number, defaultValue: 100 },
+                minLength: { type: Number, defaultValue: 3 }
             });
 
             suggestionList = new SuggestionList(scope.source, scope.options);
