@@ -39,24 +39,7 @@ angular.module('tags-input', []);
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
-angular.module('tags-input').directive('tagsInput', ["$interpolate", function($interpolate) {
-    function initializeOptions(scope, attrs, options) {
-        var converters = {};
-        converters[String] = function(value) { return value; };
-        converters[Number] = function(value) { return parseInt(value, 10); };
-        converters[Boolean] = function(value) { return value === 'true'; };
-        converters[RegExp] = function(value) { return new RegExp(value); };
-
-        scope.options = {};
-
-        angular.forEach(options, function(value, key) {
-            var interpolatedValue = attrs[key] && $interpolate(attrs[key])(scope.$parent),
-                converter = converters[options[key].type];
-
-            scope.options[key] = interpolatedValue ? converter(interpolatedValue) : options[key].defaultValue;
-        });
-    }
-
+angular.module('tags-input').directive('tagsInput', ["configuration", function(configuration) {
     function SimplePubSub() {
         var events = {};
 
@@ -105,7 +88,7 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
             var events = new SimplePubSub(),
                 shouldRemoveLastTag;
 
-            initializeOptions($scope, $attrs, {
+            configuration.load($scope, $attrs, {
                 customClass: { type: String, defaultValue: '' },
                 placeholder: { type: String, defaultValue: 'Add a tag' },
                 tabindex: { type: Number },
@@ -257,18 +240,22 @@ angular.module('tags-input').directive('tagsInput', ["$interpolate", function($i
  * @description
  * Provides autocomplete support for the tagsInput directive.
  *
- * @param {expression} source Callback that will be called for every keystroke and will be provided with the current
- *                            input's value. Must return a promise.
+ * @param {expression} source Expression to evaluate upon changing the input content. The input value is available as $text.
+ *                            The result of the expression must be a promise that resolves to an array of strings.
+ * @param {number=} [debounceDelay=100] Amount of time, in milliseconds, to wait after the last keystroke before evaluating
+ *                                      the expression in the source option.
  */
-angular.module('tags-input').directive('autoComplete', ["$document", function($document) {
-    function SuggestionList(loadFn) {
-        var self = {};
+angular.module('tags-input').directive('autoComplete', ["$document","$timeout","configuration", function($document, $timeout, configuration) {
+    function SuggestionList(loadFn, options) {
+        var self = {}, debouncedLoadId;
 
         self.reset = function() {
             self.items = [];
             self.visible = false;
             self.index = -1;
             self.selected = null;
+
+            $timeout.cancel(debouncedLoadId);
         };
         self.show = function() {
             self.selected = null;
@@ -278,16 +265,15 @@ angular.module('tags-input').directive('autoComplete', ["$document", function($d
             self.visible = false;
         };
         self.load = function(text) {
-            if (self.selected === text) {
-                return;
-            }
-
-            loadFn({ $text: text }).then(function(items) {
-                self.items = items;
-                if (items.length > 0) {
-                    self.show();
-                }
-            });
+            $timeout.cancel(debouncedLoadId);
+            debouncedLoadId = $timeout(function() {
+                loadFn({ $text: text }).then(function(items) {
+                    self.items = items;
+                    if (items.length > 0) {
+                        self.show();
+                    }
+                });
+            }, options.debounceDelay, false);
         };
         self.selectNext = function() {
             self.select(++self.index);
@@ -325,10 +311,15 @@ angular.module('tags-input').directive('autoComplete', ["$document", function($d
                   '</div>',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList = new SuggestionList(scope.source),
+                suggestionList, tagsInput, input;
 
-                tagsInput = tagsInputCtrl.registerAutocomplete(),
-                input = tagsInput.input;
+            configuration.load(scope, attrs, {
+                debounceDelay: { type: Number, defaultValue: 100 }
+            });
+
+            suggestionList = new SuggestionList(scope.source, scope.options);
+            tagsInput = tagsInputCtrl.registerAutocomplete();
+            input = tagsInput.input;
 
             scope.suggestionList = suggestionList;
 
@@ -428,5 +419,32 @@ angular.module('tags-input').directive('transcludeAppend', function() {
         });
     };
 });
+
+/**
+ * @ngdoc service
+ * @name tagsInput.service:configuration
+ *
+ * @description
+ * Loads and initializes options from HTML attributes. Used internally for tagsInput and autoComplete directives.
+ */
+angular.module('tags-input').service('configuration', ["$interpolate", function($interpolate) {
+    this.load = function(scope, attrs, options) {
+        var converters = {};
+        converters[String] = function(value) { return value; };
+        converters[Number] = function(value) { return parseInt(value, 10); };
+        converters[Boolean] = function(value) { return value === 'true'; };
+        converters[RegExp] = function(value) { return new RegExp(value); };
+
+        scope.options = {};
+
+        angular.forEach(options, function(value, key) {
+            var interpolatedValue = attrs[key] && $interpolate(attrs[key])(scope.$parent),
+                converter = converters[options[key].type];
+
+            scope.options[key] = interpolatedValue ? converter(interpolatedValue) : options[key].defaultValue;
+        });
+    };
+}]);
+
 
 }());
