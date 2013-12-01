@@ -248,6 +248,7 @@ angular.module('tags-input').directive('tagsInput', ["configuration", function(c
  *                                 in the source option.
  * @param {boolean=} [highlightMatchedText=true] Flag indicating that the matched text will be highlighted in the
  *                                               suggestions list.
+ * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
  */
 angular.module('tags-input').directive('autoComplete', ["$document","$timeout","$sce","configuration", function($document, $timeout, $sce, configuration) {
     function SuggestionList(loadFn, options) {
@@ -314,7 +315,7 @@ angular.module('tags-input').directive('autoComplete', ["$document","$timeout","
         scope: { source: '&' },
         template: '<div class="autocomplete" ng-show="suggestionList.visible">' +
                   '  <ul class="suggestions">' +
-                  '    <li class="suggestion" ng-repeat="item in suggestionList.items"' +
+                  '    <li class="suggestion" ng-repeat="item in suggestionList.items | limitTo:options.maxResultsToShow"' +
                   '                           ng-class="{selected: item == suggestionList.selected}"' +
                   '                           ng-click="addSuggestion()"' +
                   '                           ng-mouseenter="suggestionList.select($index)"' +
@@ -328,7 +329,8 @@ angular.module('tags-input').directive('autoComplete', ["$document","$timeout","
             configuration.load(scope, attrs, {
                 debounceDelay: { type: Number, defaultValue: 100 },
                 minLength: { type: Number, defaultValue: 3 },
-                highlightMatchedText: { type: Boolean, defaultValue: true }
+                highlightMatchedText: { type: Boolean, defaultValue: true },
+                maxResultsToShow: { type: Number, defaultValue: 10 }
             });
 
             suggestionList = new SuggestionList(scope.source, scope.options);
