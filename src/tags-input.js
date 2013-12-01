@@ -178,6 +178,9 @@ angular.module('tags-input').directive('tagsInput', function(configuration) {
                     on: function(name, handler) {
                         events.on(name, handler);
                         return this;
+                    },
+                    getTags: function() {
+                        return $scope.tags;
                     }
                 };
             };

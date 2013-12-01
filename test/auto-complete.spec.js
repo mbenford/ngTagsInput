@@ -31,7 +31,8 @@ describe('autocomplete-directive', function() {
             on: jasmine.createSpy().andCallFake(function(name, handler) {
                 eventHandlers[name] = handler;
                 return this;
-            })
+            }),
+            getTags: jasmine.createSpy().andReturn([])
         };
 
         parent = $compile('<tags-input ng-model="whatever"></tags-input>')($scope);
@@ -88,7 +89,7 @@ describe('autocomplete-directive', function() {
     }
 
     function loadSuggestions(items, text) {
-        suggestionList.load(text || 'foobar');
+        suggestionList.load(text || 'foobar', tagsInput.getTags());
         $timeout.flush();
         resolve(items);
     }
@@ -98,15 +99,15 @@ describe('autocomplete-directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('renders all elements returned by the load function', function() {
+        it('renders all elements returned by the load function that aren\'t already added', function() {
             // Act
+            tagsInput.getTags.andReturn(['Item3']);
             loadSuggestions(['Item1','Item2','Item3']);
 
             // Assert
-            expect(getSuggestions().length).toBe(3);
+            expect(getSuggestions().length).toBe(2);
             expect(getSuggestionText(0)).toBe('Item1');
             expect(getSuggestionText(1)).toBe('Item2');
-            expect(getSuggestionText(2)).toBe('Item3');
         });
 
         it('shows the suggestions list when there are items to show', function() {

@@ -766,7 +766,8 @@ describe('tags-input-directive', function() {
             expect(autocompleteObj).toEqual({
                 changeInputValue: jasmine.any(Function),
                 focusInput: jasmine.any(Function),
-                on: jasmine.any(Function)
+                on: jasmine.any(Function),
+                getTags: jasmine.any(Function)
             });
         });
 
@@ -789,6 +790,15 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect(input.focus).toHaveBeenCalled();
+        });
+
+        it('returns the list of tags', function() {
+            // Arrange
+            $scope.tags = ['a', 'b', 'c'];
+            $scope.$digest();
+
+            // Act/Assert
+            expect(autocompleteObj.getTags()).toEqual(['a', 'b', 'c']);
         });
     });
 });

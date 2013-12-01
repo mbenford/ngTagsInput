@@ -7,12 +7,15 @@
   <link rel="stylesheet" href="../build/ng-tags-input.css"/>
 </head>
 <body ng-controller="Ctrl">
-  <tags-input ng-model="tags" placeholder="{{ placeholder.value }}">
+  <tags-input ng-model="tags"
+              placeholder="{{ placeholder.value }}"
+              replace-spaces-with-dashes="false">
     <auto-complete source="loadItems($query)"
                    debounce-delay="0"
                    min-length="1"
                    highlight-matched-text="true"
-                   max-results-to-show="10"></auto-complete>
+                   max-results-to-show="10">
+    </auto-complete>
   </tags-input>
 
   <script type="text/javascript">
