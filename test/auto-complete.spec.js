@@ -686,6 +686,47 @@ describe('autocomplete-directive', function() {
             expect(getSuggestionText(4)).toBe('bab');
         });
     });
+
+    describe('max-results-to-show option', function() {
+        it('initializes the option to 10', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.maxResultsToShow).toBe(10);
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('max-results-to-show="5"');
+
+            // Assert
+            expect(isolateScope.options.maxResultsToShow).toBe(5);
+        });
+
+        it('sets the option given an interpolated string', function() {
+            // Arrange/Act
+            $scope.value = 5;
+            compile('max-results-to-show="{{ value }}"');
+
+            // Assert
+            expect(isolateScope.options.maxResultsToShow).toBe(5);
+        });
+
+        it('limits the number of results to be displayed at a time', function() {
+            // Arrange
+            compile('max-results-to-show="3"');
+
+            // Act
+            loadSuggestions(['Item1', 'Item2', 'Item3', 'Item4', 'Item5']);
+
+            // Assert
+            expect(getSuggestions().length).toBe(3);
+            expect(getSuggestionText(0)).toBe('Item1');
+            expect(getSuggestionText(1)).toBe('Item2');
+            expect(getSuggestionText(2)).toBe('Item3');
+        });
+    });
 });
 
 })();

@@ -8,7 +8,11 @@
 </head>
 <body ng-controller="Ctrl">
   <tags-input ng-model="tags" placeholder="{{ placeholder.value }}">
-    <auto-complete source="loadItems($query)" debounce-delay="0" min-length="1" highlight-matched-text="true"></auto-complete>
+    <auto-complete source="loadItems($query)"
+                   debounce-delay="0"
+                   min-length="1"
+                   highlight-matched-text="true"
+                   max-results-to-show="10"></auto-complete>
   </tags-input>
 
   <script type="text/javascript">
