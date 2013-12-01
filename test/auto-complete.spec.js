@@ -3,7 +3,7 @@
 
 describe('autocomplete-directive', function() {
     var $compile, $scope, $q, $timeout,
-        parentCtrl, element, isolateScope, input, suggestionList, deferred, inputChangeHandler, onTagAddedHandler;
+        parentCtrl, element, isolateScope, suggestionList, deferred, tagsInput, eventHandlers;
 
     beforeEach(function() {
         module('tags-input');
@@ -16,23 +16,22 @@ describe('autocomplete-directive', function() {
         });
 
         deferred = $q.defer();
+        eventHandlers = {};
         $scope.loadItems = jasmine.createSpy().andReturn(deferred.promise);
 
         compile();
     });
 
     function compile() {
-        var parent, tagsInput, options;
-
-        input = angular.element('<input type="text">');
-        input.changeValue = jasmine.createSpy();
-        input.change = jasmine.createSpy().andCallFake(function(handler) { inputChangeHandler = handler; });
+        var parent, options;
 
         tagsInput = {
-            input: input,
-            events: {
-                on: jasmine.createSpy().andCallFake(function(name, handler) { onTagAddedHandler = handler; })
-            }
+            changeInputValue: jasmine.createSpy(),
+            focusInput: jasmine.createSpy(),
+            on: jasmine.createSpy().andCallFake(function(name, handler) {
+                eventHandlers[name] = handler;
+                return this;
+            })
         };
 
         parent = $compile('<tags-input ng-model="whatever"></tags-input>')($scope);
@@ -58,13 +57,13 @@ describe('autocomplete-directive', function() {
 
     function sendKeyDown(keyCode) {
         var event = jQuery.Event('keydown', { keyCode: keyCode });
-        input.trigger(event);
+        eventHandlers['input-keydown'](event);
 
         return event;
     }
 
     function changeInputValue(value) {
-        inputChangeHandler(value);
+        eventHandlers['input-changed'](value);
         $scope.$digest();
     }
 
@@ -180,7 +179,7 @@ describe('autocomplete-directive', function() {
             suggestionList.show();
 
             // Act
-            onTagAddedHandler();
+            eventHandlers['tag-added']();
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(false);
@@ -195,7 +194,7 @@ describe('autocomplete-directive', function() {
             sendKeyDown(KEYS.enter);
 
             // Assert
-            expect(input.changeValue).toHaveBeenCalledWith('Item1');
+            expect(tagsInput.changeInputValue).toHaveBeenCalledWith('Item1');
         });
 
         it('adds the selected suggestion to the input field when the tab key is pressed and there is a suggestion selected', function() {
@@ -207,7 +206,7 @@ describe('autocomplete-directive', function() {
             sendKeyDown(KEYS.tab);
 
             // Assert
-            expect(input.changeValue).toHaveBeenCalledWith('Item1');
+            expect(tagsInput.changeInputValue).toHaveBeenCalledWith('Item1');
         });
 
         it('does not change the input value when the enter key is pressed and there is nothing selected', function() {
@@ -218,7 +217,7 @@ describe('autocomplete-directive', function() {
             sendKeyDown(KEYS.enter);
 
             // Assert
-            expect(input.changeValue).not.toHaveBeenCalled();
+            expect(tagsInput.changeInputValue).not.toHaveBeenCalled();
         });
 
         it('sets the selected suggestion to null after adding it to the input field', function() {
@@ -342,20 +341,19 @@ describe('autocomplete-directive', function() {
                 getSuggestion(1).click();
 
                 // Assert
-                expect(input.changeValue).toHaveBeenCalledWith('Item2');
+                expect(tagsInput.changeInputValue).toHaveBeenCalledWith('Item2');
             });
 
             it('focuses the input field when a suggestion is added via a mouse click', function() {
                 // Arrange
                 loadSuggestions(['Item1', 'Item2', 'Item3']);
                 suggestionList.select(0);
-                spyOn(input[0], 'focus');
 
                 // Act
                 getSuggestion(1).click();
 
                 // Assert
-                expect(input[0].focus).toHaveBeenCalled();
+                expect(tagsInput.focusInput).toHaveBeenCalled();
             });
         });
     });

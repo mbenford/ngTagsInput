@@ -41,7 +41,7 @@ angular.module('tags-input').directive('tagsInput', function(configuration) {
             },
             trigger: function(name, args) {
                 angular.forEach(events[name], function(handler) {
-                   handler(args);
+                   handler.call(null, args);
                 });
             }
         };
@@ -157,23 +157,27 @@ angular.module('tags-input').directive('tagsInput', function(configuration) {
                 shouldRemoveLastTag = false;
             });
 
-            $scope.newTagChange = angular.noop;
-
             this.registerAutocomplete = function() {
                 var input = $element.find('input');
-                input.changeValue = function(value) {
-                    $scope.newTag = value;
-                };
+                input.on('keydown', function(e) {
+                    events.trigger('input-keydown', e);
+                });
 
-                input.change = function(handler) {
-                    $scope.newTagChange = function() {
-                        handler($scope.newTag);
-                    };
+                $scope.newTagChange = function() {
+                    events.trigger('input-changed', $scope.newTag);
                 };
 
                 return {
-                    input: input,
-                    events: events
+                    changeInputValue: function(value) {
+                        $scope.newTag = value;
+                    },
+                    focusInput: function() {
+                        input[0].focus();
+                    },
+                    on: function(name, handler) {
+                        events.on(name, handler);
+                        return this;
+                    }
                 };
             };
         },

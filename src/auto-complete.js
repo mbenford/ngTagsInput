@@ -92,7 +92,7 @@ angular.module('tags-input').directive('autoComplete', function($document, $time
                   '</div>',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList, tagsInput, input, highlight;
+                suggestionList, tagsInput, highlight;
 
             configuration.load(scope, attrs, {
                 debounceDelay: { type: Number, defaultValue: 100 },
@@ -103,7 +103,6 @@ angular.module('tags-input').directive('autoComplete', function($document, $time
 
             suggestionList = new SuggestionList(scope.source, scope.options);
             tagsInput = tagsInputCtrl.registerAutocomplete();
-            input = tagsInput.input;
 
             if (scope.options.highlightMatchedText) {
                 highlight = function(item, text) {
@@ -123,9 +122,9 @@ angular.module('tags-input').directive('autoComplete', function($document, $time
                 var added = false;
 
                 if (suggestionList.selected) {
-                    input.changeValue(suggestionList.selected);
+                    tagsInput.changeInputValue(suggestionList.selected);
                     suggestionList.reset();
-                    input[0].focus();
+                    tagsInput.focusInput();
 
                     added = true;
                 }
@@ -136,70 +135,69 @@ angular.module('tags-input').directive('autoComplete', function($document, $time
                 return $sce.trustAsHtml(highlight(item, suggestionList.query));
             };
 
-            input.change(function(value) {
-                if (value) {
-                    suggestionList.load(value);
-                } else {
+            tagsInput
+                .on('tag-added', function() {
                     suggestionList.reset();
-                }
-            });
-
-            input.on('keydown', function(e) {
-                var key, handled;
-
-                if (hotkeys.indexOf(e.keyCode) === -1) {
-                    return;
-                }
-
-                // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.
-                // I've sent a PR to Angular addressing this issue and hopefully it'll be fixed soon.
-                // https://github.com/angular/angular.js/pull/4833
-                var immediatePropagationStopped = false;
-                e.stopImmediatePropagation = function() {
-                    immediatePropagationStopped = true;
-                    e.stopPropagation();
-                };
-                e.isImmediatePropagationStopped = function() {
-                    return immediatePropagationStopped;
-                };
-
-                if (suggestionList.visible) {
-                    key = e.keyCode;
-                    handled = false;
-
-                    if (key === KEYS.down) {
-                        suggestionList.selectNext();
-                        handled = true;
-                    }
-                    else if (key === KEYS.up) {
-                        suggestionList.selectPrior();
-                        handled = true;
-                    }
-                    else if (key === KEYS.escape) {
+                })
+                .on('input-changed', function(value) {
+                    if (value) {
+                        suggestionList.load(value);
+                    } else {
                         suggestionList.reset();
-                        handled = true;
                     }
-                    else if (key === KEYS.enter || key === KEYS.tab) {
-                        handled = scope.addSuggestion();
+                })
+                .on('input-keydown', function(e) {
+                    var key, handled;
+
+                    if (hotkeys.indexOf(e.keyCode) === -1) {
+                        return;
                     }
 
-                    if (handled) {
-                        e.preventDefault();
-                        e.stopImmediatePropagation();
-                        scope.$apply();
+                    // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.
+                    // I've sent a PR to Angular addressing this issue and hopefully it'll be fixed soon.
+                    // https://github.com/angular/angular.js/pull/4833
+                    var immediatePropagationStopped = false;
+                    e.stopImmediatePropagation = function() {
+                        immediatePropagationStopped = true;
+                        e.stopPropagation();
+                    };
+                    e.isImmediatePropagationStopped = function() {
+                        return immediatePropagationStopped;
+                    };
+
+                    if (suggestionList.visible) {
+                        key = e.keyCode;
+                        handled = false;
+
+                        if (key === KEYS.down) {
+                            suggestionList.selectNext();
+                            handled = true;
+                        }
+                        else if (key === KEYS.up) {
+                            suggestionList.selectPrior();
+                            handled = true;
+                        }
+                        else if (key === KEYS.escape) {
+                            suggestionList.reset();
+                            handled = true;
+                        }
+                        else if (key === KEYS.enter || key === KEYS.tab) {
+                            handled = scope.addSuggestion();
+                        }
+
+                        if (handled) {
+                            e.preventDefault();
+                            e.stopImmediatePropagation();
+                            scope.$apply();
+                        }
                     }
-                }
-            });
+                });
 
             $document.on('click', function() {
                 if (suggestionList.visible) {
                     suggestionList.reset();
                     scope.$apply();
                 }
-            });
-
-            tagsInput.events.on('tag-added', function() {
-                suggestionList.reset();
             });
         }
     };
