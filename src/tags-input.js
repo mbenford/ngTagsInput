@@ -115,6 +115,7 @@ angular.module('tags-input').directive('tagsInput', function(configuration) {
                     }
 
                     $scope.newTag = '';
+                    events.trigger('input-changed', '');
                     changed = true;
                 }
                 return changed;

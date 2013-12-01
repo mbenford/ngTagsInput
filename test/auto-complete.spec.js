@@ -174,17 +174,6 @@ describe('autocomplete-directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('hides the suggestion box when a tag is added', function() {
-            // Arrange
-            suggestionList.show();
-
-            // Act
-            eventHandlers['tag-added']();
-
-            // Assert
-            expect(isSuggestionsBoxVisible()).toBe(false);
-        });
-
         it('adds the selected suggestion to the input field when the enter key is pressed and the suggestions box is visible', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);

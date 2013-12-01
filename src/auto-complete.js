@@ -136,9 +136,6 @@ angular.module('tags-input').directive('autoComplete', function($document, $time
             };
 
             tagsInput
-                .on('tag-added', function() {
-                    suggestionList.reset();
-                })
                 .on('input-changed', function(value) {
                     if (value) {
                         suggestionList.load(value);
