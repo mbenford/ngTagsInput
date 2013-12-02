@@ -764,20 +764,23 @@ describe('tags-input-directive', function() {
 
         it('creates an object containing all the autocomplete directive needs to work', function() {
             expect(autocompleteObj).toEqual({
-                changeInputValue: jasmine.any(Function),
+                tryAddTag: jasmine.any(Function),
                 focusInput: jasmine.any(Function),
                 on: jasmine.any(Function),
                 getTags: jasmine.any(Function)
             });
         });
 
-        it('changes the input value', function() {
-            // Act
-            autocompleteObj.changeInputValue('ABC');
+        it('tries to add a tag', function() {
+            // Arrange
+            $scope.tags = [];
             $scope.$digest();
 
+            // Act
+            autocompleteObj.tryAddTag('tag');
+
             // Assert
-            expect(getInput().val()).toBe('ABC');
+            expect($scope.tags).toEqual(['tag']);
         });
 
         it('focus the input box', function() {

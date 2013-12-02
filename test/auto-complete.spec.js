@@ -27,6 +27,7 @@ describe('autocomplete-directive', function() {
 
         tagsInput = {
             changeInputValue: jasmine.createSpy(),
+            tryAddTag: jasmine.createSpy(),
             focusInput: jasmine.createSpy(),
             on: jasmine.createSpy().andCallFake(function(name, handler) {
                 eventHandlers[name] = handler;
@@ -175,7 +176,7 @@ describe('autocomplete-directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('adds the selected suggestion to the input field when the enter key is pressed and the suggestions box is visible', function() {
+        it('adds the selected suggestion when the enter key is pressed and the suggestions box is visible', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
             suggestionList.select(0);
@@ -184,10 +185,10 @@ describe('autocomplete-directive', function() {
             sendKeyDown(KEYS.enter);
 
             // Assert
-            expect(tagsInput.changeInputValue).toHaveBeenCalledWith('Item1');
+            expect(tagsInput.tryAddTag).toHaveBeenCalledWith('Item1');
         });
 
-        it('adds the selected suggestion to the input field when the tab key is pressed and there is a suggestion selected', function() {
+        it('adds the selected suggestion when the tab key is pressed and there is a suggestion selected', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);
             suggestionList.select(0);
@@ -196,7 +197,7 @@ describe('autocomplete-directive', function() {
             sendKeyDown(KEYS.tab);
 
             // Assert
-            expect(tagsInput.changeInputValue).toHaveBeenCalledWith('Item1');
+            expect(tagsInput.tryAddTag).toHaveBeenCalledWith('Item1');
         });
 
         it('does not change the input value when the enter key is pressed and there is nothing selected', function() {
@@ -207,7 +208,7 @@ describe('autocomplete-directive', function() {
             sendKeyDown(KEYS.enter);
 
             // Assert
-            expect(tagsInput.changeInputValue).not.toHaveBeenCalled();
+            expect(tagsInput.tryAddTag).not.toHaveBeenCalled();
         });
 
         it('sets the selected suggestion to null after adding it to the input field', function() {
@@ -322,7 +323,7 @@ describe('autocomplete-directive', function() {
                 expect(suggestionList.selected).toBe('Item2');
             });
 
-            it('adds the selected suggestion to the input field when a mouse click is triggered', function() {
+            it('adds the selected suggestion when a mouse click is triggered', function() {
                 // Arrange
                 loadSuggestions(['Item1', 'Item2', 'Item3']);
                 getSuggestion(1).mouseenter();
@@ -331,7 +332,7 @@ describe('autocomplete-directive', function() {
                 getSuggestion(1).click();
 
                 // Assert
-                expect(tagsInput.changeInputValue).toHaveBeenCalledWith('Item2');
+                expect(tagsInput.tryAddTag).toHaveBeenCalledWith('Item2');
             });
 
             it('focuses the input field when a suggestion is added via a mouse click', function() {

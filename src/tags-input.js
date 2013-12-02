@@ -169,18 +169,19 @@ angular.module('tags-input').directive('tagsInput', function(configuration) {
                 };
 
                 return {
-                    changeInputValue: function(value) {
-                        $scope.newTag = value;
+                    tryAddTag: function(tag) {
+                        $scope.newTag = tag;
+                        return $scope.tryAdd();
                     },
                     focusInput: function() {
                         input[0].focus();
                     },
+                    getTags: function() {
+                        return $scope.tags;
+                    },
                     on: function(name, handler) {
                         events.on(name, handler);
                         return this;
-                    },
-                    getTags: function() {
-                        return $scope.tags;
                     }
                 };
             };
