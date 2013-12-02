@@ -61,7 +61,7 @@ angular.module('tags-input').directive('autoComplete', function($document, $time
                 self.query = query;
                 loadFn({ $query: query }).then(function(items) {
                     self.items = getDifference(items, tags);
-                    if (items.length > 0) {
+                    if (self.items.length > 0) {
                         self.show();
                     }
                 });

@@ -127,6 +127,15 @@ describe('autocomplete-directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
+        it('hides the suggestions list when there is no items left to show', function() {
+            // Act
+            tagsInput.getTags.andReturn(['Item1', 'Item2', 'Item3']);
+            loadSuggestions(['Item1', 'Item2', 'Item3']);
+
+            // Assert
+            expect(isSuggestionsBoxVisible()).toBe(false);
+        });
+
         it('hides the suggestion box when the input field becomes empty', function() {
             // Arrange
             changeInputValue('foobar');
