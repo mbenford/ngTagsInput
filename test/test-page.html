@@ -9,7 +9,8 @@
 <body ng-controller="Ctrl">
   <tags-input ng-model="tags"
               placeholder="{{ placeholder.value }}"
-              replace-spaces-with-dashes="false">
+              replace-spaces-with-dashes="false"
+    add-on-blur="false">
     <auto-complete source="loadItems($query)"
                    debounce-delay="0"
                    min-length="1"
@@ -17,6 +18,8 @@
                    max-results-to-show="10">
     </auto-complete>
   </tags-input>
+
+  <input type="text"/>
 
   <script type="text/javascript">
     angular.module('app', ['tags-input'])

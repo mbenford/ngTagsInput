@@ -20,6 +20,7 @@ angular.module('tags-input', []);
  * @param {boolean=} [addOnEnter=true] Flag indicating that a new tag will be added on pressing the ENTER key.
  * @param {boolean=} [addOnSpace=false] Flag indicating that a new tag will be added on pressing the SPACE key.
  * @param {boolean=} [addOnComma=true] Flag indicating that a new tag will be added on pressing the COMMA key.
+ * @param {boolean=} [addOnBlur=true] Flag indicating that a new tag will be added when the input field loses focus.
  * @param {boolean=} [replaceSpacesWithDashes=true] Flag indicating that spaces will be replaced with dashes.
  * @param {string=} [allowedTagsPattern=^[a-zA-Z0-9\s]+$*] Regular expression that determines whether a new tag is valid.
  * @param {boolean=} [enableEditingLastTag=false] Flag indicating that the last tag will be moved back into
@@ -28,7 +29,7 @@ angular.module('tags-input', []);
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
-angular.module('tags-input').directive('tagsInput', function(configuration) {
+angular.module('tags-input').directive('tagsInput', function($timeout, $document, configuration) {
     function SimplePubSub() {
         var events = {};
 
@@ -56,7 +57,7 @@ angular.module('tags-input').directive('tagsInput', function(configuration) {
         },
         replace: false,
         transclude: true,
-        template: '<div class="ngTagsInput" ng-class="options.customClass" transclude-append>' +
+        template: '<div class="ngTagsInput" tabindex="-1" ng-class="options.customClass" transclude-append>' +
                   '  <div class="tags">' +
                   '    <ul>' +
                   '      <li ng-repeat="tag in tags" ng-class="getCssClass($index)">' +
@@ -88,6 +89,7 @@ angular.module('tags-input').directive('tagsInput', function(configuration) {
                 addOnEnter: { type: Boolean, defaultValue: true },
                 addOnSpace: { type: Boolean, defaultValue: false },
                 addOnComma: { type: Boolean, defaultValue: true },
+                addOnBlur: { type: Boolean, defaultValue: true },
                 allowedTagsPattern: { type: RegExp, defaultValue: /^[a-zA-Z0-9\s]+$/ },
                 enableEditingLastTag: { type: Boolean, defaultValue: false }
             });
@@ -190,39 +192,52 @@ angular.module('tags-input').directive('tagsInput', function(configuration) {
             var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace];
             var input = element.find('input');
 
-            input.on('keydown', function(e) {
-                var key;
+            input
+                .on('keydown', function(e) {
+                    var key;
 
-                // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.
-                // I've sent a PR to Angular addressing this issue and hopefully it'll be fixed soon.
-                // https://github.com/angular/angular.js/pull/4833
-                if (e.isImmediatePropagationStopped && e.isImmediatePropagationStopped()) {
-                    return;
-                }
-
-                if (hotkeys.indexOf(e.keyCode) === -1) {
-                    return;
-                }
-
-                key = e.keyCode;
-
-                if (key === KEYS.enter && scope.options.addOnEnter ||
-                    key === KEYS.comma && scope.options.addOnComma ||
-                    key === KEYS.space && scope.options.addOnSpace) {
-
-                    if (scope.tryAdd()) {
-                        scope.$apply();
+                    // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.
+                    // I've sent a PR to Angular addressing this issue and hopefully it'll be fixed soon.
+                    // https://github.com/angular/angular.js/pull/4833
+                    if (e.isImmediatePropagationStopped && e.isImmediatePropagationStopped()) {
+                        return;
                     }
-                    e.preventDefault();
-                }
-                else if (key === KEYS.backspace && this.value.length === 0) {
-                    if (scope.tryRemoveLast()) {
-                        scope.$apply();
 
+                    if (hotkeys.indexOf(e.keyCode) === -1) {
+                        return;
+                    }
+
+                    key = e.keyCode;
+
+                    if (key === KEYS.enter && scope.options.addOnEnter ||
+                        key === KEYS.comma && scope.options.addOnComma ||
+                        key === KEYS.space && scope.options.addOnSpace) {
+
+                        if (scope.tryAdd()) {
+                            scope.$apply();
+                        }
                         e.preventDefault();
                     }
-                }
-            });
+                    else if (key === KEYS.backspace && this.value.length === 0) {
+                        if (scope.tryRemoveLast()) {
+                            scope.$apply();
+
+                            e.preventDefault();
+                        }
+                    }
+                })
+                .on('blur', function() {
+                    if (!scope.options.addOnBlur) {
+                        return;
+                    }
+
+                    $timeout(function() {
+                        var parentElement = angular.element($document[0].activeElement).parent();
+                        if (parentElement[0] !== element[0] && scope.tryAdd()) {
+                            scope.$apply();
+                        }
+                    }, 0);
+                });
 
             element.find('div').on('click', function() {
                 input[0].focus();

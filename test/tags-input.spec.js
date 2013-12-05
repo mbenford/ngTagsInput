@@ -2,15 +2,17 @@
 'use strict';
 
 describe('tags-input-directive', function() {
-    var $compile, $scope,
+    var $compile, $scope, $timeout, $document,
         isolateScope, element;
 
     beforeEach(function() {
         module('tags-input');
 
-        inject(function(_$compile_, _$rootScope_) {
+        inject(function(_$compile_, _$rootScope_, _$document_, _$timeout_) {
             $compile = _$compile_;
             $scope = _$rootScope_;
+            $document = _$document_;
+            $timeout = _$timeout_;
         });
     });
 
@@ -329,6 +331,96 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect(isolateScope.options.addOnComma).toBe(true);
+        });
+    });
+
+    describe('add-on-blur option', function() {
+        it('initializes the option to true', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.addOnBlur).toBe(true);
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('add-on-blur="false"');
+
+            // Assert
+            expect(isolateScope.options.addOnBlur).toBe(false);
+        });
+
+        it('sets the option given an interpolated string', function() {
+            // Arrange
+            $scope.value = false;
+
+            // Act
+            compile('add-on-blur="{{ value }}"');
+
+            // Assert
+            expect(isolateScope.options.addOnBlur).toBe(false);
+        });
+
+        it('ensures the outermost div element has a tabindex attribute set to -1', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(element.find('div').attr('tabindex')).toBe('-1');
+        });
+
+        describe('option is true', function() {
+            var anotherElement;
+
+            beforeEach(function() {
+                compile('add-on-blur="true"');
+                anotherElement = angular.element('<div></div>');
+
+                $document.find('body')
+                    .append(element)
+                    .append(anotherElement);
+            });
+
+            it('adds a tag when the input field loses focus to any element on the page but the directive itself', function() {
+                // Arrange
+                isolateScope.newTag = 'foo';
+                anotherElement[0].focus();
+
+                // Act
+                getInput().trigger('blur');
+                $timeout.flush();
+
+                // Assert
+                expect($scope.tags).toEqual(['foo']);
+            });
+
+            it('does not add a tag when the input field loses focus to the directive itself', function() {
+                // Arrange
+                isolateScope.newTag = 'foo';
+                element.find('div')[0].focus();
+
+                // Act
+                getInput().trigger('blur');
+                $timeout.flush();
+
+                // Assert
+                expect($scope.tags).toEqual([]);
+            });
+        });
+
+        describe('option is off', function() {
+            it('does not add a new tag when the input field loses focus', function() {
+                // Arrange
+                compile('add-on-blur="false"');
+                isolateScope.newTag = 'foo';
+
+                // Act
+                getInput().trigger('blur');
+
+                // Assert
+                expect($scope.tags).toEqual([]);
+            });
         });
     });
 
