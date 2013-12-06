@@ -26,6 +26,13 @@
     font-size: 14px;
 }
 
+.ngTagsInput .tags.focused {
+    outline: none;
+    -webkit-box-shadow: 0px 0px 3px 1px rgba(5,139,242,0.6);
+    -moz-box-shadow: 0px 0px 3px 1px rgba(5,139,242,0.6);
+    box-shadow: 0px 0px 3px 1px rgba(5,139,242,0.6);
+}
+
 .ngTagsInput .tags ul {
     margin: 0px;
     padding: 0px;

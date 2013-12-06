@@ -151,6 +151,77 @@ describe('tags-input-directive', function() {
             expect(element.find('div').hasClass('myClass')).toBe(true);
         });
     });
+
+    describe('focus outline', function() {
+        beforeEach(function() {
+            compile();
+        });
+
+        it('outlines the tags div when the focused property is true', function() {
+            // Arrange
+            isolateScope.hasFocus = true;
+
+            // Act
+            $scope.$digest();
+
+            // Assert
+            expect(element.find('div.tags').hasClass('focused')).toBe(true);
+        });
+
+        it('does not outline the tags div when the focused property is false', function() {
+            // Arrange
+            isolateScope.hasFocus = false;
+
+            // Act
+            $scope.$digest();
+
+            // Assert
+            expect(element.find('div.tags').hasClass('focused')).toBe(false);
+        });
+
+        it('sets the focused property to true when the input field gains focus', function() {
+            // Arrange
+            isolateScope.hasFocus = false;
+            spyOn($scope, '$digest');
+
+            // Act
+            getInput().triggerHandler('focus');
+
+            // Assert
+            expect(isolateScope.hasFocus).toBe(true);
+            expect($scope.$digest).toHaveBeenCalled();
+        });
+
+        it('sets the focused property to false when the input field loses focus', function() {
+            // Arrange
+            var body = $document.find('body');
+            body.append(element);
+            body.focus();
+
+            isolateScope.hasFocus = true;
+            spyOn($scope, '$digest');
+
+            // Act
+            getInput().triggerHandler('blur');
+            $timeout.flush();
+
+            // Assert
+            expect(isolateScope.hasFocus).toBe(false);
+            expect($scope.$digest).toHaveBeenCalled();
+        });
+
+        it('does not trigger a digest cycle when the input field is focused already', function() {
+            // Arrange
+            isolateScope.hasFocus = true;
+            spyOn($scope, '$digest');
+
+            // Act
+            getInput().triggerHandler('focus');
+
+            // Assert
+            expect($scope.$digest).not.toHaveBeenCalled();
+        });
+    });
     
     describe('tabindex option', function() {
         it('sets the input field tab index', function() {
@@ -371,24 +442,22 @@ describe('tags-input-directive', function() {
         });
 
         describe('option is true', function() {
-            var anotherElement;
+            var body;
 
             beforeEach(function() {
                 compile('add-on-blur="true"');
-                anotherElement = angular.element('<div></div>');
 
-                $document.find('body')
-                    .append(element)
-                    .append(anotherElement);
+                body = $document.find('body');
+                body.append(element);
             });
 
             it('adds a tag when the input field loses focus to any element on the page but the directive itself', function() {
                 // Arrange
                 isolateScope.newTag = 'foo';
-                anotherElement[0].focus();
+                body.focus();
 
                 // Act
-                getInput().trigger('blur');
+                getInput().triggerHandler('blur');
                 $timeout.flush();
 
                 // Assert
@@ -398,10 +467,10 @@ describe('tags-input-directive', function() {
             it('does not add a tag when the input field loses focus to the directive itself', function() {
                 // Arrange
                 isolateScope.newTag = 'foo';
-                element.find('div')[0].focus();
+                element.find('div').focus();
 
                 // Act
-                getInput().trigger('blur');
+                getInput().triggerHandler('blur');
                 $timeout.flush();
 
                 // Assert
@@ -416,7 +485,7 @@ describe('tags-input-directive', function() {
                 isolateScope.newTag = 'foo';
 
                 // Act
-                getInput().trigger('blur');
+                getInput().triggerHandler('blur');
 
                 // Assert
                 expect($scope.tags).toEqual([]);

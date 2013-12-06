@@ -10,7 +10,7 @@
   <tags-input ng-model="tags"
               placeholder="{{ placeholder.value }}"
               replace-spaces-with-dashes="false"
-    add-on-blur="false">
+              add-on-blur="true">
     <auto-complete source="loadItems($query)"
                    debounce-delay="0"
                    min-length="1"

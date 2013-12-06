@@ -58,7 +58,7 @@ angular.module('tags-input').directive('tagsInput', function($timeout, $document
         replace: false,
         transclude: true,
         template: '<div class="ngTagsInput" tabindex="-1" ng-class="options.customClass" transclude-append>' +
-                  '  <div class="tags">' +
+                  '  <div class="tags" ng-class="{focused: hasFocus}">' +
                   '    <ul>' +
                   '      <li ng-repeat="tag in tags" ng-class="getCssClass($index)">' +
                   '        <span>{{ tag }}</span>' +
@@ -226,17 +226,24 @@ angular.module('tags-input').directive('tagsInput', function($timeout, $document
                         }
                     }
                 })
-                .on('blur', function() {
-                    if (!scope.options.addOnBlur) {
+                .on('focus', function() {
+                    if (scope.hasFocus) {
                         return;
                     }
-
+                    scope.hasFocus = true;
+                    scope.$apply();
+                })
+                .on('blur', function() {
                     $timeout(function() {
                         var parentElement = angular.element($document[0].activeElement).parent();
-                        if (parentElement[0] !== element[0] && scope.tryAdd()) {
+                        if (parentElement[0] !== element[0]) {
+                            scope.hasFocus = false;
+                            if (scope.options.addOnBlur) {
+                                scope.tryAdd();
+                            }
                             scope.$apply();
                         }
-                    }, 0);
+                    }, 0, false);
                 });
 
             element.find('div').on('click', function() {
