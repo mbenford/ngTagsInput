@@ -5,11 +5,11 @@ angular.module("ngTagsInputSite", ['tags-input'])
             superheroes = data;
         });
         $scope.tags = ['Batman', 'Superman', 'Flash'];
-        $scope.loadItems = function(text) {
+        $scope.loadItems = function($query) {
             var items, deferred = $q.defer();
 
             items = _.chain(superheroes)
-                .filter(function(x) { return x.toLowerCase().indexOf(text.toLowerCase()) > -1; })
+                .filter(function(x) { return x.toLowerCase().indexOf($query.toLowerCase()) > -1; })
                 .take(10)
                 .value();
 
