@@ -73,4 +73,4 @@ See the [LICENSE](https://github.com/mbenford/ngTagsInput/blob/master/LICENSE ""
 
 ## Changelog
 
-See the [ChangeLog](https://github.com/mbenford/ngTagsInput/blob/master/ChangeLog) file.
+See the [CHANGELOG](https://github.com/mbenford/ngTagsInput/blob/master/CHANGELOG.md) page.
