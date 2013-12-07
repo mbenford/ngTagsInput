@@ -113,13 +113,13 @@
     z-index: 999;
 }
 
-.ngTagsInput .autocomplete ul.suggestions {
+.ngTagsInput .autocomplete ul {
     margin: 0;
     padding: 0;
     list-style-type: none;
 }
 
-.ngTagsInput .autocomplete li.suggestion {
+.ngTagsInput .autocomplete li {
     padding: 3px 16px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     line-height: 20px;
