@@ -1,4 +1,3 @@
-(function() {
 'use strict';
 
 /**
@@ -8,12 +7,10 @@
  * @description
  * Re-creates the old behavior of ng-transclude.
  */
-angular.module('tags-input').directive('transcludeAppend', function() {
+tagsInput.directive('transcludeAppend', function() {
     return function(scope, element, attrs, ctrl, transcludeFn) {
         transcludeFn(function(clone) {
             element.append(clone);
         });
     };
 });
-
-}());

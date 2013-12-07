@@ -22,6 +22,7 @@
         "jasmine": true,
         "spyOn": true,
         "require": true,
+        "tagsInput": true,
         "KEYS": true
     }
 }

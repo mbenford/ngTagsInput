@@ -17,7 +17,7 @@
  *                                               suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
  */
-angular.module('tags-input').directive('autoComplete', function($document, $timeout, $sce, configuration) {
+tagsInput.directive('autoComplete', function($document, $timeout, $sce, configuration) {
     function SuggestionList(loadFn, options) {
         var self = {}, debouncedLoadId, getDifference;
 

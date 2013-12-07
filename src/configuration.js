@@ -1,4 +1,3 @@
-(function() {
 'use strict';
 
 /**
@@ -8,7 +7,7 @@
  * @description
  * Loads and initializes options from HTML attributes. Used internally for tagsInput and autoComplete directives.
  */
-angular.module('tags-input').service('configuration', function($interpolate) {
+tagsInput.service('configuration', function($interpolate) {
     this.load = function(scope, attrs, options) {
         var converters = {};
         converters[String] = function(value) { return value; };
@@ -26,5 +25,3 @@ angular.module('tags-input').service('configuration', function($interpolate) {
         });
     };
 });
-
-}());

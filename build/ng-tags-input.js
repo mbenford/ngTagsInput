@@ -12,7 +12,7 @@ var KEYS = {
     comma: 188
 };
 
-angular.module('tags-input', []);
+var tagsInput = angular.module('tags-input', []);
 
 /**
  * @ngdoc directive
@@ -40,7 +40,7 @@ angular.module('tags-input', []);
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
-angular.module('tags-input').directive('tagsInput', ["$timeout","$document","configuration", function($timeout, $document, configuration) {
+tagsInput.directive('tagsInput', ["$timeout","$document","configuration", function($timeout, $document, configuration) {
     function SimplePubSub() {
         var events = {};
 
@@ -265,7 +265,7 @@ angular.module('tags-input').directive('tagsInput', ["$timeout","$document","con
  *                                               suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
  */
-angular.module('tags-input').directive('autoComplete', ["$document","$timeout","$sce","configuration", function($document, $timeout, $sce, configuration) {
+tagsInput.directive('autoComplete', ["$document","$timeout","$sce","configuration", function($document, $timeout, $sce, configuration) {
     function SuggestionList(loadFn, options) {
         var self = {}, debouncedLoadId, getDifference;
 
@@ -450,7 +450,6 @@ angular.module('tags-input').directive('autoComplete', ["$document","$timeout","
         }
     };
 }]);
-(function() {
 
 /**
  * @ngdoc directive
@@ -459,16 +458,13 @@ angular.module('tags-input').directive('autoComplete', ["$document","$timeout","
  * @description
  * Re-creates the old behavior of ng-transclude.
  */
-angular.module('tags-input').directive('transcludeAppend', function() {
+tagsInput.directive('transcludeAppend', function() {
     return function(scope, element, attrs, ctrl, transcludeFn) {
         transcludeFn(function(clone) {
             element.append(clone);
         });
     };
 });
-
-}());
-(function() {
 
 /**
  * @ngdoc service
@@ -477,7 +473,7 @@ angular.module('tags-input').directive('transcludeAppend', function() {
  * @description
  * Loads and initializes options from HTML attributes. Used internally for tagsInput and autoComplete directives.
  */
-angular.module('tags-input').service('configuration', ["$interpolate", function($interpolate) {
+tagsInput.service('configuration', ["$interpolate", function($interpolate) {
     this.load = function(scope, attrs, options) {
         var converters = {};
         converters[String] = function(value) { return value; };
@@ -496,9 +492,7 @@ angular.module('tags-input').service('configuration', ["$interpolate", function(
     };
 }]);
 
-}());
-
-angular.module('tags-input').run(['$templateCache', function($templateCache) {
+tagsInput.run(["$templateCache", function($templateCache) {
   
   $templateCache.put('ngTagsInput/tags-input.html',
     "<div class=\"ngTagsInput\" tabindex=\"-1\" ng-class=\"options.customClass\" transclude-append=\"\"><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul><li ng-repeat=\"tag in tags\" ng-class=\"getCssClass($index)\"><span>{{tag}}</span> <button type=\"button\" ng-click=\"remove($index)\">{{options.removeTagSymbol}}</button></li></ul><input placeholder=\"{{options.placeholder}}\" size=\"{{options.placeholder.length}}\" maxlength=\"{{options.maxLength}}\" tabindex=\"{{options.tabindex}}\" ng-model=\"newTag\" ng-change=\"newTagChange()\"></div></div>"
@@ -507,7 +501,6 @@ angular.module('tags-input').run(['$templateCache', function($templateCache) {
   $templateCache.put('ngTagsInput/auto-complete.html',
     "<div class=\"autocomplete\" ng-show=\"suggestionList.visible\"><ul class=\"suggestions\"><li class=\"suggestion\" ng-repeat=\"item in suggestionList.items | limitTo:options.maxResultsToShow\" ng-class=\"{selected: item == suggestionList.selected}\" ng-click=\"addSuggestion()\" ng-mouseenter=\"suggestionList.select($index)\" ng-bind-html=\"highlight(item)\"></li></ul></div>"
   );
-
 }]);
 
 }());

@@ -59,6 +59,9 @@ module.exports = function(grunt) {
                     url: function(url) {
                         return 'ngTagsInput/' + url.replace('templates/', '');
                     },
+                    bootstrap: function(module, script) {
+                        return 'tagsInput.run(function($templateCache) {\n' + script + '});\n';
+                    },
                     htmlmin: {
                         collapseWhitespace: true,
                         removeRedundantAttributes: true

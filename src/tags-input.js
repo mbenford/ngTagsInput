@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('tags-input', []);
+var tagsInput = angular.module('tags-input', []);
 
 /**
  * @ngdoc directive
@@ -28,7 +28,7 @@ angular.module('tags-input', []);
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
-angular.module('tags-input').directive('tagsInput', function($timeout, $document, configuration) {
+tagsInput.directive('tagsInput', function($timeout, $document, configuration) {
     function SimplePubSub() {
         var events = {};
 
