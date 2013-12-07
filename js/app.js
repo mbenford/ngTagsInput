@@ -36,6 +36,15 @@ angular.module("ngTagsInputSite", ['tags-input'])
             'Casino Royale',
             'Ghost Dog: The Way of the Samurai'];
     })
+    .controller('GettingStartedCtrl', function($scope, $q) {
+        $scope.tags = ['Tag1', 'Tag2', 'Tag3'];
+
+        $scope.loadItems = function($query) {
+            var deferred = $q.defer();
+            deferred.resolve(['Tag1', 'Tag2', 'Tag3', 'Tag4', 'Tag5']);
+            return deferred.promise;
+        };
+    })
     .controller('NavCtrl', function($scope, $location) {
         function Link(url, text) {
             this.url = url;
