@@ -6,36 +6,44 @@ Tags input directive for AngularJS. Check out the [ngTagsInput website](http://m
 
 ## Requirements
 
- - AngularJS 1.0.5+ (**v1.2+ isn't supported yet**)
+ - AngularJS 1.2+
  - A modern browser
 
 ## Installing
 
 Download either `ng-tags-input.min.zip` or `ng-tags-input.zip` from the [Releases page](https://github.com/mbenford/ngTagsInput/releases) and add its content files to your web application. Make sure the JavaScript file is included after the AngularJS script.
 
+You can also use Bower to install all files at once. Just run `bower install ng-tags-input`.
+
 ## Usage
 
  1. Add the `tags-input` module as a dependency in your AngularJS app;
  2. Add the custom directive `<tags-input>` to the HTML file where you want to use an input tag control and bind it to a property of your model. That property, if it exists, must be an array of strings;
  3. Set up the options that make sense to your application;
- 4. Customize the CSS classes, if you want to.
- 3. You're done!
+ 4. Enable autocomplete, if you want to use it, by adding the directive `<auto-complete>` inside the `<tags-input>` tag, and bind it to a function of your model. That function must return a promise;
+ 5. Customize the CSS classes, if you want to.
+ 6. You're done!
 
 ## Example
     <html>
     <head>
-        <script type="text/javascript" src="angular.min.js"></script>
-        <script type="text/javascript" src="ng-tags-input.min.js"></script>
+        <script src="angular.min.js"></script>
+        <script src="ng-tags-input.min.js"></script>
         <link rel="stylesheet" type="text/css" href="ng-tags-input.min.css">               
         <script>
             angular.module('myApp', ['tags-input'])
-                .controller('MyCtrl', function($scope) {
+                .controller('MyCtrl', function($scope, $http) {
                     $scope.tags = ['just','some','cool','tags'];
+                    $scope.loadTags = function(query) {
+                        return $http.get('/tags?query=' + query);
+                    }
                 });
         </script>
     </head>
     <body ng-app="myApp" ng-controller="MyCtrl">
-        <tags-input ng-model="tags"></tags-input>
+        <tags-input ng-model="tags">
+            <auto-complete source="loadTags($query)"></auto-complete>
+        </tags-input>
     </body>
     </html>    
 

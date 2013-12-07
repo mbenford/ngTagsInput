@@ -4,7 +4,7 @@
         "email": "michael@michaelbenford.net"
     },
     "name": "ng-tags-input",
-    "version": "0.1.5",
+    "version": "1.0.0",
     "description": "Tags input directive for AngularJS",
     "license": "MIT",
     "repository": {

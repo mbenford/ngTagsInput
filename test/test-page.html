@@ -26,8 +26,8 @@
         .controller('Ctrl', function($scope, $q) {
             $scope.tags = ['Batman', 'Superman', 'Flash'];
             $scope.placeholder = {value: "New tag" };
-            $scope.loadItems = function(text) {
-              console.log(text);
+            $scope.loadItems = function(query) {
+              console.log(query);
               var deferred = $q.defer();
               deferred.resolve(['Batman', 'Superman', 'Flash', 'Iron Man', 'Hulk', 'Wolverine', "Green Lantern", "Green Arrow", "Spiderman"]);
               return deferred.promise;
