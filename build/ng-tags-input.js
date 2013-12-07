@@ -40,7 +40,7 @@ var tagsInput = angular.module('tags-input', []);
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
-tagsInput.directive('tagsInput', ["$timeout","$document","configuration", function($timeout, $document, configuration) {
+tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", function($timeout, $document, tagsInputConfig) {
     function SimplePubSub() {
         var events = {};
 
@@ -73,7 +73,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","configuration", functi
             var events = new SimplePubSub(),
                 shouldRemoveLastTag;
 
-            configuration.load($scope, $attrs, {
+            tagsInputConfig.load($scope, $attrs, {
                 customClass: { type: String, defaultValue: '' },
                 placeholder: { type: String, defaultValue: 'Add a tag' },
                 tabindex: { type: Number },
@@ -266,7 +266,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","configuration", functi
  *                                               suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
  */
-tagsInput.directive('autoComplete', ["$document","$timeout","$sce","configuration", function($document, $timeout, $sce, configuration) {
+tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputConfig", function($document, $timeout, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
         var self = {}, debouncedLoadId, getDifference;
 
@@ -346,7 +346,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","configuratio
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
                 suggestionList, tagsInput, highlight;
 
-            configuration.load(scope, attrs, {
+            tagsInputConfig.load(scope, attrs, {
                 debounceDelay: { type: Number, defaultValue: 100 },
                 minLength: { type: Number, defaultValue: 3 },
                 highlightMatchedText: { type: Boolean, defaultValue: true },
@@ -469,12 +469,12 @@ tagsInput.directive('transcludeAppend', function() {
 
 /**
  * @ngdoc service
- * @name tagsInput.service:configuration
+ * @name tagsInput.service:tagsInputConfig
  *
  * @description
  * Loads and initializes options from HTML attributes. Used internally for tagsInput and autoComplete directives.
  */
-tagsInput.service('configuration', ["$interpolate", function($interpolate) {
+tagsInput.service('tagsInputConfig', ["$interpolate", function($interpolate) {
     this.load = function(scope, attrs, options) {
         var converters = {};
         converters[String] = function(value) { return value; };

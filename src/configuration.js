@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc service
- * @name tagsInput.service:configuration
+ * @name tagsInput.service:tagsInputConfig
  *
  * @description
  * Loads and initializes options from HTML attributes. Used internally for tagsInput and autoComplete directives.
  */
-tagsInput.service('configuration', function($interpolate) {
+tagsInput.service('tagsInputConfig', function($interpolate) {
     this.load = function(scope, attrs, options) {
         var converters = {};
         converters[String] = function(value) { return value; };

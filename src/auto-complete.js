@@ -18,7 +18,7 @@
  *                                               suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
  */
-tagsInput.directive('autoComplete', function($document, $timeout, $sce, configuration) {
+tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
         var self = {}, debouncedLoadId, getDifference;
 
@@ -98,7 +98,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, configur
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
                 suggestionList, tagsInput, highlight;
 
-            configuration.load(scope, attrs, {
+            tagsInputConfig.load(scope, attrs, {
                 debounceDelay: { type: Number, defaultValue: 100 },
                 minLength: { type: Number, defaultValue: 3 },
                 highlightMatchedText: { type: Boolean, defaultValue: true },
