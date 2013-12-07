@@ -22,7 +22,7 @@ var tagsInput = angular.module('tags-input', []);
  * ngTagsInput is an Angular directive that renders an input box with tag editing support.
  *
  * @param {string} ngModel Assignable angular expression to data-bind to.
- * @param {string=} ngClass CSS class to style the control.
+ * @param {string=} customClass CSS class to style the control.
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
@@ -256,9 +256,10 @@ tagsInput.directive('tagsInput', ["$timeout","$document","configuration", functi
  * Provides autocomplete support for the tagsInput directive.
  *
  * @param {expression} source Expression to evaluate upon changing the input content. The input value is available as
- *                            $query. The result of the expression must be a promise that resolves to an array of strings.
- * @param {number=} [debounceDelay=100] Amount of time, in milliseconds, to wait after the last keystroke before
- *                                      evaluating the expression in the source option.
+ *                            $query. The result of the expression must be a promise that eventually resolves to an
+ *                            array of strings.
+ * @param {number=} [debounceDelay=100] Amount of time, in milliseconds, to wait before evaluating the expression in
+ *                                      the source option after the last keystroke.
  * @param {number=} [minLength=3] Minimum number of characters that must be entered before evaluating the expression
  *                                 in the source option.
  * @param {boolean=} [highlightMatchedText=true] Flag indicating that the matched text will be highlighted in the

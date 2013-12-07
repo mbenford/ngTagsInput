@@ -8,9 +8,10 @@
  * Provides autocomplete support for the tagsInput directive.
  *
  * @param {expression} source Expression to evaluate upon changing the input content. The input value is available as
- *                            $query. The result of the expression must be a promise that resolves to an array of strings.
- * @param {number=} [debounceDelay=100] Amount of time, in milliseconds, to wait after the last keystroke before
- *                                      evaluating the expression in the source option.
+ *                            $query. The result of the expression must be a promise that eventually resolves to an
+ *                            array of strings.
+ * @param {number=} [debounceDelay=100] Amount of time, in milliseconds, to wait before evaluating the expression in
+ *                                      the source option after the last keystroke.
  * @param {number=} [minLength=3] Minimum number of characters that must be entered before evaluating the expression
  *                                 in the source option.
  * @param {boolean=} [highlightMatchedText=true] Flag indicating that the matched text will be highlighted in the

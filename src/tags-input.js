@@ -10,7 +10,7 @@ var tagsInput = angular.module('tags-input', []);
  * ngTagsInput is an Angular directive that renders an input box with tag editing support.
  *
  * @param {string} ngModel Assignable angular expression to data-bind to.
- * @param {string=} ngClass CSS class to style the control.
+ * @param {string=} customClass CSS class to style the control.
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
