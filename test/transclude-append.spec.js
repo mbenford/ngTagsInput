@@ -1,4 +1,3 @@
-(function() {
 'use strict';
 
 describe('transclude-append-directive', function () {
@@ -56,6 +55,3 @@ describe('transclude-append-directive', function () {
         expect(content).toEqual(['existing content', 'transcluded content']);
     });
 });
-
-
-}());

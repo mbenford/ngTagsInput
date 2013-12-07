@@ -1,4 +1,3 @@
-(function() {
 'use strict';
 
 describe('tags-input-directive', function() {
@@ -21,8 +20,8 @@ describe('tags-input-directive', function() {
         var template = '<tags-input ng-model="tags" ' + options + '></tags-input>';
 
         element = $compile(template)($scope);
-        isolateScope = element.isolateScope();
         $scope.$digest();
+        isolateScope = element.isolateScope();
     }
 
     function getTags() {
@@ -966,5 +965,3 @@ describe('tags-input-directive', function() {
         });
     });
 });
-
-}());

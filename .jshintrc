@@ -1,5 +1,5 @@
 {
-    "strict": true,
+    "globalstrict": true,
     "curly": true,
     "eqeqeq": true,
     "immed": true,

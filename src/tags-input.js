@@ -1,4 +1,3 @@
-(function() {
 'use strict';
 
 angular.module('tags-input', []);
@@ -57,23 +56,7 @@ angular.module('tags-input').directive('tagsInput', function($timeout, $document
         },
         replace: false,
         transclude: true,
-        template: '<div class="ngTagsInput" tabindex="-1" ng-class="options.customClass" transclude-append>' +
-                  '  <div class="tags" ng-class="{focused: hasFocus}">' +
-                  '    <ul>' +
-                  '      <li ng-repeat="tag in tags" ng-class="getCssClass($index)">' +
-                  '        <span>{{ tag }}</span>' +
-                  '        <button type="button" ng-click="remove($index)">{{ options.removeTagSymbol }}</button>' +
-                  '      </li>' +
-                  '    </ul>' +
-                  '    <input type="text"' +
-                  '           placeholder="{{ options.placeholder }}"' +
-                  '           size="{{ options.placeholder.length }}"' +
-                  '           maxlength="{{ options.maxLength }}"' +
-                  '           tabindex="{{ options.tabindex }}"' +
-                  '           ng-model="newTag"' +
-                  '           ng-change="newTagChange()">' +
-                  '  </div>' +
-                  '</div>',
+        templateUrl: 'ngTagsInput/tags-input.html',
         controller: function($scope, $attrs, $element) {
             var events = new SimplePubSub(),
                 shouldRemoveLastTag;
@@ -252,5 +235,3 @@ angular.module('tags-input').directive('tagsInput', function($timeout, $document
         }
     };
 });
-
-}());

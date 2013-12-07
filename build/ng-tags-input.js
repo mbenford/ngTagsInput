@@ -68,23 +68,7 @@ angular.module('tags-input').directive('tagsInput', ["$timeout","$document","con
         },
         replace: false,
         transclude: true,
-        template: '<div class="ngTagsInput" tabindex="-1" ng-class="options.customClass" transclude-append>' +
-                  '  <div class="tags" ng-class="{focused: hasFocus}">' +
-                  '    <ul>' +
-                  '      <li ng-repeat="tag in tags" ng-class="getCssClass($index)">' +
-                  '        <span>{{ tag }}</span>' +
-                  '        <button type="button" ng-click="remove($index)">{{ options.removeTagSymbol }}</button>' +
-                  '      </li>' +
-                  '    </ul>' +
-                  '    <input type="text"' +
-                  '           placeholder="{{ options.placeholder }}"' +
-                  '           size="{{ options.placeholder.length }}"' +
-                  '           maxlength="{{ options.maxLength }}"' +
-                  '           tabindex="{{ options.tabindex }}"' +
-                  '           ng-model="newTag"' +
-                  '           ng-change="newTagChange()">' +
-                  '  </div>' +
-                  '</div>',
+        templateUrl: 'ngTagsInput/tags-input.html',
         controller: ["$scope","$attrs","$element", function($scope, $attrs, $element) {
             var events = new SimplePubSub(),
                 shouldRemoveLastTag;
@@ -356,15 +340,7 @@ angular.module('tags-input').directive('autoComplete', ["$document","$timeout","
         restrict: 'E',
         require: '?^tagsInput',
         scope: { source: '&' },
-        template: '<div class="autocomplete" ng-show="suggestionList.visible">' +
-                  '  <ul class="suggestions">' +
-                  '    <li class="suggestion" ng-repeat="item in suggestionList.items | limitTo:options.maxResultsToShow"' +
-                  '                           ng-class="{selected: item == suggestionList.selected}"' +
-                  '                           ng-click="addSuggestion()"' +
-                  '                           ng-mouseenter="suggestionList.select($index)"' +
-                  '                           ng-bind-html="highlight(item)"></li>' +
-                  '  </ul>' +
-                  '</div>',
+        templateUrl: 'ngTagsInput/auto-complete.html',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
                 suggestionList, tagsInput, highlight;
@@ -474,6 +450,7 @@ angular.module('tags-input').directive('autoComplete', ["$document","$timeout","
         }
     };
 }]);
+(function() {
 
 /**
  * @ngdoc directive
@@ -489,6 +466,9 @@ angular.module('tags-input').directive('transcludeAppend', function() {
         });
     };
 });
+
+}());
+(function() {
 
 /**
  * @ngdoc service
@@ -516,5 +496,18 @@ angular.module('tags-input').service('configuration', ["$interpolate", function(
     };
 }]);
 
+}());
+
+angular.module('tags-input').run(['$templateCache', function($templateCache) {
+  
+  $templateCache.put('ngTagsInput/tags-input.html',
+    "<div class=\"ngTagsInput\" tabindex=\"-1\" ng-class=\"options.customClass\" transclude-append=\"\"><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul><li ng-repeat=\"tag in tags\" ng-class=\"getCssClass($index)\"><span>{{tag}}</span> <button type=\"button\" ng-click=\"remove($index)\">{{options.removeTagSymbol}}</button></li></ul><input placeholder=\"{{options.placeholder}}\" size=\"{{options.placeholder.length}}\" maxlength=\"{{options.maxLength}}\" tabindex=\"{{options.tabindex}}\" ng-model=\"newTag\" ng-change=\"newTagChange()\"></div></div>"
+  );
+
+  $templateCache.put('ngTagsInput/auto-complete.html',
+    "<div class=\"autocomplete\" ng-show=\"suggestionList.visible\"><ul class=\"suggestions\"><li class=\"suggestion\" ng-repeat=\"item in suggestionList.items | limitTo:options.maxResultsToShow\" ng-class=\"{selected: item == suggestionList.selected}\" ng-click=\"addSuggestion()\" ng-mouseenter=\"suggestionList.select($index)\" ng-bind-html=\"highlight(item)\"></li></ul></div>"
+  );
+
+}]);
 
 }());

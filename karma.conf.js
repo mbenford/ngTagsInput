@@ -21,9 +21,19 @@ module.exports = function(config) {
       'src/tags-input.js',
       'src/auto-complete.js',
       'src/transclude-append.js',
-      'src/configuration.js'
+      'src/configuration.js',
+      'templates/*.html'
     ],
 
+    preprocessors: {
+        'templates/*.html': ['ng-html2js']
+    },
+
+    ngHtml2JsPreprocessor: {
+        stripPrefix: 'templates/',
+        prependPrefix: 'ngTagsInput/',
+        moduleName: 'tags-input'
+    },
 
     // list of files to exclude
     exclude: [

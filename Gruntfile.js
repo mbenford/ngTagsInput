@@ -15,6 +15,10 @@ module.exports = function(grunt) {
                 out: 'build/<%= pkg.name %>.css',
                 outMin: 'tmp/<%= pkg.name %>.min.css'
             },
+            html: {
+                src: ['templates/tags-input.html', 'templates/auto-complete.html'],
+                out: 'tmp/templates.js'
+            },
             zip: {
                 unminified: 'build/<%= pkg.name %>.zip',
                 minified: 'build/<%= pkg.name %>.min.zip'
@@ -45,6 +49,23 @@ module.exports = function(grunt) {
             build: ['build/'],
             tmp: ['tmp/']
         },
+        // Compiles the HTML templates into a Javascript file
+        ngtemplates: {
+            'tags-input': {
+                files: {
+                    '<%= files.html.out %>': ['<%= files.html.src %>']
+                },
+                options: {
+                    url: function(url) {
+                        return 'ngTagsInput/' + url.replace('templates/', '');
+                    },
+                    htmlmin: {
+                        collapseWhitespace: true,
+                        removeRedundantAttributes: true
+                    }
+                }
+            }
+        },
         // Concatenates all source files into one JS file and one CSS file
         concat: {
             js: {
@@ -52,15 +73,14 @@ module.exports = function(grunt) {
                     banner: '(function() {\n\'use strict\';\n\n',
                     footer: '\n}());',
                     process: function(src) {
-                        // Remove all (function() {'use strict'; and }()) from the code and
+                        // Remove all 'use strict'; from the code and
                         // replaces all double blank lines with one
-                        return src.replace(/\(function\(\) \{\n'use strict';\n\s*/g, '')
-                                  .replace(/\n\}\(\)\);/g, '')
+                        return src.replace(/'use strict';\n/g, '')
                                   .replace(/\n\n\s*\n/g, '\n\n');
                     }
                 },
                 files: {
-                    '<%= files.js.out %>': ['<%= files.js.src %>']
+                    '<%= files.js.out %>': ['<%= files.js.src %>', '<%= files.html.out %>']
                 }
             },
             css: {
@@ -140,6 +160,7 @@ module.exports = function(grunt) {
         'jshint',
         'karma',
         'clean',
+        'ngtemplates',
         'concat',
         'ngAnnotate',
         'uglify',

@@ -1,4 +1,3 @@
-(function() {
 'use strict';
 
 /**
@@ -93,15 +92,7 @@ angular.module('tags-input').directive('autoComplete', function($document, $time
         restrict: 'E',
         require: '?^tagsInput',
         scope: { source: '&' },
-        template: '<div class="autocomplete" ng-show="suggestionList.visible">' +
-                  '  <ul class="suggestions">' +
-                  '    <li class="suggestion" ng-repeat="item in suggestionList.items | limitTo:options.maxResultsToShow"' +
-                  '                           ng-class="{selected: item == suggestionList.selected}"' +
-                  '                           ng-click="addSuggestion()"' +
-                  '                           ng-mouseenter="suggestionList.select($index)"' +
-                  '                           ng-bind-html="highlight(item)"></li>' +
-                  '  </ul>' +
-                  '</div>',
+        templateUrl: 'ngTagsInput/auto-complete.html',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
                 suggestionList, tagsInput, highlight;
@@ -211,5 +202,3 @@ angular.module('tags-input').directive('autoComplete', function($document, $time
         }
     };
 });
-
-}());

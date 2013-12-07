@@ -1,4 +1,3 @@
-(function() {
 'use strict';
 
 describe('autocomplete-directive', function() {
@@ -37,8 +36,9 @@ describe('autocomplete-directive', function() {
         };
 
         parent = $compile('<tags-input ng-model="whatever"></tags-input>')($scope);
-        parentCtrl = parent.controller('tagsInput');
+        $scope.$digest();
 
+        parentCtrl = parent.controller('tagsInput');
         spyOn(parentCtrl, 'registerAutocomplete').andReturn(tagsInput);
 
         options = jQuery.makeArray(arguments).join(' ');
@@ -726,5 +726,3 @@ describe('autocomplete-directive', function() {
         });
     });
 });
-
-})();
