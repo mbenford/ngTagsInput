@@ -31,7 +31,7 @@ You can also use Bower to install all files at once. Just run `bower install ng-
         <script src="ng-tags-input.min.js"></script>
         <link rel="stylesheet" type="text/css" href="ng-tags-input.min.css">               
         <script>
-            angular.module('myApp', ['tags-input'])
+            angular.module('myApp', ['ngTagsInput'])
                 .controller('MyCtrl', function($scope, $http) {
                     $scope.tags = ['just','some','cool','tags'];
                     $scope.loadTags = function(query) {

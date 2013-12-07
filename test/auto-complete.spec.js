@@ -5,7 +5,7 @@ describe('autocomplete-directive', function() {
         parentCtrl, element, isolateScope, suggestionList, deferred, tagsInput, eventHandlers;
 
     beforeEach(function() {
-        module('tags-input');
+        module('ngTagsInput');
 
         inject(function($rootScope, _$compile_, _$q_, _$timeout_) {
             $scope = $rootScope;

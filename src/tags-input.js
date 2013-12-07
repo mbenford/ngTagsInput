@@ -1,6 +1,6 @@
 'use strict';
 
-var tagsInput = angular.module('tags-input', []);
+var tagsInput = angular.module('ngTagsInput', []);
 
 /**
  * @ngdoc directive

@@ -5,7 +5,7 @@ describe('tags-input-directive', function() {
         isolateScope, element;
 
     beforeEach(function() {
-        module('tags-input');
+        module('ngTagsInput');
 
         inject(function(_$compile_, _$rootScope_, _$document_, _$timeout_) {
             $compile = _$compile_;

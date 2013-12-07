@@ -32,7 +32,7 @@ module.exports = function(config) {
     ngHtml2JsPreprocessor: {
         stripPrefix: 'templates/',
         prependPrefix: 'ngTagsInput/',
-        moduleName: 'tags-input'
+        moduleName: 'ngTagsInput'
     },
 
     // list of files to exclude

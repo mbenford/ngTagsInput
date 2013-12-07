@@ -51,7 +51,7 @@ module.exports = function(grunt) {
         },
         // Compiles the HTML templates into a Javascript file
         ngtemplates: {
-            'tags-input': {
+            ngTagsInput: {
                 files: {
                     '<%= files.html.out %>': ['<%= files.html.src %>']
                 },
