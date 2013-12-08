@@ -17,7 +17,7 @@ You can also use Bower to install all files at once. Just run `bower install ng-
 
 ## Usage
 
- 1. Add the `tags-input` module as a dependency in your AngularJS app;
+ 1. Add the `ngTagsInput` module as a dependency in your AngularJS app;
  2. Add the custom directive `<tags-input>` to the HTML file where you want to use an input tag control and bind it to a property of your model. That property, if it exists, must be an array of strings;
  3. Set up the options that make sense to your application;
  4. Enable autocomplete, if you want to use it, by adding the directive `<auto-complete>` inside the `<tags-input>` tag, and bind it to a function of your model. That function must return a promise;
