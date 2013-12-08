@@ -1,4 +1,4 @@
-angular.module("ngTagsInputSite", ['tags-input'])
+angular.module("ngTagsInputSite", ['ngTagsInput'])
     .controller('HomeCtrl', function($scope, $http, $q) {
         var superheroes;
         $http.get('superheroes.json').success(function(data) {
