@@ -5,6 +5,7 @@
     - Added addOnBlur option ([69415a2][], [#29][])
     - Fixed focus outline ([7d3c51a][], [#32][])
     - Renamed ng-class option as custom-class ([298bf11][])
+    - Renamed tags-input module as ngTagsInput ([1db08aa][])
 - **autocomplete**
     - Added debounce-delay option ([1a6527f][], [#19][])
     - Added min-length option ([c17d7a4][], [#21][])
@@ -32,6 +33,7 @@
 [5e2bf29]: https://github.com/mbenford/ngTagsInput/commit/5e2bf29
 [503d380]: https://github.com/mbenford/ngTagsInput/commit/503d380
 [84bb916]: https://github.com/mbenford/ngTagsInput/commit/84bb916
+[1db08aa]: https://github.com/mbenford/ngTagsInput/commit/1db08aa
 [#17]: https://github.com/mbenford/ngTagsInput/issues/17
 [#18]: https://github.com/mbenford/ngTagsInput/issues/18
 [#19]: https://github.com/mbenford/ngTagsInput/issues/19
