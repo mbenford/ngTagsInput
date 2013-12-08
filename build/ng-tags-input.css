@@ -122,6 +122,7 @@
 .ngTagsInput .autocomplete li {
     padding: 3px 16px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
     line-height: 20px;
     cursor: pointer;
     text-align: left;
