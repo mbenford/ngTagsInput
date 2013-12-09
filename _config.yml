@@ -3,4 +3,6 @@ markdown: redcarpet
 pygments: true
 exclude: ['node_modules','*.log']
 stable_version: 1.0.0
+minified_size: 10kb
+unminified_size: 25kb
 production_url: http://mbenford.github.io/ngTagsInput

@@ -35,6 +35,10 @@ angular.module("ngTagsInputSite", ['ngTagsInput'])
             'The Fugitive',
             'Casino Royale',
             'Ghost Dog: The Way of the Samurai'];
+
+        $scope.loadMovies = function($query) {
+
+        };
     })
     .controller('GettingStartedCtrl', function($scope, $q) {
         $scope.tags = ['Tag1', 'Tag2', 'Tag3'];

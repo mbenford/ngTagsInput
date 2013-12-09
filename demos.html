@@ -24,18 +24,20 @@ priority: 0.50
     <div class="col-md-6">
       <h4>HTML</h4>
 {% highlight html %}
-<tags-input ng-model="superheroes" ng-class="superheroes"
+<tags-input ng-model="superheroes"
+            custom-class="superheroes"
             placeholder="Add a superhero"
-            replace-spaces-with-dashes="false"
-            enable-editing-last-tag="true"></tags-input>
+            replace-spaces-with-dashes="false">
+</tags-input>
 {% endhighlight %}
     </div>
     <div class="col-md-6">
       <h4>Output</h4>
-      <tags-input ng-model="superheroes" ng-class="superheroes"
-                     placeholder="Add a superhero"
-                     replace-spaces-with-dashes="false"
-                     enable-editing-last-tag="true"></tags-input>
+      <tags-input ng-model="superheroes"
+                  custom-class="superheroes"
+                  placeholder="Add a superhero"
+                  replace-spaces-with-dashes="false">
+      </tags-input>
     </div>
   </div>
 
@@ -43,22 +45,34 @@ priority: 0.50
     <div class="col-md-6">
       <h4>HTML</h4>
 {% highlight html %}
-<tags-input ng-model="movies" ng-class="movies"
+<tags-input ng-model="movies"
+            custom-class="movies"
             placeholder="Add a movie"
             replace-spaces-with-dashes="false"
             add-on-comma="true"
             add-on-space="false"
-            max-length="20"></tags-input>
+            max-length="20">
+  <auto-complete source="loadMovies($query)"
+                 min-length="3"
+                 max-results-to-show="5">
+  </auto-complete>
+</tags-input>
 {% endhighlight %}
     </div>
     <div class="col-md-6">
       <h4>Output</h4>
-      <tags-input ng-model="movies" ng-class="movies"
+      <tags-input ng-model="movies"
+                  custom-class="movies"
                   placeholder="Add a movie"
                   replace-spaces-with-dashes="false"
                   add-on-comma="true"
                   add-on-space="false"
-                  max-length="20"></tags-input>
+                  max-length="20">
+        <auto-complete source="loadMovies($query)"
+                       min-length="3"
+                       max-results-to-show="5">
+        </auto-complete>
+      </tags-input>
     </div>
   </div>
 </div>
