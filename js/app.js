@@ -1,15 +1,18 @@
 angular.module("ngTagsInputSite", ['ngTagsInput'])
-    .controller('HomeCtrl', function($scope, $http, $q) {
-        var superheroes;
-        $http.get('superheroes.json').success(function(data) {
-            superheroes = data;
-        });
-        $scope.tags = ['Batman', 'Superman', 'Flash'];
-        $scope.loadItems = function($query) {
+    .service('data', function($http, $q) {
+        var files = {};
+
+        this.load = function(name, file) {
+            $http.get(file).success(function(data) {
+                files[name] = data;
+            });
+        };
+
+        this.search = function(name, query) {
             var items, deferred = $q.defer();
 
-            items = _.chain(superheroes)
-                .filter(function(x) { return x.toLowerCase().indexOf($query.toLowerCase()) > -1; })
+            items = _.chain(files[name])
+                .filter(function(x) { return x.toLowerCase().indexOf(query.toLowerCase()) > -1; })
                 .take(10)
                 .value();
 
@@ -17,7 +20,18 @@ angular.module("ngTagsInputSite", ['ngTagsInput'])
             return deferred.promise;
         }
     })
-    .controller('DemoCtrl', function($scope) {
+    .controller('HomeCtrl', function($scope, data) {
+        data.load('superheroes', 'superheroes.json');
+
+        $scope.tags = ['Batman', 'Superman', 'Flash'];
+        $scope.loadItems = function($query) {
+            return data.search('superheroes', $query);
+        }
+    })
+    .controller('DemoCtrl', function($scope, data) {
+        data.load('superheroes', 'superheroes.json');
+        data.load('movies', 'movies.json');
+
         $scope.tags = ['just','some','cool','tags'];
         $scope.superheroes = ['Batman', 'Superman', 'Flash', 'Iron Man', 'Hulk', 'Wolverine', "Green Lantern", "Green Arrow", "Spiderman"];
         $scope.movies = ['The Dark Knight',
@@ -36,8 +50,11 @@ angular.module("ngTagsInputSite", ['ngTagsInput'])
             'Casino Royale',
             'Ghost Dog: The Way of the Samurai'];
 
+        $scope.loadSuperheroes = function($query) {
+            return data.search('superheroes', $query);
+        };
         $scope.loadMovies = function($query) {
-
+            return data.search('movies', $query);
         };
     })
     .controller('GettingStartedCtrl', function($scope, $q) {

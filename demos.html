@@ -27,7 +27,12 @@ priority: 0.50
 <tags-input ng-model="superheroes"
             custom-class="superheroes"
             placeholder="Add a superhero"
-            replace-spaces-with-dashes="false">
+            replace-spaces-with-dashes="false"
+            enable-editing-last-tag="true">
+  <auto-complete source="loadSuperheroes($query)"
+                 min-length="0"
+                 max-results-to-show="10">
+  </auto-complete>
 </tags-input>
 {% endhighlight %}
     </div>
@@ -36,7 +41,12 @@ priority: 0.50
       <tags-input ng-model="superheroes"
                   custom-class="superheroes"
                   placeholder="Add a superhero"
-                  replace-spaces-with-dashes="false">
+                  replace-spaces-with-dashes="false"
+                  enable-editing-last-tag="true">
+        <auto-complete source="loadSuperheroes($query)"
+                       min-length="0"
+                       max-results-to-show="10">
+        </auto-complete>
       </tags-input>
     </div>
   </div>
@@ -46,7 +56,7 @@ priority: 0.50
       <h4>HTML</h4>
 {% highlight html %}
 <tags-input ng-model="movies"
-            custom-class="movies"
+            custom-class="bootstrap"
             placeholder="Add a movie"
             replace-spaces-with-dashes="false"
             add-on-comma="true"
@@ -62,7 +72,7 @@ priority: 0.50
     <div class="col-md-6">
       <h4>Output</h4>
       <tags-input ng-model="movies"
-                  custom-class="movies"
+                  custom-class="bootstrap"
                   placeholder="Add a movie"
                   replace-spaces-with-dashes="false"
                   add-on-comma="true"
