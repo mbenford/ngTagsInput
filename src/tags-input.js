@@ -186,7 +186,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                         return;
                     }
 
-                    if (hotkeys.indexOf(e.keyCode) === -1) {
+                    if (e.shiftKey === true || hotkeys.indexOf(e.keyCode) === -1) {
                         return;
                     }
 
