@@ -198,7 +198,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                         return;
                     }
 
-                    if (hotkeys.indexOf(e.keyCode) === -1) {
+                    if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey || hotkeys.indexOf(e.keyCode) === -1) {
                         return;
                     }
 
@@ -247,6 +247,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
         }
     };
 }]);
+
 
 /**
  * @ngdoc directive

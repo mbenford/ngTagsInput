@@ -43,15 +43,19 @@ describe('tags-input-directive', function() {
     function newTag(tag, key) {
         key = key || KEYS.enter;
 
-        for(var i = 0; i < tag.length; i++) {
-            sendKeyPress(tag.charCodeAt(i));
-        }
+        sendKeyPresses(tag);
         sendKeyDown(key);
     }
 
-    function sendKeyPress(charCode) {
+    function sendKeyPresses(str) {
+        for(var i = 0; i < str.length; i++) {
+            sendKeyPress(str.charCodeAt(i));
+        }
+    }
+
+    function sendKeyPress(charCode, eventProps) {
         var input = getInput();
-        var event = jQuery.Event('keypress', { charCode: charCode });
+        var event = jQuery.Event('keypress', jQuery.extend({}, eventProps||{}, { charCode: charCode }));
 
         input.trigger(event);
         if (!event.isDefaultPrevented()) {
@@ -962,6 +966,22 @@ describe('tags-input-directive', function() {
 
             // Act/Assert
             expect(autocompleteObj.getTags()).toEqual(['a', 'b', 'c']);
+        });
+    });
+
+    describe('key presses with modifiers do not trigger hotkeys', function() {
+        it('allows shift-comma to enter a left angle character', function() {
+            // Arrange
+            compile('add-on-comma="true"');
+
+            // Act
+            sendKeyPresses('Testing ');
+            sendKeyPress(',', {shiftKey: true});
+            sendKeyPresses('test>');
+            sendKeyDown(KEYS.comma);
+
+            // Assert
+            expect($scope.tags).toEqual(['Testing <test>']);
         });
     });
 });
