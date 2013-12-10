@@ -15,6 +15,7 @@ var tagsInput = angular.module('ngTagsInput', []);
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
  * @param {number=} maxLength Maximum length allowed for a new tag.
+ * @param {number=} limit Maximum number of tags allowed for model set.
  * @param {string=} [removeTagSymbol=×] Symbol character for the remove tag button.
  * @param {boolean=} [addOnEnter=true] Flag indicating that a new tag will be added on pressing the ENTER key.
  * @param {boolean=} [addOnSpace=false] Flag indicating that a new tag will be added on pressing the SPACE key.
@@ -69,6 +70,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 replaceSpacesWithDashes: { type: Boolean, defaultValue: true },
                 minLength: { type: Number, defaultValue: 3 },
                 maxLength: { type: Number },
+                limit: { type: Number, defaultValue: -1 },
                 addOnEnter: { type: Boolean, defaultValue: true },
                 addOnSpace: { type: Boolean, defaultValue: false },
                 addOnComma: { type: Boolean, defaultValue: true },
@@ -87,7 +89,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 var changed = false;
                 var tag = $scope.newTag;
 
-                if (tag.length >= $scope.options.minLength && $scope.options.allowedTagsPattern.test(tag)) {
+                if (tag.length >= $scope.options.minLength &&
+                    ($scope.options.limit < 0 || $scope.tags.length < $scope.options.limit) &&
+                    $scope.options.allowedTagsPattern.test(tag)) {
 
                     if ($scope.options.replaceSpacesWithDashes) {
                         tag = tag.replace(/\s/g, '-');
