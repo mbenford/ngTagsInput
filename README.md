@@ -20,9 +20,11 @@ You can also use Bower to install all files at once. Just run `bower install ng-
  1. Add the `ngTagsInput` module as a dependency in your AngularJS app;
  2. Add the custom directive `<tags-input>` to the HTML file where you want to use an input tag control and bind it to a property of your model. That property, if it exists, must be an array of strings;
  3. Set up the options that make sense to your application;
- 4. Enable autocomplete, if you want to use it, by adding the directive `<auto-complete>` inside the `<tags-input>` tag, and bind it to a function of your model. That function must return a promise;
+ 4. Enable autocomplete, if you want to use it, by adding the directive `<auto-complete>` inside the `<tags-input>` tag, and bind it to a function of your model. That function must return a promise that eventually resolves to an array of strings;
  5. Customize the CSS classes, if you want to.
  6. You're done!
+
+**Note:** There's a more detailed [getting started](http://mbenford.github.io/ngTagsInput/gettingstarted.html) guide on the ngTagsInput website.
 
 ## Example
     <html>
@@ -35,8 +37,10 @@ You can also use Bower to install all files at once. Just run `bower install ng-
                 .controller('MyCtrl', function($scope, $http) {
                     $scope.tags = ['just','some','cool','tags'];
                     $scope.loadTags = function(query) {
-                        return $http.get('/tags?query=' + query);
-                    }
+                         return $http.get('/tags?query=' + query).then(function(response) {
+                             return response.data;
+                         });
+                    };
                 });
         </script>
     </head>
@@ -55,21 +59,13 @@ Check out the [documentation](http://mbenford.github.io/ngTagsInput/documentatio
 
 You can see the directive in action in the [demo page](http://mbenford.github.io/ngTagsInput/demos.html).
 
-## Building from the source code
+## Contributing
 
-Building the directive is a five-step process:
-
-- Install Node.js;
-- Install PhantomJS;
-- Run `npm install -g grunt-cli karma` to install grunt-cli and karma globally;
-- Run `npm install` to install the development dependencies;
-- Run `grunt` to build the directive.
-
-While coding you can execute `grunt test` to run the tests or `grunt watch` to run them automatically every time the source code files change.
+See the [CONTRIBUTING](https://github.com/mbenford/ngTagsInput/blob/master/CONTRIBUTING.md) file.
 
 ## License
 
-See the [LICENSE](https://github.com/mbenford/ngTagsInput/blob/master/LICENSE "") file.
+See the [LICENSE](https://github.com/mbenford/ngTagsInput/blob/master/LICENSE) file.
 
 ## Changelog
 
