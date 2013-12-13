@@ -106,11 +106,11 @@ Just as in the subject, use the imperative, present tense: "change" not "changed
 
 The footer should contain any information about Breaking Changes and it's also the place to reference GitHub issues that this commit Closes.
 
-### Example
+#### Example
 
-    feat(tagsInput): Added addOnBlur option
+    feat(tagsInput): Add addOnBlur option
 
-    Added an option for the user to set if a tag should be created when the
+    Add an option for the user to set if a tag should be created when the
     input field loses focus and there is some text left in it. This feature
     is important because it prevents a tag from being accidentally lost when
     it's not explicitly added.
