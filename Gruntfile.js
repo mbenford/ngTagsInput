@@ -159,7 +159,7 @@ module.exports = function(grunt) {
         'jshint',
         'karma'
     ]);
-    grunt.registerTask('default', [
+    grunt.registerTask('pack', [
         'jshint',
         'karma',
         'clean',
@@ -171,4 +171,6 @@ module.exports = function(grunt) {
         'compress',
         'clean:tmp'
     ]);
+
+    grunt.registerTask('default', ['pack']);
 };
