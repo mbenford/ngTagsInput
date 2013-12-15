@@ -683,6 +683,30 @@ describe('autocomplete-directive', function() {
             expect(getSuggestionText(3)).toBe('aba');
             expect(getSuggestionText(4)).toBe('bab');
         });
+
+        it('encodes HTML characters in suggestions list', function() {
+            // Act
+            loadSuggestions(['<Item 1>', 'Item <2>', 'Item &3']);
+
+            // Assert
+            expect(getSuggestionText(0)).toBe('&lt;Item 1&gt;');
+            expect(getSuggestionText(1)).toBe('Item &lt;2&gt;');
+            expect(getSuggestionText(2)).toBe('Item &amp;3');
+        });
+
+        it('highlights encoded HTML characters in suggestions list', function() {
+            // Arrange
+            compile('highlight-matched-text="true"', 'min-length="1"');
+
+            // Act
+            loadSuggestions(['<Item 1>', 'Item <2>', 'Item &3'], '>');
+
+            // Assert
+            expect(getSuggestionText(0)).toBe('&lt;Item 1<em>&gt;</em>');
+            expect(getSuggestionText(1)).toBe('Item &lt;2<em>&gt;</em>');
+            expect(getSuggestionText(2)).toBe('Item &amp;3');
+        });
+
     });
 
     describe('max-results-to-show option', function() {

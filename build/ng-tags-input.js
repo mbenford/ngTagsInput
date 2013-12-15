@@ -337,6 +337,12 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
         return self;
     }
 
+    function encodeHTML(value) {
+        return value.replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+    }
+
     return {
         restrict: 'E',
         require: '?^tagsInput',
@@ -344,7 +350,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
         templateUrl: 'ngTagsInput/auto-complete.html',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList, tagsInput, highlight;
+                suggestionList, tagsInput, markdown;
 
             tagsInputConfig.load(scope, attrs, {
                 debounceDelay: { type: Number, defaultValue: 100 },
@@ -357,13 +363,13 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
             suggestionList = new SuggestionList(scope.source, scope.options);
 
             if (scope.options.highlightMatchedText) {
-                highlight = function(item, text) {
+                markdown = function(item, text) {
                     var expression = new RegExp(text, 'gi');
-                    return item.replace(expression, '<em>$&</em>');
+                    return item.replace(expression, '**$&**');
                 };
             }
             else {
-                highlight = function(item) {
+                markdown = function(item) {
                     return item;
                 };
             }
@@ -384,7 +390,10 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
             };
 
             scope.highlight = function(item) {
-                return $sce.trustAsHtml(highlight(item, suggestionList.query));
+                item = markdown(item, suggestionList.query);
+                item = encodeHTML(item);
+                item = item.replace(/\*\*(.+?)\*\*/g, '<em>$1</em>');
+                return $sce.trustAsHtml(item);
             };
 
             tagsInput

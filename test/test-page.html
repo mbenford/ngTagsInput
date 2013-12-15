@@ -10,7 +10,8 @@
   <tags-input ng-model="tags"
               placeholder="{{ placeholder.value }}"
               replace-spaces-with-dashes="false"
-              add-on-blur="true">
+              add-on-blur="true"
+              allowed-tags-pattern="^[a-zA-Z0-9\s<>@\.]+$">
     <auto-complete source="loadItems($query)"
                    debounce-delay="0"
                    min-length="1"
@@ -29,7 +30,7 @@
             $scope.loadItems = function(query) {
               console.log(query);
               var deferred = $q.defer();
-              deferred.resolve(['Batman', 'Superman', 'Flash', 'Iron Man', 'Hulk', 'Wolverine', "Green Lantern", "Green Arrow", "Spiderman"]);
+              deferred.resolve(['Batman <bruce@wayne.com>', 'Superman', 'Flash', 'Iron Man', 'Hulk', 'Wolverine', "Green Lantern", "Green Arrow", "Spiderman"]);
               return deferred.promise;
             };
         });
