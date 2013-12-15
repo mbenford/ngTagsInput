@@ -265,6 +265,53 @@ describe('autocomplete-directive', function() {
             // Assert
             expect(suggestionList.selected).toBeNull();
         });
+
+        it('discards all load calls but the last one', function() {
+            // Arrange
+            var deferred1 = $q.defer(), deferred2 = $q.defer(), deferred3 = $q.defer();
+            var promises = [deferred1.promise, deferred2.promise, deferred3.promise];
+
+            $scope.loadItems = jasmine.createSpy().andCallFake(function() {
+                return promises.shift();
+            });
+            spyOn(suggestionList, 'show');
+
+            // Act
+            // First we need to register all promises
+            suggestionList.load('foobar', tagsInput.getTags());
+            $timeout.flush();
+
+            suggestionList.load('foobar', tagsInput.getTags());
+            $timeout.flush();
+
+            suggestionList.load('foobar', tagsInput.getTags());
+            $timeout.flush();
+
+            // Now we resolve each promise which was previously created
+            deferred1.resolve(['Item1']);
+            deferred2.resolve(['Item2']);
+            deferred3.resolve(['Item3']);
+
+            $scope.$digest();
+
+            // Assert
+            expect(suggestionList.show.calls.length).toBe(1);
+        });
+
+        it('discards all load calls after the suggestion list is reset', function() {
+            // Arrange
+            spyOn(suggestionList, 'show');
+            suggestionList.load('foobar', tagsInput.getTags());
+            $timeout.flush();
+
+            // Act
+            suggestionList.reset();
+
+            resolve(['Item3']);
+
+            // Assert
+            expect(suggestionList.show).not.toHaveBeenCalled();
+        });
     });
 
     describe('navigation through suggestions', function() {
@@ -555,7 +602,6 @@ describe('autocomplete-directive', function() {
 
             // Assert
             expect($scope.loadItems).not.toHaveBeenCalled();
-
         });
     });
 

@@ -268,7 +268,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
  */
 tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputConfig", function($document, $timeout, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
-        var self = {}, debouncedLoadId, getDifference;
+        var self = {}, debouncedLoadId, getDifference, lastPromise;
 
         getDifference = function(array1, array2) {
             var result = [];
@@ -283,6 +283,8 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
         };
 
         self.reset = function() {
+            lastPromise = null;
+
             self.items = [];
             self.visible = false;
             self.index = -1;
@@ -307,7 +309,15 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
             $timeout.cancel(debouncedLoadId);
             debouncedLoadId = $timeout(function() {
                 self.query = query;
-                loadFn({ $query: query }).then(function(items) {
+
+                var promise = loadFn({ $query: query });
+                lastPromise = promise;
+
+                promise.then(function(items) {
+                    if (promise !== lastPromise) {
+                        return;
+                    }
+
                     self.items = getDifference(items, tags);
                     if (self.items.length > 0) {
                         self.show();

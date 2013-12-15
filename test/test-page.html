@@ -24,13 +24,23 @@
 
   <script type="text/javascript">
     angular.module('app', ['ngTagsInput'])
-        .controller('Ctrl', function($scope, $q) {
+        .controller('Ctrl', function($scope, $q, $timeout) {
+            var superheroes = ['Batman <bruce@wayne.com>', 'Superman', 'Flash', 'Iron Man', 'Hulk', 'Wolverine', "Green Lantern", "Green Arrow", "Spiderman"];
+
             $scope.tags = ['Batman', 'Superman', 'Flash'];
             $scope.placeholder = {value: "New tag" };
             $scope.loadItems = function(query) {
               console.log(query);
               var deferred = $q.defer();
-              deferred.resolve(['Batman <bruce@wayne.com>', 'Superman', 'Flash', 'Iron Man', 'Hulk', 'Wolverine', "Green Lantern", "Green Arrow", "Spiderman"]);
+              var items = [];
+              for (var i = 0; i < superheroes.length; i++) {
+                if (superheroes[i].indexOf(query) > -1) {
+                  items.push(superheroes[i]);
+                }
+              }
+              $timeout(function() {
+                deferred.resolve(items);
+              }, 2000);
               return deferred.promise;
             };
         });
