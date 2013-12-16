@@ -189,8 +189,6 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
 
             input
                 .on('keydown', function(e) {
-                    var key;
-
                     // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.
                     // I've sent a PR to Angular addressing this issue and hopefully it'll be fixed soon.
                     // https://github.com/angular/angular.js/pull/4833
@@ -198,11 +196,12 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                         return;
                     }
 
-                    if (hotkeys.indexOf(e.keyCode) === -1) {
+                    var key = e.keyCode,
+                        isModifier = e.shiftKey || e.altKey || e.ctrlKey || e.metaKey;
+
+                    if (isModifier || hotkeys.indexOf(key) === -1) {
                         return;
                     }
-
-                    key = e.keyCode;
 
                     if (key === KEYS.enter && scope.options.addOnEnter ||
                         key === KEYS.comma && scope.options.addOnComma ||

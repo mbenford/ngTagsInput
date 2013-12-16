@@ -60,8 +60,8 @@ describe('tags-input-directive', function() {
         }
     }
 
-    function sendKeyDown(keyCode) {
-        var event = jQuery.Event('keydown', { keyCode: keyCode });
+    function sendKeyDown(keyCode, properties) {
+        var event = jQuery.Event('keydown', angular.extend({ keyCode: keyCode }, properties || {}));
         getInput().trigger(event);
 
         return event;
@@ -962,6 +962,69 @@ describe('tags-input-directive', function() {
 
             // Act/Assert
             expect(autocompleteObj.getTags()).toEqual(['a', 'b', 'c']);
+        });
+    });
+
+    describe('hotkeys propagation handling', function() {
+        var hotkeys;
+
+        beforeEach(function() {
+            compile('add-on-enter="true"', 'add-on-space="true"', 'add-on-comma="true"');
+        });
+
+        describe('modifier key is on', function() {
+            beforeEach(function() {
+                hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace];
+            });
+
+            it('does not prevent any hotkey from being propagated when the shift key is down', function() {
+                angular.forEach(hotkeys, function(key) {
+                    expect(sendKeyDown(key, { shiftKey: true }).isDefaultPrevented()).toBe(false);
+                });
+            });
+
+            it('does not prevent any hotkey from being propagated when the alt key is down', function() {
+                angular.forEach(hotkeys, function(key) {
+                    expect(sendKeyDown(key, { altKey: true }).isDefaultPrevented()).toBe(false);
+                });
+            });
+
+            it('does not prevent any hotkey from being propagated when the ctrl key is down', function() {
+                angular.forEach(hotkeys, function(key) {
+                    expect(sendKeyDown(key, { ctrlKey: true }).isDefaultPrevented()).toBe(false);
+                });
+            });
+
+            it('does not prevent any hotkey from being propagated when the meta key is down', function() {
+                angular.forEach(hotkeys, function(key) {
+                    expect(sendKeyDown(key, { metaKey: true }).isDefaultPrevented()).toBe(false);
+                });
+            });
+
+        });
+
+        describe('modifier key is off', function() {
+            it('prevents enter, comma and space keys from being propagated when all modifiers are up', function() {
+                // Arrange
+                hotkeys = [KEYS.enter, KEYS.comma, KEYS.space];
+
+                // Act/Assert
+                angular.forEach(hotkeys, function(key) {
+                    expect(sendKeyDown(key, {
+                        shiftKey: false,
+                        ctrlKey: false,
+                        altKey: false,
+                        metaKey: false}).isDefaultPrevented()).toBe(true);
+                });
+            });
+
+            it('prevents the backspace key from being propagated when all modifiers are up', function() {
+                // Arrange
+                isolateScope.tryRemoveLast = function() { return true; };
+
+                // Act/Assert
+                expect(sendKeyDown(KEYS.backspace).isDefaultPrevented()).toBe(true);
+            });
         });
     });
 });
