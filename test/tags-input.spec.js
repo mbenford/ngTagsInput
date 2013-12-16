@@ -756,6 +756,69 @@ describe('tags-input-directive', function() {
         });
     });
 
+    describe('limit option', function() {
+        it('adds a new tag only if there are not more tags than set in limit option', function() {
+            // Arrange
+            compile('limit="1"');
+
+            // Act
+            newTag('foo');
+            newTag('bar');
+
+            // Assert
+            expect($scope.tags).toEqual(['foo']);
+        });
+
+        it('initializes the option to no-limit', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.limit).toBe(-1);
+        });
+
+        it('adds a new tag when there is no limit/limit is explicitly set to -1', function() {
+            // Arrange
+            compile();
+
+            // Act
+            newTag('foo');
+
+            // Assert
+            expect($scope.tags).toEqual(['foo']);
+        });
+
+        it('does not add a new tag when limit is set to 0', function() {
+            // Arrange
+            compile('limit="0"');
+
+            // Act
+            newTag('foo');
+
+            // Assert
+            expect($scope.tags).toEqual([]);
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('limit="5"');
+
+            // Assert
+            expect(isolateScope.options.limit).toBe(5);
+        });
+
+        it('sets the option given a interpolated string', function() {
+            // Arrange
+            $scope.value = 5;
+
+            // Act
+            compile('limit="{{ value }}"');
+
+            // Assert
+            expect(isolateScope.options.limit).toBe(5);
+        });
+    });
+
     describe('enable-editing-last-tag option', function() {
         beforeEach(function() {
             $scope.tags = ['some','cool','tags'];
