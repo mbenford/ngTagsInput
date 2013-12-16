@@ -1,3 +1,18 @@
+## v1.0.1 (2013-12-16)
+
+- **tagsInput**
+    - Ignore modifier keys when processing keystrokes ([820014e][], [#35][])
+- **autocomplete**
+    - Encode HTML chars in suggestion list ([6e4f7c7][], [#34][])
+    - Prevent pending promises from executing ([710d33a][], [#36][])
+    
+[820014e]: https://github.com/mbenford/ngTagsInput/commit/820014e
+[710d33a]: https://github.com/mbenford/ngTagsInput/commit/710d33a
+[6e4f7c7]: https://github.com/mbenford/ngTagsInput/commit/6e4f7c7
+[#34]: https://github.com/mbenford/ngTagsInput/issues/34
+[#35]: https://github.com/mbenford/ngTagsInput/issues/35
+[#36]: https://github.com/mbenford/ngTagsInput/issues/36
+
 ## v1.0.0 (2013-12-07)
 
 - **tagsInput**
