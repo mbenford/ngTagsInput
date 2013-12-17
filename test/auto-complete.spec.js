@@ -120,6 +120,9 @@ describe('autocomplete-directive', function() {
         });
 
         it('hides the suggestions list when there is no items to show', function() {
+            // Arrange
+            suggestionList.visible = true;
+
             // Act
             loadSuggestions([]);
 

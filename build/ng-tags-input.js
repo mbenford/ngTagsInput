@@ -321,6 +321,9 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
                     if (self.items.length > 0) {
                         self.show();
                     }
+                    else {
+                        self.reset();
+                    }
                 });
             }, options.debounceDelay, false);
         };
