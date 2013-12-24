@@ -24,6 +24,7 @@
     overflow-x: hidden;
     word-wrap: break-word;
     font-size: 14px;
+    cursor: text;
 }
 
 .ngTagsInput .tags.focused {
@@ -33,14 +34,14 @@
     box-shadow: 0px 0px 3px 1px rgba(5,139,242,0.6);
 }
 
-.ngTagsInput .tags ul {
+.ngTagsInput .tags .tag-list {
     margin: 0px;
     padding: 0px;
     overflow: visible;
     list-style-type: none;
 }
 
-.ngTagsInput .tags li {
+.ngTagsInput .tags .tag-item {
     margin: 2px;
     padding-left: 4px;
     display: inline-block;
@@ -56,10 +57,9 @@
     background: -o-linear-gradient(top,  rgba(240,249,255,1) 0%,rgba(203,235,255,1) 47%,rgba(161,219,255,1) 100%); /* Opera 11.10+ */
     background: -ms-linear-gradient(top,  rgba(240,249,255,1) 0%,rgba(203,235,255,1) 47%,rgba(161,219,255,1) 100%); /* IE10+ */
     background: linear-gradient(to bottom,  rgba(240,249,255,1) 0%,rgba(203,235,255,1) 47%,rgba(161,219,255,1) 100%); /* W3C */
-
 }
 
-.ngTagsInput .tags li.selected {
+.ngTagsInput .tags .tag-item.selected {
     background: rgb(254,187,187); /* Old browsers */
     background: -moz-linear-gradient(top,  rgba(254,187,187,1) 0%, rgba(254,144,144,1) 45%, rgba(255,92,92,1) 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(254,187,187,1)), color-stop(45%,rgba(254,144,144,1)), color-stop(100%,rgba(255,92,92,1))); /* Chrome,Safari4+ */
@@ -69,11 +69,11 @@
     background: linear-gradient(to bottom,  rgba(254,187,187,1) 0%,rgba(254,144,144,1) 45%,rgba(255,92,92,1) 100%); /* W3C */
 }
 
-.ngTagsInput .tags span {
+.ngTagsInput .tags .tag-item span {
     font: 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.ngTagsInput .tags button {
+.ngTagsInput .tags .tag-item button {
     margin: 0px;
     border: none;
     background: none;
@@ -83,11 +83,11 @@
     vertical-align: middle;
 }
 
-.ngTagsInput .tags button:active {
+.ngTagsInput .tags .tag-item button:active {
     color: #ff0000;
 }
 
-.ngTagsInput .tags input {
+.ngTagsInput .tags .tag-input {
     border: 0px;
     outline: none;
     margin: 2px;

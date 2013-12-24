@@ -5,13 +5,24 @@
   <script type="text/javascript" src="lib/angular.js"></script>
   <script type="text/javascript" src="../build/ng-tags-input.js"></script>
   <link rel="stylesheet" href="../build/ng-tags-input.css"/>
+  <style>
+    .foo .tags .tag-input {
+      font-size: 16px;
+      font-weight: bold;
+      letter-spacing: 4px;
+      border-left: 3px solid;
+      padding-left: 3px;
+    }
+  </style>
 </head>
 <body ng-controller="Ctrl">
   <tags-input ng-model="tags"
+              custom-class="foo"
               placeholder="{{ placeholder.value }}"
               replace-spaces-with-dashes="false"
               add-on-blur="true"
-              allowed-tags-pattern="^[a-zA-Z0-9\s<>@\.]+$">
+              allowed-tags-pattern="^[a-zA-Z0-9\s<@\.]+$"
+              enable-editing-last-tag="true">
     <auto-complete source="loadItems($query)"
                    debounce-delay="0"
                    min-length="1"

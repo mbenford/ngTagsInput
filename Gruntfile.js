@@ -6,7 +6,14 @@ module.exports = function(grunt) {
         // Sets all files used by the script
         files: {
             js: {
-                src: ['src/keycodes.js', 'src/tags-input.js', 'src/auto-complete.js', 'src/transclude-append.js', 'src/configuration.js'],
+                src: [
+                    'src/keycodes.js',
+                    'src/tags-input.js',
+                    'src/auto-complete.js',
+                    'src/transclude-append.js',
+                    'src/autosize.js',
+                    'src/configuration.js'
+                ],
                 out: 'build/<%= pkg.name %>.js',
                 outMin: 'tmp/<%= pkg.name %>.min.js'
             },

@@ -17,10 +17,12 @@ module.exports = function(config) {
       'test/tags-input.spec.js',
       'test/auto-complete.spec.js',
       'test/transclude-append.spec.js',
+      'test/autosize.spec.js',
       'src/keycodes.js',
       'src/tags-input.js',
       'src/auto-complete.js',
       'src/transclude-append.js',
+      'src/autosize.js',
       'src/configuration.js',
       'templates/*.html'
     ],

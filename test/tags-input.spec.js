@@ -501,14 +501,6 @@ describe('tags-input-directive', function() {
             expect(getInput().attr('placeholder')).toBe('New tag');
         });
 
-        it('sets the input size attribute to placeholder option length', function() {
-            // Arrange/Act
-            compile('placeholder="New tag"');
-
-            // Assert
-            expect(getInput().attr('size')).toBe('7');
-        });
-
         it('sets the option given a static string', function() {
             // Arrange/Act
             compile('placeholder="New tag"');
