@@ -40,7 +40,7 @@ var tagsInput = angular.module('ngTagsInput', []);
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
-tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", function($timeout, $document, tagsInputConfig) {
+tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", function($timeout, $document, tiConfiguration) {
     function SimplePubSub() {
         var events = {};
 
@@ -73,7 +73,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
             var events = new SimplePubSub(),
                 shouldRemoveLastTag;
 
-            tagsInputConfig.load($scope, $attrs, {
+            tiConfiguration.load($scope, $attrs, {
                 customClass: { type: String, defaultValue: '' },
                 placeholder: { type: String, defaultValue: 'Add a tag' },
                 tabindex: { type: Number },
@@ -265,7 +265,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
  *                                               suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
  */
-tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputConfig", function($document, $timeout, $sce, tagsInputConfig) {
+tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tiConfiguration", function($document, $timeout, $sce, tiConfiguration) {
     function SuggestionList(loadFn, options) {
         var self = {}, debouncedLoadId, getDifference, lastPromise;
 
@@ -364,7 +364,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
                 suggestionList, tagsInput, markdown;
 
-            tagsInputConfig.load(scope, attrs, {
+            tiConfiguration.load(scope, attrs, {
                 debounceDelay: { type: Number, defaultValue: 100 },
                 minLength: { type: Number, defaultValue: 3 },
                 highlightMatchedText: { type: Boolean, defaultValue: true },
@@ -475,12 +475,12 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
 
 /**
  * @ngdoc directive
- * @name tagsInput.directive:transcludeAppend
+ * @name tagsInput.directive:tiTranscludeAppend
  *
  * @description
- * Re-creates the old behavior of ng-transclude.
+ * Re-creates the old behavior of ng-transclude. Used internally by tagsInput directive.
  */
-tagsInput.directive('transcludeAppend', function() {
+tagsInput.directive('tiTranscludeAppend', function() {
     return function(scope, element, attrs, ctrl, transcludeFn) {
         transcludeFn(function(clone) {
             element.append(clone);
@@ -489,13 +489,58 @@ tagsInput.directive('transcludeAppend', function() {
 });
 
 /**
- * @ngdoc service
- * @name tagsInput.service:tagsInputConfig
+ * @ngDoc directive
+ * @name tagsInput.directive:tiAutosize
  *
  * @description
- * Loads and initializes options from HTML attributes. Used internally for tagsInput and autoComplete directives.
+ * Automatically sets the input's width so its content is always visible. Used internally by tagsInput directive.
  */
-tagsInput.service('tagsInputConfig', ["$interpolate", function($interpolate) {
+tagsInput.directive('tiAutosize', function() {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+        link: function(scope, element, attrs, ctrl) {
+            var span, resize;
+
+            span = angular.element('<span class="tag-input"></span>');
+            span.css('display', 'none')
+                .css('visibility', 'hidden')
+                .css('width', 'auto');
+
+            element.parent().append(span);
+
+            resize = function(value) {
+                var originalValue = value;
+
+                if (angular.isString(value) && value.length === 0) {
+                    value = element.attr('placeholder') || '';
+                }
+                span.text(value);
+                span.css('display', '');
+                try {
+                    element.css('width', span.prop('offsetWidth') + 'px');
+                }
+                finally {
+                    span.css('display', 'none');
+                }
+
+                return originalValue;
+            };
+
+            ctrl.$parsers.unshift(resize);
+            ctrl.$formatters.unshift(resize);
+        }
+    };
+});
+
+/**
+ * @ngdoc service
+ * @name tagsInput.service:tiConfiguration
+ *
+ * @description
+ * Loads and initializes options from HTML attributes. Used internally by tagsInput and autoComplete directives.
+ */
+tagsInput.service('tiConfiguration', ["$interpolate", function($interpolate) {
     this.load = function(scope, attrs, options) {
         var converters = {};
         converters[String] = function(value) { return value; };
@@ -517,11 +562,11 @@ tagsInput.service('tagsInputConfig', ["$interpolate", function($interpolate) {
 tagsInput.run(["$templateCache", function($templateCache) {
   
   $templateCache.put('ngTagsInput/tags-input.html',
-    "<div class=\"ngTagsInput\" tabindex=\"-1\" ng-class=\"options.customClass\" transclude-append=\"\"><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul><li ng-repeat=\"tag in tags\" ng-class=\"getCssClass($index)\"><span>{{tag}}</span> <button type=\"button\" ng-click=\"remove($index)\">{{options.removeTagSymbol}}</button></li></ul><input placeholder=\"{{options.placeholder}}\" size=\"{{options.placeholder.length}}\" maxlength=\"{{options.maxLength}}\" tabindex=\"{{options.tabindex}}\" ng-model=\"newTag\" ng-change=\"newTagChange()\"></div></div>"
+    "<div class=\"ngTagsInput\" tabindex=\"-1\" ng-class=\"options.customClass\" ti-transclude-append=\"\"><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul class=\"tag-list\"><li class=\"tag-item\" ng-repeat=\"tag in tags\" ng-class=\"getCssClass($index)\"><span>{{tag}}</span> <button type=\"button\" ng-click=\"remove($index)\">{{options.removeTagSymbol}}</button></li></ul><input class=\"tag-input\" placeholder=\"{{options.placeholder}}\" maxlength=\"{{options.maxLength}}\" tabindex=\"{{options.tabindex}}\" ng-model=\"newTag\" ng-change=\"newTagChange()\" ti-autosize=\"\"></div></div>"
   );
 
   $templateCache.put('ngTagsInput/auto-complete.html',
-    "<div class=\"autocomplete\" ng-show=\"suggestionList.visible\"><ul><li ng-repeat=\"item in suggestionList.items | limitTo:options.maxResultsToShow\" ng-class=\"{selected: item == suggestionList.selected}\" ng-click=\"addSuggestion()\" ng-mouseenter=\"suggestionList.select($index)\" ng-bind-html=\"highlight(item)\"></li></ul></div>"
+    "<div class=\"autocomplete\" ng-show=\"suggestionList.visible\"><ul class=\"suggestion-list\"><li class=\"suggestion-item\" ng-repeat=\"item in suggestionList.items | limitTo:options.maxResultsToShow\" ng-class=\"{selected: item == suggestionList.selected}\" ng-click=\"addSuggestion()\" ng-mouseenter=\"suggestionList.select($index)\" ng-bind-html=\"highlight(item)\"></li></ul></div>"
   );
 }]);
 
