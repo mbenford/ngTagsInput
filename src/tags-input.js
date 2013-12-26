@@ -213,6 +213,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
                         return;
                     }
                     scope.hasFocus = true;
+                    if(scope.$root.$$phase) {
+                        return;
+                    }
                     scope.$apply();
                 })
                 .on('blur', function() {
