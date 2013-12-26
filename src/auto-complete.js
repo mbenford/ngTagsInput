@@ -162,7 +162,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tiConfig
             };
 
             tagsInput
-                .on('input-changed', function(value) {
+                .on('input-change', function(value) {
                     if (value) {
                         suggestionList.load(value, tagsInput.getTags());
                     } else {

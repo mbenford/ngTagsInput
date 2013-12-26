@@ -955,6 +955,48 @@ describe('tags-input-directive', function() {
             // Act/Assert
             expect(autocompleteObj.getTags()).toEqual(['a', 'b', 'c']);
         });
+
+        describe('events', function() {
+            var callback;
+
+            beforeEach(function() {
+                callback = jasmine.createSpy();
+            });
+
+            it('triggers an event when a key is pressed down on the input', function() {
+                // Arrange
+                autocompleteObj.on('input-keydown', callback);
+
+                // Act
+                var event = sendKeyDown(65);
+
+                // Assert
+                expect(callback).toHaveBeenCalledWith(event);
+            });
+
+            it('triggers an event when the input content changes', function() {
+                // Arrange
+                autocompleteObj.on('input-change', callback);
+
+                // Act
+                getInput().val('ABC').trigger('input');
+
+                // Assert
+                expect(callback).toHaveBeenCalledWith('ABC');
+            });
+
+            it('triggers an event when the input loses focus', function() {
+                // Arrange
+                autocompleteObj.on('input-blur', callback);
+
+                // Act
+                getInput().trigger('blur');
+                $timeout.flush();
+
+                // Assert
+                expect(callback).toHaveBeenCalled();
+            });
+        });
     });
 
     describe('hotkeys propagation handling', function() {

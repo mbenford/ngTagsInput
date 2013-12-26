@@ -65,7 +65,7 @@ describe('autocomplete-directive', function() {
     }
 
     function changeInputValue(value) {
-        eventHandlers['input-changed'](value);
+        eventHandlers['input-change'](value);
         $scope.$digest();
     }
 
