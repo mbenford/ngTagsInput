@@ -70,8 +70,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", func
         transclude: true,
         templateUrl: 'ngTagsInput/tags-input.html',
         controller: ["$scope","$attrs","$element", function($scope, $attrs, $element) {
-            var events = new SimplePubSub(),
-                shouldRemoveLastTag;
+            var shouldRemoveLastTag;
 
             tiConfiguration.load($scope, $attrs, {
                 customClass: { type: String, defaultValue: '' },
@@ -89,8 +88,10 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", func
                 enableEditingLastTag: { type: Boolean, defaultValue: false }
             });
 
-            events.on('tag-added', $scope.onTagAdded);
-            events.on('tag-removed', $scope.onTagRemoved);
+            $scope.events = new SimplePubSub();
+
+            $scope.events.on('tag-added', $scope.onTagAdded);
+            $scope.events.on('tag-removed', $scope.onTagRemoved);
 
             $scope.newTag = '';
             $scope.tags = $scope.tags || [];
@@ -108,11 +109,11 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", func
                     if ($scope.tags.indexOf(tag) === -1) {
                         $scope.tags.push(tag);
 
-                        events.trigger('tag-added', { $tag: tag });
+                        $scope.events.trigger('tag-added', { $tag: tag });
                     }
 
                     $scope.newTag = '';
-                    events.trigger('input-changed', '');
+                    $scope.events.trigger('input-changed', '');
                     changed = true;
                 }
                 return changed;
@@ -142,7 +143,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", func
 
             $scope.remove = function(index) {
                 var removedTag = $scope.tags.splice(index, 1)[0];
-                events.trigger('tag-removed', { $tag: removedTag });
+                $scope.events.trigger('tag-removed', { $tag: removedTag });
                 return removedTag;
             };
 
@@ -158,11 +159,11 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", func
             this.registerAutocomplete = function() {
                 var input = $element.find('input');
                 input.on('keydown', function(e) {
-                    events.trigger('input-keydown', e);
+                    $scope.events.trigger('input-keydown', e);
                 });
 
                 $scope.newTagChange = function() {
-                    events.trigger('input-changed', $scope.newTag);
+                    $scope.events.trigger('input-change', $scope.newTag);
                 };
 
                 return {
@@ -177,7 +178,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", func
                         return $scope.tags;
                     },
                     on: function(name, handler) {
-                        events.on(name, handler);
+                        $scope.events.on(name, handler);
                         return this;
                     }
                 };
@@ -235,6 +236,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", func
                             if (scope.options.addOnBlur) {
                                 scope.tryAdd();
                             }
+                            scope.events.trigger('input-blur');
                             scope.$apply();
                         }
                     }, 0, false);
@@ -409,7 +411,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tiConfigurat
             };
 
             tagsInput
-                .on('input-changed', function(value) {
+                .on('input-change', function(value) {
                     if (value) {
                         suggestionList.load(value, tagsInput.getTags());
                     } else {
@@ -461,6 +463,9 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tiConfigurat
                             scope.$apply();
                         }
                     }
+                })
+                .on('input-blur', function() {
+                    suggestionList.reset();
                 });
 
             $document.on('click', function() {
