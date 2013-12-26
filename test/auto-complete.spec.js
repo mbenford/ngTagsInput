@@ -188,6 +188,17 @@ describe('autocomplete-directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
+        it('hides the suggestion box when the input field loses focus', function() {
+            // Arrange
+            suggestionList.visible = true;
+
+            // Act
+            eventHandlers['input-blur']();
+
+            // Assert
+            expect(isSuggestionsBoxVisible()).toBe(false);
+        });
+
         it('adds the selected suggestion when the enter key is pressed and the suggestions box is visible', function() {
             // Arrange
             loadSuggestions(['Item1', 'Item2']);

@@ -58,8 +58,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
         transclude: true,
         templateUrl: 'ngTagsInput/tags-input.html',
         controller: function($scope, $attrs, $element) {
-            var events = new SimplePubSub(),
-                shouldRemoveLastTag;
+            var shouldRemoveLastTag;
 
             tiConfiguration.load($scope, $attrs, {
                 customClass: { type: String, defaultValue: '' },
@@ -77,8 +76,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
                 enableEditingLastTag: { type: Boolean, defaultValue: false }
             });
 
-            events.on('tag-added', $scope.onTagAdded);
-            events.on('tag-removed', $scope.onTagRemoved);
+            $scope.events = new SimplePubSub();
+
+            $scope.events.on('tag-added', $scope.onTagAdded);
+            $scope.events.on('tag-removed', $scope.onTagRemoved);
 
             $scope.newTag = '';
             $scope.tags = $scope.tags || [];
@@ -96,11 +97,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
                     if ($scope.tags.indexOf(tag) === -1) {
                         $scope.tags.push(tag);
 
-                        events.trigger('tag-added', { $tag: tag });
+                        $scope.events.trigger('tag-added', { $tag: tag });
                     }
 
                     $scope.newTag = '';
-                    events.trigger('input-changed', '');
+                    $scope.events.trigger('input-changed', '');
                     changed = true;
                 }
                 return changed;
@@ -130,7 +131,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
 
             $scope.remove = function(index) {
                 var removedTag = $scope.tags.splice(index, 1)[0];
-                events.trigger('tag-removed', { $tag: removedTag });
+                $scope.events.trigger('tag-removed', { $tag: removedTag });
                 return removedTag;
             };
 
@@ -146,11 +147,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
             this.registerAutocomplete = function() {
                 var input = $element.find('input');
                 input.on('keydown', function(e) {
-                    events.trigger('input-keydown', e);
+                    $scope.events.trigger('input-keydown', e);
                 });
 
                 $scope.newTagChange = function() {
-                    events.trigger('input-changed', $scope.newTag);
+                    $scope.events.trigger('input-changed', $scope.newTag);
                 };
 
                 return {
@@ -165,7 +166,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
                         return $scope.tags;
                     },
                     on: function(name, handler) {
-                        events.on(name, handler);
+                        $scope.events.on(name, handler);
                         return this;
                     }
                 };
@@ -223,6 +224,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
                             if (scope.options.addOnBlur) {
                                 scope.tryAdd();
                             }
+                            scope.events.trigger('input-blur');
                             scope.$apply();
                         }
                     }, 0, false);

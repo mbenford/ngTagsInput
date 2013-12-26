@@ -214,6 +214,9 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tiConfig
                             scope.$apply();
                         }
                     }
+                })
+                .on('input-blur', function() {
+                    suggestionList.reset();
                 });
 
             $document.on('click', function() {
