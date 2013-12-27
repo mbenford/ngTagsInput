@@ -1,6 +1,6 @@
 ngTagsInput
 ===========
-[![Build Status](https://travis-ci.org/mbenford/ngTagsInput.png?branch=master)](https://travis-ci.org/mbenford/ngTagsInput)
+[![Build Status](https://travis-ci.org/mbenford/ngTagsInput.png?branch=master)](https://travis-ci.org/mbenford/ngTagsInput) [![devDependency Status](https://david-dm.org/mbenford/ngTagsInput/dev-status.png)](https://david-dm.org/mbenford/ngTagsInput#info=devDependencies)
 
 Tags input directive for AngularJS. Check out the [ngTagsInput website](http://mbenford.github.io/ngTagsInput) for more information.
 
