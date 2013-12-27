@@ -42,7 +42,7 @@
     },
     "karma": {
       "version": "0.10.8",
-      "from": "karma@~0.10.0",
+      "from": "karma@>=0.9",
       "dependencies": {
         "di": {
           "version": "0.0.1",
@@ -128,7 +128,7 @@
         },
         "minimatch": {
           "version": "0.2.14",
-          "from": "minimatch@~0.2",
+          "from": "minimatch@~0.2.11",
           "dependencies": {
             "lru-cache": {
               "version": "2.5.0",

@@ -41,7 +41,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
             },
             trigger: function(name, args) {
                 angular.forEach(events[name], function(handler) {
-                   handler.call(null, args);
+                    handler.call(null, args);
                 });
             }
         };

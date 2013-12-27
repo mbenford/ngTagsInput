@@ -1048,7 +1048,8 @@ describe('tags-input-directive', function() {
                         shiftKey: false,
                         ctrlKey: false,
                         altKey: false,
-                        metaKey: false}).isDefaultPrevented()).toBe(true);
+                        metaKey: false
+                    }).isDefaultPrevented()).toBe(true);
                 });
             });
 

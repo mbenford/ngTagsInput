@@ -1,3 +1,5 @@
+'use strict';
+
 var KEYS = {
     backspace: 8,
     tab: 9,

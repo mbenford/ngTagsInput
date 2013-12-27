@@ -8,6 +8,11 @@
     "quotmark": "single",
     "undef": true,
     "eqnull": true,
+    "freeze": true,
+    "indent": 4,
+    "newcap": true,
+    "latedef": false,
+    "trailing": true,
     "globals": {
         "angular": true,
         "module": true,

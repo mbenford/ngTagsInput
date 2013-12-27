@@ -1,3 +1,5 @@
+/* jshint globalstrict: false */
+
 module.exports = function(grunt) {
     'use strict';
 
