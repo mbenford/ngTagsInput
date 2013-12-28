@@ -28,8 +28,9 @@
     "grunt-ng-annotate": "0.0.4",
     "grunt-angular-templates": "0.5.1",
     "grunt-karma": "0.6.2",
-    "grunt-karma-coveralls": "~2.2.0",
+    "grunt-karma-coveralls": "2.2.0",
+    "grunt-open": "0.2.2",
     "karma-ng-html2js-preprocessor": "0.1.0",
-    "karma-coverage": "~0.1.4"
+    "karma-coverage": "0.1.4"
   }
 }

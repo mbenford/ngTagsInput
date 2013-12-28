@@ -61,6 +61,12 @@ module.exports = function(grunt) {
                 coverage_dir: 'coverage'
             }
         },
+        // Opens the coverage report
+        open: {
+            coverage: {
+                path: grunt.file.expand('coverage/**/lcov-report/index.html')[0]
+            }
+        },
         // Cleans the build folder
         clean: {
             build: ['build/'],
@@ -180,6 +186,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('travis', ['test', 'coveralls']);
+    grunt.registerTask('coverage', ['test', 'open:coverage']);
 
     grunt.registerTask('pack', [
         'jshint',
