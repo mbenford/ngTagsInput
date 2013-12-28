@@ -50,7 +50,15 @@ module.exports = function(grunt) {
             },
             continuous: {
                 singleRun: true,
-                browsers: ['PhantomJS']
+                browsers: ['PhantomJS'],
+                reporters: ['progress', 'coverage']
+            }
+        },
+        // Sends coverage information to Coveralls
+        coveralls: {
+            options: {
+                debug: true,
+                coverage_dir: 'coverage'
             }
         },
         // Cleans the build folder
@@ -69,7 +77,8 @@ module.exports = function(grunt) {
                         return 'ngTagsInput/' + url.replace('templates/', '');
                     },
                     bootstrap: function(module, script) {
-                        return 'tagsInput.run(function($templateCache) {\n' + script + '});\n';
+                        return '/* HTML templates */\n' +
+                               'tagsInput.run(function($templateCache) {\n' + script + '});\n';
                     },
                     htmlmin: {
                         collapseWhitespace: true,
@@ -84,10 +93,11 @@ module.exports = function(grunt) {
                 options: {
                     banner: '(function() {\n\'use strict\';\n\n',
                     footer: '\n}());',
+                    separator: '\n\n',
                     process: function(src) {
                         // Remove all 'use strict'; from the code and
                         // replaces all double blank lines with one
-                        return src.replace(/'use strict';\n/g, '')
+                        return src.replace(/'use strict';\n+/g, '')
                                   .replace(/\n\n\s*\n/g, '\n\n');
                     }
                 },
@@ -168,6 +178,9 @@ module.exports = function(grunt) {
         'jshint',
         'karma'
     ]);
+
+    grunt.registerTask('travis', ['test', 'coveralls']);
+
     grunt.registerTask('pack', [
         'jshint',
         'karma',

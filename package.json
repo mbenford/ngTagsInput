@@ -1,33 +1,35 @@
 {
-    "author": {
-        "name": "Michael Benford",
-        "email": "michael@michaelbenford.net"
-    },
-    "name": "ng-tags-input",
-    "version": "1.0.0",
-    "description": "Tags input directive for AngularJS",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/mbenford/ngTagsInput.git"
-    },
-    "scripts": {
-        "test": "grunt test"
-    },
-    "dependencies": {},
-    "devDependencies": {
-        "grunt": "0.4.2",
-        "grunt-contrib-uglify": "0.2.7",
-        "grunt-contrib-cssmin": "0.7.0",
-        "grunt-contrib-watch": "0.5.3",
-        "grunt-contrib-jshint": "0.8.0",
-        "grunt-contrib-compress": "0.5.3",
-        "grunt-contrib-clean": "0.5.0",
-        "grunt-contrib-concat": "0.3.0",
-        "grunt-ng-annotate": "0.0.4",
-        "grunt-angular-templates": "0.5.1",
-        "grunt-karma": "0.6.2",
-        "karma-ng-html2js-preprocessor": "0.1.0",
-        "load-grunt-tasks": "0.2.1"
-    }
+  "author": {
+    "name": "Michael Benford",
+    "email": "michael@michaelbenford.net"
+  },
+  "name": "ng-tags-input",
+  "version": "1.0.0",
+  "description": "Tags input directive for AngularJS",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mbenford/ngTagsInput.git"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "0.4.2",
+    "load-grunt-tasks": "0.2.1",
+    "grunt-contrib-uglify": "0.2.7",
+    "grunt-contrib-cssmin": "0.7.0",
+    "grunt-contrib-watch": "0.5.3",
+    "grunt-contrib-jshint": "0.8.0",
+    "grunt-contrib-compress": "0.5.3",
+    "grunt-contrib-clean": "0.5.0",
+    "grunt-contrib-concat": "0.3.0",
+    "grunt-ng-annotate": "0.0.4",
+    "grunt-angular-templates": "0.5.1",
+    "grunt-karma": "0.6.2",
+    "grunt-karma-coveralls": "~2.2.0",
+    "karma-ng-html2js-preprocessor": "0.1.0",
+    "karma-coverage": "~0.1.4"
+  }
 }
