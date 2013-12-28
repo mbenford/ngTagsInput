@@ -53,7 +53,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", func
             },
             trigger: function(name, args) {
                 angular.forEach(events[name], function(handler) {
-                   handler.call(null, args);
+                    handler.call(null, args);
                 });
             }
         };
@@ -298,9 +298,6 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tiConfigurat
             self.selected = null;
             self.visible = true;
         };
-        self.hide = function() {
-            self.visible = false;
-        };
         self.load = function(query, tags) {
             if (query.length < options.minLength) {
                 self.reset();
@@ -319,7 +316,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tiConfigurat
                         return;
                     }
 
-                    self.items = getDifference(items, tags);
+                    self.items = getDifference(items.data || items, tags);
                     if (self.items.length > 0) {
                         self.show();
                     }
@@ -564,9 +561,10 @@ tagsInput.service('tiConfiguration', ["$interpolate", function($interpolate) {
     };
 }]);
 
+
+/* HTML templates */
 tagsInput.run(["$templateCache", function($templateCache) {
-  
-  $templateCache.put('ngTagsInput/tags-input.html',
+    $templateCache.put('ngTagsInput/tags-input.html',
     "<div class=\"ngTagsInput\" tabindex=\"-1\" ng-class=\"options.customClass\" ti-transclude-append=\"\"><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul class=\"tag-list\"><li class=\"tag-item\" ng-repeat=\"tag in tags\" ng-class=\"getCssClass($index)\"><span>{{tag}}</span> <button type=\"button\" ng-click=\"remove($index)\">{{options.removeTagSymbol}}</button></li></ul><input class=\"tag-input\" placeholder=\"{{options.placeholder}}\" maxlength=\"{{options.maxLength}}\" tabindex=\"{{options.tabindex}}\" ng-model=\"newTag\" ng-change=\"newTagChange()\" ti-autosize=\"\"></div></div>"
   );
 

@@ -111,6 +111,17 @@ describe('autocomplete-directive', function() {
             expect(getSuggestionText(1)).toBe('Item2');
         });
 
+        it('renders all elements returned by the load function that aren\'t already added ($http promise)', function() {
+            // Act
+            tagsInput.getTags.andReturn(['Item3']);
+            loadSuggestions({ data: ['Item1','Item2','Item3'] });
+
+            // Assert
+            expect(getSuggestions().length).toBe(2);
+            expect(getSuggestionText(0)).toBe('Item1');
+            expect(getSuggestionText(1)).toBe('Item2');
+        });
+
         it('shows the suggestions list when there are items to show', function() {
             // Act
             loadSuggestions(['Item1']);

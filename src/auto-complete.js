@@ -49,9 +49,6 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tiConfig
             self.selected = null;
             self.visible = true;
         };
-        self.hide = function() {
-            self.visible = false;
-        };
         self.load = function(query, tags) {
             if (query.length < options.minLength) {
                 self.reset();
@@ -70,7 +67,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tiConfig
                         return;
                     }
 
-                    self.items = getDifference(items, tags);
+                    self.items = getDifference(items.data || items, tags);
                     if (self.items.length > 0) {
                         self.show();
                     }

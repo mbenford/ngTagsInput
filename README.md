@@ -39,9 +39,7 @@ You can also use Bower to install all files at once. Just run `bower install ng-
                 .controller('MyCtrl', function($scope, $http) {
                     $scope.tags = ['just','some','cool','tags'];
                     $scope.loadTags = function(query) {
-                         return $http.get('/tags?query=' + query).then(function(response) {
-                             return response.data;
-                         });
+                         return $http.get('/tags?query=' + query);
                     };
                 });
         </script>
