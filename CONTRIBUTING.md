@@ -44,6 +44,8 @@ That performs all tasks needed to produce the final JavaScript and CSS files. Af
 
 While coding you can execute `grunt test` to run the tests or `grunt watch` to run them automatically every time the source code files change. You can use `karma start` as well, of course.
 
+You can also generate the code coverage report by running `grunt coverage`. This may help you be sure nothing is left untested.
+
 # Guidelines
 
 Even though ngTagsInput isn't a big project, there are a few guidelines I'd like you to follow so everything remains organized and consistent.
