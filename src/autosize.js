@@ -25,7 +25,7 @@ tagsInput.directive('tiAutosize', function() {
                 var originalValue = value;
 
                 if (angular.isString(value) && value.length === 0) {
-                    value = element.attr('placeholder') || '';
+                    value = element.attr('placeholder');
                 }
                 span.text(value);
                 span.css('display', '');
