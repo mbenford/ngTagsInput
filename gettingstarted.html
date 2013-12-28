@@ -55,8 +55,10 @@ priority: 0.80
   <p>
     You should pass a function of the scope to the <em>source</em> attribute. That function will be called for every
     keystroke on the input field and will be provided with its current value. That function also must return a promise which
-    eventually resolves to an array of strings.
+    eventually resolves to either an array of strings or an object with a <em>data</em> property containing an array of
+    strings (e.g. <em>$http promises</em>).
   </p>
+
   <p>
     Given the above code and assuming that the <em>loadItems</em> function will return a promise that resolves to an array
     containing 5 items - say, <em>Tag1</em>, <em>Tag2</em>, <em>Tag3</em>, <em>Tag4</em> and <em>Tag5</em> - the
@@ -69,7 +71,7 @@ priority: 0.80
   </p>
   <p>
     Just like the <em>&lt;tags-input&gt;</em> directive, several options are available for you to customize how the
-    autocomplete will work. Check them out on the documentation page.
+    autocomplete will work. Check them out on the <a href="documentation.html">documentation</a> page.
   </p>
 </section>
 
@@ -93,4 +95,32 @@ priority: 0.80
   <p>
     These options aren't mutually exclusive and you can use them both in order to achieve better results.
   </p>
+</section>
+
+<section>
+  <h2>Code Example</h2>
+  <p>Check out below a code example showing how to use the directive:</p>
+  {% highlight html %}
+<html>
+  <head>
+    <script src="angular.min.js"></script>
+    <script src="ng-tags-input.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="ng-tags-input.min.css">
+    <script>
+      angular.module('myApp', ['ngTagsInput'])
+        .controller('MyCtrl', function($scope, $http) {
+          $scope.tags = ['just','some','cool','tags'];
+          $scope.loadTags = function(query) {
+            return $http.get('/tags?query=' + query);
+          };
+        });
+    </script>
+  </head>
+  <body ng-app="myApp" ng-controller="MyCtrl">
+    <tags-input ng-model="tags">
+      <auto-complete source="loadTags($query)"></auto-complete>
+    </tags-input>
+  </body>
+</html>
+  {% endhighlight %}
 </section>
