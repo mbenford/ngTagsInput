@@ -75,6 +75,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
                 addOnBlur: { type: Boolean, defaultValue: true },
                 allowedTagsPattern: { type: RegExp, defaultValue: /^[a-zA-Z0-9\s]+$/ },
                 enableEditingLastTag: { type: Boolean, defaultValue: false },
+                minTags: { type: Number },
                 maxTags: { type: Number }
             });
 
@@ -238,6 +239,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
 
             scope.$watch('tags.length', function() {
                 ngModelCtrl.$setValidity('maxTags', angular.isUndefined(scope.options.maxTags) || scope.tags.length <= scope.options.maxTags);
+                ngModelCtrl.$setValidity('minTags', angular.isUndefined(scope.options.minTags) || scope.tags.length >= scope.options.minTags);
             });
         }
     };

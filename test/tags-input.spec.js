@@ -872,6 +872,75 @@ describe('tags-input-directive', function() {
         });
     });
 
+    describe('min-tags option', function() {
+        it('initializes the option to undefined', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.minTags).toBeUndefined();
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('min-tags="3"');
+
+            // Assert
+            expect(isolateScope.options.minTags).toBe(3);
+        });
+
+        it('sets the option given an interpolated string', function() {
+            // Arrange
+            $scope.value = 5;
+
+            // Act
+            compile('min-tags="{{ value }}"');
+
+            // Assert
+            expect(isolateScope.options.minTags).toBe(5);
+        });
+
+        it('makes the element invalid when the number of tags is lesser than the min-tags option', function() {
+            // Arrange
+            compileWithForm('min-tags="3"', 'name="tags"');
+
+            // Act
+            $scope.tags = ['Tag1', 'Tag2'];
+            $scope.$digest();
+
+            // Assert
+            expect($scope.form.tags.$invalid).toBe(true);
+            expect($scope.form.tags.$error.minTags).toBe(true);
+        });
+
+        it('makes the element valid when the number of tags is not lesser than the min-tags option', function() {
+            // Arrange
+            compileWithForm('min-tags="2"', 'name="tags"');
+
+            // Act
+            $scope.tags = ['Tag1', 'Tag2'];
+            $scope.$digest();
+
+            // Assert
+            expect($scope.form.tags.$valid).toBe(true);
+            expect($scope.form.tags.$error.minTags).toBe(false);
+        });
+
+        it('makes the element valid when the max-tags option is undefined', function() {
+            // Arrange
+            compileWithForm('name="tags"');
+
+            // Act
+            $scope.tags = ['Tag1', 'Tag2', 'Tags3', 'Tags4', 'Tags5'];
+            $scope.$digest();
+
+            // Assert
+            expect($scope.form.tags.$valid).toBe(true);
+            expect($scope.form.tags.$error.minTags).toBe(false);
+        });
+    });
+
+
     describe('max-tags option', function() {
         it('initializes the option to undefined', function() {
             // Arrange/Act
