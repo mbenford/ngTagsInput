@@ -61,6 +61,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", func
 
     return {
         restrict: 'E',
+        require: 'ngModel',
         scope: {
             tags: '=ngModel',
             onTagAdded: '&',
@@ -85,7 +86,9 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", func
                 addOnComma: { type: Boolean, defaultValue: true },
                 addOnBlur: { type: Boolean, defaultValue: true },
                 allowedTagsPattern: { type: RegExp, defaultValue: /^[a-zA-Z0-9\s]+$/ },
-                enableEditingLastTag: { type: Boolean, defaultValue: false }
+                enableEditingLastTag: { type: Boolean, defaultValue: false },
+                minTags: { type: Number },
+                maxTags: { type: Number }
             });
 
             $scope.events = new SimplePubSub();
@@ -184,7 +187,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", func
                 };
             };
         }],
-        link: function(scope, element) {
+        link: function(scope, element, attrs, ngModelCtrl) {
             var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace];
             var input = element.find('input');
 
@@ -244,6 +247,11 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", func
 
             element.find('div').on('click', function() {
                 input[0].focus();
+            });
+
+            scope.$watch('tags.length', function() {
+                ngModelCtrl.$setValidity('maxTags', angular.isUndefined(scope.options.maxTags) || scope.tags.length <= scope.options.maxTags);
+                ngModelCtrl.$setValidity('minTags', angular.isUndefined(scope.options.minTags) || scope.tags.length >= scope.options.minTags);
             });
         }
     };
@@ -356,7 +364,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tiConfigurat
 
     return {
         restrict: 'E',
-        require: '?^tagsInput',
+        require: '^tagsInput',
         scope: { source: '&' },
         templateUrl: 'ngTagsInput/auto-complete.html',
         link: function(scope, element, attrs, tagsInputCtrl) {
