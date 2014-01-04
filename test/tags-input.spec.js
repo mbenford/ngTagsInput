@@ -24,6 +24,15 @@ describe('tags-input-directive', function() {
         isolateScope = element.isolateScope();
     }
 
+    function compileWithForm() {
+        var options = jQuery.makeArray(arguments).join(' ');
+        var template = '<form name="form"><tags-input ng-model="tags" ' + options + '></tags-input></form>';
+
+        element = $compile(template)($scope);
+        $scope.$digest();
+        isolateScope = element.isolateScope();
+    }
+
     function getTags() {
         return element.find('li');
     }
@@ -860,6 +869,74 @@ describe('tags-input-directive', function() {
                     expect($scope.tags).toEqual(['some','cool','tags']);
                 });
             });
+        });
+    });
+
+    describe('max-tags option', function() {
+        it('initializes the option to undefined', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.maxTags).toBeUndefined();
+        });
+
+        it('sets the option given a static string', function() {
+            // Arrange/Act
+            compile('max-tags="3"');
+
+            // Assert
+            expect(isolateScope.options.maxTags).toBe(3);
+        });
+
+        it('sets the option given an interpolated string', function() {
+            // Arrange
+            $scope.value = 5;
+
+            // Act
+            compile('max-tags="{{ value }}"');
+
+            // Assert
+            expect(isolateScope.options.maxTags).toBe(5);
+        });
+
+        it('makes the element invalid when the number of tags is greater than the max-tags option', function() {
+            // Arrange
+            compileWithForm('max-tags="2"', 'name="tags"');
+
+            // Act
+            $scope.tags = ['Tag1', 'Tag2', 'Tag3'];
+            $scope.$digest();
+
+            // Assert
+            expect($scope.form.tags.$invalid).toBe(true);
+            expect($scope.form.tags.$error.maxTags).toBe(true);
+        });
+
+        it('makes the element valid when the number of tags is not greater than the max-tags option', function() {
+            // Arrange
+            compileWithForm('max-tags="2"', 'name="tags"');
+
+            // Act
+            $scope.tags = ['Tag1', 'Tag2'];
+            $scope.$digest();
+
+            // Assert
+            expect($scope.form.tags.$valid).toBe(true);
+            expect($scope.form.tags.$error.maxTags).toBe(false);
+        });
+
+        it('makes the element valid when the max-tags option is undefined', function() {
+            // Arrange
+            compileWithForm('name="tags"');
+
+            // Act
+            $scope.tags = ['Tag1', 'Tag2', 'Tags3', 'Tags4', 'Tags5'];
+            $scope.$digest();
+
+            // Assert
+            expect($scope.form.tags.$valid).toBe(true);
+            expect($scope.form.tags.$error.maxTags).toBe(false);
         });
     });
 

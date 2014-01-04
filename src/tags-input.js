@@ -49,6 +49,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
 
     return {
         restrict: 'E',
+        require: 'ngModel',
         scope: {
             tags: '=ngModel',
             onTagAdded: '&',
@@ -73,7 +74,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
                 addOnComma: { type: Boolean, defaultValue: true },
                 addOnBlur: { type: Boolean, defaultValue: true },
                 allowedTagsPattern: { type: RegExp, defaultValue: /^[a-zA-Z0-9\s]+$/ },
-                enableEditingLastTag: { type: Boolean, defaultValue: false }
+                enableEditingLastTag: { type: Boolean, defaultValue: false },
+                maxTags: { type: Number }
             });
 
             $scope.events = new SimplePubSub();
@@ -172,7 +174,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
                 };
             };
         },
-        link: function(scope, element) {
+        link: function(scope, element, attrs, ngModelCtrl) {
             var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace];
             var input = element.find('input');
 
@@ -232,6 +234,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
 
             element.find('div').on('click', function() {
                 input[0].focus();
+            });
+
+            scope.$watch('tags.length', function() {
+                ngModelCtrl.$setValidity('maxTags', angular.isUndefined(scope.options.maxTags) || scope.tags.length <= scope.options.maxTags);
             });
         }
     };
