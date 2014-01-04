@@ -900,7 +900,7 @@ describe('tags-input-directive', function() {
             expect(isolateScope.options.minTags).toBe(5);
         });
 
-        it('makes the element invalid when the number of tags is lesser than the min-tags option', function() {
+        it('makes the element invalid when the number of tags is less than the min-tags option', function() {
             // Arrange
             compileWithForm('min-tags="3"', 'name="tags"');
 
@@ -913,7 +913,7 @@ describe('tags-input-directive', function() {
             expect($scope.form.tags.$error.minTags).toBe(true);
         });
 
-        it('makes the element valid when the number of tags is not lesser than the min-tags option', function() {
+        it('makes the element valid when the number of tags is not less than the min-tags option', function() {
             // Arrange
             compileWithForm('min-tags="2"', 'name="tags"');
 
