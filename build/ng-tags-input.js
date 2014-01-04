@@ -27,6 +27,8 @@ var tagsInput = angular.module('ngTagsInput', []);
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
  * @param {number=} maxLength Maximum length allowed for a new tag.
+ * @param {number=} minTags Sets minTags validation error key if the number of tags added is less than minTags.
+ * @param {number=} maxTags Sets maxTags validation error key if the number of tags added is greater than maxTags.
  * @param {string=} [removeTagSymbol=×] Symbol character for the remove tag button.
  * @param {boolean=} [addOnEnter=true] Flag indicating that a new tag will be added on pressing the ENTER key.
  * @param {boolean=} [addOnSpace=false] Flag indicating that a new tag will be added on pressing the SPACE key.
