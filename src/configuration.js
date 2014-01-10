@@ -1,27 +1,48 @@
 'use strict';
 
 /**
- * @ngdoc service
- * @name tagsInput.service:tiConfiguration
+ * @ngdoc provider
+ * @name tagsInput.provider:tagsInputConfig
  *
  * @description
- * Loads and initializes options from HTML attributes. Used internally by tagsInput and autoComplete directives.
+ * Sets global default configuration options for tagsInput and autoComplete directives. It's also used internally to parse and
+ * initialize options from HTML attributes.
  */
-tagsInput.service('tiConfiguration', function($interpolate) {
-    this.load = function(scope, attrs, options) {
+tagsInput.provider('tagsInputConfig', function() {
+    var globalDefaults = {};
+
+    /**
+     * @ngdoc function
+     * @name setDefaults
+     * @description Sets the default configuration option for a directive.
+     *
+     * @param {string} directive Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'.
+     * @param {object} defaults Object containing options and their values.
+     */
+    this.setDefaults = function(directive, defaults) {
+        globalDefaults[directive] = defaults;
+        return this;
+    };
+
+    this.$get = function($interpolate) {
         var converters = {};
         converters[String] = function(value) { return value; };
         converters[Number] = function(value) { return parseInt(value, 10); };
-        converters[Boolean] = function(value) { return value === 'true'; };
+        converters[Boolean] = function(value) { return value.toLowerCase() === 'true'; };
         converters[RegExp] = function(value) { return new RegExp(value); };
 
-        scope.options = {};
+        return {
+            load: function(directive, scope, attrs, options) {
+                scope.options = {};
 
-        angular.forEach(options, function(value, key) {
-            var interpolatedValue = attrs[key] && $interpolate(attrs[key])(scope.$parent),
-                converter = converters[options[key].type];
+                angular.forEach(options, function(value, key) {
+                    var interpolatedValue = attrs[key] && $interpolate(attrs[key])(scope.$parent),
+                        converter = converters[value[0]],
+                        getDefault = function(key) { return globalDefaults[directive] ? globalDefaults[directive][key] : value[1]; };
 
-            scope.options[key] = interpolatedValue ? converter(interpolatedValue) : options[key].defaultValue;
-        });
+                    scope.options[key] = interpolatedValue ? converter(interpolatedValue) : getDefault(key);
+                });
+            }
+        };
     };
 });

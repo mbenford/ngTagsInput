@@ -239,25 +239,6 @@ describe('tags-input-directive', function() {
             // Assert
             expect(getInput().attr('tabindex')).toBe('1');
         });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('tabindex="1"');
-
-            // Assert
-            expect(isolateScope.options.tabindex).toBe(1);
-        });
-
-        it('sets the option given an interpolated string', function() {
-            // Arrange
-            $scope.value = 1;
-
-            // Act
-            compile('tabindex="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.tabindex).toBe(1);
-        });
     });
 
     describe('add-on-enter option', function() {
@@ -286,25 +267,6 @@ describe('tags-input-directive', function() {
         it('initializes the option to true', function() {
             // Arrange/Act
             compile();
-
-            // Assert
-            expect(isolateScope.options.addOnEnter).toBe(true);
-        });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('add-on-enter="true"');
-
-            // Assert
-            expect(isolateScope.options.addOnEnter).toBe(true);
-        });
-
-        it('sets the option given an interpolated string', function() {
-            // Arrange
-            $scope.value = true;
-
-            // Act
-            compile('add-on-enter="{{ value }}"');
 
             // Assert
             expect(isolateScope.options.addOnEnter).toBe(true);
@@ -341,25 +303,6 @@ describe('tags-input-directive', function() {
             // Assert
             expect(isolateScope.options.addOnSpace).toBe(false);
         });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('add-on-space="true"');
-
-            // Assert
-            expect(isolateScope.options.addOnSpace).toBe(true);
-        });
-
-        it('sets the option given an interpolated string', function() {
-            // Arrange
-            $scope.value = true;
-
-            // Act
-            compile('add-on-space="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.addOnSpace).toBe(true);
-        });
     });
 
     describe('add-on-comma option', function() {
@@ -392,25 +335,6 @@ describe('tags-input-directive', function() {
             // Assert
             expect(isolateScope.options.addOnComma).toBe(true);
         });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('add-on-comma="true"');
-
-            // Assert
-            expect(isolateScope.options.addOnComma).toBe(true);
-        });
-
-        it('sets the option given an interpolated string', function() {
-            // Arrange
-            $scope.value = true;
-
-            // Act
-            compile('add-on-comma="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.addOnComma).toBe(true);
-        });
     });
 
     describe('add-on-blur option', function() {
@@ -420,25 +344,6 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect(isolateScope.options.addOnBlur).toBe(true);
-        });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('add-on-blur="false"');
-
-            // Assert
-            expect(isolateScope.options.addOnBlur).toBe(false);
-        });
-
-        it('sets the option given an interpolated string', function() {
-            // Arrange
-            $scope.value = false;
-
-            // Act
-            compile('add-on-blur="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.addOnBlur).toBe(false);
         });
 
         it('ensures the outermost div element has a tabindex attribute set to -1', function() {
@@ -510,25 +415,6 @@ describe('tags-input-directive', function() {
             expect(getInput().attr('placeholder')).toBe('New tag');
         });
 
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('placeholder="New tag"');
-
-            // Assert
-            expect(isolateScope.options.placeholder).toBe('New tag');
-        });
-
-        it('sets the option given an interpolated string', function() {
-            // Arrange
-            $scope.value = 'New tag';
-
-            // Act
-            compile('placeholder="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.placeholder).toBe('New tag');
-        });
-
         it('initializes the option to "Add a tag"', function() {
             // Arrange/Act
             compile();
@@ -548,25 +434,6 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect(element.find('button').html()).toBe('X');
-        });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('remove-tag-symbol="X"');
-
-            // Assert
-            expect(isolateScope.options.removeTagSymbol).toBe('X');
-        });
-
-        it('sets the option given an interpolated string', function() {
-            // Arrange
-            $scope.value = 'X';
-
-            // Act
-            compile('remove-tag-symbol="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.removeTagSymbol).toBe('X');
         });
 
         it('initializes the option to charcode 215 (&times;)', function() {
@@ -608,25 +475,6 @@ describe('tags-input-directive', function() {
             // Assert
             expect(isolateScope.options.replaceSpacesWithDashes).toBe(true);
         });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('replace-spaces-with-dashes="true"');
-
-            // Assert
-            expect(isolateScope.options.replaceSpacesWithDashes).toBe(true);
-        });
-
-        it('sets the option given a interpolated string', function() {
-            // Arrange
-            $scope.value = true;
-
-            // Act
-            compile('replace-spaces-with-dashes="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.replaceSpacesWithDashes).toBe(true);
-        });
     });
 
     describe('allowed-tags-pattern option', function() {
@@ -659,25 +507,6 @@ describe('tags-input-directive', function() {
             // Assert
             expect(isolateScope.options.allowedTagsPattern.toString()).toBe('/^[a-zA-Z0-9\\s]+$/');
         });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('allowed-tags-pattern=".*"');
-
-            // Assert
-            expect(isolateScope.options.allowedTagsPattern.toString()).toBe('/.*/');
-        });
-
-        it('sets the option given a interpolated string', function() {
-            // Arrange
-            $scope.value = '.*';
-
-            // Act
-            compile('allowed-tags-pattern="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.allowedTagsPattern.toString()).toBe('/.*/');
-        });
     });
 
     describe('min-length option', function() {
@@ -699,25 +528,6 @@ describe('tags-input-directive', function() {
             // Assert
             expect(isolateScope.options.minLength).toBe(3);
         });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('min-length="5"');
-
-            // Assert
-            expect(isolateScope.options.minLength).toBe(5);
-        });
-
-        it('sets the option given a interpolated string', function() {
-            // Arrange
-            $scope.value = 5;
-
-            // Act
-            compile('min-length="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.minLength).toBe(5);
-        });
     });
 
     describe('max-length option', function() {
@@ -736,25 +546,6 @@ describe('tags-input-directive', function() {
             // Assert
             expect(getInput().attr('maxlength')).toBe('');
         });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('max-length="5"');
-
-            // Assert
-            expect(isolateScope.options.maxLength).toBe(5);
-        });
-
-        it('sets the option given a interpolated string', function() {
-            // Arrange
-            $scope.value = 5;
-
-            // Act
-            compile('max-length="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.maxLength).toBe(5);
-        });
     });
 
     describe('enable-editing-last-tag option', function() {
@@ -768,25 +559,6 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect(isolateScope.options.enableEditingLastTag).toBe(false);
-        });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('enable-editing-last-tag="true"');
-
-            // Assert
-            expect(isolateScope.options.enableEditingLastTag).toBe(true);
-        });
-
-        it('sets the option given an interpolated string', function() {
-            // Arrange
-            $scope.value = true;
-
-            // Act
-            compile('enable-editing-last-tag="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.enableEditingLastTag).toBe(true);
         });
 
         describe('option is on', function() {
@@ -881,25 +653,6 @@ describe('tags-input-directive', function() {
             expect(isolateScope.options.minTags).toBeUndefined();
         });
 
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('min-tags="3"');
-
-            // Assert
-            expect(isolateScope.options.minTags).toBe(3);
-        });
-
-        it('sets the option given an interpolated string', function() {
-            // Arrange
-            $scope.value = 5;
-
-            // Act
-            compile('min-tags="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.minTags).toBe(5);
-        });
-
         it('makes the element invalid when the number of tags is less than the min-tags option', function() {
             // Arrange
             compileWithForm('min-tags="3"', 'name="tags"');
@@ -948,25 +701,6 @@ describe('tags-input-directive', function() {
 
             // Assert
             expect(isolateScope.options.maxTags).toBeUndefined();
-        });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('max-tags="3"');
-
-            // Assert
-            expect(isolateScope.options.maxTags).toBe(3);
-        });
-
-        it('sets the option given an interpolated string', function() {
-            // Arrange
-            $scope.value = 5;
-
-            // Act
-            compile('max-tags="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.maxTags).toBe(5);
         });
 
         it('makes the element invalid when the number of tags is greater than the max-tags option', function() {

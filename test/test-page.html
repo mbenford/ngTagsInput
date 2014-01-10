@@ -18,7 +18,6 @@
 <body ng-controller="Ctrl">
   <tags-input ng-model="tags"
               custom-class="foo"
-              placeholder="{{ placeholder.value }}"
               replace-spaces-with-dashes="false"
               add-on-blur="true"
               allowed-tags-pattern="^[a-zA-Z0-9\s<@\.]+$"
@@ -27,10 +26,10 @@
     <auto-complete source="loadItems($query)"
                    debounce-delay="0"
                    min-length="1"
-                   highlight-matched-text="true"
                    max-results-to-show="10">
     </auto-complete>
   </tags-input>
+  <tags-input ng-model="tags"></tags-input>
 
   <input type="text"/>
 
@@ -55,6 +54,16 @@
               }, 2000);
               return deferred.promise;
             };
+        })
+        .config(function(tagsInputConfigProvider) {
+            tagsInputConfigProvider
+              .setDefaults('tagsInput', {
+                placeholder: 'new tag',
+                removeTagSymbol: 'x'
+              })
+              .setDefaults('autoComplete', {
+                highlightMatchedText: true
+              });
         });
   </script>
 </body>

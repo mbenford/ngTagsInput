@@ -1,7 +1,5 @@
 'use strict';
 
-var tagsInput = angular.module('ngTagsInput', []);
-
 /**
  * @ngdoc directive
  * @name tagsInput.directive:tagsInput
@@ -30,7 +28,7 @@ var tagsInput = angular.module('ngTagsInput', []);
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
-tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) {
+tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) {
     function SimplePubSub() {
         var events = {};
 
@@ -63,22 +61,22 @@ tagsInput.directive('tagsInput', function($timeout, $document, tiConfiguration) 
         controller: function($scope, $attrs, $element) {
             var shouldRemoveLastTag;
 
-            tiConfiguration.load($scope, $attrs, {
-                customClass: { type: String, defaultValue: '' },
-                placeholder: { type: String, defaultValue: 'Add a tag' },
-                tabindex: { type: Number },
-                removeTagSymbol: { type: String, defaultValue: String.fromCharCode(215) },
-                replaceSpacesWithDashes: { type: Boolean, defaultValue: true },
-                minLength: { type: Number, defaultValue: 3 },
-                maxLength: { type: Number },
-                addOnEnter: { type: Boolean, defaultValue: true },
-                addOnSpace: { type: Boolean, defaultValue: false },
-                addOnComma: { type: Boolean, defaultValue: true },
-                addOnBlur: { type: Boolean, defaultValue: true },
-                allowedTagsPattern: { type: RegExp, defaultValue: /^[a-zA-Z0-9\s]+$/ },
-                enableEditingLastTag: { type: Boolean, defaultValue: false },
-                minTags: { type: Number },
-                maxTags: { type: Number }
+            tagsInputConfig.load('tagsInput', $scope, $attrs, {
+                customClass: [String],
+                placeholder: [String, 'Add a tag'],
+                tabindex: [Number],
+                removeTagSymbol: [String, String.fromCharCode(215)],
+                replaceSpacesWithDashes: [Boolean, true],
+                minLength: [Number, 3],
+                maxLength: [Number],
+                addOnEnter: [Boolean, true],
+                addOnSpace: [Boolean, false],
+                addOnComma: [Boolean, true],
+                addOnBlur: [Boolean, true],
+                allowedTagsPattern: [RegExp, /^[a-zA-Z0-9\s]+$/],
+                enableEditingLastTag: [Boolean, false],
+                minTags: [Number],
+                maxTags: [Number]
             });
 
             $scope.events = new SimplePubSub();

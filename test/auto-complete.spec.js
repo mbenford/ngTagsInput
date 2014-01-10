@@ -590,23 +590,6 @@ describe('autocomplete-directive', function() {
             expect(isolateScope.options.debounceDelay).toBe(100);
         });
 
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('debounce-delay="1000"');
-
-            // Assert
-            expect(isolateScope.options.debounceDelay).toBe(1000);
-        });
-
-        it('sets the option given an interpolated string', function() {
-            // Arrange/Act
-            $scope.value = 1000;
-            compile('debounce-delay="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.debounceDelay).toBe(1000);
-        });
-
         it('doesn\'t call the load function immediately', function() {
             // Arrange
             compile('debounce-delay="100"');
@@ -656,23 +639,6 @@ describe('autocomplete-directive', function() {
 
             // Assert
             expect(isolateScope.options.minLength).toBe(3);
-        });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('min-length="5"');
-
-            // Assert
-            expect(isolateScope.options.minLength).toBe(5);
-        });
-
-        it('sets the option given an interpolated string', function() {
-            // Arrange/Act
-            $scope.value = 5;
-            compile('min-length="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.minLength).toBe(5);
         });
 
         it('calls the load function only after the minimum amount of characters has been entered', function() {
@@ -725,23 +691,6 @@ describe('autocomplete-directive', function() {
 
             // Assert
             expect(isolateScope.options.highlightMatchedText).toBe(true);
-        });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('highlight-matched-text="false"');
-
-            // Assert
-            expect(isolateScope.options.highlightMatchedText).toBe(false);
-        });
-
-        it('sets the option given an interpolated string', function() {
-            // Arrange/Act
-            $scope.value = false;
-            compile('highlight-matched-text="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.highlightMatchedText).toBe(false);
         });
 
         it('highlights the matched text in the suggestions list', function() {
@@ -806,23 +755,6 @@ describe('autocomplete-directive', function() {
 
             // Assert
             expect(isolateScope.options.maxResultsToShow).toBe(10);
-        });
-
-        it('sets the option given a static string', function() {
-            // Arrange/Act
-            compile('max-results-to-show="5"');
-
-            // Assert
-            expect(isolateScope.options.maxResultsToShow).toBe(5);
-        });
-
-        it('sets the option given an interpolated string', function() {
-            // Arrange/Act
-            $scope.value = 5;
-            compile('max-results-to-show="{{ value }}"');
-
-            // Assert
-            expect(isolateScope.options.maxResultsToShow).toBe(5);
         });
 
         it('limits the number of results to be displayed at a time', function() {
