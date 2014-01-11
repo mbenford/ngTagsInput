@@ -37,6 +37,18 @@ module.exports = function(grunt) {
                 src: 'test/*.spec.js'
             }
         },
+        banners: {
+            unminified: '/*!\n' +
+                        ' * <%= pkg.prettyName %> v<%= pkg.version %>\n' +
+                        ' * <%= pkg.homepage %>\n' +
+                        ' *\n' +
+                        ' * Copyright (c) 2013-<%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
+                        ' * License: <%= pkg.license %>\n' +
+                        ' *\n' +
+                        ' * Generated at <%= grunt.template.today("yyyy-mm-dd HH:MM:ss o") %>\n' +
+                        ' */',
+            minified: '/*! <%= pkg.prettyName %> v<%= pkg.version %> License: <%= pkg.license %> */'
+        },
         // Validates the JS file with JSHint
         jshint: {
             files: ['Gruntfile.js', ['<%= files.js.src %>'], ['<%= files.spec.src %>']],
@@ -98,7 +110,8 @@ module.exports = function(grunt) {
         concat: {
             js: {
                 options: {
-                    banner: '(function() {\n\'use strict\';\n\n',
+                    banner: '<%= banners.unminified %>\n' +
+                            '(function() {\n\'use strict\';\n\n',
                     footer: '\n}());',
                     separator: '\n\n',
                     process: function(src) {
@@ -129,6 +142,9 @@ module.exports = function(grunt) {
         // Minifies the JS file
         uglify: {
             build: {
+                options: {
+                    banner: '<%= banners.minified %>'
+                },
                 files: {
                     '<%= files.js.outMin %>': ['<%= files.js.out %>']
                 }

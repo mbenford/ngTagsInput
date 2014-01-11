@@ -1,3 +1,12 @@
+/*!
+ * ngTagsInput v1.1.0
+ * http://mbenford.github.io/ngTagsInput
+ *
+ * Copyright (c) 2013-2014 Michael Benford
+ * License: MIT
+ *
+ * Generated at 2014-01-11 04:03:13 -0200
+ */
 (function() {
 'use strict';
 
@@ -42,7 +51,7 @@ var tagsInput = angular.module('ngTagsInput', []);
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
-tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", function($timeout, $document, tiConfiguration) {
+tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", function($timeout, $document, tagsInputConfig) {
     function SimplePubSub() {
         var events = {};
 
@@ -75,22 +84,22 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", func
         controller: ["$scope","$attrs","$element", function($scope, $attrs, $element) {
             var shouldRemoveLastTag;
 
-            tiConfiguration.load($scope, $attrs, {
-                customClass: { type: String, defaultValue: '' },
-                placeholder: { type: String, defaultValue: 'Add a tag' },
-                tabindex: { type: Number },
-                removeTagSymbol: { type: String, defaultValue: String.fromCharCode(215) },
-                replaceSpacesWithDashes: { type: Boolean, defaultValue: true },
-                minLength: { type: Number, defaultValue: 3 },
-                maxLength: { type: Number },
-                addOnEnter: { type: Boolean, defaultValue: true },
-                addOnSpace: { type: Boolean, defaultValue: false },
-                addOnComma: { type: Boolean, defaultValue: true },
-                addOnBlur: { type: Boolean, defaultValue: true },
-                allowedTagsPattern: { type: RegExp, defaultValue: /^[a-zA-Z0-9\s]+$/ },
-                enableEditingLastTag: { type: Boolean, defaultValue: false },
-                minTags: { type: Number },
-                maxTags: { type: Number }
+            tagsInputConfig.load('tagsInput', $scope, $attrs, {
+                customClass: [String],
+                placeholder: [String, 'Add a tag'],
+                tabindex: [Number],
+                removeTagSymbol: [String, String.fromCharCode(215)],
+                replaceSpacesWithDashes: [Boolean, true],
+                minLength: [Number, 3],
+                maxLength: [Number],
+                addOnEnter: [Boolean, true],
+                addOnSpace: [Boolean, false],
+                addOnComma: [Boolean, true],
+                addOnBlur: [Boolean, true],
+                allowedTagsPattern: [RegExp, /^[a-zA-Z0-9\s]+$/],
+                enableEditingLastTag: [Boolean, false],
+                minTags: [Number],
+                maxTags: [Number]
             });
 
             $scope.events = new SimplePubSub();
@@ -277,7 +286,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tiConfiguration", func
  *                                               suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
  */
-tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tiConfiguration", function($document, $timeout, $sce, tiConfiguration) {
+tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputConfig", function($document, $timeout, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
         var self = {}, debouncedLoadId, getDifference, lastPromise;
 
@@ -373,11 +382,11 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tiConfigurat
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
                 suggestionList, tagsInput, markdown;
 
-            tiConfiguration.load(scope, attrs, {
-                debounceDelay: { type: Number, defaultValue: 100 },
-                minLength: { type: Number, defaultValue: 3 },
-                highlightMatchedText: { type: Boolean, defaultValue: true },
-                maxResultsToShow: { type: Number, defaultValue: 10 }
+            tagsInputConfig.load('autoComplete', scope, attrs, {
+                debounceDelay: [Number, 100],
+                minLength: [Number, 3],
+                highlightMatchedText: [Boolean, true],
+                maxResultsToShow: [Number, 10]
             });
 
             tagsInput = tagsInputCtrl.registerAutocomplete();
@@ -546,30 +555,51 @@ tagsInput.directive('tiAutosize', function() {
 });
 
 /**
- * @ngdoc service
- * @name tagsInput.service:tiConfiguration
+ * @ngdoc provider
+ * @name tagsInput.provider:tagsInputConfig
  *
  * @description
- * Loads and initializes options from HTML attributes. Used internally by tagsInput and autoComplete directives.
+ * Sets global default configuration options for tagsInput and autoComplete directives. It's also used internally to parse and
+ * initialize options from HTML attributes.
  */
-tagsInput.service('tiConfiguration', ["$interpolate", function($interpolate) {
-    this.load = function(scope, attrs, options) {
+tagsInput.provider('tagsInputConfig', function() {
+    var globalDefaults = {};
+
+    /**
+     * @ngdoc function
+     * @name setDefaults
+     * @description Sets the default configuration option for a directive.
+     *
+     * @param {string} directive Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'.
+     * @param {object} defaults Object containing options and their values.
+     */
+    this.setDefaults = function(directive, defaults) {
+        globalDefaults[directive] = defaults;
+        return this;
+    };
+
+    this.$get = ["$interpolate", function($interpolate) {
         var converters = {};
         converters[String] = function(value) { return value; };
         converters[Number] = function(value) { return parseInt(value, 10); };
-        converters[Boolean] = function(value) { return value === 'true'; };
+        converters[Boolean] = function(value) { return value.toLowerCase() === 'true'; };
         converters[RegExp] = function(value) { return new RegExp(value); };
 
-        scope.options = {};
+        return {
+            load: function(directive, scope, attrs, options) {
+                scope.options = {};
 
-        angular.forEach(options, function(value, key) {
-            var interpolatedValue = attrs[key] && $interpolate(attrs[key])(scope.$parent),
-                converter = converters[options[key].type];
+                angular.forEach(options, function(value, key) {
+                    var interpolatedValue = attrs[key] && $interpolate(attrs[key])(scope.$parent),
+                        converter = converters[value[0]],
+                        getDefault = function(key) { return globalDefaults[directive] ? globalDefaults[directive][key] : value[1]; };
 
-            scope.options[key] = interpolatedValue ? converter(interpolatedValue) : options[key].defaultValue;
-        });
-    };
-}]);
+                    scope.options[key] = interpolatedValue ? converter(interpolatedValue) : getDefault(key);
+                });
+            }
+        };
+    }];
+});
 
 
 /* HTML templates */
