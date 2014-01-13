@@ -38,7 +38,10 @@ tagsInput.provider('tagsInputConfig', function() {
                 angular.forEach(options, function(value, key) {
                     var interpolatedValue = attrs[key] && $interpolate(attrs[key])(scope.$parent),
                         converter = converters[value[0]],
-                        getDefault = function(key) { return globalDefaults[directive] ? globalDefaults[directive][key] : value[1]; };
+                        getDefault = function(key) {
+                            var globalValue = globalDefaults[directive] && globalDefaults[directive][key];
+                            return angular.isDefined(globalValue) ? globalValue : value[1];
+                        };
 
                     scope.options[key] = interpolatedValue ? converter(interpolatedValue) : getDefault(key);
                 });

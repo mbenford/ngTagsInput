@@ -93,9 +93,7 @@ describe('configuration service', function() {
         // Arrange
         provider.setDefaults('foo', {
             prop1: 'foobar',
-            prop2: 42,
-            prop3: false,
-            prop4: /.*/
+            prop3: false
         });
 
         // Act
@@ -109,9 +107,9 @@ describe('configuration service', function() {
         // Assert
         expect($scope.options).toEqual({
             prop1: 'foobar',
-            prop2: 42,
+            prop2: 84,
             prop3: false,
-            prop4: /.*/
+            prop4: /.?/
         });
     });
 
