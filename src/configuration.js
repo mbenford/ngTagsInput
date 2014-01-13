@@ -18,6 +18,8 @@ tagsInput.provider('tagsInputConfig', function() {
      *
      * @param {string} directive Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'.
      * @param {object} defaults Object containing options and their values.
+     *
+     * @returns {object} The service itself for chaining purposes.
      */
     this.setDefaults = function(directive, defaults) {
         globalDefaults[directive] = defaults;
