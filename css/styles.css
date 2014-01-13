@@ -69,7 +69,7 @@ h3 {
     text-decoration: line-through;
 }
 
-.superheroes .tags li {
+.superheroes .tags .tag-item {
     background: rgb(238,238,238); /* Old browsers */
     background: -moz-linear-gradient(top,  rgba(238,238,238,1) 0%, rgba(204,204,204,1) 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,238,238,1)), color-stop(100%,rgba(204,204,204,1))); /* Chrome,Safari4+ */
@@ -79,7 +79,7 @@ h3 {
     background: linear-gradient(to bottom,  rgba(238,238,238,1) 0%,rgba(204,204,204,1) 100%); /* W3C */
 }
 
-.movies .tags li {
+.movies .tags .tag-item {
     background: rgb(230,240,163); /* Old browsers */
     background: -moz-linear-gradient(top,  rgba(230,240,163,1) 0%, rgba(210,230,56,1) 50%, rgba(195,216,37,1) 51%, rgba(219,240,67,1) 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(230,240,163,1)), color-stop(50%,rgba(210,230,56,1)), color-stop(51%,rgba(195,216,37,1)), color-stop(100%,rgba(219,240,67,1))); /* Chrome,Safari4+ */
@@ -89,7 +89,7 @@ h3 {
     background: linear-gradient(to bottom,  rgba(230,240,163,1) 0%,rgba(210,230,56,1) 50%,rgba(195,216,37,1) 51%,rgba(219,240,67,1) 100%); /* W3C */
 }
 
-.movies .tags li.selected {
+.movies .tags .tag-item.selected {
     background: rgb(157,213,58); /* Old browsers */
     background: -moz-linear-gradient(top,  rgba(157,213,58,1) 0%, rgba(161,213,79,1) 50%, rgba(128,194,23,1) 51%, rgba(124,188,10,1) 100%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(157,213,58,1)), color-stop(50%,rgba(161,213,79,1)), color-stop(51%,rgba(128,194,23,1)), color-stop(100%,rgba(124,188,10,1))); /* Chrome,Safari4+ */
@@ -112,21 +112,21 @@ h3 {
     box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6);
 }
 
-.bootstrap .tags li {
+.bootstrap .tags .tag-item {
     background: #428bca;
     border: 1px solid #357ebd;
     border-radius: 4px;
     color: #fff;
 }
 
-.bootstrap .tags li.selected {
+.bootstrap .tags .tag-item.selected {
     background: #d9534f;
     border: 1px solid #d43f3a;
     border-radius: 4px;
     color: #fff;
 }
 
-.bootstrap .tags button {
+.bootstrap .tags .tag-item button {
     background: transparent;
     color: #000;
     opacity: .4;
@@ -136,7 +136,7 @@ h3 {
     border-radius: 4px;
 }
 
-.bootstrap .autocomplete li.selected {
+.bootstrap .autocomplete .tag-item.selected {
     color: #262626;
     background-color: #e9e9e9;
 }
