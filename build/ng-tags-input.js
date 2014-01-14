@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-01-13 02:10:10 -0200
+ * Generated at 2014-01-14 02:33:59 -0200
  */
 (function() {
 'use strict';
@@ -572,6 +572,8 @@ tagsInput.provider('tagsInputConfig', function() {
      *
      * @param {string} directive Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'.
      * @param {object} defaults Object containing options and their values.
+     *
+     * @returns {object} The service itself for chaining purposes.
      */
     this.setDefaults = function(directive, defaults) {
         globalDefaults[directive] = defaults;
