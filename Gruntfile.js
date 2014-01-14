@@ -192,6 +192,11 @@ module.exports = function(grunt) {
         watch: {
             files: ['<%= files.js.src %>'],
             tasks: ['test']
+        },
+        changelog: {
+            options: {
+                github: 'mbenford/ngTagsInput'
+            }
         }
     });
 

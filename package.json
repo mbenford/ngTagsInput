@@ -33,6 +33,7 @@
     "grunt-karma-coveralls": "2.2.0",
     "grunt-open": "0.2.2",
     "karma-ng-html2js-preprocessor": "0.1.0",
-    "karma-coverage": "0.1.4"
+    "karma-coverage": "0.1.4",
+    "grunt-conventional-changelog": "1.0.0"
   }
 }
