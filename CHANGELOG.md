@@ -1,3 +1,29 @@
+## v1.1.0 (2014-01-14)
+
+#### Bug Fixes
+
+* **tagsInput:** 
+  * Change input width accordingly to its content ([8abdf79b](http://github.com/mbenford/ngTagsInput/commit/8abdf79bcd6871cd7c7064838020ea2b6c7b2fa2), [#6](http://github.com/mbenford/ngTagsInput/issues/6))
+* **autocomplete:**
+  * Fix require property ([231f275c](http://github.com/mbenford/ngTagsInput/commit/231f275c9f254370cb821648f71860a51e67a935))
+  * Close suggestion list when input loses focus ([d73d1567](http://github.com/mbenford/ngTagsInput/commit/d73d1567f3e01e45096ae50ca34b01424841214c), [#52](http://github.com/mbenford/ngTagsInput/issues/52))
+  * Hide suggestion list when there's nothing to show ([5a58a927](http://github.com/mbenford/ngTagsInput/commit/5a58a9274d38d8914a107c0108e6f2e4b1fd62e8), [#39](http://github.com/mbenford/ngTagsInput/issues/39))
+
+#### Features
+
+* **tagsInput:**
+  * Add support for ngModelController ([49c07608](http://github.com/mbenford/ngTagsInput/commit/49c076089b93f41decf751b662437a29fa28c7ea), [#45](http://github.com/mbenford/ngTagsInput/issues/45))
+  * Add min-tags option ([49c07608](http://github.com/mbenford/ngTagsInput/commit/49c076089b93f41decf751b662437a29fa28c7ea), [#47](http://github.com/mbenford/ngTagsInput/issues/47))
+  * Add max-tags option ([2bc02ec9](http://github.com/mbenford/ngTagsInput/commit/2bc02ec9f9c04fab5ef715efbc40914f7301fc22), [#24](http://github.com/mbenford/ngTagsInput/issues/24))
+* **autocomplete:** 
+  * Add support for $http promises ([adaf6580](http://github.com/mbenford/ngTagsInput/commit/adaf6580320a47b962cb769407ae19abd8e6317c), [#38](http://github.com/mbenford/ngTagsInput/issues/38))
+* **configProvider:** 
+  * Add support for global configuration ([e48be112](http://github.com/mbenford/ngTagsInput/commit/e48be112b65ca5bbf9513fdaa4618bb949ae7640), [#48](http://github.com/mbenford/ngTagsInput/issues/48))
+
+#### Breaking Changes
+
+* Some CSS selectors must be changed, and therefore custom stylesheets based on the old selectors will conflict with this fix. They'll have to be updated to use class selectors.  ([8abdf79b](http://github.com/mbenford/ngTagsInput/commit/8abdf79bcd6871cd7c7064838020ea2b6c7b2fa2), [#6](http://github.com/mbenford/ngTagsInput/issues/6))
+
 ## v1.0.1 (2013-12-16)
 
 - **tagsInput**
