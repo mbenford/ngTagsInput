@@ -50,79 +50,79 @@ priority: 0.50
             <tbody>
               <tr>
                 <td>ngModel <em>(required)</em></td>
-                <td><span class="label type-string">string</span></td>
+                <td><span class="label type type-string">string</span></td>
                 <td>Assignable angular expression to data-bind to.</td>
                 <td>&ndash;</td>
               </tr>
               <tr>
                 <td>customClass</td>
-                <td><span class="label type-string">string</span></td>
+                <td><span class="label type type-string">string</span></td>
                 <td>CSS class to style the control.</td>
                 <td>&ndash;</td>
               </tr>
               <tr>
                 <td>tabindex</td>
-                <td><span class="label type-number">number</span></td>
+                <td><span class="label type type-number">number</span></td>
                 <td>Tab index for the new tag input box.</td>
                 <td>&ndash;</td>
               </tr>
               <tr>
                 <td>placeholder</td>
-                <td><span class="label type-string">string</span></td>
+                <td><span class="label type type-string">string</span></td>
                 <td>Text placeholder for the new tag input box.</td>
                 <td>Add a tag</td>
               </tr>
               <tr>
                 <td>removeTagSymbol</td>
-                <td><span class="label type-string">string</span></td>
+                <td><span class="label type type-string">string</span></td>
                 <td>Character to remove an existing tag.</td>
                 <td>&times;</td>
               </tr>
               <tr>
                 <td>minLength</td>
-                <td><span class="label type-number">number</span></td>
+                <td><span class="label type type-number">number</span></td>
                 <td>Minimum length for a new tag.</td>
                 <td>3</td>
               </tr>
               <tr>
                 <td>maxLength</td>
-                <td><span class="label type-number">number</span></td>
+                <td><span class="label type type-number">number</span></td>
                 <td>Maximum length for a new tag.</td>
                 <td>&ndash;</td>
               </tr>
               <tr>
                 <td>addOnEnter</td>
-                <td><span class="label type-boolean">boolean</span></td>
+                <td><span class="label type type-boolean">boolean</span></td>
                 <td>Flag indicating that a new tag will be added on pressing the ENTER key.</td>
                 <td>true</td>
               </tr>
               <tr>
                 <td>addOnSpace</td>
-                <td><span class="label type-boolean">boolean</span></td>
+                <td><span class="label type type-boolean">boolean</span></td>
                 <td>Flag indicating that a new tag will be added on pressing the SPACE key.</td>
                 <td>false</td>
               </tr>
               <tr>
                 <td>addOnComma</td>
-                <td><span class="label type-boolean">boolean</span></td>
+                <td><span class="label type type-boolean">boolean</span></td>
                 <td>Flag indicating that a new tag will be added on pressing the COMMA key.</td>
                 <td>true</td>
               </tr>
               <tr>
                 <td>addOnBlur</td>
-                <td><span class="label type-boolean">boolean</span></td>
+                <td><span class="label type type-boolean">boolean</span></td>
                 <td>Flag indicating that a new tag will be added when the input field loses focus.</td>
                 <td>true</td>
               </tr>
               <tr>
                 <td>allowedTagsPattern</td>
-                <td><span class="label type-string">string</span></td>
+                <td><span class="label type type-string">string</span></td>
                 <td>Regular expression that determines the pattern used to validate a tag.</td>
                 <td>^[a-zA-Z0-9\s]+$*</td>
               </tr>
               <tr>
                 <td>enableEditingLastTag</td>
-                <td><span class="label type-boolean">boolean</span></td>
+                <td><span class="label type type-boolean">boolean</span></td>
                 <td>
                   Flag indicating that the last tag will be moved back into the new tag input box instead of being removed
                   when the backspace key is pressed and the input box is empty.
@@ -131,13 +131,13 @@ priority: 0.50
               </tr>
               <tr>
                 <td>onTagAdded</td>
-                <td><span class="label type-expression">expression</span></td>
+                <td><span class="label type type-expression">expression</span></td>
                 <td>Expression to evaluate upon adding a new tag. The new tag is available as <em>$tag</em>.</td>
                 <td>&ndash;</td>
               </tr>
               <tr>
                 <td>onTagRemoved</td>
-                <td><span class="label type-expression">expression</span></td>
+                <td><span class="label type type-expression">expression</span></td>
                 <td>Expression to evaluate upon removing an existing tag. The removed tag is available as <em>$tag</em>.</td>
                 <td>&ndash;</td>
               </tr>
@@ -180,7 +180,7 @@ priority: 0.50
         <tbody>
           <tr>
             <td>source <em>(required)</em></td>
-            <td><span class="label type-expression">expression</span></td>
+            <td><span class="label type type-expression">expression</span></td>
             <td>
               Expression to evaluate upon changing the input content. The input value is available as <em>$query</em>.
               The result of the expression must be a promise that eventually resolves to an array of strings.
@@ -189,25 +189,25 @@ priority: 0.50
           </tr>
           <tr>
             <td>debounceDelay</td>
-            <td><span class="label type-number">number</span></td>
+            <td><span class="label type type-number">number</span></td>
             <td>Amount of time, in milliseconds, to wait before evaluating the expression in the <em>source</em> option after the last keystroke.</td>
             <td>100ms</td>
           </tr>
           <tr>
             <td>minLength</td>
-            <td><span class="label type-number">number</span></td>
+            <td><span class="label type type-number">number</span></td>
             <td>Minimum number of characters that must be entered before evaluating the expression in the <em>source</em> option.</td>
             <td>3</td>
           </tr>
           <tr>
             <td>highlightMatchedText</td>
-            <td><span class="label type-boolean">boolean</span></td>
+            <td><span class="label type type-boolean">boolean</span></td>
             <td>Flag indicating that the matched text will be highlighted in the suggestions list.</td>
             <td>true</td>
           </tr>
           <tr>
             <td>maxResultsToShow</td>
-            <td><span class="label type-number">number</span></td>
+            <td><span class="label type type-number">number</span></td>
             <td>Maximum number of results to be displayed at a time.</td>
             <td>10</td>
           </tr>
@@ -241,12 +241,12 @@ priority: 0.50
                 <tbody>
                   <tr>
                     <td>directive</td>
-                    <td><span class="label type-string">string</span></td>
+                    <td><span class="label type type-string">string</span></td>
                     <td>Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'</td>
                   </tr>
                   <tr>
                     <td>defaults</td>
-                    <td><span class="label type-expression">object</span></td>
+                    <td><span class="label type type-expression">object</span></td>
                     <td>Object containing options and their values.</td>
                   </tr>
                 </tbody>
