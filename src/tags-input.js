@@ -104,7 +104,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     }
 
                     $scope.newTag = '';
-                    $scope.events.trigger('input-changed', '');
+                    $scope.events.trigger('input-change', '');
                     changed = true;
                 }
                 return changed;
