@@ -197,6 +197,14 @@ module.exports = function(grunt) {
             options: {
                 github: 'mbenford/ngTagsInput'
             }
+        },
+        bump: {
+            options: {
+                files: ['package.json'],
+                commit: false,
+                createTag: false,
+                push: false
+            }
         }
     });
 

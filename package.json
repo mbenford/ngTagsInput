@@ -4,8 +4,8 @@
     "email": "michael@michaelbenford.net"
   },
   "name": "ng-tags-input",
-  "version": "1.1.0",
   "prettyName": "ngTagsInput",
+  "version": "1.1.1",
   "description": "Tags input directive for AngularJS",
   "license": "MIT",
   "homepage": "http://mbenford.github.io/ngTagsInput",
@@ -34,6 +34,7 @@
     "grunt-open": "0.2.2",
     "karma-ng-html2js-preprocessor": "0.1.0",
     "karma-coverage": "0.1.4",
-    "grunt-conventional-changelog": "1.0.0"
+    "grunt-conventional-changelog": "1.0.0",
+    "grunt-bump": "0.0.13"
   }
 }
