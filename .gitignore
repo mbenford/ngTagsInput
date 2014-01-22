@@ -3,4 +3,5 @@
 .settings/
 node_modules/
 coverage/
+build/
 *.log
