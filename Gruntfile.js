@@ -3,8 +3,12 @@
 module.exports = function(grunt) {
     'use strict';
 
+    var packageFile = 'package.json',
+        bowerRepoDirectory = '../ngTagsInput-bower/',
+        bowerFile = bowerRepoDirectory + 'bower.json';
+
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+        pkg: grunt.file.readJSON(packageFile),
         // Sets all files used by the script
         files: {
             js: {
@@ -18,12 +22,12 @@ module.exports = function(grunt) {
                     'src/configuration.js'
                 ],
                 out: 'build/<%= pkg.name %>.js',
-                outMin: 'tmp/<%= pkg.name %>.min.js'
+                outMin: 'build/<%= pkg.name %>.min.js'
             },
             css: {
                 src: ['css/tags-input.css', 'css/autocomplete.css'],
                 out: 'build/<%= pkg.name %>.css',
-                outMin: 'tmp/<%= pkg.name %>.min.css'
+                outMin: 'build/<%= pkg.name %>.min.css'
             },
             html: {
                 src: ['templates/tags-input.html', 'templates/auto-complete.html'],
@@ -193,11 +197,25 @@ module.exports = function(grunt) {
             files: ['<%= files.js.src %>'],
             tasks: ['test']
         },
+        // Updates the CHANGELOG file
         changelog: {
             options: {
                 github: 'mbenford/ngTagsInput'
             }
         },
+        // Fixes CHANGELOG format
+        replace: {
+            changelog: {
+                src: ['CHANGELOG.md'],
+                overwrite: true,
+                replacements: [
+                    { from: ', closes [', to: ', [' },
+                    { from: /\n\n\s*\n/g, to: '\n\n' },
+                    { from: /<a.*\/a>\n/g, to: '' }
+                ]
+            }
+        },
+        // Bumps the current version number
         bump: {
             options: {
                 files: ['package.json'],
@@ -205,22 +223,61 @@ module.exports = function(grunt) {
                 createTag: false,
                 push: false
             }
+        },
+        // Copy generated scripts to the bower folder
+        copy: {
+            bower: {
+                files: [{
+                    expand: true,
+                    flatten: true,
+                    src: ['build/*.js', 'build/*.css'],
+                    dest: bowerRepoDirectory,
+                    filter: 'isFile'
+                }]
+            }
+        },
+        // Adds, commits and tags releases in Git
+        shell: {
+            git: {
+                command: [
+                    'git add .',
+                    'git commit -m "chore(release): Release v<%= pkg.version %>"',
+                    'git tag -a v<%= pkg.version %> -m "v<%= pkg.version %>"',
+                ].join('&&'),
+                options: {
+                    stdout: true
+                }
+            },
+            git_bower: {
+                command: [
+                    'git add .',
+                    'git commit -m "Updated to v<%= pkg.version %>"',
+                    'git tag -a v<%= pkg.version %> -m "v<%= pkg.version %>"'
+                ].join('&&'),
+                options: {
+                    stdout: true,
+                    execOptions: { cwd: bowerRepoDirectory }
+                }
+            }
         }
     });
 
     require('load-grunt-tasks')(grunt);
 
-    grunt.registerTask('test', [
-        'jshint',
-        'karma'
-    ]);
+    grunt.registerTask('update-bower-version', function() {
+        var pkg = grunt.file.readJSON(packageFile),
+            bower = grunt.file.readJSON(bowerFile);
 
+        bower.version = pkg.version;
+        grunt.file.write(bowerFile, JSON.stringify(bower, null, '  '));
+    });
+
+    grunt.registerTask('test', ['jshint','karma']);
     grunt.registerTask('travis', ['test', 'coveralls']);
     grunt.registerTask('coverage', ['test', 'open:coverage']);
 
     grunt.registerTask('pack', [
-        'jshint',
-        'karma',
+        'test',
         'clean',
         'ngtemplates',
         'concat',
@@ -229,6 +286,16 @@ module.exports = function(grunt) {
         'cssmin',
         'compress',
         'clean:tmp'
+    ]);
+
+    grunt.registerTask('release', [
+        'pack',
+        'changelog',
+        'replace:changelog',
+        'shell:git',
+        'copy:bower',
+        'update-bower-version',
+        'shell:git_bower'
     ]);
 
     grunt.registerTask('default', ['pack']);

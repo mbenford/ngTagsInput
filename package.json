@@ -35,6 +35,9 @@
     "karma-ng-html2js-preprocessor": "0.1.0",
     "karma-coverage": "0.1.4",
     "grunt-conventional-changelog": "1.0.0",
-    "grunt-bump": "0.0.13"
+    "grunt-bump": "0.0.13",
+    "grunt-contrib-copy": "0.5.0",
+    "grunt-text-replace": "0.3.10",
+    "grunt-shell": "0.6.3"
   }
 }
