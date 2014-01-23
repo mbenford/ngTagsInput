@@ -2,5 +2,5 @@ name: ngTagsInput Site
 markdown: redcarpet
 pygments: true
 exclude: ['node_modules','*.log']
-stable_version: 1.1.0
+stable_version: 1.1.1
 production_url: http://mbenford.github.io/ngTagsInput
