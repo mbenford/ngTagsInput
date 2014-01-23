@@ -1,3 +1,9 @@
+### v1.1.1 (2014-01-23)
+
+#### Bug Fixes
+
+* **tagsInput:** Fix input-change event name ([47b40e13](http://github.com/mbenford/ngTagsInput/commit/47b40e1394bb3dfe7eabaf932a77d92539fb065e), [#57](http://github.com/mbenford/ngTagsInput/issues/57))
+
 ## v1.1.0 (2014-01-14)
 
 #### Bug Fixes
