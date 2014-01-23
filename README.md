@@ -1,8 +1,4 @@
-# ngTagsInput
-
-[![Build Status](https://travis-ci.org/mbenford/ngTagsInput.png?branch=master)](https://travis-ci.org/mbenford/ngTagsInput)
-[![Coverage Status](https://coveralls.io/repos/mbenford/ngTagsInput/badge.png?branch=master)](https://coveralls.io/r/mbenford/ngTagsInput?branch=master)
-[![devDependency Status](https://david-dm.org/mbenford/ngTagsInput/dev-status.png)](https://david-dm.org/mbenford/ngTagsInput#info=devDependencies)
+# ngTagsInput [![Build Status](https://travis-ci.org/mbenford/ngTagsInput.png?branch=master)](https://travis-ci.org/mbenford/ngTagsInput) [![Coverage Status](https://coveralls.io/repos/mbenford/ngTagsInput/badge.png?branch=master)](https://coveralls.io/r/mbenford/ngTagsInput?branch=master) [![devDependency Status](https://david-dm.org/mbenford/ngTagsInput/dev-status.png)](https://david-dm.org/mbenford/ngTagsInput#info=devDependencies)
 
 Tags input directive for AngularJS. Check out the [ngTagsInput website](http://mbenford.github.io/ngTagsInput) for more information.
 
@@ -70,3 +66,8 @@ See the [LICENSE](https://github.com/mbenford/ngTagsInput/blob/master/LICENSE) f
 ## Changelog
 
 See the [CHANGELOG](https://github.com/mbenford/ngTagsInput/blob/master/CHANGELOG.md) page.
+
+---
+
+[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/mbenford/ngtagsinput/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
