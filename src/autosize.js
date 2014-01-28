@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * @ngDoc directive
+ * @ngdoc directive
  * @name tagsInput.directive:tiAutosize
  *
  * @description

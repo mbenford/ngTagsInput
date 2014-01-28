@@ -1,8 +1,8 @@
 'use strict';
 
 /**
- * @ngdoc provider
- * @name tagsInput.provider:tagsInputConfig
+ * @ngdoc service
+ * @name tagsInput.service:tagsInputConfig
  *
  * @description
  * Sets global default configuration options for tagsInput and autoComplete directives. It's also used internally to parse and
@@ -12,9 +12,10 @@ tagsInput.provider('tagsInputConfig', function() {
     var globalDefaults = {};
 
     /**
-     * @ngdoc function
+     * @ngdoc method
      * @name setDefaults
      * @description Sets the default configuration option for a directive.
+     * @methodOf tagsInput.service:tagsInputConfig
      *
      * @param {string} directive Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'.
      * @param {object} defaults Object containing options and their values.
