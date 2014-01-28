@@ -259,6 +259,9 @@ module.exports = function(grunt) {
                     execOptions: { cwd: bowerRepoDirectory }
                 }
             }
+        },
+        ngdocs: {
+            all: ['src/**/*.js']
         }
     });
 
