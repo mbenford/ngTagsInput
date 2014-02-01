@@ -65,21 +65,4 @@ angular.module("ngTagsInputSite", ['ngTagsInput'])
             deferred.resolve(['Tag1', 'Tag2', 'Tag3', 'Tag4', 'Tag5']);
             return deferred.promise;
         };
-    })
-    .controller('NavCtrl', function($scope, $location) {
-        function Link(url, text) {
-            this.url = url;
-            this.text = text;
-            this.cssClass = $location.absUrl().lastIndexOf(url) > -1 ? 'active' : '';
-
-        }
-        console.log($location.absUrl());
-        $scope.navbar = {
-            links: [
-                new Link('download.html', 'Download'),
-                new Link('gettingstarted.html', 'Getting started'),
-                new Link('demos.html', 'Demos'),
-                new Link('documentation.html', 'Documentation')
-            ]
-        };
     });
