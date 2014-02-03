@@ -684,6 +684,40 @@ describe('autocomplete-directive', function() {
         });
     });
 
+    describe('show-on-empty option', function(){
+        it('initialize the option to false', function(){
+            //Arrange
+            compile();
+
+            //Assert
+            expect(isolateScope.options.showOnEmpty).toBe(false);
+        });
+
+        it('shows the suggestion box when the input field becomes empty', function(){
+            //Arrange
+            compile('show-on-empty="true"');
+
+            //Act
+            changeInputValue('');
+            $timeout.flush();
+
+            expect($scope.loadItems).toHaveBeenCalledWith(null);
+        });
+
+        it('shows the suggestion box when input is focused and input is empty', function(){
+            //Arrange
+            compile('show-on-empty="true"');
+
+            //Act
+            eventHandlers['input-focus']();
+            $timeout.flush();
+
+            //Assert
+            expect($scope.loadItems).toHaveBeenCalledWith(null);
+        });
+
+    });
+
     describe('highlight-matched-text option', function() {
         it('initializes the option to true', function() {
             // Arrange/Act
