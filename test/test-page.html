@@ -18,10 +18,10 @@
 <body ng-controller="Ctrl">
   <tags-input ng-model="tags"
               custom-class="foo"
-              replace-spaces-with-dashes="false"
-              add-on-blur="true"
+              replace-spaces-with-dashes="true"
               allowed-tags-pattern="^[a-zA-Z0-9\s<@\.]+$"
               enable-editing-last-tag="true"
+              placeholder="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     min-tags="3">
     <auto-complete source="loadItems($query)"
                    debounce-delay="0"
@@ -29,23 +29,42 @@
                    max-results-to-show="10">
     </auto-complete>
   </tags-input>
-  <tags-input ng-model="tags"></tags-input>
+  <tags-input ng-init="tags2=['item1', 'item2', 'item3']" ng-model="tags2" display-property="label" add-on-blur="false">
+    <auto-complete source="loadItems2($query)"
+                   debounce-delay="0"
+                   min-length="1"
+                   max-results-to-show="10">
+    </auto-complete>
+  </tags-input>
+
+  <p>{{tags}}</p>
+  <p>{{tags2}}</p>
 
   <input type="text"/>
 
   <script type="text/javascript">
     angular.module('app', ['ngTagsInput'])
         .controller('Ctrl', function($scope, $q, $timeout) {
-            var superheroes = ['Batman <bruce@wayne.com>', 'Superman', 'Flash', 'Iron Man', 'Hulk', 'Wolverine', "Green Lantern", "Green Arrow", "Spiderman"];
+            var superheroes = [
+              { text: 'Batman <bruce@wayne.com>' },
+              { text: 'Superman' },
+              { text: 'Flash' },
+              { text: 'Iron Man' },
+              { text: 'Hulk' },
+              { text: 'Wolverine' },
+              { text: 'Green Lantern' },
+              { text: 'Green Arrow' },
+              { text: 'Spiderman'}
+            ];
 
-            $scope.tags = ['Batman', 'Superman', 'Flash'];
+            $scope.tags = [{ text: 'Batman' }, { text: 'Superman' }, { text:'Flash' }];
             $scope.placeholder = {value: "New tag" };
             $scope.loadItems = function(query) {
               console.log(query);
               var deferred = $q.defer();
               var items = [];
               for (var i = 0; i < superheroes.length; i++) {
-                if (superheroes[i].indexOf(query) > -1) {
+                if (superheroes[i].text.indexOf(query) > -1) {
                   items.push(superheroes[i]);
                 }
               }
@@ -54,6 +73,12 @@
               }, 2000);
               return deferred.promise;
             };
+
+            $scope.loadItems2 = function(query) {
+                var deferred = $q.defer();
+                deferred.resolve(['Item1', 'Item2', 'Item3', 'Item4', 'Item5']);
+                return deferred.promise;
+            }
         })
         .config(function(tagsInputConfigProvider) {
             tagsInputConfigProvider

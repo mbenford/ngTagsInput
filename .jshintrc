@@ -28,6 +28,9 @@
         "spyOn": true,
         "require": true,
         "tagsInput": true,
-        "KEYS": true
+        "makeObjectArray": true,
+        "findInObjectArray": true,
+        "KEYS": true,
+        "generateArray": true
     }
 }

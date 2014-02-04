@@ -1,6 +1,6 @@
 'use strict';
 
-describe('autocomplete-directive', function() {
+describe('autoComplete directive', function() {
     var $compile, $scope, $q, $timeout,
         parentCtrl, element, isolateScope, suggestionList, deferred, tagsInput, eventHandlers;
 
@@ -28,11 +28,14 @@ describe('autocomplete-directive', function() {
             changeInputValue: jasmine.createSpy(),
             tryAddTag: jasmine.createSpy(),
             focusInput: jasmine.createSpy(),
-            on: jasmine.createSpy().andCallFake(function(name, handler) {
-                eventHandlers[name] = handler;
+            on: jasmine.createSpy().andCallFake(function(names, handler) {
+                names.split(' ').forEach(function(name) { eventHandlers[name] = handler; });
                 return this;
             }),
-            getTags: jasmine.createSpy().andReturn([])
+            getTags: jasmine.createSpy().andReturn([]),
+            getOptions: jasmine.createSpy().andReturn({
+                displayProperty: 'text'
+            })
         };
 
         parent = $compile('<tags-input ng-model="whatever"></tags-input>')($scope);
@@ -89,7 +92,15 @@ describe('autocomplete-directive', function() {
         return !getSuggestionsBox().hasClass('ng-hide');
     }
 
-    function loadSuggestions(items, text) {
+    function generateSuggestions(count) {
+        return generateArray(count, function(index) {
+            return { text: 'Item' + index };
+        });
+    }
+
+    function loadSuggestions(countOrItems, text) {
+        var items = angular.isNumber(countOrItems) ? generateSuggestions(countOrItems) : countOrItems;
+
         suggestionList.load(text || 'foobar', tagsInput.getTags());
         $timeout.flush();
         resolve(items);
@@ -102,8 +113,8 @@ describe('autocomplete-directive', function() {
 
         it('renders all elements returned by the load function that aren\'t already added', function() {
             // Act
-            tagsInput.getTags.andReturn(['Item3']);
-            loadSuggestions(['Item1','Item2','Item3']);
+            tagsInput.getTags.andReturn([{ text: 'Item3' }]);
+            loadSuggestions(3);
 
             // Assert
             expect(getSuggestions().length).toBe(2);
@@ -113,8 +124,8 @@ describe('autocomplete-directive', function() {
 
         it('renders all elements returned by the load function that aren\'t already added ($http promise)', function() {
             // Act
-            tagsInput.getTags.andReturn(['Item3']);
-            loadSuggestions({ data: ['Item1','Item2','Item3'] });
+            tagsInput.getTags.andReturn([{ text: 'Item3' }]);
+            loadSuggestions({ data: generateSuggestions(3)});
 
             // Assert
             expect(getSuggestions().length).toBe(2);
@@ -124,7 +135,7 @@ describe('autocomplete-directive', function() {
 
         it('shows the suggestions list when there are items to show', function() {
             // Act
-            loadSuggestions(['Item1']);
+            loadSuggestions(1);
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(true);
@@ -143,8 +154,8 @@ describe('autocomplete-directive', function() {
 
         it('hides the suggestions list when there is no items left to show', function() {
             // Act
-            tagsInput.getTags.andReturn(['Item1', 'Item2', 'Item3']);
-            loadSuggestions(['Item1', 'Item2', 'Item3']);
+            tagsInput.getTags.andReturn([{ text: 'Item1' }, { text: 'Item2' }]);
+            loadSuggestions(2);
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(false);
@@ -189,7 +200,7 @@ describe('autocomplete-directive', function() {
 
         it('hides the suggestion box after adding the selected suggestion to the input field', function() {
             // Arrange
-            loadSuggestions(['Item1', 'Item2']);
+            loadSuggestions(2);
             suggestionList.select(0);
 
             // Act
@@ -210,33 +221,55 @@ describe('autocomplete-directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
+        it('hides the suggestion box when a tag is added', function() {
+            // Arrange
+            suggestionList.visible = true;
+
+            // Act
+            eventHandlers['tag-added']();
+
+            // Assert
+            expect(isSuggestionsBoxVisible()).toBe(false);
+        });
+
+        it('hides the suggestion box when a duplicate tag is tried to be added', function() {
+            // Arrange
+            suggestionList.visible = true;
+
+            // Act
+            eventHandlers['duplicate-tag']();
+
+            // Assert
+            expect(isSuggestionsBoxVisible()).toBe(false);
+        });
+
         it('adds the selected suggestion when the enter key is pressed and the suggestions box is visible', function() {
             // Arrange
-            loadSuggestions(['Item1', 'Item2']);
+            loadSuggestions(2);
             suggestionList.select(0);
 
             // Act
             sendKeyDown(KEYS.enter);
 
             // Assert
-            expect(tagsInput.tryAddTag).toHaveBeenCalledWith('Item1');
+            expect(tagsInput.tryAddTag).toHaveBeenCalledWith({ text: 'Item1' });
         });
 
         it('adds the selected suggestion when the tab key is pressed and there is a suggestion selected', function() {
             // Arrange
-            loadSuggestions(['Item1', 'Item2']);
+            loadSuggestions(2);
             suggestionList.select(0);
 
             // Act
             sendKeyDown(KEYS.tab);
 
             // Assert
-            expect(tagsInput.tryAddTag).toHaveBeenCalledWith('Item1');
+            expect(tagsInput.tryAddTag).toHaveBeenCalledWith({ text: 'Item1' });
         });
 
         it('does not change the input value when the enter key is pressed and there is nothing selected', function() {
             // Arrange
-            loadSuggestions(['Item1', 'Item2']);
+            loadSuggestions(2);
 
             // Act
             sendKeyDown(KEYS.enter);
@@ -247,7 +280,7 @@ describe('autocomplete-directive', function() {
 
         it('sets the selected suggestion to null after adding it to the input field', function() {
             // Arrange
-            loadSuggestions(['Item1', 'Item2']);
+            loadSuggestions(2);
             suggestionList.select(0);
 
             // Act
@@ -259,7 +292,7 @@ describe('autocomplete-directive', function() {
 
         it('does not call the load function after adding the selected suggestion to the input field', function() {
             // Arrange
-            loadSuggestions(['Item1', 'Item2']);
+            loadSuggestions(2);
             suggestionList.select(0);
 
             // Act
@@ -271,7 +304,7 @@ describe('autocomplete-directive', function() {
 
         it('highlights the selected suggestion only', function() {
             // Arrange
-            loadSuggestions(['Item1', 'Item2', 'Item3']);
+            loadSuggestions(3);
 
             // Act
             suggestionList.select(1);
@@ -285,7 +318,7 @@ describe('autocomplete-directive', function() {
 
         it('selects no suggestion after the suggestion box is shown', function() {
             // Arrange/Act
-            loadSuggestions(['Item1', 'Item2']);
+            loadSuggestions(2);
 
             // Assert
             expect(suggestionList.selected).toBeNull();
@@ -313,9 +346,9 @@ describe('autocomplete-directive', function() {
             $timeout.flush();
 
             // Now we resolve each promise which was previously created
-            deferred1.resolve(['Item1']);
-            deferred2.resolve(['Item2']);
-            deferred3.resolve(['Item3']);
+            deferred1.resolve([{ text: 'Item1' }]);
+            deferred2.resolve([{ text: 'Item2' }]);
+            deferred3.resolve([{ text: 'Item3' }]);
 
             $scope.$digest();
 
@@ -332,93 +365,100 @@ describe('autocomplete-directive', function() {
             // Act
             suggestionList.reset();
 
-            resolve(['Item3']);
+            resolve([{ text: 'Item3'}]);
 
             // Assert
             expect(suggestionList.show).not.toHaveBeenCalled();
         });
+
+        it('converts an array of strings into an array of objects', function() {
+            // Arrange/Act
+            loadSuggestions(['Item1', 'Item2', 'Item3']);
+
+            // Assert
+            expect(suggestionList.items).toEqual([
+                { text: 'Item1' },
+                { text: 'Item2' },
+                { text: 'Item3' }
+            ]);
+        });
     });
 
     describe('navigation through suggestions', function() {
+        beforeEach(function() {
+            loadSuggestions(3);
+        });
+
         describe('downward', function() {
             it('selects the next suggestion when the down arrow key is pressed and there\'s something selected', function() {
                 // Arrange
-                loadSuggestions(['Item1', 'Item2']);
                 suggestionList.select(0);
 
                 // Act
                 sendKeyDown(KEYS.down);
 
                 // Assert
-                expect(suggestionList.selected).toBe('Item2');
+                expect(suggestionList.selected).toEqual({ text: 'Item2' });
             });
 
             it('selects the first suggestion when the down arrow key is pressed and the last item is selected', function() {
                 // Arrange
-                loadSuggestions(['Item1', 'Item2']);
-                suggestionList.select(1);
+                suggestionList.select(2);
 
                 // Act
                 sendKeyDown(KEYS.down);
 
                 // Assert
-                expect(suggestionList.selected).toBe('Item1');
+                expect(suggestionList.selected).toEqual({ text: 'Item1' });
             });
         });
 
         describe('upward', function() {
             it('selects the prior suggestion when the down up key is pressed and there\'s something selected', function() {
                 // Arrange
-                loadSuggestions(['Item1', 'Item2']);
                 suggestionList.select(1);
 
                 // Act
                 sendKeyDown(KEYS.up);
 
                 // Assert
-                expect(suggestionList.selected).toBe('Item1');
+                expect(suggestionList.selected).toEqual({ text: 'Item1' });
             });
 
             it('selects the last suggestion when the up arrow key is pressed and the first item is selected', function() {
                 // Arrange
-                loadSuggestions(['Item1', 'Item2']);
                 suggestionList.select(0);
 
                 // Act
                 sendKeyDown(KEYS.up);
 
                 // Assert
-                expect(suggestionList.selected).toBe('Item2');
+                expect(suggestionList.selected).toEqual({ text: 'Item3' });
             });
         });
 
         describe('mouse', function() {
             it('selects the suggestion under the mouse pointer', function() {
-                // Arrange
-                loadSuggestions(['Item1', 'Item2', 'Item3']);
-
                 // Act
                 getSuggestion(1).mouseenter();
 
                 // Assert
-                expect(suggestionList.selected).toBe('Item2');
+                expect(suggestionList.selected).toEqual({ text: 'Item2' });
             });
 
             it('adds the selected suggestion when a mouse click is triggered', function() {
                 // Arrange
-                loadSuggestions(['Item1', 'Item2', 'Item3']);
                 getSuggestion(1).mouseenter();
 
                 // Act
                 getSuggestion(1).click();
 
                 // Assert
-                expect(tagsInput.tryAddTag).toHaveBeenCalledWith('Item2');
+                expect(tagsInput.tryAddTag).toHaveBeenCalledWith({ text: 'Item2' });
             });
 
             it('focuses the input field when a suggestion is added via a mouse click', function() {
                 // Arrange
-                loadSuggestions(['Item1', 'Item2', 'Item3']);
                 suggestionList.select(0);
 
                 // Act
@@ -698,7 +738,13 @@ describe('autocomplete-directive', function() {
             compile('highlight-matched-text="true"', 'min-length="1"');
 
             // Act
-            loadSuggestions(['a', 'ab', 'ba', 'aba', 'bab'], 'a');
+            loadSuggestions([
+                { text: 'a' },
+                { text: 'ab' },
+                { text: 'ba' },
+                { text: 'aba' },
+                { text: 'bab' }
+            ], 'a');
 
             // Assert
             expect(getSuggestionText(0)).toBe('<em>a</em>');
@@ -713,7 +759,13 @@ describe('autocomplete-directive', function() {
             compile('highlight-matched-text="false"', 'min-length="1"');
 
             // Act
-            loadSuggestions(['a', 'ab', 'ba', 'aba', 'bab'], 'a');
+            loadSuggestions([
+                { text: 'a' },
+                { text: 'ab' },
+                { text: 'ba' },
+                { text: 'aba' },
+                { text: 'bab' }
+            ], 'a');
 
             // Assert
             expect(getSuggestionText(0)).toBe('a');
@@ -725,7 +777,11 @@ describe('autocomplete-directive', function() {
 
         it('encodes HTML characters in suggestions list', function() {
             // Act
-            loadSuggestions(['<Item 1>', 'Item <2>', 'Item &3']);
+            loadSuggestions([
+                { text: '<Item 1>' },
+                { text: 'Item <2>' },
+                { text: 'Item &3' }
+            ]);
 
             // Assert
             expect(getSuggestionText(0)).toBe('&lt;Item 1&gt;');
@@ -738,14 +794,17 @@ describe('autocomplete-directive', function() {
             compile('highlight-matched-text="true"', 'min-length="1"');
 
             // Act
-            loadSuggestions(['<Item 1>', 'Item <2>', 'Item &3'], '>');
+            loadSuggestions([
+                { text: '<Item 1>' },
+                { text: 'Item <2>' },
+                { text: 'Item &3' }
+            ], '>');
 
             // Assert
             expect(getSuggestionText(0)).toBe('&lt;Item 1<em>&gt;</em>');
             expect(getSuggestionText(1)).toBe('Item &lt;2<em>&gt;</em>');
             expect(getSuggestionText(2)).toBe('Item &amp;3');
         });
-
     });
 
     describe('max-results-to-show option', function() {
@@ -762,7 +821,7 @@ describe('autocomplete-directive', function() {
             compile('max-results-to-show="3"');
 
             // Act
-            loadSuggestions(['Item1', 'Item2', 'Item3', 'Item4', 'Item5']);
+            loadSuggestions(5);
 
             // Assert
             expect(getSuggestions().length).toBe(3);

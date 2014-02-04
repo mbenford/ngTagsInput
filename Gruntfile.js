@@ -14,6 +14,7 @@ module.exports = function(grunt) {
             js: {
                 src: [
                     'src/keycodes.js',
+                    'src/functions.js',
                     'src/init.js',
                     'src/tags-input.js',
                     'src/auto-complete.js',

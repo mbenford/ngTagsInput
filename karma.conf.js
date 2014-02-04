@@ -13,6 +13,7 @@ module.exports = function(config) {
       'test/lib/angular.js',
       'test/lib/angular-mocks.js',
       'test/*.spec.js',
+      'test/helpers.js',
       'src/init.js',
       'src/*.js',
       'templates/*.html'
