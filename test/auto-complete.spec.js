@@ -657,6 +657,40 @@ describe('autoComplete directive', function() {
         });
     });
 
+    describe('show-suggestions-on-downkey option', function(){
+        it('initializes the option to false', function(){
+           //Arrange
+            compile();
+
+            //Assert
+            expect(isolateScope.options.showSuggestionsOnDownkey).toBe(false);
+
+        });
+        it('shows the suggestion box when down arrow keydown is triggered', function() {
+            //Arrange
+            compile('show-suggestions-on-downkey="true"');
+
+            // Act
+            sendKeyDown(KEYS.down);
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).toHaveBeenCalledWith(null);
+
+        });
+        it('does prevent the down arrow keydown event from being propagated', function() {
+            //Arrange
+            compile('show-suggestions-on-downkey="true"');
+
+            // Act
+            var event = sendKeyDown(KEYS.down);
+
+            // Assert
+            expect(event.isDefaultPrevented()).toBe(true);
+            expect(event.isPropagationStopped()).toBe(true);
+        });
+    });
+
     describe('debounce-delay option', function() {
         it('initializes the option to 100 milliseconds', function() {
             // Arrange/Act
@@ -853,6 +887,24 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(0)).toBe('&lt;Item 1<em>&gt;</em>');
             expect(getSuggestionText(1)).toBe('Item &lt;2<em>&gt;</em>');
             expect(getSuggestionText(2)).toBe('Item &amp;3');
+        });
+
+        it('doesn\'t highlight text if input is not null but min-length is 0', function() {
+
+            //Arrange
+            compile('highlight-matched-text="true"', 'min-length="0"');
+
+            //Act
+            loadSuggestions(['a', 'ab', 'ba', 'aba', 'bab'], '');
+
+            //Assert
+            // Assert
+            expect(getSuggestionText(0)).toBe('a');
+            expect(getSuggestionText(1)).toBe('ab');
+            expect(getSuggestionText(2)).toBe('ba');
+            expect(getSuggestionText(3)).toBe('aba');
+            expect(getSuggestionText(4)).toBe('bab');
+
         });
     });
 
