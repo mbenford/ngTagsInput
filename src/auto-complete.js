@@ -17,6 +17,9 @@
  * @param {boolean=} [highlightMatchedText=true] Flag indicating that the matched text will be highlighted in the
  *                                               suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
+ *
+ * @param {boolean=} [showSuggestionOnDownkey=false] When true the suggestion box will load and become visible on down
+ *                                                   down key trigger.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
@@ -49,8 +52,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
             self.selected = null;
             self.visible = true;
         };
-        self.load = function(query, tags) {
-            if (query.length < options.minLength) {
+        self.load = function(query, tags, override) {
+            if (!override && query.length < options.minLength) {
                 self.reset();
                 return;
             }
@@ -118,7 +121,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 debounceDelay: [Number, 100],
                 minLength: [Number, 3],
                 highlightMatchedText: [Boolean, true],
-                maxResultsToShow: [Number, 10]
+                maxResultsToShow: [Number, 10],
+                showSuggestionsOnDownkey: [Boolean, false]
             });
 
             tagsInput = tagsInputCtrl.registerAutocomplete();
@@ -167,7 +171,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                     }
                 })
                 .on('input-keydown', function(e) {
-                    var key, handled;
+                    var key = e.keyCode,
+                        handled = false;
 
                     if (hotkeys.indexOf(e.keyCode) === -1) {
                         return;
@@ -186,8 +191,6 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                     };
 
                     if (suggestionList.visible) {
-                        key = e.keyCode;
-                        handled = false;
 
                         if (key === KEYS.down) {
                             suggestionList.selectNext();
@@ -204,12 +207,18 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                         else if (key === KEYS.enter || key === KEYS.tab) {
                             handled = scope.addSuggestion();
                         }
-
-                        if (handled) {
-                            e.preventDefault();
-                            e.stopImmediatePropagation();
-                            scope.$apply();
+                    }
+                    else if(!suggestionList.visible){
+                        if(key === KEYS.down && scope.options.showSuggestionsOnDownkey){
+                            var val = e.currentTarget ? e.currentTarget.value : null;
+                            suggestionList.load(val && val.length > 0 ? val : null, tagsInput.getTags(), true);
+                            handled = true;
                         }
+                    }
+                    if (handled) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        scope.$apply();
                     }
                 })
                 .on('input-blur', function() {
