@@ -28,6 +28,7 @@
         "spyOn": true,
         "require": true,
         "tagsInput": true,
+        "SimplePubSub": true,
         "makeObjectArray": true,
         "findInObjectArray": true,
         "KEYS": true,

@@ -26,7 +26,7 @@ describe('autoComplete directive', function() {
 
         tagsInput = {
             changeInputValue: jasmine.createSpy(),
-            tryAddTag: jasmine.createSpy(),
+            addTag: jasmine.createSpy(),
             focusInput: jasmine.createSpy(),
             on: jasmine.createSpy().andCallFake(function(names, handler) {
                 names.split(' ').forEach(function(name) { eventHandlers[name] = handler; });
@@ -252,7 +252,7 @@ describe('autoComplete directive', function() {
             sendKeyDown(KEYS.enter);
 
             // Assert
-            expect(tagsInput.tryAddTag).toHaveBeenCalledWith({ text: 'Item1' });
+            expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' });
         });
 
         it('adds the selected suggestion when the tab key is pressed and there is a suggestion selected', function() {
@@ -264,7 +264,7 @@ describe('autoComplete directive', function() {
             sendKeyDown(KEYS.tab);
 
             // Assert
-            expect(tagsInput.tryAddTag).toHaveBeenCalledWith({ text: 'Item1' });
+            expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' });
         });
 
         it('does not change the input value when the enter key is pressed and there is nothing selected', function() {
@@ -275,7 +275,7 @@ describe('autoComplete directive', function() {
             sendKeyDown(KEYS.enter);
 
             // Assert
-            expect(tagsInput.tryAddTag).not.toHaveBeenCalled();
+            expect(tagsInput.addTag).not.toHaveBeenCalled();
         });
 
         it('sets the selected suggestion to null after adding it to the input field', function() {
@@ -454,7 +454,7 @@ describe('autoComplete directive', function() {
                 getSuggestion(1).click();
 
                 // Assert
-                expect(tagsInput.tryAddTag).toHaveBeenCalledWith({ text: 'Item2' });
+                expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item2' });
             });
 
             it('focuses the input field when a suggestion is added via a mouse click', function() {

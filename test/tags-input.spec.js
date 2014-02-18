@@ -95,7 +95,11 @@ describe('tags-input directive', function() {
     describe('basic features', function() {
         it('renders the correct number of tags', function() {
             // Arrange
-            $scope.tags = generateTags(3);
+            $scope.tags = [
+                { text: 'Tag1 '},
+                { text: ' Tag2'},
+                { text: ' Tag3 '}
+            ];
 
             // Act
             compile();
@@ -112,9 +116,9 @@ describe('tags-input directive', function() {
             compile();
 
             // Act
-            newTag('Tag1');
-            newTag('Tag2');
-            newTag('Tag3');
+            newTag('Tag1 ');
+            newTag(' Tag2');
+            newTag(' Tag3 ');
 
             // Assert
             expect($scope.tags).toEqual([
@@ -905,7 +909,7 @@ describe('tags-input directive', function() {
 
         it('creates an object containing all the autocomplete directive needs to work', function() {
             expect(autocompleteObj).toEqual({
-                tryAddTag: jasmine.any(Function),
+                addTag: jasmine.any(Function),
                 focusInput: jasmine.any(Function),
                 on: jasmine.any(Function),
                 getTags: jasmine.any(Function),
@@ -919,7 +923,7 @@ describe('tags-input directive', function() {
             $scope.$digest();
 
             // Act
-            autocompleteObj.tryAddTag({ text: 'Tag' });
+            autocompleteObj.addTag({ text: ' Tag ' });
 
             // Assert
             expect($scope.tags).toEqual([{ text: 'Tag' }]);
@@ -930,7 +934,7 @@ describe('tags-input directive', function() {
             getInput().val('Tag').trigger('input');
 
             // Act
-            autocompleteObj.tryAddTag({ text: 'Tag' });
+            autocompleteObj.addTag({ text: 'Tag' });
             $scope.$digest();
 
             // Assert

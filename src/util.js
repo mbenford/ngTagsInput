@@ -1,5 +1,25 @@
 'use strict';
 
+function SimplePubSub() {
+    var events = {};
+    return {
+        on: function(names, handler) {
+            names.split(' ').forEach(function(name) {
+                if (!events[name]) {
+                    events[name] = [];
+                }
+                events[name].push(handler);
+            });
+            return this;
+        },
+        trigger: function(name, args) {
+            angular.forEach(events[name], function(handler) {
+                handler.call(null, args);
+            });
+        }
+    };
+}
+
 function makeObjectArray(array, key) {
     array = array || [];
     if (array.length > 0 && !angular.isObject(array[0])) {

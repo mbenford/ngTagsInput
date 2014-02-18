@@ -30,7 +30,7 @@
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
 tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) {
-    function TagList(tags, options, events) {
+    function TagList(options, events) {
         var self = {}, getTagText, setTagText;
 
         getTagText = function(tag) {
@@ -41,7 +41,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             tag[options.displayProperty] = text;
         };
 
-        self.items = tags;
+        self.items = [];
 
         self.addText = function(text) {
             var tag = {};
@@ -50,7 +50,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         };
 
         self.add = function(tag) {
-            var tagText = getTagText(tag);
+            var tagText = getTagText(tag).trim();
 
             if (tagText.length >= options.minLength && options.allowedTagsPattern.test(tagText)) {
 
@@ -96,27 +96,6 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         return self;
     }
 
-    function SimplePubSub() {
-        var events = {};
-
-        return {
-            on: function(names, handler) {
-                names.split(' ').forEach(function(name) {
-                    if (!events[name]) {
-                        events[name] = [];
-                    }
-                    events[name].push(handler);
-                });
-                return this;
-            },
-            trigger: function(name, args) {
-                angular.forEach(events[name], function(handler) {
-                    handler.call(null, args);
-                });
-            }
-        };
-    }
-
     return {
         restrict: 'E',
         require: 'ngModel',
@@ -129,6 +108,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         transclude: true,
         templateUrl: 'ngTagsInput/tags-input.html',
         controller: function($scope, $attrs, $element) {
+            var tagList, events, options;
+
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 customClass: [String],
                 placeholder: [String, 'Add a tag'],
@@ -148,61 +129,50 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 displayProperty: [String, 'text']
             });
 
+            events = new SimplePubSub();
+            options = $scope.options;
+            tagList = new TagList(options, events);
+
+            $scope.events = events;
+            $scope.tagList = tagList;
             $scope.newTag = '';
 
-            $scope.events = new SimplePubSub();
-            $scope.events
+            events
                 .on('tag-added', $scope.onTagAdded)
                 .on('tag-removed', $scope.onTagRemoved)
                 .on('tag-added duplicate-tag', function() {
                     $scope.newTag = '';
                 })
                 .on('input-change', function() {
-                    $scope.tagList.selected = null;
+                    tagList.selected = null;
                 });
 
             $scope.$watch('tags', function(value) {
-                $scope.tags = makeObjectArray(value, $scope.options.displayProperty);
-                $scope.tagList = new TagList($scope.tags, $scope.options, $scope.events);
+                $scope.tags = makeObjectArray(value, options.displayProperty);
+                tagList.items = $scope.tags;
             });
 
-            $scope.addText = function() {
-                return $scope.tagList.addText($scope.newTag);
-            };
-
-            $scope.tryRemoveLast = function() {
-                var tag = $scope.tagList.removeLast();
-                if (tag && $scope.options.enableEditingLastTag) {
-                    $scope.newTag = tag[$scope.options.displayProperty];
-                }
-                return tag;
-            };
-
-            $scope.remove = function(index) {
-                return $scope.tagList.remove(index);
-            };
-
             $scope.getDisplayText = function(tag) {
-                return tag[$scope.options.displayProperty];
+                return tag[options.displayProperty].trim();
             };
 
             $scope.track = function(tag) {
-                return $scope.getDisplayText(tag);
+                return tag[options.displayProperty];
             };
 
             $scope.newTagChange = function() {
-                $scope.events.trigger('input-change', $scope.newTag);
+                events.trigger('input-change', $scope.newTag);
             };
 
             this.registerAutocomplete = function() {
                 var input = $element.find('input');
                 input.on('keydown', function(e) {
-                    $scope.events.trigger('input-keydown', e);
+                    events.trigger('input-keydown', e);
                 });
 
                 return {
-                    tryAddTag: function(tag) {
-                        return $scope.tagList.add(tag);
+                    addTag: function(tag) {
+                        return tagList.add(tag);
                     },
                     focusInput: function() {
                         input[0].focus();
@@ -214,15 +184,23 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                         return $scope.options;
                     },
                     on: function(name, handler) {
-                        $scope.events.on(name, handler);
+                        events.on(name, handler);
                         return this;
                     }
                 };
             };
         },
         link: function(scope, element, attrs, ngModelCtrl) {
-            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace];
-            var input = element.find('input');
+            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace],
+                tagList = scope.tagList,
+                events = scope.events,
+                options = scope.options,
+                input = element.find('input');
+
+            scope.$watch('tags.length', function() {
+                ngModelCtrl.$setValidity('maxTags', angular.isUndefined(options.maxTags) || scope.tags.length <= options.maxTags);
+                ngModelCtrl.$setValidity('minTags', angular.isUndefined(options.minTags) || scope.tags.length >= options.minTags);
+            });
 
             input
                 .on('keydown', function(e) {
@@ -240,17 +218,20 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                         return;
                     }
 
-                    if (key === KEYS.enter && scope.options.addOnEnter ||
-                        key === KEYS.comma && scope.options.addOnComma ||
-                        key === KEYS.space && scope.options.addOnSpace) {
+                    if (key === KEYS.enter && options.addOnEnter ||
+                        key === KEYS.comma && options.addOnComma ||
+                        key === KEYS.space && options.addOnSpace) {
 
-                        scope.addText();
+                        tagList.addText(scope.newTag);
 
                         scope.$apply();
                         e.preventDefault();
                     }
-                    else if (key === KEYS.backspace && this.value.length === 0) {
-                        scope.tryRemoveLast();
+                    else if (key === KEYS.backspace && scope.newTag.length === 0) {
+                        var tag = tagList.removeLast();
+                        if (tag && options.enableEditingLastTag) {
+                            scope.newTag = tag[options.displayProperty];
+                        }
 
                         scope.$apply();
                         e.preventDefault();
@@ -268,10 +249,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                         var parentElement = angular.element($document[0].activeElement).parent();
                         if (parentElement[0] !== element[0]) {
                             scope.hasFocus = false;
-                            if (scope.options.addOnBlur) {
-                                scope.addText();
+                            if (options.addOnBlur) {
+                                tagList.addText(scope.newTag);
                             }
-                            scope.events.trigger('input-blur');
+                            events.trigger('input-blur');
                             scope.$apply();
                         }
                     }, 0, false);
@@ -279,11 +260,6 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
 
             element.find('div').on('click', function() {
                 input[0].focus();
-            });
-
-            scope.$watch('tags.length', function() {
-                ngModelCtrl.$setValidity('maxTags', angular.isUndefined(scope.options.maxTags) || scope.tags.length <= scope.options.maxTags);
-                ngModelCtrl.$setValidity('minTags', angular.isUndefined(scope.options.minTags) || scope.tags.length >= scope.options.minTags);
             });
         }
     };

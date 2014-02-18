@@ -107,7 +107,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
         templateUrl: 'ngTagsInput/auto-complete.html',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList, tagsInput, getItemText, markdown;
+                suggestionList, tagsInput, options, getItemText, markdown;
 
             tagsInputConfig.load('autoComplete', scope, attrs, {
                 debounceDelay: [Number, 100],
@@ -116,16 +116,18 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 maxResultsToShow: [Number, 10]
             });
 
-            tagsInput = tagsInputCtrl.registerAutocomplete();
-            scope.options.tagsInput = tagsInput.getOptions();
+            options = scope.options;
 
-            suggestionList = new SuggestionList(scope.source, scope.options);
+            tagsInput = tagsInputCtrl.registerAutocomplete();
+            options.tagsInput = tagsInput.getOptions();
+
+            suggestionList = new SuggestionList(scope.source, options);
 
             getItemText = function(item) {
-                return item[scope.options.tagsInput.displayProperty];
+                return item[options.tagsInput.displayProperty];
             };
 
-            if (scope.options.highlightMatchedText) {
+            if (options.highlightMatchedText) {
                 markdown = function(item, text) {
                     var expression = new RegExp(text, 'gi');
                     return item.replace(expression, '**$&**');
@@ -143,7 +145,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 var added = false;
 
                 if (suggestionList.selected) {
-                    tagsInput.tryAddTag(suggestionList.selected);
+                    tagsInput.addTag(suggestionList.selected);
                     suggestionList.reset();
                     tagsInput.focusInput();
 
