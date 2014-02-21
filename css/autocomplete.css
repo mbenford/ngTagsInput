@@ -1,4 +1,4 @@
-.ngTagsInput .autocomplete {
+tags-input .autocomplete {
     margin-top: 5px;
     position: absolute;
     padding: 8px 0;
@@ -11,13 +11,13 @@
     z-index: 999;
 }
 
-.ngTagsInput .autocomplete .suggestion-list {
+tags-input .autocomplete .suggestion-list {
     margin: 0;
     padding: 0;
     list-style-type: none;
 }
 
-.ngTagsInput .autocomplete .suggestion-item {
+tags-input .autocomplete .suggestion-item {
     padding: 3px 16px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 16px;
@@ -29,12 +29,12 @@
     text-overflow: ellipsis;
 }
 
-.ngTagsInput .autocomplete .suggestion-item.selected {
+tags-input .autocomplete .suggestion-item.selected {
     color: #fff;
     background-color: #0097cf
 }
 
-.ngTagsInput .autocomplete .suggestion-item em {
+tags-input .autocomplete .suggestion-item em {
     font-weight: bold;
     font-style: normal;
 }

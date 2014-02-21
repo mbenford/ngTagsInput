@@ -14,7 +14,7 @@ tagsInput.directive('tiAutosize', function() {
         link: function(scope, element, attrs, ctrl) {
             var span, resize;
 
-            span = angular.element('<span class="tag-input"></span>');
+            span = angular.element('<span class="input"></span>');
             span.css('display', 'none')
                 .css('visibility', 'hidden')
                 .css('width', 'auto');

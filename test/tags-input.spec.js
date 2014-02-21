@@ -177,14 +177,6 @@ describe('tags-input directive', function() {
             expect(getInput().val()).toBe('');
         });
 
-        it('adds a custom CSS class to the container div when custom-class option is provided', function() {
-            // Arrange/Act
-            compile('custom-class="myClass"');
-
-            // Arrange
-            expect(element.find('div').hasClass('myClass')).toBe(true);
-        });
-
         it('empties the input field after a tag is added directly', function() {
             // Arrange
             compile();

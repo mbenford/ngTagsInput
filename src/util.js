@@ -16,6 +16,7 @@ function SimplePubSub() {
             angular.forEach(events[name], function(handler) {
                 handler.call(null, args);
             });
+            return this;
         }
     };
 }

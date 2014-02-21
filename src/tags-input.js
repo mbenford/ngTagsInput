@@ -9,7 +9,6 @@
  *
  * @param {string} ngModel Assignable angular expression to data-bind to.
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
- * @param {string=} customClass CSS class to style the control.
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
@@ -108,10 +107,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         transclude: true,
         templateUrl: 'ngTagsInput/tags-input.html',
         controller: function($scope, $attrs, $element) {
-            var tagList, events, options;
-
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
-                customClass: [String],
                 placeholder: [String, 'Add a tag'],
                 tabindex: [Number],
                 removeTagSymbol: [String, String.fromCharCode(215)],
@@ -129,50 +125,18 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 displayProperty: [String, 'text']
             });
 
-            events = new SimplePubSub();
-            options = $scope.options;
-            tagList = new TagList(options, events);
-
-            $scope.events = events;
-            $scope.tagList = tagList;
-            $scope.newTag = '';
-
-            events
-                .on('tag-added', $scope.onTagAdded)
-                .on('tag-removed', $scope.onTagRemoved)
-                .on('tag-added duplicate-tag', function() {
-                    $scope.newTag = '';
-                })
-                .on('input-change', function() {
-                    tagList.selected = null;
-                });
-
-            $scope.$watch('tags', function(value) {
-                $scope.tags = makeObjectArray(value, options.displayProperty);
-                tagList.items = $scope.tags;
-            });
-
-            $scope.getDisplayText = function(tag) {
-                return tag[options.displayProperty].trim();
-            };
-
-            $scope.track = function(tag) {
-                return tag[options.displayProperty];
-            };
-
-            $scope.newTagChange = function() {
-                events.trigger('input-change', $scope.newTag);
-            };
+            $scope.events = new SimplePubSub();
+            $scope.tagList = new TagList($scope.options, $scope.events);
 
             this.registerAutocomplete = function() {
                 var input = $element.find('input');
                 input.on('keydown', function(e) {
-                    events.trigger('input-keydown', e);
+                    $scope.events.trigger('input-keydown', e);
                 });
 
                 return {
                     addTag: function(tag) {
-                        return tagList.add(tag);
+                        return $scope.tagList.add(tag);
                     },
                     focusInput: function() {
                         input[0].focus();
@@ -184,7 +148,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                         return $scope.options;
                     },
                     on: function(name, handler) {
-                        events.on(name, handler);
+                        $scope.events.on(name, handler);
                         return this;
                     }
                 };
@@ -197,9 +161,41 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 options = scope.options,
                 input = element.find('input');
 
-            scope.$watch('tags.length', function() {
-                ngModelCtrl.$setValidity('maxTags', angular.isUndefined(options.maxTags) || scope.tags.length <= options.maxTags);
-                ngModelCtrl.$setValidity('minTags', angular.isUndefined(options.minTags) || scope.tags.length >= options.minTags);
+            events
+                .on('tag-added', scope.onTagAdded)
+                .on('tag-removed', scope.onTagRemoved)
+                .on('tag-added duplicate-tag', function() {
+                    scope.newTag = '';
+                })
+                .on('tag-added tag-removed', function() {
+                    ngModelCtrl.$setViewValue(scope.tags);
+                })
+                .on('input-change', function() {
+                    tagList.selected = null;
+                });
+
+            scope.newTag = '';
+
+            scope.getDisplayText = function(tag) {
+                return tag[options.displayProperty].trim();
+            };
+
+            scope.track = function(tag) {
+                return tag[options.displayProperty];
+            };
+
+            scope.newTagChange = function() {
+                events.trigger('input-change', scope.newTag);
+            };
+
+            scope.$watch('tags', function(value) {
+                scope.tags = makeObjectArray(value, options.displayProperty);
+                tagList.items = scope.tags;
+            });
+
+            scope.$watch('tags.length', function(value) {
+                ngModelCtrl.$setValidity('maxTags', angular.isUndefined(options.maxTags) || value <= options.maxTags);
+                ngModelCtrl.$setValidity('minTags', angular.isUndefined(options.minTags) || value >= options.minTags);
             });
 
             input
@@ -246,7 +242,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 })
                 .on('blur', function() {
                     $timeout(function() {
-                        var parentElement = angular.element($document[0].activeElement).parent();
+                        var parentElement = angular.element($document.prop('activeElement')).parent();
                         if (parentElement[0] !== element[0]) {
                             scope.hasFocus = false;
                             if (options.addOnBlur) {

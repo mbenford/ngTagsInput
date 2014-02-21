@@ -5,7 +5,7 @@ describe('autosize directive', function() {
         element;
 
     // The style tag should be created once, so we can't do it within a beforeEach() callback
-    $('<style> .tag-input { box-sizing: border-box; border: 1px; padding: 2px; font: Arial 18px; }</style>').appendTo('head');
+    $('<style> .input { box-sizing: border-box; border: 1px; padding: 2px; font: Arial 18px; }</style>').appendTo('head');
 
     beforeEach(function() {
         module('ngTagsInput');
@@ -20,7 +20,7 @@ describe('autosize directive', function() {
     function compile() {
         var attributes = $.makeArray(arguments).join(' ');
 
-        element = angular.element('<input class="tag-input" ng-model="model" ti-autosize ' + attributes + '>');
+        element = angular.element('<input class="input" ng-model="model" ti-autosize ' + attributes + '>');
         $document.find('body').append(element);
 
         $compile(element)($scope);
@@ -28,7 +28,7 @@ describe('autosize directive', function() {
     }
 
     function getTextWidth(text) {
-        var width, span = angular.element('<span class="tag-input"></span>');
+        var width, span = angular.element('<span class="input"></span>');
 
         span.text(text);
         $document.find('body').append(span);

@@ -6,23 +6,39 @@
   <script type="text/javascript" src="../build/ng-tags-input.js"></script>
   <link rel="stylesheet" href="../build/ng-tags-input.css"/>
   <style>
-    .foo .tags .tag-input {
+    .foo .tags .input {
       font-size: 16px;
       font-weight: bold;
       letter-spacing: 4px;
       border-left: 3px solid;
       padding-left: 3px;
     }
+
+    .foo.ng-pristine .tags {
+      background-color: green;
+    }
+    .foo.ng-dirty .tags {
+      background-color: brown;
+    }
+    .foo.ng-valid .tags {
+      background-color: yellow;
+    }
+    .foo.ng-invalid .tags {
+      background-color: red;
+    }
+
+    .foo .autocomplete .suggestion-item.selected {
+      background-color: green;
+    }
   </style>
 </head>
 <body ng-controller="Ctrl">
-  <tags-input ng-model="tags"
-              custom-class="foo"
+  <tags-input class="foo" ng-model="tags" limit-tags="5"
               replace-spaces-with-dashes="true"
               allowed-tags-pattern="^[a-zA-Z0-9\s<@\.]+$"
               enable-editing-last-tag="true"
               placeholder="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-    min-tags="3">
+              min-tags="3">
     <auto-complete source="loadItems($query)"
                    debounce-delay="0"
                    min-length="1"
@@ -36,9 +52,6 @@
                    max-results-to-show="10">
     </auto-complete>
   </tags-input>
-
-  <p>{{tags}}</p>
-  <p>{{tags2}}</p>
 
   <input type="text"/>
 
@@ -80,11 +93,24 @@
                 return deferred.promise;
             }
         })
+        .directive('limitTags', function() {
+          return {
+            require: 'ngModel',
+            link: function(scope, elem, attrs, ngModel) {
+                var max = parseInt(attrs.limitTags, 10);
+                ngModel.$parsers.unshift(function(value) {
+                    if (value && value.length > max) {
+                      value.splice(value.length - 1, 1);
+                    }
+                    return value;
+                });
+            }
+          };
+        })
         .config(function(tagsInputConfigProvider) {
             tagsInputConfigProvider
               .setDefaults('tagsInput', {
-                placeholder: 'new tag',
-                removeTagSymbol: 'x'
+                placeholder: 'new tag'
               })
               .setDefaults('autoComplete', {
                 highlightMatchedText: true
