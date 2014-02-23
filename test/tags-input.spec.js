@@ -544,12 +544,12 @@ describe('tags-input directive', function() {
             expect($scope.tags).toEqual([]);
         });
 
-        it('initializes the option to ^[a-zA-Z0-9\\s]+$', function() {
+        it('initializes the option to .+', function() {
             // Arrange/Act
             compile();
 
             // Assert
-            expect(isolateScope.options.allowedTagsPattern.toString()).toBe('/^[a-zA-Z0-9\\s]+$/');
+            expect(isolateScope.options.allowedTagsPattern.toString()).toBe('/.+/');
         });
     });
 

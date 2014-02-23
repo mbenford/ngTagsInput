@@ -118,7 +118,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 addOnSpace: [Boolean, false],
                 addOnComma: [Boolean, true],
                 addOnBlur: [Boolean, true],
-                allowedTagsPattern: [RegExp, /^[a-zA-Z0-9\s]+$/],
+                allowedTagsPattern: [RegExp, /.+/],
                 enableEditingLastTag: [Boolean, false],
                 minTags: [Number],
                 maxTags: [Number],
