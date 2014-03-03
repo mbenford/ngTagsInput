@@ -36,7 +36,7 @@
   <tags-input class="foo" ng-model="tags" limit-tags="5"
               replace-spaces-with-dashes="true"
               enable-editing-last-tag="true"
-              placeholder="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              placeholder="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
               min-tags="3">
     <auto-complete source="loadItems($query)"
                    debounce-delay="0"
@@ -109,7 +109,7 @@
         .config(function(tagsInputConfigProvider) {
             tagsInputConfigProvider
               .setDefaults('tagsInput', {
-                placeholder: 'new tag'
+                placeholder: ''
               })
               .setDefaults('autoComplete', {
                 highlightMatchedText: true
