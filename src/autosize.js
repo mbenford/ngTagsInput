@@ -30,12 +30,14 @@ tagsInput.directive('tiAutosize', function() {
                     value = attrs.placeholder;
                 }
 
-                span.text(value);
-                span.css('display', '');
-                width = span.prop('offsetWidth') + THRESHOLD;
-                span.css('display', 'none');
+                if (value) {
+                    span.text(value);
+                    span.css('display', '');
+                    width = span.prop('offsetWidth');
+                    span.css('display', 'none');
+                }
 
-                element.css('width', width + 'px');
+                element.css('width', width ? width + THRESHOLD + 'px' : '');
 
                 return originalValue;
             };

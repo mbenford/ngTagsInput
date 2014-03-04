@@ -13,7 +13,7 @@ describe('autosize directive', function() {
         });
 
         style = angular.element('<style> .input { box-sizing: border-box; border: 1px; padding: 2px; font: Arial 18px; }</style>').appendTo('head');
-        container = angular.element('<div style="width: 300px"></div>').appendTo('body');
+        container = angular.element('<div></div>').appendTo('body');
     });
 
     afterEach(function() {
@@ -81,5 +81,18 @@ describe('autosize directive', function() {
 
         // Assert
         expect(element.css('width')).toBe(getTextWidth('Some placeholder'));
+    });
+
+    it('clears the input width when it cannot be calculated', function() {
+        // Arrange
+        container.hide();
+        compile();
+
+        // Act
+        element.val('AAAAAAAAAAAAAA');
+        element.trigger('input');
+
+        // Assert
+        expect(element.prop('style').width).toBe('');
     });
 });
