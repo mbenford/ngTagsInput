@@ -421,6 +421,20 @@ describe('tags-input directive', function() {
                 expect($scope.tags).toEqual([{ text: 'foo' }]);
             });
 
+            it('adds a tag when the input field loses focus to the browser window', function() {
+                // Arrange
+                isolateScope.newTag = 'foo';
+                spyOn($document, 'prop');
+                $document.prop.andReturn(getInput()[0]);
+
+                // Act
+                getInput().triggerHandler('blur');
+                $timeout.flush();
+
+                // Assert
+                expect($scope.tags).toEqual([{ text: 'foo' }]);
+            });
+
             it('does not add a tag when the input field loses focus to the directive itself', function() {
                 // Arrange
                 isolateScope.newTag = 'foo';

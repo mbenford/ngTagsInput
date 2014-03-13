@@ -172,6 +172,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 })
                 .on('input-change', function() {
                     tagList.selected = null;
+                })
+                .on('input-blur', function() {
+                    if (options.addOnBlur) {
+                        tagList.addText(scope.newTag);
+                    }
                 });
 
             scope.newTag = '';
@@ -242,16 +247,15 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 })
                 .on('blur', function() {
                     $timeout(function() {
-                        var parentElement = angular.element($document.prop('activeElement')).parent();
-                        if (parentElement[0] !== element[0]) {
+                        var activeElement = $document.prop('activeElement'),
+                            lostFocusToBrowserWindow = activeElement === input[0],
+                            lostFocusToChildElement = element[0].contains(activeElement);
+
+                        if (lostFocusToBrowserWindow || !lostFocusToChildElement) {
                             scope.hasFocus = false;
-                            if (options.addOnBlur) {
-                                tagList.addText(scope.newTag);
-                            }
                             events.trigger('input-blur');
-                            scope.$apply();
                         }
-                    }, 0, false);
+                    });
                 });
 
             element.find('div').on('click', function() {
