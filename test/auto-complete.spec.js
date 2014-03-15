@@ -16,7 +16,7 @@ describe('autoComplete directive', function() {
 
         deferred = $q.defer();
         eventHandlers = {};
-        $scope.loadItems = jasmine.createSpy().andReturn(deferred.promise);
+        $scope.loadItems = jasmine.createSpy().and.returnValue(deferred.promise);
 
         compile();
     });
@@ -28,12 +28,12 @@ describe('autoComplete directive', function() {
             changeInputValue: jasmine.createSpy(),
             addTag: jasmine.createSpy(),
             focusInput: jasmine.createSpy(),
-            on: jasmine.createSpy().andCallFake(function(names, handler) {
+            on: jasmine.createSpy().and.callFake(function(names, handler) {
                 names.split(' ').forEach(function(name) { eventHandlers[name] = handler; });
                 return this;
             }),
-            getTags: jasmine.createSpy().andReturn([]),
-            getOptions: jasmine.createSpy().andReturn({
+            getTags: jasmine.createSpy().and.returnValue([]),
+            getOptions: jasmine.createSpy().and.returnValue({
                 displayProperty: 'text'
             })
         };
@@ -42,7 +42,7 @@ describe('autoComplete directive', function() {
         $scope.$digest();
 
         parentCtrl = parent.controller('tagsInput');
-        spyOn(parentCtrl, 'registerAutocomplete').andReturn(tagsInput);
+        spyOn(parentCtrl, 'registerAutocomplete').and.returnValue(tagsInput);
 
         options = jQuery.makeArray(arguments).join(' ');
         element = angular.element('<auto-complete source="loadItems($query)" ' + options + '></auto-complete>');
@@ -113,7 +113,7 @@ describe('autoComplete directive', function() {
 
         it('renders all elements returned by the load function that aren\'t already added', function() {
             // Act
-            tagsInput.getTags.andReturn([{ text: 'Item3' }]);
+            tagsInput.getTags.and.returnValue([{ text: 'Item3' }]);
             loadSuggestions(3);
 
             // Assert
@@ -124,7 +124,7 @@ describe('autoComplete directive', function() {
 
         it('renders all elements returned by the load function that aren\'t already added ($http promise)', function() {
             // Act
-            tagsInput.getTags.andReturn([{ text: 'Item3' }]);
+            tagsInput.getTags.and.returnValue([{ text: 'Item3' }]);
             loadSuggestions({ data: generateSuggestions(3)});
 
             // Assert
@@ -154,7 +154,7 @@ describe('autoComplete directive', function() {
 
         it('hides the suggestions list when there is no items left to show', function() {
             // Act
-            tagsInput.getTags.andReturn([{ text: 'Item1' }, { text: 'Item2' }]);
+            tagsInput.getTags.and.returnValue([{ text: 'Item1' }, { text: 'Item2' }]);
             loadSuggestions(2);
 
             // Assert
@@ -299,7 +299,7 @@ describe('autoComplete directive', function() {
             sendKeyDown(KEYS.enter);
 
             // Assert
-            expect($scope.loadItems.callCount).toBe(1);
+            expect($scope.loadItems.calls.count()).toBe(1);
         });
 
         it('highlights the selected suggestion only', function() {
@@ -329,7 +329,7 @@ describe('autoComplete directive', function() {
             var deferred1 = $q.defer(), deferred2 = $q.defer(), deferred3 = $q.defer();
             var promises = [deferred1.promise, deferred2.promise, deferred3.promise];
 
-            $scope.loadItems = jasmine.createSpy().andCallFake(function() {
+            $scope.loadItems = jasmine.createSpy().and.callFake(function() {
                 return promises.shift();
             });
             spyOn(suggestionList, 'show');
@@ -353,7 +353,7 @@ describe('autoComplete directive', function() {
             $scope.$digest();
 
             // Assert
-            expect(suggestionList.show.calls.length).toBe(1);
+            expect(suggestionList.show.calls.count()).toBe(1);
         });
 
         it('discards all load calls after the suggestion list is reset', function() {
@@ -693,8 +693,8 @@ describe('autoComplete directive', function() {
             $timeout.flush();
 
             // Assert
-            expect($scope.loadItems.calls.length).toBe(1);
-            expect($scope.loadItems.calls[0].args[0]).toBe('ABC');
+            expect($scope.loadItems.calls.count()).toBe(1);
+            expect($scope.loadItems.calls.argsFor(0)).toEqual(['ABC']);
         });
 
         it('doesn\'t call the load function when the minimum amount of characters isn\'t entered', function() {

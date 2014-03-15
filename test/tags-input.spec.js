@@ -425,7 +425,7 @@ describe('tags-input directive', function() {
                 // Arrange
                 isolateScope.newTag = 'foo';
                 spyOn($document, 'prop');
-                $document.prop.andReturn(getInput()[0]);
+                $document.prop.and.returnValue(getInput()[0]);
 
                 // Act
                 getInput().triggerHandler('blur');

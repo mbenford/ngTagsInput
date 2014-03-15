@@ -2,5 +2,5 @@ language: node_js
 node_js:
   - "0.10"
 before_script:
-  - npm install -g grunt-cli@0.1.11 karma@0.10.8
+  - npm install -g grunt-cli@0.1.11 karma-cli@0.0.4
 script: grunt travis
