@@ -16,6 +16,11 @@
 
     .foo .tags .input {
       width: 1036px;
+      
+    }
+    
+    .foo .tags .tag-item {
+      height: 50px;
     }
 
     .foo.ng-pristine .tags {
@@ -48,7 +53,7 @@
                    max-results-to-show="10">
     </auto-complete>
   </tags-input>
-  <tags-input ng-init="tags2=['item1', 'item2', 'item3']" ng-model="tags2" display-property="label" add-on-blur="true">
+  <tags-input ng-init="tags2=['item1', 'item2', 'item3']" ng-model="tags2" display-property="label" add-on-blur="true" placeholder="Add a superhero">
     <auto-complete source="loadItems2($query)"
                    debounce-delay="0"
                    min-length="1"
@@ -56,6 +61,7 @@
     </auto-complete>
   </tags-input>
 
+  <input type="text"/>
   <input type="text"/>
 
   <script type="text/javascript">

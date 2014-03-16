@@ -7,23 +7,24 @@ So you want to contribute to ngTagsInput... that's awesome! I really appreciate 
 Before writing your killing feature you need to have a few things set up:
 
 1. Install Node.js (0.10.22 or higher)
-2. Install `grunt-cli` and `karma` globally
+2. Install `grunt-cli` and `karma-cli` globally
 
-        npm install -g grunt-cli karma
+        npm install -g grunt-cli karma-cli
 
-3. Clone your repository
+3. Install Ruby and the `sass` gem if you want to compile the SCSS files
+4. Clone your repository
 
         git clone https://github.com/<your_github_username>/ngTagsInput
         
-4. Go to the ngTagsInput directory
+5. Go to the ngTagsInput directory
 
         cd ngTagsInput
         
-5. Add the main ngTagsInput repo as an upstream remote
+6. Add the main ngTagsInput repo as an upstream remote
 
         git remote add upstream https://github.com/mbenford/ngTagsInput
 
-6. Install the development dependencies
+7. Install the development dependencies
 
         npm install
         
@@ -39,12 +40,15 @@ That performs all tasks needed to produce the final JavaScript and CSS files. Af
 
     ng-tags-input.js
     ng-tags-input.css
-    ng-tags-input.zip
-    ng-tags-input.min.zip
+    ng-tags-input.min.js
+    ng-tags-input.min.css
 
-While coding you can execute `grunt test` to run the tests or `grunt watch` to run them automatically every time the source code files change. You can use `karma start` as well, of course.
+In addition to `pack` there are other useful tasks you might want to use:
 
-You can also generate the code coverage report by running `grunt coverage`. This may help you be sure nothing is left untested.
+- `pack:js`: Generates only the Javascript files.
+- `test`: Runs all tests using PhantomJS (you can use `karma start` as well, of course).
+- `watch`: Runs all tests automatically every time the source code files change.
+- `coverage`: Generates the code coverage report. This may help you be sure nothing is left untested.
 
 # Guidelines
 

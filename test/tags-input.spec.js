@@ -51,6 +51,10 @@ describe('tags-input directive', function() {
         return getTag(index).find('span').html();
     }
 
+    function getRemoveButton(index) {
+        return getTag(index).find('a').first();
+    }
+
     function getInput() {
         return element.find('input');
     }
@@ -134,10 +138,10 @@ describe('tags-input directive', function() {
             compile();
 
             // Act
-            element.find('button').click();
+            getRemoveButton(1).click();
 
             // Assert
-            expect($scope.tags).toEqual([]);
+            expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag3' }]);
         });
 
         it('sets focus on the input field when the container div is clicked', function() {
@@ -491,7 +495,7 @@ describe('tags-input directive', function() {
             compile('remove-tag-symbol="X"');
 
             // Assert
-            expect(element.find('button').html()).toBe('X');
+            expect(getRemoveButton(0).html()).toBe('X');
         });
 
         it('initializes the option to charcode 215 (&times;)', function() {
@@ -884,7 +888,7 @@ describe('tags-input directive', function() {
             compile('on-tag-removed="callback($tag)"');
 
             // Act
-            element.find('button')[0].click();
+            getRemoveButton(0).click();
 
             // Assert
             expect($scope.callback).toHaveBeenCalledWith({ text: 'Tag1' });

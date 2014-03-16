@@ -1,0 +1,40 @@
+// general
+$base-font-family:                      'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+// tagsInput
+$tags-bgcolor:                          #fff;
+$tags-border:                           1px solid darkgray;
+$tags-border-shadow:                    1px 1px 1px 0 lightgray inset;
+$tags-outline-box-shadow:               0 0 3px 1px rgba(5, 139, 242, 0.6);
+
+$tag-height:                            26px;
+$tag-font:                              14px $base-font-family;
+$tag-color:                             rgba(240, 249, 255, 1) 0%, rgba(203, 235, 255, 1) 47%, rgba(161, 219, 255, 1) 100%;
+$tag-border:                            1px solid rgb(172, 172, 172);
+$tag-border-radius:                     3px;
+$tag-color-selected:                    rgba(254, 187, 187, 1) 0%, rgba(254, 144, 144, 1) 45%, rgba(255, 92, 92, 1) 100%;
+
+$remove-button-color:                   #585858;
+$remove-button-color-active:            #ff0000;
+$remove-button-font:                    bold 16px Arial, sans-serif;
+
+$input-font:                            $tag-font;
+
+// autoComplete
+$suggestion-box-z-index:                999;
+$suggestion-box-width:                  100%;
+$suggestion-box-color:                  #fff;
+$suggestion-box-border:                 1px solid rgba(0, 0, 0, 0.2);
+$suggestion-box-shadow:                 0 5px 10px rgba(0, 0, 0, 0.2);
+
+$suggestion-font:                       16px $base-font-family;
+$suggestion-color:                      #000;
+$suggestion-bgcolor:                    #fff;
+$suggestion-color-selected:             #fff;
+$suggestion-bgcolor-selected:           #0097cf;
+
+$suggestion-highlight-font:             normal bold $suggestion-font;
+$suggestion-highlight-color:            $suggestion-color;
+$suggestion-highlight-bgcolor:          $suggestion-bgcolor;
+$suggestion-highlight-color-selected:   $suggestion-color-selected;
+$suggestion-highlight-bgcolor-selected: $suggestion-bgcolor-selected;

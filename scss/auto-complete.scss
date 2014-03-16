@@ -1,0 +1,46 @@
+@import "mixins";
+@import "variables";
+
+tags-input .autocomplete {
+  margin-top: 5px;
+  position: absolute;
+  padding: 5px 0;
+  z-index: $suggestion-box-z-index;
+  width: $suggestion-box-width;
+  background-color: $suggestion-box-color;
+  border: $suggestion-box-border;
+  @include box-shadow($suggestion-box-shadow);
+
+  .suggestion-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  .suggestion-item {
+    padding: 5px 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font: $suggestion-font;
+    color: $suggestion-color;
+    background-color: $suggestion-bgcolor;
+
+    &.selected {
+      color: $suggestion-color-selected;
+      background-color: $suggestion-bgcolor-selected;
+
+      em {
+        color: $suggestion-highlight-color-selected;
+        background-color: $suggestion-highlight-bgcolor-selected;
+      }
+    }
+
+    em {
+      font: $suggestion-highlight-font;
+      color: $suggestion-highlight-color;
+      background-color: $suggestion-highlight-bgcolor;
+    }
+  }
+}

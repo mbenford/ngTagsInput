@@ -1,0 +1,20 @@
+tags-input *, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+tags-input {
+  .host {
+    position: relative;
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+    &:active {
+      outline: none;
+    }
+  }
+}
+
+@import "tags-input";
+@import "auto-complete";

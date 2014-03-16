@@ -1,0 +1,72 @@
+@import "mixins";
+@import "variables";
+
+tags-input .tags {
+  -moz-appearance: textfield;
+  -webkit-appearance: textfield;
+  padding: 1px;
+  overflow: hidden;
+  word-wrap: break-word;
+  cursor: text;
+  background-color: $tags-bgcolor;
+  border: $tags-border;
+  box-shadow: $tags-border-shadow;
+
+  &.focused {
+    outline: none;
+    @include box-shadow($tags-outline-box-shadow);
+  }
+
+  .tag-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  .tag-item {
+    margin: 2px;
+    padding: 0 5px;
+    display: inline-block;
+    float: left;
+    font: $tag-font;
+    height: $tag-height;
+    line-height: $tag-height - 1px;
+    border: $tag-border;
+    border-radius: $tag-border-radius;
+    @include gradient($tag-color);
+
+    &.selected {
+      @include gradient($tag-color-selected);
+    }
+
+    .remove-button {
+      margin: 0 0 0 5px;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      vertical-align: middle;
+      font: $remove-button-font;
+      color: $remove-button-color;
+
+      &:active {
+        color: $remove-button-color-active;
+      }
+    }
+  }
+
+  .input {
+    border: 0;
+    outline: none;
+    margin: 2px;
+    padding: 0;
+    padding-left: 5px;
+    float: left;
+    height: $tag-height;
+    font: $input-font;
+  }
+
+  .input::-ms-clear {
+    display: none;
+  }
+}

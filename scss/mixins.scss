@@ -1,0 +1,10 @@
+@mixin gradient($steps...) {
+  background: -webkit-linear-gradient(top, $steps);
+  background: linear-gradient(to bottom, $steps);
+}
+
+@mixin box-shadow($args...) {
+  -webkit-box-shadow: $args;
+  -moz-box-shadow: $args;
+  box-shadow: $args;
+}
