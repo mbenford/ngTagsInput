@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-03-16 01:16:56 -0300
+ * Generated at 2014-03-23 02:33:06 -0300
  */
 (function() {
 'use strict';
@@ -83,6 +83,8 @@ var tagsInput = angular.module('ngTagsInput', []);
  * @param {number=} maxLength Maximum length allowed for a new tag.
  * @param {number=} minTags Sets minTags validation error key if the number of tags added is less than minTags.
  * @param {number=} maxTags Sets maxTags validation error key if the number of tags added is greater than maxTags.
+ * @param {boolean=} [allowLeftoverText=false] Sets leftoverText validation error key if there is any leftover text in
+ *                                             the input element when the directive loses focus.
  * @param {string=} [removeTagSymbol=×] Symbol character for the remove tag button.
  * @param {boolean=} [addOnEnter=true] Flag indicating that a new tag will be added on pressing the ENTER key.
  * @param {boolean=} [addOnSpace=false] Flag indicating that a new tag will be added on pressing the SPACE key.
@@ -98,7 +100,7 @@ var tagsInput = angular.module('ngTagsInput', []);
  */
 tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", function($timeout, $document, tagsInputConfig) {
     function TagList(options, events) {
-        var self = {}, getTagText, setTagText;
+        var self = {}, getTagText, setTagText, tagIsValid;
 
         getTagText = function(tag) {
             return tag[options.displayProperty];
@@ -106,6 +108,14 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
 
         setTagText = function(tag, text) {
             tag[options.displayProperty] = text;
+        };
+
+        tagIsValid = function(tag) {
+            var tagText = getTagText(tag);
+
+            return tagText.length >= options.minLength &&
+                   options.allowedTagsPattern.test(tagText) &&
+                   !findInObjectArray(self.items, tag, options.displayProperty);
         };
 
         self.items = [];
@@ -119,22 +129,18 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
         self.add = function(tag) {
             var tagText = getTagText(tag).trim();
 
-            if (tagText.length >= options.minLength && options.allowedTagsPattern.test(tagText)) {
+            if (options.replaceSpacesWithDashes) {
+                tagText = tagText.replace(/\s/g, '-');
+            }
 
-                if (options.replaceSpacesWithDashes) {
-                    tagText = tagText.replace(/\s/g, '-');
-                }
+            setTagText(tag, tagText);
 
-                setTagText(tag, tagText);
-
-                if (!findInObjectArray(self.items, tag, options.displayProperty)) {
-                    self.items.push(tag);
-
-                    events.trigger('tag-added', { $tag: tag });
-                }
-                else {
-                    events.trigger('duplicate-tag', { $tag: tag });
-                }
+            if (tagIsValid(tag)) {
+                self.items.push(tag);
+                events.trigger('tag-added', { $tag: tag });
+            }
+            else {
+                events.trigger('invalid-tag', { $tag: tag });
             }
 
             return tag;
@@ -190,7 +196,8 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                 enableEditingLastTag: [Boolean, false],
                 minTags: [Number],
                 maxTags: [Number],
-                displayProperty: [String, 'text']
+                displayProperty: [String, 'text'],
+                allowLeftoverText: [Boolean, false]
             });
 
             $scope.events = new SimplePubSub();
@@ -232,22 +239,30 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
             events
                 .on('tag-added', scope.onTagAdded)
                 .on('tag-removed', scope.onTagRemoved)
-                .on('tag-added duplicate-tag', function() {
-                    scope.newTag = '';
+                .on('tag-added', function() {
+                    scope.newTag.text = '';
                 })
                 .on('tag-added tag-removed', function() {
                     ngModelCtrl.$setViewValue(scope.tags);
                 })
+                .on('invalid-tag', function() {
+                    scope.newTag.invalid = true;
+                })
                 .on('input-change', function() {
                     tagList.selected = null;
+                    scope.newTag.invalid = null;
+                })
+                .on('input-focus', function() {
+                    ngModelCtrl.$setValidity('leftoverText', true);
                 })
                 .on('input-blur', function() {
                     if (options.addOnBlur) {
-                        tagList.addText(scope.newTag);
+                        tagList.addText(scope.newTag.text);
                     }
+                    ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
                 });
 
-            scope.newTag = '';
+            scope.newTag = { text: '', invalid: null };
 
             scope.getDisplayText = function(tag) {
                 return tag[options.displayProperty].trim();
@@ -258,7 +273,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
             };
 
             scope.newTagChange = function() {
-                events.trigger('input-change', scope.newTag);
+                events.trigger('input-change', scope.newTag.text);
             };
 
             scope.$watch('tags', function(value) {
@@ -291,15 +306,15 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                         key === KEYS.comma && options.addOnComma ||
                         key === KEYS.space && options.addOnSpace) {
 
-                        tagList.addText(scope.newTag);
+                        tagList.addText(scope.newTag.text);
 
                         scope.$apply();
                         e.preventDefault();
                     }
-                    else if (key === KEYS.backspace && scope.newTag.length === 0) {
+                    else if (key === KEYS.backspace && scope.newTag.text.length === 0) {
                         var tag = tagList.removeLast();
                         if (tag && options.enableEditingLastTag) {
-                            scope.newTag = tag[options.displayProperty];
+                            scope.newTag.text = tag[options.displayProperty];
                         }
 
                         scope.$apply();
@@ -311,6 +326,8 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                         return;
                     }
                     scope.hasFocus = true;
+                    events.trigger('input-focus');
+
                     scope.$apply();
                 })
                 .on('blur', function() {
@@ -500,7 +517,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
             };
 
             tagsInput
-                .on('tag-added duplicate-tag', function() {
+                .on('tag-added invalid-tag', function() {
                     suggestionList.reset();
                 })
                 .on('input-change', function(value) {
@@ -690,7 +707,7 @@ tagsInput.provider('tagsInputConfig', function() {
 /* HTML templates */
 tagsInput.run(["$templateCache", function($templateCache) {
     $templateCache.put('ngTagsInput/tags-input.html',
-    "<div class=\"host\" tabindex=\"-1\" ti-transclude-append=\"\"><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul class=\"tag-list\"><li class=\"tag-item\" ng-repeat=\"tag in tagList.items track by track(tag)\" ng-class=\"{ selected: tag == tagList.selected }\"><span>{{getDisplayText(tag)}}</span> <a class=\"remove-button\" ng-click=\"tagList.remove($index)\">{{options.removeTagSymbol}}</a></li></ul><input class=\"input\" placeholder=\"{{options.placeholder}}\" maxlength=\"{{options.maxLength}}\" tabindex=\"{{options.tabindex}}\" ng-model=\"newTag\" ng-change=\"newTagChange()\" ng-trim=\"false\" ti-autosize=\"\"></div></div>"
+    "<div class=\"host\" tabindex=\"-1\" ti-transclude-append=\"\"><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul class=\"tag-list\"><li class=\"tag-item\" ng-repeat=\"tag in tagList.items track by track(tag)\" ng-class=\"{ selected: tag == tagList.selected }\"><span>{{getDisplayText(tag)}}</span> <a class=\"remove-button\" ng-click=\"tagList.remove($index)\">{{options.removeTagSymbol}}</a></li></ul><input class=\"input\" placeholder=\"{{options.placeholder}}\" maxlength=\"{{options.maxLength}}\" tabindex=\"{{options.tabindex}}\" ng-model=\"newTag.text\" ng-change=\"newTagChange()\" ng-trim=\"false\" ng-class=\"{'invalid-tag': newTag.invalid}\" ti-autosize=\"\"></div></div>"
   );
 
   $templateCache.put('ngTagsInput/auto-complete.html',

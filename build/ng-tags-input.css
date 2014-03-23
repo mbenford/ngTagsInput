@@ -75,8 +75,16 @@ tags-input .tags .input {
   height: 26px;
   font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+tags-input .tags .input.invalid-tag {
+  color: red;
+}
 tags-input .tags .input::-ms-clear {
   display: none;
+}
+tags-input.ng-invalid .tags {
+  -webkit-box-shadow: 0 0 3px 1px rgba(255, 0, 0, 0.6);
+  -moz-box-shadow: 0 0 3px 1px rgba(255, 0, 0, 0.6);
+  box-shadow: 0 0 3px 1px rgba(255, 0, 0, 0.6);
 }
 
 tags-input .autocomplete {
