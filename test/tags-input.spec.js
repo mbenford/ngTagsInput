@@ -13,6 +13,8 @@ describe('tags-input directive', function() {
             $document = _$document_;
             $timeout = _$timeout_;
         });
+
+        jasmine.addMatchers(customMatchers);
     });
 
     function compile() {
@@ -30,7 +32,7 @@ describe('tags-input directive', function() {
 
         element = $compile(template)($scope);
         $scope.$digest();
-        isolateScope = element.isolateScope();
+        isolateScope = element.children().isolateScope();
     }
 
     function generateTags(count) {
@@ -169,7 +171,7 @@ describe('tags-input directive', function() {
             expect($scope.tags).toEqual([{ text: 'foo' }]);
         });
 
-        it('clears the input field when a duplicate tag is tried to be added', function() {
+        it('makes the input field invalid when a duplicate tag is tried to be added', function() {
             // Arrange
             compile();
 
@@ -178,7 +180,20 @@ describe('tags-input directive', function() {
             newTag('Foo');
 
             // Assert
-            expect(getInput().val()).toBe('');
+            expect(getInput()).toHaveClass('invalid-tag');
+        });
+
+        it('makes the input field valid when its content changes', function() {
+            // Arrange
+            compile();
+            newTag('foo');
+            newTag('Foo');
+
+            // Act
+            getInput().val('foo').trigger('input');
+
+            // Assert
+            expect(getInput()).not.toHaveClass('invalid-tag');
         });
 
         it('empties the input field after a tag is added directly', function() {
@@ -221,7 +236,7 @@ describe('tags-input directive', function() {
             $scope.$digest();
 
             // Assert
-            expect(element.find('div.tags').hasClass('focused')).toBe(true);
+            expect(element.find('div.tags')).toHaveClass('focused');
         });
 
         it('does not outline the tags div when the focused property is false', function() {
@@ -232,7 +247,7 @@ describe('tags-input directive', function() {
             $scope.$digest();
 
             // Assert
-            expect(element.find('div.tags').hasClass('focused')).toBe(false);
+            expect(element.find('div.tags')).not.toHaveClass('focused');
         });
 
         it('sets the focused property to true when the input field gains focus', function() {
@@ -414,7 +429,7 @@ describe('tags-input directive', function() {
 
             it('adds a tag when the input field loses focus to any element on the page but the directive itself', function() {
                 // Arrange
-                isolateScope.newTag = 'foo';
+                isolateScope.newTag.text = 'foo';
                 body.focus();
 
                 // Act
@@ -427,7 +442,7 @@ describe('tags-input directive', function() {
 
             it('adds a tag when the input field loses focus to the browser window', function() {
                 // Arrange
-                isolateScope.newTag = 'foo';
+                isolateScope.newTag.text = 'foo';
                 spyOn($document, 'prop');
                 $document.prop.and.returnValue(getInput()[0]);
 
@@ -441,7 +456,7 @@ describe('tags-input directive', function() {
 
             it('does not add a tag when the input field loses focus to the directive itself', function() {
                 // Arrange
-                isolateScope.newTag = 'foo';
+                isolateScope.newTag.text = 'foo';
                 element.find('div').focus();
 
                 // Act
@@ -457,7 +472,7 @@ describe('tags-input directive', function() {
             it('does not add a new tag when the input field loses focus', function() {
                 // Arrange
                 compile('add-on-blur="false"');
-                isolateScope.newTag = 'foo';
+                isolateScope.newTag.text = 'foo';
 
                 // Act
                 getInput().triggerHandler('blur');
@@ -660,7 +675,7 @@ describe('tags-input directive', function() {
                     sendBackspace();
 
                     // Assert
-                    expect(getTag(2).hasClass('selected')).toBe(true);
+                    expect(getTag(2)).toHaveClass('selected');
                 });
 
                 it('does nothing when the input field is not empty', function() {
@@ -678,7 +693,7 @@ describe('tags-input directive', function() {
                     sendKeyPress(65);
 
                     // Assert
-                    expect(getTag(2).hasClass('selected')).toBe(false);
+                    expect(getTag(2)).not.toHaveClass('selected');
                 });
             });
 
@@ -866,6 +881,59 @@ describe('tags-input directive', function() {
 
     });
 
+    describe('allow-leftover-text option', function() {
+        it('initializes the option to false', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.allowLeftoverText).toBe(false);
+        });
+
+        it('makes the element invalid when it loses focus and there is any leftover text', function() {
+            // Arrange
+            compileWithForm('allow-leftover-text="false"', 'name="tags"');
+            newTag('foo');
+            newTag('Foo');
+
+            // Act
+            isolateScope.events.trigger('input-blur');
+
+            // Assert
+            expect($scope.form.tags.$invalid).toBe(true);
+            expect($scope.form.tags.$error.leftoverText).toBe(true);
+        });
+
+        it('does not make the element invalid when it loses focus and there is any leftover text and the option is true', function() {
+            // Arrange
+            compileWithForm('allow-leftover-text="true"', 'name="tags"');
+            newTag('foo');
+            newTag('Foo');
+
+            // Act
+            isolateScope.events.trigger('input-blur');
+
+            // Assert
+            expect($scope.form.tags.$valid).toBe(true);
+            expect($scope.form.tags.$error.leftoverText).toBe(false);
+        });
+
+        it('makes the element valid and removes the leftoverText error when it gains focus', function() {
+            // Arrange
+            compileWithForm('name="tags"');
+            newTag('foo');
+            newTag('Foo');
+            isolateScope.events.trigger('input-blur');
+
+            // Act
+            isolateScope.events.trigger('input-focus');
+
+            // Assert
+            expect($scope.form.tags.$valid).toBe(true);
+            expect($scope.form.tags.$error.leftoverText).toBe(false);
+        });
+    });
+
     describe('on-tag-added option', function() {
         it('calls the provided callback when a new tag is added', function() {
             // Arrange
@@ -978,48 +1046,6 @@ describe('tags-input directive', function() {
 
             // Act/Assert
             expect(autocompleteObj.getOptions()).toEqual({ option1: 1, option2: 2, option3: true });
-        });
-
-        describe('events', function() {
-            var callback;
-
-            beforeEach(function() {
-                callback = jasmine.createSpy();
-            });
-
-            it('triggers an event when a key is pressed down on the input', function() {
-                // Arrange
-                autocompleteObj.on('input-keydown', callback);
-
-                // Act
-                var event = sendKeyDown(65);
-
-                // Assert
-                expect(callback).toHaveBeenCalledWith(event);
-            });
-
-            it('triggers an event when the input content changes', function() {
-                // Arrange
-                autocompleteObj.on('input-change', callback);
-
-                // Act
-                getInput().val('ABC').trigger('input');
-
-                // Assert
-                expect(callback).toHaveBeenCalledWith('ABC');
-            });
-
-            it('triggers an event when the input loses focus', function() {
-                // Arrange
-                autocompleteObj.on('input-blur', callback);
-
-                // Act
-                getInput().trigger('blur');
-                $timeout.flush();
-
-                // Assert
-                expect(callback).toHaveBeenCalled();
-            });
         });
     });
 

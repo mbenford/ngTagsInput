@@ -53,7 +53,7 @@
                    max-results-to-show="10">
     </auto-complete>
   </tags-input>
-  <tags-input ng-init="tags2=['item1', 'item2', 'item3']" ng-model="tags2" display-property="label" add-on-blur="true" placeholder="Add a superhero">
+  <tags-input ng-init="tags2=['item1', 'item2', 'item3']" ng-model="tags2" display-property="label" add-on-blur="false" placeholder="Add a superhero">
     <auto-complete source="loadItems2($query)"
                    debounce-delay="0"
                    min-length="1"

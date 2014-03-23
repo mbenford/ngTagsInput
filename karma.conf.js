@@ -12,8 +12,9 @@ module.exports = function(config) {
       'test/lib/jquery-1.10.2.min.js',
       'test/lib/angular.js',
       'test/lib/angular-mocks.js',
-      'test/*.spec.js',
       'test/helpers.js',
+      'test/matchers.js',
+      'test/*.spec.js',
       'src/init.js',
       'src/*.js',
       'templates/*.html'

@@ -167,7 +167,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
             };
 
             tagsInput
-                .on('tag-added duplicate-tag', function() {
+                .on('tag-added invalid-tag', function() {
                     suggestionList.reset();
                 })
                 .on('input-change', function(value) {

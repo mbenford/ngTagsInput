@@ -33,6 +33,7 @@
         "makeObjectArray": true,
         "findInObjectArray": true,
         "KEYS": true,
-        "generateArray": true
+        "generateArray": true,
+        "customMatchers": true
     }
 }

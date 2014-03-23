@@ -232,12 +232,12 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('hides the suggestion box when a duplicate tag is tried to be added', function() {
+        it('hides the suggestion box when an invalid tag is tried to be added', function() {
             // Arrange
             suggestionList.visible = true;
 
             // Act
-            eventHandlers['duplicate-tag']();
+            eventHandlers['invalid-tag']();
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(false);
