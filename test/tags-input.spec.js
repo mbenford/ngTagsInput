@@ -587,7 +587,28 @@ describe('tags-input directive', function() {
     });
 
     describe('min-length option', function() {
-        it('adds a new tag only if its length is greater than or equal to min-length option', function() {
+        it('initializes the option to 3', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.minLength).toBe(3);
+        });
+
+        it('adds a new tag if the input length is greater than the min-length option', function() {
+            // Arrange
+            compile('min-length="5"');
+
+            // Act
+            newTag('foobar');
+
+            // Assert
+            expect($scope.tags).toEqual([{ text: 'foobar' }]);
+            expect(getInput()).not.toHaveClass('invalid-tag');
+
+        });
+
+        it('does not add a new tag if the input length is less than the min-length option', function() {
             // Arrange
             compile('min-length="5"');
 
@@ -596,32 +617,52 @@ describe('tags-input directive', function() {
 
             // Assert
             expect($scope.tags).toEqual([]);
-        });
-
-        it('initializes the option to 3', function() {
-            // Arrange/Act
-            compile();
-
-            // Assert
-            expect(isolateScope.options.minLength).toBe(3);
+            expect(getInput()).toHaveClass('invalid-tag');
         });
     });
 
     describe('max-length option', function() {
-        it('sets the maxlength attribute of the input field to max-length option', function() {
-            // Arrange/Act
-            compile('max-length="10"');
-
-            // Assert
-            expect(getInput().attr('maxlength')).toBe('10');
-        });
-
-        it('initializes the option to empty', function() {
+        it('initializes the option to undefined', function() {
             // Arrange/Act
             compile();
 
             // Assert
-            expect(getInput().attr('maxlength')).toBe('');
+            expect(isolateScope.options.maxLength).toBeUndefined();
+        });
+
+        it('adds a new tag if the input length is less than the max-length option', function() {
+            // Arrange
+            compile('max-length="5"');
+
+            // Act
+            newTag('foo');
+
+            // Assert
+            expect($scope.tags).toEqual([{ text: 'foo' }]);
+            expect(getInput()).not.toHaveClass('invalid-tag');
+        });
+
+        it('adds a new tag of any length if the max-length option has no value', function() {
+            // Arrange
+            compile();
+
+            // Act
+            newTag('foooooooooooooooooooooooooooooooooooooooooooooooooooooooobar');
+
+            // Assert
+            expect($scope.tags).toEqual([{ text: 'foooooooooooooooooooooooooooooooooooooooooooooooooooooooobar' }]);
+        });
+
+        it('does not add a new tag if the input length is greater than the max-length option', function() {
+            // Arrange
+            compile('max-length="5"');
+
+            // Act
+            newTag('foobar');
+
+            // Assert
+            expect($scope.tags).toEqual([]);
+            expect(getInput()).toHaveClass('invalid-tag');
         });
     });
 

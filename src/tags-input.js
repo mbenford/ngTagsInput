@@ -46,6 +46,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             var tagText = getTagText(tag);
 
             return tagText.length >= options.minLength &&
+                   tagText.length <= (options.maxLength || tagText.length) &&
                    options.allowedTagsPattern.test(tagText) &&
                    !findInObjectArray(self.items, tag, options.displayProperty);
         };
