@@ -1088,6 +1088,19 @@ describe('tags-input directive', function() {
             // Act/Assert
             expect(autocompleteObj.getOptions()).toEqual({ option1: 1, option2: 2, option3: true });
         });
+
+        it('subscribe for an event', function() {
+            // Arrange
+            var callback = angular.noop;
+            spyOn(isolateScope.events, 'on');
+
+            // Act
+            var obj = autocompleteObj.on('dummy event', callback);
+
+            // Assert
+            expect(obj).toBe(autocompleteObj);
+            expect(isolateScope.events.on).toHaveBeenCalledWith('dummy event', callback);
+        });
     });
 
     describe('hotkeys propagation handling', function() {
