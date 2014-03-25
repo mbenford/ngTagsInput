@@ -975,6 +975,70 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('add-from-autocomplete-only option', function() {
+        it('initializes the option to false', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.addFromAutocompleteOnly).toBe(false);
+        });
+
+        describe('option is true', function() {
+            beforeEach(function() {
+                compileWithForm('add-from-autocomplete-only="true"', 'name="tags"', 'allow-leftover-text="false"',
+                    'add-on-blur="true"', 'add-on-enter="true"', 'add-on-comma="true"', 'add-on-space="true"');
+            });
+
+            it('does not add a tag when the enter key is pressed', function() {
+                // Act
+                newTag('foo', KEYS.enter);
+
+                // Assert
+                expect($scope.tags).toEqual([]);
+            });
+
+            it('does not add a tag when the comma key is pressed', function() {
+                // Act
+                newTag('foo', KEYS.comma);
+
+                // Assert
+                expect($scope.tags).toEqual([]);
+            });
+
+            it('does not add a tag when the space key is pressed', function() {
+                // Act
+                newTag('foo', KEYS.space);
+
+                // Assert
+                expect($scope.tags).toEqual([]);
+            });
+
+            it('does not add a tag when the element loses focus', function() {
+                // Arrange
+                isolateScope.newTag.text = 'foo';
+
+                // Act
+                isolateScope.events.trigger('input-blur');
+
+                // Assert
+                expect(isolateScope.tags).toEqual([]);
+            });
+
+            it('does not make the element invalid when it loses focus and there is any leftover text', function() {
+                // Arrange
+                isolateScope.newTag.text = 'foo';
+
+                // Act
+                isolateScope.events.trigger('input-blur');
+
+                // Assert
+                expect($scope.form.tags.$valid).toBe(true);
+                expect($scope.form.tags.$error.leftoverText).toBeFalsy();
+            });
+        });
+    });
+
     describe('on-tag-added option', function() {
         it('calls the provided callback when a new tag is added', function() {
             // Arrange

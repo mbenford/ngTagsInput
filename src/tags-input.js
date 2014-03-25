@@ -27,6 +27,9 @@
  * @param {boolean=} [enableEditingLastTag=false] Flag indicating that the last tag will be moved back into
  *                                                the new tag input box instead of being removed when the backspace key
  *                                                is pressed and the input box is empty.
+ * @param {boolean=} [addFromAutocompleteOnly=false] Flag indicating that only tags coming from the autocomplete list will be allowed.
+ *                                                   When this flag is true, addOnEnter, addOnComma, addOnSpace, addOnBlur and
+ *                                                   allowLeftoverText values are ignored.
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
@@ -130,7 +133,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 minTags: [Number],
                 maxTags: [Number],
                 displayProperty: [String, 'text'],
-                allowLeftoverText: [Boolean, false]
+                allowLeftoverText: [Boolean, false],
+                addFromAutocompleteOnly: [Boolean, false]
             });
 
             $scope.events = new SimplePubSub();
@@ -189,10 +193,13 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     ngModelCtrl.$setValidity('leftoverText', true);
                 })
                 .on('input-blur', function() {
-                    if (options.addOnBlur) {
-                        tagList.addText(scope.newTag.text);
+                    if (!options.addFromAutocompleteOnly) {
+                        if (options.addOnBlur) {
+                            tagList.addText(scope.newTag.text);
+                        }
+
+                        ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
                     }
-                    ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
                 });
 
             scope.newTag = { text: '', invalid: null };
@@ -229,22 +236,28 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     }
 
                     var key = e.keyCode,
-                        isModifier = e.shiftKey || e.altKey || e.ctrlKey || e.metaKey;
+                        isModifier = e.shiftKey || e.altKey || e.ctrlKey || e.metaKey,
+                        addKeys = {},
+                        shouldAdd, shouldRemove;
 
                     if (isModifier || hotkeys.indexOf(key) === -1) {
                         return;
                     }
 
-                    if (key === KEYS.enter && options.addOnEnter ||
-                        key === KEYS.comma && options.addOnComma ||
-                        key === KEYS.space && options.addOnSpace) {
+                    addKeys[KEYS.enter] = options.addOnEnter;
+                    addKeys[KEYS.comma] = options.addOnComma;
+                    addKeys[KEYS.space] = options.addOnSpace;
 
+                    shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
+                    shouldRemove = !shouldAdd && key === KEYS.backspace && scope.newTag.text.length === 0;
+
+                    if (shouldAdd) {
                         tagList.addText(scope.newTag.text);
 
                         scope.$apply();
                         e.preventDefault();
                     }
-                    else if (key === KEYS.backspace && scope.newTag.text.length === 0) {
+                    else if (shouldRemove) {
                         var tag = tagList.removeLast();
                         if (tag && options.enableEditingLastTag) {
                             scope.newTag.text = tag[options.displayProperty];
