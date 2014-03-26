@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-03-23 21:36:15 -0300
+ * Generated at 2014-03-26 01:52:06 -0300
  */
 (function() {
 'use strict';
@@ -95,6 +95,9 @@ var tagsInput = angular.module('ngTagsInput', []);
  * @param {boolean=} [enableEditingLastTag=false] Flag indicating that the last tag will be moved back into
  *                                                the new tag input box instead of being removed when the backspace key
  *                                                is pressed and the input box is empty.
+ * @param {boolean=} [addFromAutocompleteOnly=false] Flag indicating that only tags coming from the autocomplete list will be allowed.
+ *                                                   When this flag is true, addOnEnter, addOnComma, addOnSpace, addOnBlur and
+ *                                                   allowLeftoverText values are ignored.
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
@@ -198,7 +201,8 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                 minTags: [Number],
                 maxTags: [Number],
                 displayProperty: [String, 'text'],
-                allowLeftoverText: [Boolean, false]
+                allowLeftoverText: [Boolean, false],
+                addFromAutocompleteOnly: [Boolean, false]
             });
 
             $scope.events = new SimplePubSub();
@@ -257,10 +261,13 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                     ngModelCtrl.$setValidity('leftoverText', true);
                 })
                 .on('input-blur', function() {
-                    if (options.addOnBlur) {
-                        tagList.addText(scope.newTag.text);
+                    if (!options.addFromAutocompleteOnly) {
+                        if (options.addOnBlur) {
+                            tagList.addText(scope.newTag.text);
+                        }
+
+                        ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
                     }
-                    ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
                 });
 
             scope.newTag = { text: '', invalid: null };
@@ -297,22 +304,28 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                     }
 
                     var key = e.keyCode,
-                        isModifier = e.shiftKey || e.altKey || e.ctrlKey || e.metaKey;
+                        isModifier = e.shiftKey || e.altKey || e.ctrlKey || e.metaKey,
+                        addKeys = {},
+                        shouldAdd, shouldRemove;
 
                     if (isModifier || hotkeys.indexOf(key) === -1) {
                         return;
                     }
 
-                    if (key === KEYS.enter && options.addOnEnter ||
-                        key === KEYS.comma && options.addOnComma ||
-                        key === KEYS.space && options.addOnSpace) {
+                    addKeys[KEYS.enter] = options.addOnEnter;
+                    addKeys[KEYS.comma] = options.addOnComma;
+                    addKeys[KEYS.space] = options.addOnSpace;
 
+                    shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
+                    shouldRemove = !shouldAdd && key === KEYS.backspace && scope.newTag.text.length === 0;
+
+                    if (shouldAdd) {
                         tagList.addText(scope.newTag.text);
 
                         scope.$apply();
                         e.preventDefault();
                     }
-                    else if (key === KEYS.backspace && scope.newTag.text.length === 0) {
+                    else if (shouldRemove) {
                         var tag = tagList.removeLast();
                         if (tag && options.enableEditingLastTag) {
                             scope.newTag.text = tag[options.displayProperty];
@@ -656,11 +669,11 @@ tagsInput.directive('tiAutosize', function() {
  * @name tagsInput.service:tagsInputConfig
  *
  * @description
- * Sets global default configuration options for tagsInput and autoComplete directives. It's also used internally to parse and
+ * Sets global configuration settings for both tagsInput and autoComplete directives. It's also used internally to parse and
  * initialize options from HTML attributes.
  */
 tagsInput.provider('tagsInputConfig', function() {
-    var globalDefaults = {};
+    var globalDefaults = {}, interpolationStatus = {};
 
     /**
      * @ngdoc method
@@ -678,6 +691,22 @@ tagsInput.provider('tagsInputConfig', function() {
         return this;
     };
 
+    /***
+     * @ngdoc method
+     * @name setActiveInterpolation
+     * @description Sets active interpolation for a set of options.
+     * @methodOf tagsInput.service:tagsInputConfig
+     *
+     * @param {string} directive Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'.
+     * @param {object} options Object containing which options should have interpolation turned on at all times.
+     *
+     * @returns {object} The service itself for chaining purposes.
+     */
+    this.setActiveInterpolation = function(directive, options) {
+        interpolationStatus[directive] = options;
+        return this;
+    };
+
     this.$get = ["$interpolate", function($interpolate) {
         var converters = {};
         converters[String] = function(value) { return value; };
@@ -690,14 +719,29 @@ tagsInput.provider('tagsInputConfig', function() {
                 scope.options = {};
 
                 angular.forEach(options, function(value, key) {
-                    var interpolatedValue = attrs[key] && $interpolate(attrs[key])(scope.$parent),
-                        converter = converters[value[0]],
-                        getDefault = function(key) {
-                            var globalValue = globalDefaults[directive] && globalDefaults[directive][key];
-                            return angular.isDefined(globalValue) ? globalValue : value[1];
-                        };
+                    var type, localDefault, converter, getDefault, updateValue;
 
-                    scope.options[key] = interpolatedValue ? converter(interpolatedValue) : getDefault(key);
+                    type = value[0];
+                    localDefault = value[1];
+                    converter = converters[type];
+
+                    getDefault = function() {
+                        var globalValue = globalDefaults[directive] && globalDefaults[directive][key];
+                        return angular.isDefined(globalValue) ? globalValue : localDefault;
+                    };
+
+                    updateValue = function(value) {
+                        scope.options[key] = value ? converter(value) : getDefault();
+                    };
+
+                    if (interpolationStatus[directive] && interpolationStatus[directive][key]) {
+                        attrs.$observe(key, function(value) {
+                            updateValue(value);
+                        });
+                    }
+                    else {
+                        updateValue(attrs[key] && $interpolate(attrs[key])(scope.$parent));
+                    }
                 });
             }
         };
