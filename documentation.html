@@ -329,7 +329,7 @@ priority: 0.50
 var app = angular.module('app', ['ngTagsInput'])
     .config(function(tagsInputConfigProvider) {
         tagsInputConfigProvider
-            .setDefaults('tagsInput'), {
+            .setDefaults('tagsInput', {
                 placeholder: 'New tag',
                 addOnEnter: false
             })
