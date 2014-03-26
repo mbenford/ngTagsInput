@@ -25,12 +25,16 @@ priority: 0.50
        [remove-tag-symbol="{string}"]
        [min-length="{number}"]
        [max-length="{number}"]
+       [min-tags="{number}"]
+       [max-tags="{number}"]
+       [allow-leftover-text="{boolean}"]
        [add-on-enter="{boolean}"]
        [add-on-space="{boolean}"]
        [add-on-comma="{boolean}"]
        [add-on-blur="{boolean}"]
        [allowed-tags-pattern="{string}"]
        [enable-editing-last-tag="{boolean}"]
+       [add-from-autocomplete-only="{boolean}"]
        [on-tag-added="{expression}"]
        [on-tag-removed="{expression}"]>
 </tags-input>
@@ -91,6 +95,27 @@ priority: 0.50
                 <td>&ndash;</td>
               </tr>
               <tr>
+                <td>minTags</td>
+                <td><span class="label type type-number">number</span></td>
+                <td>Sets minTags validation error key if the number of tags added is less than minTags</td>
+                <td>&ndash;</td>
+              </tr>
+              <tr>
+                <td>maxTags</td>
+                <td><span class="label type type-number">number</span></td>
+                <td>Sets maxTags validation error key if the number of tags added is greater than maxTags.</td>
+                <td>&ndash;</td>
+              </tr>
+              <tr>
+                <td>allowLeftoverText</td>
+                <td><span class="label type type-boolean">boolean</span></td>
+                <td>
+                  Sets leftoverText validation error key if there is any leftover text in the input element when the
+                  directive loses focus.
+                </td>
+                <td>false</td>
+              </tr>
+              <tr>
                 <td>addOnEnter</td>
                 <td><span class="label type type-boolean">boolean</span></td>
                 <td>Flag indicating that a new tag will be added on pressing the ENTER key.</td>
@@ -118,7 +143,7 @@ priority: 0.50
                 <td>allowedTagsPattern</td>
                 <td><span class="label type type-string">string</span></td>
                 <td>Regular expression that determines the pattern used to validate a tag.</td>
-                <td>^[a-zA-Z0-9\s]+$*</td>
+                <td>.+</td>
               </tr>
               <tr>
                 <td>enableEditingLastTag</td>
@@ -126,6 +151,15 @@ priority: 0.50
                 <td>
                   Flag indicating that the last tag will be moved back into the new tag input box instead of being removed
                   when the backspace key is pressed and the input box is empty.
+                </td>
+                <td>false</td>
+              </tr>
+              <tr>
+                <td>addFromAutocompleteOnly</td>
+                <td><span class="label type type-boolean">boolean</span></td>
+                <td>
+                  Flag indicating that only tags coming from the autocomplete list will be allowed. When this flag is
+                  true, addOnEnter, addOnComma, addOnSpace, addOnBlur and allowLeftoverText values are ignored.
                 </td>
                 <td>false</td>
               </tr>
@@ -219,7 +253,7 @@ priority: 0.50
       <h1 id="tagsInputConfigProvider" ><code>tagsInputConfigProvider <small>(service in module <strong>ngTagsInput</strong>)</small></code></h1>
       <section>
         <h2>Description</h2>
-        <p>Sets global default configuration options for <em>tagsInput</em> and <em>autoComplete</em> directives.</p>
+        <p>Sets global configuration settings for both <em>tagsInput</em> and <em>autoComplete</em> directives.</p>
       </section>
 
       <section>
@@ -255,6 +289,36 @@ priority: 0.50
               <p>The service itself for chaining purposes.</p>
             </div>
           </li>
+          <li>
+            <h3>setActiveInterpolation(directive, options)</h3>
+            <div>
+              <p>Sets active interpolation for a set of options.</p>
+              <h5>Parameters</h5>
+              <table class="table table-bordered table-striped table-hover">
+                <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>directive</td>
+                  <td><span class="label type type-string">string</span></td>
+                  <td>Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'</td>
+                </tr>
+                <tr>
+                  <td>options</td>
+                  <td><span class="label type type-expression">object</span></td>
+                  <td>Object containing which options should have interpolation turned on at all times.</td>
+                </tr>
+                </tbody>
+              </table>
+              <h5>Returns</h5>
+              <p>The service itself for chaining purposes.</p>
+            </div>
+          </li>
         </ul>
       </section>
 
@@ -272,6 +336,11 @@ var app = angular.module('app', ['ngTagsInput'])
             .setDefaults('autoComplete', {
                 maxResultsToShow: 20,
                 debounceDelay: 1000
+            })
+            .setActiveInterpolation('tagsInput', {
+                placeholder: true,
+                addOnEnter: true,
+                removeTagSymbol: true
             });
     });
 {% endhighlight %}

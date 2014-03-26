@@ -57,12 +57,11 @@ h3 {
 
 .tags-input-home .tags .tag-item {
     height: 30px;
-    line-height: 2;
+    line-height: 29px;
 }
 
-.tags-input-home .tags .tag-input {
+.tags-input-home .tags .input {
     height: 30px;
-    padding-top: 1px;
 }
 
 .deleted-text {

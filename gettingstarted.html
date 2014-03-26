@@ -32,11 +32,11 @@ priority: 0.80
   <p>ngTagsInput provides a new HTML element called <em>&lt;tags-input&gt;</em> which can be bind to a property of a scope:</p>
 <pre><strong>&lt;tags-input ng-model="tags"&gt;&lt;/tags-input&gt;</strong></pre>
   <p>
-    The property bound to the directive must be an array of strings, if it exists. Otherwise the directive will create the
+    The property bound to the directive must be an array of objects, if it exists. Otherwise the directive will create the
     property and initialize it as an empty array.
   </p>
   <p>
-    Assuming that the <em>tags</em> property contains 3 items - say, <em>Tag1</em>, <em>Tag2</em> and <em>Tag3</em> -
+    Assuming that the <em>tags</em> property contains 3 items - say, <em>{ text: 'Tag1' }</em>, <em>{ text: 'Tag2' }</em> and <em>{ text: 'Tag3' }</em> -
     the above code will produce the following:
   </p>
   <p><tags-input ng-model="tags"></tags-input></p>
@@ -55,14 +55,14 @@ priority: 0.80
   <p>
     You should pass a function of the scope to the <em>source</em> attribute. That function will be called for every
     keystroke on the input field and will be provided with its current value. That function also must return a promise which
-    eventually resolves to either an array of strings or an object with a <em>data</em> property containing an array of
-    strings (e.g. <em>$http promises</em>).
+    eventually resolves to either an array of objects or an object with a <em>data</em> property containing an array of
+    objects (e.g. <em>$http promises</em>).
   </p>
 
   <p>
     Given the above code and assuming that the <em>loadItems</em> function will return a promise that resolves to an array
-    containing 5 items - say, <em>Tag1</em>, <em>Tag2</em>, <em>Tag3</em>, <em>Tag4</em> and <em>Tag5</em> - the
-    result will be the following (you need to type at least 3 characters before the autocomplete kicks in):
+    containing 5 items - say, <em>{ text: 'Tag1' }</em>, <em>{ text: 'Tag2' }</em>, <em>{ text: 'Tag3' }</em>, <em>{ text: 'Tag4' }</em>
+    and <em>{ text: 'Tag5' }</em> - the result will be the following (you need to type at least 3 characters before the autocomplete kicks in):
   </p>
   <p>
     <tags-input ng-model="tags">
@@ -82,7 +82,7 @@ priority: 0.80
     appearance doesn't fit your application, you can customize it with little effort. Below you can check a Boostrap-like
     version of the previous example:
   </p>
-  <p><tags-input ng-model="tags" custom-class="bootstrap">
+  <p><tags-input ng-model="tags" class="bootstrap">
     <auto-complete source="loadItems($query)"></auto-complete>
   </tags-input></p>
   <p>
@@ -90,7 +90,7 @@ priority: 0.80
   </p>
   <ul>
     <li>Edit the ng-tags-input.css file and globally change the directive's look-and-feel.</li>
-    <li>Use the <em>custom-class</em> option and change the appearance of elements individually.</li>
+    <li>Use a custom class and change the appearance of elements individually.</li>
   </ul>
   <p>
     These options aren't mutually exclusive and you can use them both in order to achieve better results.
@@ -109,7 +109,12 @@ priority: 0.80
     <script>
       angular.module('myApp', ['ngTagsInput'])
         .controller('MyCtrl', function($scope, $http) {
-          $scope.tags = ['just','some','cool','tags'];
+          $scope.tags = [
+            { text: 'just' },
+            { text: 'some' },
+            { text: 'cool' },
+            { text: 'tags' }
+          ];
           $scope.loadTags = function(query) {
             return $http.get('/tags?query=' + query);
           };
