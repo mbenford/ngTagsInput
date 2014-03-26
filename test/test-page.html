@@ -55,10 +55,12 @@
   </tags-input>
   <form name="form">
     <tags-input name="tags" ng-init="tags2=['item1', 'item2', 'item3']" ng-model="tags2" display-property="label"
+                add-on-enter="{{addOnEnter}}"
                 add-on-blur="true"
-                placeholder="Add a superhero"
+                placeholder="{{placeholder}}"
+                remove-tag-symbol="{{removeTagSymbol}}"
                 max-length="5"
-                add-from-autocomplete-only="true">
+                add-from-autocomplete-only="false">
       <auto-complete source="loadItems2($query)"
                      debounce-delay="0"
                      min-length="1"
@@ -70,8 +72,9 @@
     <p>Errors: {{form.tags.$error}}</p>
   </form>
 
-  <input type="text"/>
-  <input type="text"/>
+  <input type="text" ng-model="placeholder"/><span>{{placeholder}}</span>
+  <input type="text" ng-model="removeTagSymbol"/>
+  <input type="checkbox" ng-model="addOnEnter"/><span>{{addOnEnter}}</span>
 
   <script type="text/javascript">
     angular.module('app', ['ngTagsInput'])
@@ -89,7 +92,7 @@
             ];
 
             $scope.tags = [{ text: 'Batman' }, { text: 'Superman' }, { text:'Flash' }];
-            $scope.placeholder = {value: "New tag" };
+            $scope.placeholder = 'New tag';
             $scope.loadItems = function(query) {
               console.log(query);
               var deferred = $q.defer();
@@ -128,10 +131,15 @@
         .config(function(tagsInputConfigProvider) {
             tagsInputConfigProvider
               .setDefaults('tagsInput', {
-                placeholder: ''
+                placeholder: 'New tag'
               })
               .setDefaults('autoComplete', {
                 highlightMatchedText: true
+              })
+              .setActiveInterpolation('tagsInput', {
+                placeholder: true,
+                removeTagSymbol: true,
+                addOnEnter: true
               });
         });
   </script>

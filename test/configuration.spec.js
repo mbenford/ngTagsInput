@@ -71,6 +71,41 @@ describe('configuration service', function() {
         });
     });
 
+    it('loads interpolated values from attributes as they change', function() {
+        // Arrange
+        provider.setActiveInterpolation('foo', { prop2: true, prop4: true });
+
+        $scope.$parent.prop1 = 'barfoo';
+        $scope.$parent.prop3 = false;
+
+        attrs.prop1 = '{{ prop1 }}';
+        attrs.prop3 = '{{ prop3 }}';
+
+        var callbacks = [];
+        attrs.$observe = jasmine.createSpy().and.callFake(function(name, cb) {
+            callbacks.push(cb);
+        });
+
+        // Act
+        service.load('foo', $scope, attrs, {
+            prop1: [String],
+            prop2: [Number],
+            prop3: [Boolean],
+            prop4: [RegExp, /.*/]
+        });
+
+        callbacks[0](42);
+        callbacks[1](null);
+
+        // Assert
+        expect($scope.options).toEqual({
+            prop1: 'barfoo',
+            prop2: 42,
+            prop3: false,
+            prop4: /.*/
+        });
+    });
+
     it('loads default values when attributes are missing', function() {
         // Act
         service.load('foo', $scope, attrs, {
@@ -146,5 +181,6 @@ describe('configuration service', function() {
 
     it('returns the same object so calls can be chained', function() {
         expect(provider.setDefaults('foo', {})).toBe(provider);
+        expect(provider.setActiveInterpolation('foo', {})).toBe(provider);
     });
 });

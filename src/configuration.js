@@ -5,11 +5,11 @@
  * @name tagsInput.service:tagsInputConfig
  *
  * @description
- * Sets global default configuration options for tagsInput and autoComplete directives. It's also used internally to parse and
+ * Sets global configuration settings for both tagsInput and autoComplete directives. It's also used internally to parse and
  * initialize options from HTML attributes.
  */
 tagsInput.provider('tagsInputConfig', function() {
-    var globalDefaults = {};
+    var globalDefaults = {}, interpolationStatus = {};
 
     /**
      * @ngdoc method
@@ -27,6 +27,22 @@ tagsInput.provider('tagsInputConfig', function() {
         return this;
     };
 
+    /***
+     * @ngdoc method
+     * @name setActiveInterpolation
+     * @description Sets active interpolation for a set of options.
+     * @methodOf tagsInput.service:tagsInputConfig
+     *
+     * @param {string} directive Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'.
+     * @param {object} options Object containing which options should have interpolation turned on at all times.
+     *
+     * @returns {object} The service itself for chaining purposes.
+     */
+    this.setActiveInterpolation = function(directive, options) {
+        interpolationStatus[directive] = options;
+        return this;
+    };
+
     this.$get = function($interpolate) {
         var converters = {};
         converters[String] = function(value) { return value; };
@@ -39,14 +55,29 @@ tagsInput.provider('tagsInputConfig', function() {
                 scope.options = {};
 
                 angular.forEach(options, function(value, key) {
-                    var interpolatedValue = attrs[key] && $interpolate(attrs[key])(scope.$parent),
-                        converter = converters[value[0]],
-                        getDefault = function(key) {
-                            var globalValue = globalDefaults[directive] && globalDefaults[directive][key];
-                            return angular.isDefined(globalValue) ? globalValue : value[1];
-                        };
+                    var type, localDefault, converter, getDefault, updateValue;
 
-                    scope.options[key] = interpolatedValue ? converter(interpolatedValue) : getDefault(key);
+                    type = value[0];
+                    localDefault = value[1];
+                    converter = converters[type];
+
+                    getDefault = function() {
+                        var globalValue = globalDefaults[directive] && globalDefaults[directive][key];
+                        return angular.isDefined(globalValue) ? globalValue : localDefault;
+                    };
+
+                    updateValue = function(value) {
+                        scope.options[key] = value ? converter(value) : getDefault();
+                    };
+
+                    if (interpolationStatus[directive] && interpolationStatus[directive][key]) {
+                        attrs.$observe(key, function(value) {
+                            updateValue(value);
+                        });
+                    }
+                    else {
+                        updateValue(attrs[key] && $interpolate(attrs[key])(scope.$parent));
+                    }
                 });
             }
         };
