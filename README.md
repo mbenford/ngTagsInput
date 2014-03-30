@@ -25,32 +25,35 @@ You can also use Bower to install all files at once. Just run `bower install ng-
 **Note:** There's a more detailed [getting started](http://mbenford.github.io/ngTagsInput/gettingstarted) guide on the ngTagsInput website.
 
 ## Example
-    <html>
-    <head>
-        <script src="angular.min.js"></script>
-        <script src="ng-tags-input.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="ng-tags-input.min.css">               
-        <script>
-            angular.module('myApp', ['ngTagsInput'])
-                .controller('MyCtrl', function($scope, $http) {
-                    $scope.tags = [
-                        { text: 'just' },
-                        { text: 'some' },
-                        { text: 'cool' },
-                        { text: 'tags' }
-                    ];
-                    $scope.loadTags = function(query) {
-                         return $http.get('/tags?query=' + query);
-                    };
-                });
-        </script>
-    </head>
-    <body ng-app="myApp" ng-controller="MyCtrl">
-        <tags-input ng-model="tags">
-            <auto-complete source="loadTags($query)"></auto-complete>
-        </tags-input>
-    </body>
-    </html>    
+
+```html
+<html>
+<head>
+    <script src="angular.min.js"></script>
+    <script src="ng-tags-input.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="ng-tags-input.min.css">
+    <script>
+        angular.module('myApp', ['ngTagsInput'])
+            .controller('MyCtrl', function($scope, $http) {
+                $scope.tags = [
+                    { text: 'just' },
+                    { text: 'some' },
+                    { text: 'cool' },
+                    { text: 'tags' }
+                ];
+                $scope.loadTags = function(query) {
+                     return $http.get('/tags?query=' + query);
+                };
+            });
+    </script>
+</head>
+<body ng-app="myApp" ng-controller="MyCtrl">
+    <tags-input ng-model="tags">
+        <auto-complete source="loadTags($query)"></auto-complete>
+    </tags-input>
+</body>
+</html>
+```
 
 ## Options
 
