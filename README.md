@@ -22,7 +22,7 @@ You can also use Bower to install all files at once. Just run `bower install ng-
  5. Customize the CSS classes, if you want to.
  6. You're done!
 
-**Note:** There's a more detailed [getting started](http://mbenford.github.io/ngTagsInput/gettingstarted.html) guide on the ngTagsInput website.
+**Note:** There's a more detailed [getting started](http://mbenford.github.io/ngTagsInput/gettingstarted) guide on the ngTagsInput website.
 
 ## Example
     <html>
@@ -54,11 +54,11 @@ You can also use Bower to install all files at once. Just run `bower install ng-
 
 ## Options
 
-Check out the [documentation](http://mbenford.github.io/ngTagsInput/documentation.html) page for a detailed view of all available options.
+Check out the [documentation](http://mbenford.github.io/ngTagsInput/documentation) page for a detailed view of all available options.
 
 ## Demo
 
-You can see the directive in action in the [demo page](http://mbenford.github.io/ngTagsInput/demos.html).
+You can see the directive in action in the [demo page](http://mbenford.github.io/ngTagsInput/demos).
 
 ## Contributing
 
