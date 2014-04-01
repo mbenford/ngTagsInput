@@ -9,9 +9,19 @@ Tags input directive for AngularJS. Check out the [ngTagsInput website](http://m
 
 ## Installing
 
-Download either `ng-tags-input.min.zip` or `ng-tags-input.zip` from the [Releases page](https://github.com/mbenford/ngTagsInput/releases) and add its content files to your web application. Make sure the JavaScript file is included after the AngularJS script.
+The first step is to get the files. You have 3 options:
 
-You can also use Bower to install all files at once. Just run `bower install ng-tags-input`.
+- Download the files manually from the [Releases page](https://github.com/mbenford/ngTagsInput/releases).
+- Use Bower to download the files. Just run `bower install ng-tags-input`.
+- Load the files from [CDNJS](http://cdnjs.com/libraries/ng-tags-input/).
+
+Now all you have to do is add the scripts to your application. Just make sure the `ng-tags-input.js` file is inserted **after** the `angular.js` script:
+
+```html
+<script src="angular.js"></script>
+<script src="ng-tags-input.js"></script>
+<link rel="stylesheet" type="text/css" href="ng-tags-input.css">
+```
 
 ## Usage
 
