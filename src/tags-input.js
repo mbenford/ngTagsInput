@@ -128,6 +128,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 addOnSpace: [Boolean, false],
                 addOnComma: [Boolean, true],
                 addOnBlur: [Boolean, true],
+                addOnTab: [Boolean, true],
                 allowedTagsPattern: [RegExp, /.+/],
                 enableEditingLastTag: [Boolean, false],
                 minTags: [Number],
@@ -167,7 +168,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             };
         },
         link: function(scope, element, attrs, ngModelCtrl) {
-            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace],
+            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.tab],
                 tagList = scope.tagList,
                 events = scope.events,
                 options = scope.options,
@@ -248,7 +249,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     addKeys[KEYS.comma] = options.addOnComma;
                     addKeys[KEYS.space] = options.addOnSpace;
 
-                    shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
+                    shouldAdd = !options.addFromAutocompleteOnly && addKeys[key] && scope.newTag.text.length === 0;
                     shouldRemove = !shouldAdd && key === KEYS.backspace && scope.newTag.text.length === 0;
 
                     if (shouldAdd) {
