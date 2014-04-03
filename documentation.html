@@ -19,19 +19,20 @@ priority: 0.50
 {% highlight html %}
 <tags-input
         ng-model="{string}"
-       [custom-class="{string}"]
+       [display-property="{string}"]
        [tabindex="{number}"]
        [placeholder="{string}"]
-       [remove-tag-symbol="{string}"]
        [min-length="{number}"]
        [max-length="{number}"]
        [min-tags="{number}"]
        [max-tags="{number}"]
        [allow-leftover-text="{boolean}"]
+       [remove-tag-symbol="{string}"]
        [add-on-enter="{boolean}"]
        [add-on-space="{boolean}"]
        [add-on-comma="{boolean}"]
        [add-on-blur="{boolean}"]
+       [replace-spaces-with-dashes="{boolean}"]
        [allowed-tags-pattern="{string}"]
        [enable-editing-last-tag="{boolean}"]
        [add-from-autocomplete-only="{boolean}"]
@@ -59,10 +60,10 @@ priority: 0.50
                 <td>&ndash;</td>
               </tr>
               <tr>
-                <td>customClass</td>
+                <td>displayProperty</td>
                 <td><span class="label type type-string">string</span></td>
-                <td>CSS class to style the control.</td>
-                <td>&ndash;</td>
+                <td>Property to be rendered as the tag label.</td>
+                <td>text</td>
               </tr>
               <tr>
                 <td>tabindex</td>
@@ -75,12 +76,6 @@ priority: 0.50
                 <td><span class="label type type-string">string</span></td>
                 <td>Text placeholder for the new tag input box.</td>
                 <td>Add a tag</td>
-              </tr>
-              <tr>
-                <td>removeTagSymbol</td>
-                <td><span class="label type type-string">string</span></td>
-                <td>Character to remove an existing tag.</td>
-                <td>&times;</td>
               </tr>
               <tr>
                 <td>minLength</td>
@@ -116,6 +111,12 @@ priority: 0.50
                 <td>false</td>
               </tr>
               <tr>
+                <td>removeTagSymbol</td>
+                <td><span class="label type type-string">string</span></td>
+                <td>Character to remove an existing tag.</td>
+                <td>&times;</td>
+              </tr>
+              <tr>
                 <td>addOnEnter</td>
                 <td><span class="label type type-boolean">boolean</span></td>
                 <td>Flag indicating that a new tag will be added on pressing the ENTER key.</td>
@@ -137,6 +138,12 @@ priority: 0.50
                 <td>addOnBlur</td>
                 <td><span class="label type type-boolean">boolean</span></td>
                 <td>Flag indicating that a new tag will be added when the input field loses focus.</td>
+                <td>true</td>
+              </tr>
+              <tr>
+                <td>replaceSpacesWithDashes</td>
+                <td><span class="label type type-boolean">boolean</span></td>
+                <td>Flag indicating that spaces will be replaced with dashes.</td>
                 <td>true</td>
               </tr>
               <tr>
