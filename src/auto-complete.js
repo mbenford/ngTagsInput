@@ -107,7 +107,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
         templateUrl: 'ngTagsInput/auto-complete.html',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList, tagsInput, options, getItemText, markdown;
+                suggestionList, tagsInput, options, getItemText, markdown, documentClick;
 
             tagsInputConfig.load('autoComplete', scope, attrs, {
                 debounceDelay: [Number, 100],
@@ -227,11 +227,17 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                     suggestionList.reset();
                 });
 
-            $document.on('click', function() {
+            documentClick = function() {
                 if (suggestionList.visible) {
                     suggestionList.reset();
                     scope.$apply();
                 }
+            };
+
+            $document.on('click', documentClick);
+
+            scope.$on('$destroy', function() {
+                $document.off('click', documentClick);
             });
         }
     };

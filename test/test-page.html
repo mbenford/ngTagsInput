@@ -42,19 +42,9 @@
   </style>
 </head>
 <body ng-controller="Ctrl">
-  <tags-input class="foo" ng-model="tags" limit-tags="5"
-              replace-spaces-with-dashes="true"
-              enable-editing-last-tag="true"
-              placeholder="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-              min-tags="3">
-    <auto-complete source="loadItems($query)"
-                   debounce-delay="0"
-                   min-length="1"
-                   max-results-to-show="10">
-    </auto-complete>
-  </tags-input>
+<input type="checkbox" ng-model="visible"/>
   <form name="form">
-    <tags-input name="tags" ng-init="tags2=['item1', 'item2', 'item3']" ng-model="tags2" display-property="label"
+    <tags-input name="tags" ng-if="visible" ng-init="tags2=['item1', 'item2', 'item3']" ng-model="tags2" display-property="label"
                 add-on-enter="{{addOnEnter}}"
                 add-on-blur="true"
                 placeholder="{{placeholder}}"

@@ -1,17 +1,18 @@
 'use strict';
 
 describe('autoComplete directive', function() {
-    var $compile, $scope, $q, $timeout,
+    var $compile, $scope, $q, $timeout, $document,
         parentCtrl, element, isolateScope, suggestionList, deferred, tagsInput, eventHandlers;
 
     beforeEach(function() {
         module('ngTagsInput');
 
-        inject(function($rootScope, _$compile_, _$q_, _$timeout_) {
+        inject(function($rootScope, _$compile_, _$q_, _$timeout_, _$document_) {
             $scope = $rootScope;
             $compile = _$compile_;
             $q = _$q_;
             $timeout = _$timeout_;
+            $document = _$document_;
         });
 
         deferred = $q.defer();
@@ -192,7 +193,7 @@ describe('autoComplete directive', function() {
             $scope.$digest();
 
             // Act
-            $(document).trigger('click');
+            $document.trigger('click');
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(false);
@@ -381,6 +382,18 @@ describe('autoComplete directive', function() {
                 { text: 'Item2' },
                 { text: 'Item3' }
             ]);
+        });
+
+        it('removes the event listeners on the document when the scope is destroyed', function() {
+            // Arrange
+            compile();
+            spyOn($document, 'off');
+
+            // Arrange
+            $scope.$destroy();
+
+            // Assert
+            expect($document.off).toHaveBeenCalled();
         });
     });
 
