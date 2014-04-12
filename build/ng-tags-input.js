@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-04-12 01:55:43 -0300
+ * Generated at 2014-04-12 15:03:16 -0300
  */
 (function() {
 'use strict';
@@ -668,6 +668,12 @@ tagsInput.directive('tiAutosize', function() {
 
             ctrl.$parsers.unshift(resize);
             ctrl.$formatters.unshift(resize);
+
+            attrs.$observe('placeholder', function(value) {
+                if (!ctrl.$modelValue) {
+                    resize(value);
+                }
+            });
         }
     };
 });
