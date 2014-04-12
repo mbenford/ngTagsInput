@@ -44,6 +44,12 @@ tagsInput.directive('tiAutosize', function() {
 
             ctrl.$parsers.unshift(resize);
             ctrl.$formatters.unshift(resize);
+
+            attrs.$observe('placeholder', function(value) {
+                if (!ctrl.$modelValue) {
+                    resize(value);
+                }
+            });
         }
     };
 });

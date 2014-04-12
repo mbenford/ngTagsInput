@@ -83,6 +83,21 @@ describe('autosize directive', function() {
         expect(element.css('width')).toBe(getTextWidth('Some placeholder'));
     });
 
+    it('sets the input width as the placeholder width when the input is empty and the placeholder changes', function() {
+        // Arrange
+        $scope.placeholder = 'Some placeholder';
+        compile('placeholder="{{placeholder}}"');
+        $scope.model = '';
+        $scope.$digest();
+
+        // Act
+        $scope.placeholder = 'Some very lengthy placeholder';
+        $scope.$digest();
+
+        // Assert
+        expect(element.css('width')).toBe(getTextWidth('Some very lengthy placeholder'));
+    });
+
     it('clears the input width when it cannot be calculated', function() {
         // Arrange
         container.hide();
