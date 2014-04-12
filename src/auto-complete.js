@@ -62,7 +62,9 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                     }
 
                     items = makeObjectArray(items.data || items, options.tagsInput.displayProperty);
-                    self.items = getDifference(items, tags);
+                    items = getDifference(items, tags);
+                    self.items = items.slice(0, options.maxResultsToShow);
+
                     if (self.items.length > 0) {
                         self.show();
                     }
