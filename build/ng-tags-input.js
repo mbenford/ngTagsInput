@@ -1,11 +1,11 @@
 /*!
- * ngTagsInput v2.0.0
+ * ngTagsInput v2.0.1
  * http://mbenford.github.io/ngTagsInput
  *
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-03-26 01:52:40 -0300
+ * Generated at 2014-04-12 01:55:43 -0300
  */
 (function() {
 'use strict';
@@ -426,7 +426,9 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
                     }
 
                     items = makeObjectArray(items.data || items, options.tagsInput.displayProperty);
-                    self.items = getDifference(items, tags);
+                    items = getDifference(items, tags);
+                    self.items = items.slice(0, options.maxResultsToShow);
+
                     if (self.items.length > 0) {
                         self.show();
                     }
@@ -471,7 +473,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
         templateUrl: 'ngTagsInput/auto-complete.html',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList, tagsInput, options, getItemText, markdown;
+                suggestionList, tagsInput, options, getItemText, markdown, documentClick;
 
             tagsInputConfig.load('autoComplete', scope, attrs, {
                 debounceDelay: [Number, 100],
@@ -591,11 +593,17 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
                     suggestionList.reset();
                 });
 
-            $document.on('click', function() {
+            documentClick = function() {
                 if (suggestionList.visible) {
                     suggestionList.reset();
                     scope.$apply();
                 }
+            };
+
+            $document.on('click', documentClick);
+
+            scope.$on('$destroy', function() {
+                $document.off('click', documentClick);
             });
         }
     };
@@ -756,7 +764,7 @@ tagsInput.run(["$templateCache", function($templateCache) {
   );
 
   $templateCache.put('ngTagsInput/auto-complete.html',
-    "<div class=\"autocomplete\" ng-show=\"suggestionList.visible\"><ul class=\"suggestion-list\"><li class=\"suggestion-item\" ng-repeat=\"item in suggestionList.items | limitTo:options.maxResultsToShow track by track(item)\" ng-class=\"{selected: item == suggestionList.selected}\" ng-click=\"addSuggestion()\" ng-mouseenter=\"suggestionList.select($index)\" ng-bind-html=\"highlight(item)\"></li></ul></div>"
+    "<div class=\"autocomplete\" ng-show=\"suggestionList.visible\"><ul class=\"suggestion-list\"><li class=\"suggestion-item\" ng-repeat=\"item in suggestionList.items track by track(item)\" ng-class=\"{selected: item == suggestionList.selected}\" ng-click=\"addSuggestion()\" ng-mouseenter=\"suggestionList.select($index)\" ng-bind-html=\"highlight(item)\"></li></ul></div>"
   );
 }]);
 
