@@ -44,3 +44,8 @@ function findInObjectArray(array, obj, key) {
     }
     return item;
 }
+
+function replaceAll(str, substr, newSubstr) {
+    var expression = substr.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
+    return str.replace(new RegExp(expression, 'gi'), newSubstr);
+}

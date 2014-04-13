@@ -767,6 +767,19 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(4)).toBe('b<em>a</em>b');
         });
 
+        it('highlights the matched text in the suggestions list when it contains special chars', function() {
+            // Arrange
+            compile('highlight-matched-text="true"', 'min-length="1"');
+
+            // Act
+            loadSuggestions([
+                { text: 'a**b++c..' }
+            ], 'a**b++c..');
+
+            // Assert
+            expect(getSuggestionText(0)).toBe('<em>a**b++c..</em>');
+        });
+
         it('doesn\'t highlight the matched text in the suggestions list whe the option is false', function() {
             // Arrange
             compile('highlight-matched-text="false"', 'min-length="1"');

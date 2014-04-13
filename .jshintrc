@@ -32,6 +32,7 @@
         "SimplePubSub": true,
         "makeObjectArray": true,
         "findInObjectArray": true,
+        "replaceAll" : true,
         "KEYS": true,
         "generateArray": true,
         "customMatchers": true
