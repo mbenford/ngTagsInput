@@ -2,7 +2,8 @@
 
 /**
  * @ngdoc directive
- * @name tagsInput.directive:tiAutosize
+ * @name tiAutosize
+ * @module ngTagsInput
  *
  * @description
  * Automatically sets the input's width so its content is always visible. Used internally by tagsInput directive.

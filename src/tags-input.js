@@ -2,7 +2,8 @@
 
 /**
  * @ngdoc directive
- * @name tagsInput.directive:tagsInput
+ * @name tagsInput
+ * @module ngTagsInput
  *
  * @description
  * Renders an input box with tag editing support.
@@ -23,7 +24,7 @@
  * @param {boolean=} [addOnComma=true] Flag indicating that a new tag will be added on pressing the COMMA key.
  * @param {boolean=} [addOnBlur=true] Flag indicating that a new tag will be added when the input field loses focus.
  * @param {boolean=} [replaceSpacesWithDashes=true] Flag indicating that spaces will be replaced with dashes.
- * @param {string=} [allowedTagsPattern=^&#91;a-zA-Z0-9\s&#93;+$] Regular expression that determines whether a new tag is valid.
+ * @param {string=} [allowedTagsPattern=.+] Regular expression that determines whether a new tag is valid.
  * @param {boolean=} [enableEditingLastTag=false] Flag indicating that the last tag will be moved back into
  *                                                the new tag input box instead of being removed when the backspace key
  *                                                is pressed and the input box is empty.

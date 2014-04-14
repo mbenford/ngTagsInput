@@ -2,7 +2,8 @@
 
 /**
  * @ngdoc directive
- * @name tagsInput.directive:autoComplete
+ * @name autoComplete
+ * @module ngTagsInput
  *
  * @description
  * Provides autocomplete support for the tagsInput directive.

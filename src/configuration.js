@@ -2,7 +2,8 @@
 
 /**
  * @ngdoc service
- * @name tagsInput.service:tagsInputConfig
+ * @name tagsInputConfig
+ * @module ngTagsInput
  *
  * @description
  * Sets global configuration settings for both tagsInput and autoComplete directives. It's also used internally to parse and
@@ -15,7 +16,7 @@ tagsInput.provider('tagsInputConfig', function() {
      * @ngdoc method
      * @name setDefaults
      * @description Sets the default configuration option for a directive.
-     * @methodOf tagsInput.service:tagsInputConfig
+     * @methodOf tagsInputConfig
      *
      * @param {string} directive Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'.
      * @param {object} defaults Object containing options and their values.
@@ -31,7 +32,7 @@ tagsInput.provider('tagsInputConfig', function() {
      * @ngdoc method
      * @name setActiveInterpolation
      * @description Sets active interpolation for a set of options.
-     * @methodOf tagsInput.service:tagsInputConfig
+     * @methodOf tagsInputConfig
      *
      * @param {string} directive Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'.
      * @param {object} options Object containing which options should have interpolation turned on at all times.
