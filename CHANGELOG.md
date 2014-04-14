@@ -1,3 +1,13 @@
+### 2.0.1 (2014-04-13)
+
+#### Bug Fixes
+
+* **autocomplete:**
+  * Escape regex metachars when highlighting ([e3c695f2](https://github.com/mbenford/ngTagsInput/commit/e3c695f26f96ab642a4a1f1129638e763b84b231), [#124](https://github.com/mbenford/ngTagsInput/issues/124))
+  * Fix autocomplete navigation when maxResultsToShow is set ([d95d35e8](https://github.com/mbenford/ngTagsInput/commit/d95d35e814099d74355ed431e85a957d39ec4745), [#109](https://github.com/mbenford/ngTagsInput/issues/109))
+  * Fix memory leak ([ba3a1a56](https://github.com/mbenford/ngTagsInput/commit/ba3a1a563d99894f381e4a29f3a1753a540ff453), [#118](https://github.com/mbenford/ngTagsInput/issues/118))
+* **autosize:** Re-size input when placeholder changes ([0eacc964](https://github.com/mbenford/ngTagsInput/commit/0eacc9647ed7b12fac8db23cb711bb6c38a8c31a), [#110](https://github.com/mbenford/ngTagsInput/issues/110))
+
 ## v2.0.0 (2014-03-26)
 
 #### Bug Fixes

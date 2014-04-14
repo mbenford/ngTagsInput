@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-04-13 21:10:46 -0300
+ * Generated at 2014-04-13 21:25:38 -0300
  */
 (function() {
 'use strict';
@@ -75,7 +75,8 @@ var tagsInput = angular.module('ngTagsInput', []);
 
 /**
  * @ngdoc directive
- * @name tagsInput.directive:tagsInput
+ * @name tagsInput
+ * @module ngTagsInput
  *
  * @description
  * Renders an input box with tag editing support.
@@ -96,7 +97,7 @@ var tagsInput = angular.module('ngTagsInput', []);
  * @param {boolean=} [addOnComma=true] Flag indicating that a new tag will be added on pressing the COMMA key.
  * @param {boolean=} [addOnBlur=true] Flag indicating that a new tag will be added when the input field loses focus.
  * @param {boolean=} [replaceSpacesWithDashes=true] Flag indicating that spaces will be replaced with dashes.
- * @param {string=} [allowedTagsPattern=^&#91;a-zA-Z0-9\s&#93;+$] Regular expression that determines whether a new tag is valid.
+ * @param {string=} [allowedTagsPattern=.+] Regular expression that determines whether a new tag is valid.
  * @param {boolean=} [enableEditingLastTag=false] Flag indicating that the last tag will be moved back into
  *                                                the new tag input box instead of being removed when the backspace key
  *                                                is pressed and the input box is empty.
@@ -371,7 +372,8 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
 
 /**
  * @ngdoc directive
- * @name tagsInput.directive:autoComplete
+ * @name autoComplete
+ * @module ngTagsInput
  *
  * @description
  * Provides autocomplete support for the tagsInput directive.
@@ -605,7 +607,8 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
 
 /**
  * @ngdoc directive
- * @name tagsInput.directive:tiTranscludeAppend
+ * @name tiTranscludeAppend
+ * @module ngTagsInput
  *
  * @description
  * Re-creates the old behavior of ng-transclude. Used internally by tagsInput directive.
@@ -620,7 +623,8 @@ tagsInput.directive('tiTranscludeAppend', function() {
 
 /**
  * @ngdoc directive
- * @name tagsInput.directive:tiAutosize
+ * @name tiAutosize
+ * @module ngTagsInput
  *
  * @description
  * Automatically sets the input's width so its content is always visible. Used internally by tagsInput directive.
@@ -674,7 +678,8 @@ tagsInput.directive('tiAutosize', function() {
 
 /**
  * @ngdoc service
- * @name tagsInput.service:tagsInputConfig
+ * @name tagsInputConfig
+ * @module ngTagsInput
  *
  * @description
  * Sets global configuration settings for both tagsInput and autoComplete directives. It's also used internally to parse and
@@ -687,7 +692,7 @@ tagsInput.provider('tagsInputConfig', function() {
      * @ngdoc method
      * @name setDefaults
      * @description Sets the default configuration option for a directive.
-     * @methodOf tagsInput.service:tagsInputConfig
+     * @methodOf tagsInputConfig
      *
      * @param {string} directive Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'.
      * @param {object} defaults Object containing options and their values.
@@ -703,7 +708,7 @@ tagsInput.provider('tagsInputConfig', function() {
      * @ngdoc method
      * @name setActiveInterpolation
      * @description Sets active interpolation for a set of options.
-     * @methodOf tagsInput.service:tagsInputConfig
+     * @methodOf tagsInputConfig
      *
      * @param {string} directive Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'.
      * @param {object} options Object containing which options should have interpolation turned on at all times.
