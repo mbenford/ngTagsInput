@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-04-12 15:03:16 -0300
+ * Generated at 2014-04-13 21:10:46 -0300
  */
 (function() {
 'use strict';
@@ -64,6 +64,11 @@ function findInObjectArray(array, obj, key) {
         }
     }
     return item;
+}
+
+function replaceAll(str, substr, newSubstr) {
+    var expression = substr.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
+    return str.replace(new RegExp(expression, 'gi'), newSubstr);
 }
 
 var tagsInput = angular.module('ngTagsInput', []);
@@ -473,7 +478,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
         templateUrl: 'ngTagsInput/auto-complete.html',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList, tagsInput, options, getItemText, markdown, documentClick;
+                suggestionList, tagsInput, options, getItemText, documentClick;
 
             tagsInputConfig.load('autoComplete', scope, attrs, {
                 debounceDelay: [Number, 100],
@@ -493,18 +498,6 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
                 return item[options.tagsInput.displayProperty];
             };
 
-            if (options.highlightMatchedText) {
-                markdown = function(item, text) {
-                    var expression = new RegExp(text, 'gi');
-                    return item.replace(expression, '**$&**');
-                };
-            }
-            else {
-                markdown = function(item) {
-                    return item;
-                };
-            }
-
             scope.suggestionList = suggestionList;
 
             scope.addSuggestion = function() {
@@ -522,9 +515,10 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
 
             scope.highlight = function(item) {
                 var text = getItemText(item);
-                text = markdown(text, suggestionList.query);
                 text = encodeHTML(text);
-                text = text.replace(/\*\*(.+?)\*\*/g, '<em>$1</em>');
+                if (options.highlightMatchedText) {
+                    text = replaceAll(text, encodeHTML(suggestionList.query), '<em>$&</em>');
+                }
                 return $sce.trustAsHtml(text);
             };
 
