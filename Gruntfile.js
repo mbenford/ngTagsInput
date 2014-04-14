@@ -265,6 +265,15 @@ module.exports = function(grunt) {
                     stdout: true,
                     execOptions: { cwd: bowerRepoDirectory }
                 }
+            },
+            git_build: {
+                command: [
+                    'git add build/',
+                    'git commit -m "chore(build): Update build files [skip ci]"'
+                ].join('&&'),
+                options: {
+                    stdout: true
+                }
             }
         },
         ngdocs: {
@@ -323,6 +332,11 @@ module.exports = function(grunt) {
         'copy:bower',
         'update-bower-version',
         'shell:git_bower'
+    ]);
+
+    grunt.registerTask('build', [
+        'pack',
+        'shell:git_build'
     ]);
 
     grunt.registerTask('default', ['pack']);
