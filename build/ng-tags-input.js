@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-04-13 21:25:38 -0300
+ * Generated at 2014-04-21 08:48:35 -0400
  */
 (function() {
 'use strict';
@@ -189,7 +189,13 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
         },
         replace: false,
         transclude: true,
-        templateUrl: 'ngTagsInput/tags-input.html',
+        templateUrl: function($element, $attrs) {
+            if ($attrs.templateUrl) {
+                return $attrs.templateUrl;
+            }
+
+            return 'ngTagsInput/tags-input.html';
+        },
         controller: ["$scope","$attrs","$element", function($scope, $attrs, $element) {
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 placeholder: [String, 'Add a tag'],
@@ -477,7 +483,13 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
         restrict: 'E',
         require: '^tagsInput',
         scope: { source: '&' },
-        templateUrl: 'ngTagsInput/auto-complete.html',
+        templateUrl: function($element, $attrs) {
+            if ($attrs.templateUrl) {
+                return $attrs.templateUrl;
+            }
+
+            return 'ngTagsInput/auto-complete.html';
+        },
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
                 suggestionList, tagsInput, options, getItemText, documentClick;
