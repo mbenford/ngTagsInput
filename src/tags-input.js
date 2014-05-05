@@ -175,18 +175,13 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 events = scope.events,
                 options = scope.options,
                 input = element.find('input'),
-                getTagViewText,
-                addTagFromInput;
+                getInputText;
 
-            getTagViewText = function(){
-                return scope.tagInputForm.tagInput.$viewValue;
-            };
-
-            addTagFromInput = function(){
+            getInputText = function(){
                 if (scope.tagInputForm.tagInput.$valid){
-                    tagList.addText(scope.newTag.text);
+                    return scope.newTag.text;
                 } else {
-                    events.trigger('invalid-tag');
+                    return scope.tagInputForm.tagInput.$viewValue;
                 }
             };
 
@@ -212,10 +207,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 .on('input-blur', function() {
                     if (!options.addFromAutocompleteOnly) {
                         if (options.addOnBlur) {
-                            addTagFromInput();
+                            tagList.addText(getInputText());
                         }
 
-                        ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !getTagViewText());
+                        ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !getInputText());
                     }
                 });
 
@@ -262,10 +257,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     addKeys[KEYS.space] = options.addOnSpace;
 
                     shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
-                    shouldRemove = !shouldAdd && key === KEYS.backspace && getTagViewText().length === 0;
+                    shouldRemove = !shouldAdd && key === KEYS.backspace && getInputText().length === 0;
 
                     if (shouldAdd) {
-                        addTagFromInput();
+                        tagList.addText(getInputText());
 
                         scope.$apply();
                         e.preventDefault();
