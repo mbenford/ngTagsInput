@@ -6,14 +6,18 @@
         <a class="remove-button" ng-click="tagList.remove($index)">{{options.removeTagSymbol}}</a>
       </li>
     </ul>
-    <input type="text"
-           class="input"
-           placeholder="{{options.placeholder}}"
-           tabindex="{{options.tabindex}}"
-           ng-model="newTag.text"
-           ng-change="newTagChange()"
-           ng-trim="false"
-           ng-class="{'invalid-tag': newTag.invalid}"
-           ti-autosize>
+    <ng-form name="tagInputForm">
+      <input name="tagInput"
+             type="{{options.type}}"
+             class="input"
+             placeholder="{{options.placeholder}}"
+             tabindex="{{options.tabindex}}"
+             ng-model="newTag.text"
+             tag-change
+             ng-trim="false"
+             ng-class="{'invalid-tag': newTag.invalid}"
+             ti-autosize
+             novalidate>
+    </ng-form>
   </div>
 </div>
