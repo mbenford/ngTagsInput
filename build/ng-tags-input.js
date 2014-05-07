@@ -376,7 +376,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","$filter","tagsInputCon
  *                                               suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
  */
-tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputConfig", function($document, $timeout, $sce, tagsInputConfig) {
+tagsInput.directive('autoComplete', ["$document","$timeout","$filter","$sce","tagsInputConfig", function($document, $timeout, $filter, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
         var self = {}, debouncedLoadId, getDifference, lastPromise;
 
