@@ -53,19 +53,6 @@ function makeObjectArray(array, key) {
     return array;
 }
 
-function findInObjectArray(array, obj, key) {
-    var item = null;
-    for (var i = 0; i < array.length; i++) {
-        // I'm aware of the internationalization issues regarding toLowerCase()
-        // but I couldn't come up with a better solution right now
-        if (array[i][key].toLowerCase() === obj[key].toLowerCase()) {
-            item = array[i];
-            break;
-        }
-    }
-    return item;
-}
-
 function replaceAll(str, substr, newSubstr) {
     var expression = substr.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
     return str.replace(new RegExp(expression, 'gi'), newSubstr);
@@ -107,7 +94,7 @@ var tagsInput = angular.module('ngTagsInput', []);
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
-tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", function($timeout, $document, tagsInputConfig) {
+tagsInput.directive('tagsInput', ["$timeout","$document","$filter","tagsInputConfig", function($timeout, $document, $filter, tagsInputConfig) {
     function TagList(options, events) {
         var self = {}, getTagText, setTagText, tagIsValid;
 
@@ -125,7 +112,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
             return tagText.length >= options.minLength &&
                    tagText.length <= (options.maxLength || tagText.length) &&
                    options.allowedTagsPattern.test(tagText) &&
-                   !findInObjectArray(self.items, tag, options.displayProperty);
+                   !$filter('filter')(self.items, function(value) { return angular.lowercase(value[options.displayProperty]) == angular.lowercase(tag[options.displayProperty]) }, true).length;
         };
 
         self.items = [];
@@ -395,7 +382,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
 
         getDifference = function(array1, array2) {
             return array1.filter(function(item) {
-                return !findInObjectArray(array2, item, options.tagsInput.displayProperty);
+                return !$filter('filter')(array2, function(value) { return angular.lowercase(value[options.displayProperty]) == angular.lowercase(item[options.displayProperty]) }, true).length;
             });
         };
 
