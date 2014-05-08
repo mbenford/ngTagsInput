@@ -53,19 +53,6 @@ function makeObjectArray(array, key) {
     return array;
 }
 
-function findInObjectArray(array, obj, key) {
-    var item = null;
-    for (var i = 0; i < array.length; i++) {
-        // I'm aware of the internationalization issues regarding toLowerCase()
-        // but I couldn't come up with a better solution right now
-        if (array[i][key].toLowerCase() === obj[key].toLowerCase()) {
-            item = array[i];
-            break;
-        }
-    }
-    return item;
-}
-
 function replaceAll(str, substr, newSubstr) {
     var expression = substr.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
     return str.replace(new RegExp(expression, 'gi'), newSubstr);
@@ -73,6 +60,42 @@ function replaceAll(str, substr, newSubstr) {
 
 var tagsInput = angular.module('ngTagsInput', []);
 
+tagsInput.filter('getDifference', [ '$filter', function ($filter) {
+    return function (source, compareList, propKey) {
+        var filtered = source;
+
+        angular.forEach(compareList, function (item) 
+        {
+        	filtered = $filter('filter')(
+        		filtered, 
+        		function(value) 
+        		{ 
+        			return angular.lowercase(value[propKey]) != angular.lowercase(item[propKey]) 
+        		}, 
+        		true
+        	);
+        });
+        
+		return filtered;
+    }
+}]);
+
+tagsInput.filter('hasTag', [ '$filter', function ($filter) {
+	return function (source, tag, propKey) {
+		var filtered = source;
+		
+		filtered = $filter('filter')(
+			filtered, 
+			function(value) 
+			{ 
+				return angular.lowercase(value[propKey]) == angular.lowercase(tag[propKey]) 
+			}, 
+			true
+		);
+
+		return filtered.length;
+	}
+}]);
 /**
  * @ngdoc directive
  * @name tagsInput
@@ -107,7 +130,7 @@ var tagsInput = angular.module('ngTagsInput', []);
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
-tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", function($timeout, $document, tagsInputConfig) {
+tagsInput.directive('tagsInput', ["$timeout","$document","$filter","tagsInputConfig", function($timeout, $document, $filter, tagsInputConfig) {
     function TagList(options, events) {
         var self = {}, getTagText, setTagText, tagIsValid;
 
@@ -125,7 +148,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
             return tagText.length >= options.minLength &&
                    tagText.length <= (options.maxLength || tagText.length) &&
                    options.allowedTagsPattern.test(tagText) &&
-                   !findInObjectArray(self.items, tag, options.displayProperty);
+                   !$filter('hasTag')(self.items, tag, options.displayProperty);
         };
 
         self.items = [];
@@ -389,15 +412,9 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
  *                                               suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
  */
-tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputConfig", function($document, $timeout, $sce, tagsInputConfig) {
+tagsInput.directive('autoComplete', ["$document","$timeout","$filter","$sce","tagsInputConfig", function($document, $timeout, $filter, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
-        var self = {}, debouncedLoadId, getDifference, lastPromise;
-
-        getDifference = function(array1, array2) {
-            return array1.filter(function(item) {
-                return !findInObjectArray(array2, item, options.tagsInput.displayProperty);
-            });
-        };
+        var self = {}, debouncedLoadId, lastPromise;
 
         self.reset = function() {
             lastPromise = null;
@@ -433,7 +450,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
                     }
 
                     items = makeObjectArray(items.data || items, options.tagsInput.displayProperty);
-                    items = getDifference(items, tags);
+                    items = $filter('getDifference')(items, tags, options.tagsInput.displayProperty);
                     self.items = items.slice(0, options.maxResultsToShow);
 
                     if (self.items.length > 0) {
