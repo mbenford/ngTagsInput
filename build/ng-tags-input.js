@@ -60,6 +60,42 @@ function replaceAll(str, substr, newSubstr) {
 
 var tagsInput = angular.module('ngTagsInput', []);
 
+tagsInput.filter('getDifference', [ '$filter', function ($filter) {
+    return function (source, compareList, propKey) {
+        var filtered = source;
+
+        angular.forEach(compareList, function (item) 
+        {
+        	filtered = $filter('filter')(
+        		filtered, 
+        		function(value) 
+        		{ 
+        			return angular.lowercase(value[propKey]) != angular.lowercase(item[propKey]) 
+        		}, 
+        		true
+        	);
+        });
+        
+		return filtered;
+    }
+}]);
+
+tagsInput.filter('hasTag', [ '$filter', function ($filter) {
+	return function (source, tag, propKey) {
+		var filtered = source;
+		
+		filtered = $filter('filter')(
+			filtered, 
+			function(value) 
+			{ 
+				return angular.lowercase(value[propKey]) == angular.lowercase(tag[propKey]) 
+			}, 
+			true
+		);
+
+		return filtered.length;
+	}
+}]);
 /**
  * @ngdoc directive
  * @name tagsInput
@@ -112,7 +148,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","$filter","tagsInputCon
             return tagText.length >= options.minLength &&
                    tagText.length <= (options.maxLength || tagText.length) &&
                    options.allowedTagsPattern.test(tagText) &&
-                   !$filter('filter')(self.items, function(value) { return angular.lowercase(value[options.displayProperty]) == angular.lowercase(tag[options.displayProperty]) }, true).length;
+                   !$filter('hasTag')(self.items, tag, options.displayProperty);
         };
 
         self.items = [];
@@ -378,13 +414,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","$filter","tagsInputCon
  */
 tagsInput.directive('autoComplete', ["$document","$timeout","$filter","$sce","tagsInputConfig", function($document, $timeout, $filter, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
-        var self = {}, debouncedLoadId, getDifference, lastPromise;
-
-        getDifference = function(array1, array2) {
-            return array1.filter(function(item) {
-                return !$filter('filter')(array2, function(value) { return angular.lowercase(value[options.displayProperty]) == angular.lowercase(item[options.displayProperty]) }, true).length;
-            });
-        };
+        var self = {}, debouncedLoadId, lastPromise;
 
         self.reset = function() {
             lastPromise = null;
@@ -420,7 +450,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$filter","$sce","ta
                     }
 
                     items = makeObjectArray(items.data || items, options.tagsInput.displayProperty);
-                    items = getDifference(items, tags);
+                    items = $filter('getDifference')(items, tags, options.tagsInput.displayProperty);
                     self.items = items.slice(0, options.maxResultsToShow);
 
                     if (self.items.length > 0) {
