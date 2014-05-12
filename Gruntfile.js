@@ -30,6 +30,11 @@ module.exports = function(grunt) {
                 out: 'build/<%= pkg.name %>.css',
                 outMin: 'build/<%= pkg.name %>.min.css'
             },
+            bootstrapCss: {
+                src: 'scss/bootstrap.scss',
+                out: 'build/<%= pkg.name %>-bootstrap.css',
+                outMin: 'build/<%= pkg.name %>-bootstrap.min.css'
+            },
             html: {
                 src: ['templates/tags-input.html', 'templates/auto-complete.html'],
                 out: 'tmp/templates.js'
@@ -146,7 +151,8 @@ module.exports = function(grunt) {
                     noCache: true
                 },
                 files: {
-                    '<%= files.css.out %>': ['<%= files.css.src %>']
+                    '<%= files.css.out %>': ['<%= files.css.src %>'],
+                    '<%= files.bootstrapCss.out %>': ['<%= files.bootstrapCss.src %>']
                 }
             }
         },
@@ -165,7 +171,8 @@ module.exports = function(grunt) {
         cssmin: {
             build: {
                 files: {
-                    '<%= files.css.outMin %>': ['<%= files.css.out %>']
+                    '<%= files.css.outMin %>': ['<%= files.css.out %>'],
+                    '<%= files.bootstrapCss.outMin %>': ['<%= files.bootstrapCss.out %>']
                 }
             }
         },
