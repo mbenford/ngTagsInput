@@ -206,7 +206,17 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             scope.newTag = { text: '', invalid: null };
 
             scope.getDisplayText = function(tag) {
+              var curr_path, properties_path;
+              if (options.displayProperty.indexOf('.') !== -1) {
+                properties_path = options.displayProperty.split('.');
+                curr_path = tag[properties_path.shift()];
+                while (properties_path.length > 1) {
+                  curr_path = curr_path[properties_path.shift()];
+                }
+                return curr_path[properties_path[0]].trim();
+              } else {
                 return tag[options.displayProperty].trim();
+              }
             };
 
             scope.track = function(tag) {
