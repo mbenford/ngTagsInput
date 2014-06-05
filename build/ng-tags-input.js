@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-04-13 21:25:38 -0300
+ * Generated at 2014-06-05 10:23:05 +0200
  */
 (function() {
 'use strict';
@@ -85,6 +85,7 @@ var tagsInput = angular.module('ngTagsInput', []);
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
+ * @param {string=} [type=text] Input type for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
  * @param {number=} maxLength Maximum length allowed for a new tag.
  * @param {number=} minTags Sets minTags validation error key if the number of tags added is less than minTags.
@@ -192,6 +193,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
         templateUrl: 'ngTagsInput/tags-input.html',
         controller: ["$scope","$attrs","$element", function($scope, $attrs, $element) {
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
+                type: [String, 'text'],
                 placeholder: [String, 'Add a tag'],
                 tabindex: [Number],
                 removeTagSymbol: [String, String.fromCharCode(215)],
@@ -245,7 +247,16 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                 tagList = scope.tagList,
                 events = scope.events,
                 options = scope.options,
-                input = element.find('input');
+                input = element.find('input'),
+                getInputText;
+
+            getInputText = function(){
+                if (scope.tagInputForm.tagInput.$valid){
+                    return scope.newTag.text;
+                } else {
+                    return scope.tagInputForm.tagInput.$viewValue;
+                }
+            };
 
             events
                 .on('tag-added', scope.onTagAdded)
@@ -269,10 +280,10 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                 .on('input-blur', function() {
                     if (!options.addFromAutocompleteOnly) {
                         if (options.addOnBlur) {
-                            tagList.addText(scope.newTag.text);
+                            tagList.addText(getInputText());
                         }
 
-                        ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
+                        ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !getInputText());
                     }
                 });
 
@@ -284,10 +295,6 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
 
             scope.track = function(tag) {
                 return tag[options.displayProperty];
-            };
-
-            scope.newTagChange = function() {
-                events.trigger('input-change', scope.newTag.text);
             };
 
             scope.$watch('tags', function(value) {
@@ -323,10 +330,10 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                     addKeys[KEYS.space] = options.addOnSpace;
 
                     shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
-                    shouldRemove = !shouldAdd && key === KEYS.backspace && scope.newTag.text.length === 0;
+                    shouldRemove = !shouldAdd && key === KEYS.backspace && getInputText().length === 0;
 
                     if (shouldAdd) {
-                        tagList.addText(scope.newTag.text);
+                        tagList.addText(getInputText());
 
                         scope.$apply();
                         e.preventDefault();
@@ -369,6 +376,24 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
         }
     };
 }]);
+
+tagsInput.directive('tagChange', function() {
+
+    return {
+        require: 'ngModel',
+        link: function (scope, element, attr, ctrl) {
+            var events = scope.events;
+
+            var changeParser = function(value) {
+                events.trigger('input-change', value);
+                return value;
+            };
+
+            ctrl.$parsers.push(changeParser);
+        }
+    };
+
+});
 
 /**
  * @ngdoc directive
@@ -502,8 +527,12 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
 
             scope.suggestionList = suggestionList;
 
-            scope.addSuggestion = function() {
+            scope.addSuggestion = function(index) {
                 var added = false;
+
+                if (index !== undefined){
+                    suggestionList.select(index);
+                }
 
                 if (suggestionList.selected) {
                     tagsInput.addTag(suggestionList.selected);
@@ -765,11 +794,11 @@ tagsInput.provider('tagsInputConfig', function() {
 /* HTML templates */
 tagsInput.run(["$templateCache", function($templateCache) {
     $templateCache.put('ngTagsInput/tags-input.html',
-    "<div class=\"host\" tabindex=\"-1\" ti-transclude-append=\"\"><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul class=\"tag-list\"><li class=\"tag-item\" ng-repeat=\"tag in tagList.items track by track(tag)\" ng-class=\"{ selected: tag == tagList.selected }\"><span>{{getDisplayText(tag)}}</span> <a class=\"remove-button\" ng-click=\"tagList.remove($index)\">{{options.removeTagSymbol}}</a></li></ul><input class=\"input\" placeholder=\"{{options.placeholder}}\" tabindex=\"{{options.tabindex}}\" ng-model=\"newTag.text\" ng-change=\"newTagChange()\" ng-trim=\"false\" ng-class=\"{'invalid-tag': newTag.invalid}\" ti-autosize=\"\"></div></div>"
+    "<div class=\"host\" tabindex=\"-1\" ti-transclude-append=\"\"><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul class=\"tag-list\"><li class=\"tag-item\" ng-repeat=\"tag in tagList.items track by track(tag)\" ng-class=\"{ selected: tag == tagList.selected }\"><span>{{getDisplayText(tag)}}</span> <a class=\"remove-button\" ng-click=\"tagList.remove($index)\">{{options.removeTagSymbol}}</a></li></ul><ng-form name=\"tagInputForm\"><input name=\"tagInput\" type=\"{{options.type}}\" class=\"input\" placeholder=\"{{options.placeholder}}\" tabindex=\"{{options.tabindex}}\" ng-model=\"newTag.text\" tag-change=\"\" ng-trim=\"false\" ng-class=\"{'invalid-tag': newTag.invalid}\" ti-autosize=\"\" novalidate=\"\"></ng-form></div></div>"
   );
 
   $templateCache.put('ngTagsInput/auto-complete.html',
-    "<div class=\"autocomplete\" ng-show=\"suggestionList.visible\"><ul class=\"suggestion-list\"><li class=\"suggestion-item\" ng-repeat=\"item in suggestionList.items track by track(item)\" ng-class=\"{selected: item == suggestionList.selected}\" ng-click=\"addSuggestion()\" ng-mouseenter=\"suggestionList.select($index)\" ng-bind-html=\"highlight(item)\"></li></ul></div>"
+    "<div class=\"autocomplete\" ng-show=\"suggestionList.visible\"><ul class=\"suggestion-list\"><li class=\"suggestion-item\" ng-repeat=\"item in suggestionList.items track by track(item)\" ng-class=\"{selected: item == suggestionList.selected}\" ng-click=\"addSuggestion($index)\" ng-mouseenter=\"suggestionList.select($index)\" ng-bind-html=\"highlight(item)\"></li></ul></div>"
   );
 }]);
 
