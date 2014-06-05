@@ -33,6 +33,7 @@
  *                                                   When this flag is true, addOnEnter, addOnComma, addOnSpace, addOnBlur and
  *                                                   allowLeftoverText values are ignored.
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
+ * @param {expression} onTagSelected Expression to evaluate upon selecting a tag. The selected tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
 tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) {
@@ -57,6 +58,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         };
 
         self.items = [];
+        self.selected = null;
 
         self.addText = function(text) {
             var tag = {};
@@ -84,23 +86,16 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             return tag;
         };
 
-        self.remove = function(index) {
-            var tag = self.items.splice(index, 1)[0];
-            events.trigger('tag-removed', { $tag: tag });
+        self.select = function(index) {
+            var tag = self.items[index];
+            self.selected = index;
+            events.trigger('tag-selected', { $tag: tag });
             return tag;
         };
 
-        self.removeLast = function() {
-            var tag, lastTagIndex = self.items.length - 1;
-
-            if (options.enableEditingLastTag || self.selected) {
-                self.selected = null;
-                tag = self.remove(lastTagIndex);
-            }
-            else if (!self.selected) {
-                self.selected = self.items[lastTagIndex];
-            }
-
+        self.remove = function(index) {
+            var tag = self.items.splice(index, 1)[0];
+            events.trigger('tag-removed', { $tag: tag });
             return tag;
         };
 
@@ -113,6 +108,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         scope: {
             tags: '=ngModel',
             onTagAdded: '&',
+            onTagSelected: '&',
             onTagRemoved: '&'
         },
         replace: false,
@@ -187,6 +183,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
 
             events
                 .on('tag-added', scope.onTagAdded)
+                .on('tag-selected', scope.onTagSelected)
                 .on('tag-removed', scope.onTagRemoved)
                 .on('tag-added', function() {
                     scope.newTag.text = '';
@@ -266,11 +263,22 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                         e.preventDefault();
                     }
                     else if (shouldRemove) {
-                        var tag = tagList.removeLast();
-                        if (tag && options.enableEditingLastTag) {
-                            scope.newTag.text = tag[options.displayProperty];
+                        var tag;
+                        
+                        if (tagList.selected !== null) {
+                            tag = tagList.remove(tagList.selected);
+                            tagList.selected = null;
+                        } else {
+                            if (options.enableEditingLastTag || tagList.selected !== null) {
+                                tagList.selected = null;
+                                tag = tagList.remove(tagList.items.length - 1);
+                            } else if (!tagList.selected) {
+                                tagList.selected = tagList.items.length - 1;
+                            }
+                            if (tag && options.enableEditingLastTag) {
+                                scope.newTag.text = tag[options.displayProperty];
+                            }
                         }
-
                         scope.$apply();
                         e.preventDefault();
                     }
