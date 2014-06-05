@@ -21,8 +21,8 @@ tags-input .tags {
   word-wrap: break-word;
   cursor: text;
   background-color: white;
-  border: 1px solid darkgray;
-  box-shadow: 1px 1px 1px 0 lightgray inset;
+  border: 1px solid darkgrey;
+  box-shadow: 1px 1px 1px 0 lightgrey inset;
 }
 tags-input .tags.focused {
   outline: none;

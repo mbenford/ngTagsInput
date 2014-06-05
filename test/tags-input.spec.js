@@ -293,6 +293,33 @@ describe('tags-input directive', function() {
             expect($scope.$digest).not.toHaveBeenCalled();
         });
     });
+
+    describe('select tag', function () {
+        it('selects the tag when clicking the tag', function() {
+            // Arrange
+            $scope.tags = generateTags(3);
+            compile();
+
+            // Act
+            getTag(1).find('span').click();
+
+            // Assert
+            expect(getTag(1)).toHaveClass('selected');
+        });
+        it('removes the tag when the tag is selected and the backspace is pressed', function() {
+            // Arrange
+            $scope.tags = generateTags(3);
+            compile();
+
+            // Act
+            getTag(1).find('span').click();
+            sendBackspace();
+
+            // Assert
+            expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag3' }]);
+            
+        });
+    });
     
     describe('tabindex option', function() {
         it('sets the input field tab index', function() {
@@ -1079,6 +1106,21 @@ describe('tags-input directive', function() {
 
             // Assert
             expect($scope.callback).toHaveBeenCalledWith({ text: 'Tag2' });
+        });
+    });
+
+    describe('on-tag-selected option', function () {
+        it('calls the provided callback when a tag is selected by clicking the tag', function() {
+            // Arrange
+            $scope.tags = generateTags(3);
+            $scope.callback = jasmine.createSpy();
+            compile('on-tag-selected="callback($tag)"');
+
+            // Act
+            getTag(0).find('span').click();
+
+            // Assert
+            expect($scope.callback).toHaveBeenCalledWith({ text: 'Tag1' });
         });
     });
 
