@@ -12,6 +12,7 @@
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
+ * @param {string=} [type=text] Input type for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
  * @param {number=} maxLength Maximum length allowed for a new tag.
  * @param {number=} minTags Sets minTags validation error key if the number of tags added is less than minTags.
@@ -119,6 +120,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         templateUrl: 'ngTagsInput/tags-input.html',
         controller: function($scope, $attrs, $element) {
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
+                type: [String, 'text'],
                 placeholder: [String, 'Add a tag'],
                 tabindex: [Number],
                 removeTagSymbol: [String, String.fromCharCode(215)],
@@ -172,7 +174,16 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 tagList = scope.tagList,
                 events = scope.events,
                 options = scope.options,
-                input = element.find('input');
+                input = element.find('input'),
+                getInputText;
+
+            getInputText = function(){
+                if (scope.tagInputForm.tagInput.$valid){
+                    return scope.newTag.text;
+                } else {
+                    return scope.tagInputForm.tagInput.$viewValue;
+                }
+            };
 
             events
                 .on('tag-added', scope.onTagAdded)
@@ -196,10 +207,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 .on('input-blur', function() {
                     if (!options.addFromAutocompleteOnly) {
                         if (options.addOnBlur) {
-                            tagList.addText(scope.newTag.text);
+                            tagList.addText(getInputText());
                         }
 
-                        ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
+                        ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !getInputText());
                     }
                 });
 
@@ -211,10 +222,6 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
 
             scope.track = function(tag) {
                 return tag[options.displayProperty];
-            };
-
-            scope.newTagChange = function() {
-                events.trigger('input-change', scope.newTag.text);
             };
 
             scope.$watch('tags', function(value) {
@@ -250,10 +257,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     addKeys[KEYS.space] = options.addOnSpace;
 
                     shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
-                    shouldRemove = !shouldAdd && key === KEYS.backspace && scope.newTag.text.length === 0;
+                    shouldRemove = !shouldAdd && key === KEYS.backspace && getInputText().length === 0;
 
                     if (shouldAdd) {
-                        tagList.addText(scope.newTag.text);
+                        tagList.addText(getInputText());
 
                         scope.$apply();
                         e.preventDefault();
@@ -295,4 +302,22 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             });
         }
     };
+});
+
+tagsInput.directive('tagChange', function() {
+
+    return {
+        require: 'ngModel',
+        link: function (scope, element, attr, ctrl) {
+            var events = scope.events;
+
+            var changeParser = function(value) {
+                events.trigger('input-change', value);
+                return value;
+            };
+
+            ctrl.$parsers.push(changeParser);
+        }
+    };
+
 });
