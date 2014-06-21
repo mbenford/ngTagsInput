@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-04-13 21:25:38 -0300
+ * Generated at 2014-06-21 19:08:44 -0300
  */
 (function() {
 'use strict';
@@ -58,7 +58,7 @@ function findInObjectArray(array, obj, key) {
     for (var i = 0; i < array.length; i++) {
         // I'm aware of the internationalization issues regarding toLowerCase()
         // but I couldn't come up with a better solution right now
-        if (array[i][key].toLowerCase() === obj[key].toLowerCase()) {
+        if (safeToString(array[i][key]).toLowerCase() === safeToString(obj[key]).toLowerCase()) {
             item = array[i];
             break;
         }
@@ -69,6 +69,10 @@ function findInObjectArray(array, obj, key) {
 function replaceAll(str, substr, newSubstr) {
     var expression = substr.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
     return str.replace(new RegExp(expression, 'gi'), newSubstr);
+}
+
+function safeToString(value) {
+    return angular.isUndefined(value) || value == null ? '' : value.toString().trim();
 }
 
 var tagsInput = angular.module('ngTagsInput', []);
@@ -279,7 +283,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
             scope.newTag = { text: '', invalid: null };
 
             scope.getDisplayText = function(tag) {
-                return tag[options.displayProperty].trim();
+                return safeToString(tag[options.displayProperty]);
             };
 
             scope.track = function(tag) {
@@ -480,7 +484,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
         templateUrl: 'ngTagsInput/auto-complete.html',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList, tagsInput, options, getItemText, documentClick;
+                suggestionList, tagsInput, options, getItem, getDisplayText, documentClick;
 
             tagsInputConfig.load('autoComplete', scope, attrs, {
                 debounceDelay: [Number, 100],
@@ -496,8 +500,12 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
 
             suggestionList = new SuggestionList(scope.source, options);
 
-            getItemText = function(item) {
+            getItem = function(item) {
                 return item[options.tagsInput.displayProperty];
+            };
+
+            getDisplayText = function(item) {
+                return safeToString(getItem(item));
             };
 
             scope.suggestionList = suggestionList;
@@ -516,7 +524,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
             };
 
             scope.highlight = function(item) {
-                var text = getItemText(item);
+                var text = getDisplayText(item);
                 text = encodeHTML(text);
                 if (options.highlightMatchedText) {
                     text = replaceAll(text, encodeHTML(suggestionList.query), '<em>$&</em>');
@@ -525,7 +533,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
             };
 
             scope.track = function(item) {
-                return getItemText(item);
+                return getItem(item);
             };
 
             tagsInput
