@@ -206,7 +206,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             scope.newTag = { text: '', invalid: null };
 
             scope.getDisplayText = function(tag) {
-                return tag[options.displayProperty].trim();
+                return safeToString(tag[options.displayProperty]);
             };
 
             scope.track = function(tag) {

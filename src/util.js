@@ -37,7 +37,7 @@ function findInObjectArray(array, obj, key) {
     for (var i = 0; i < array.length; i++) {
         // I'm aware of the internationalization issues regarding toLowerCase()
         // but I couldn't come up with a better solution right now
-        if (array[i][key].toLowerCase() === obj[key].toLowerCase()) {
+        if (safeToString(array[i][key]).toLowerCase() === safeToString(obj[key]).toLowerCase()) {
             item = array[i];
             break;
         }
@@ -48,4 +48,8 @@ function findInObjectArray(array, obj, key) {
 function replaceAll(str, substr, newSubstr) {
     var expression = substr.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
     return str.replace(new RegExp(expression, 'gi'), newSubstr);
+}
+
+function safeToString(value) {
+    return angular.isUndefined(value) || value == null ? '' : value.toString().trim();
 }

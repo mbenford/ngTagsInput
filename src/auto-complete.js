@@ -110,7 +110,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
         templateUrl: 'ngTagsInput/auto-complete.html',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList, tagsInput, options, getItemText, documentClick;
+                suggestionList, tagsInput, options, getItem, getDisplayText, documentClick;
 
             tagsInputConfig.load('autoComplete', scope, attrs, {
                 debounceDelay: [Number, 100],
@@ -126,8 +126,12 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
 
             suggestionList = new SuggestionList(scope.source, options);
 
-            getItemText = function(item) {
+            getItem = function(item) {
                 return item[options.tagsInput.displayProperty];
+            };
+
+            getDisplayText = function(item) {
+                return safeToString(getItem(item));
             };
 
             scope.suggestionList = suggestionList;
@@ -146,7 +150,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
             };
 
             scope.highlight = function(item) {
-                var text = getItemText(item);
+                var text = getDisplayText(item);
                 text = encodeHTML(text);
                 if (options.highlightMatchedText) {
                     text = replaceAll(text, encodeHTML(suggestionList.query), '<em>$&</em>');
@@ -155,7 +159,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
             };
 
             scope.track = function(item) {
-                return getItemText(item);
+                return getItem(item);
             };
 
             tagsInput

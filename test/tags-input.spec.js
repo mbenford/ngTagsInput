@@ -117,6 +117,30 @@ describe('tags-input directive', function() {
             expect(getTagText(2)).toBe('Tag3');
         });
 
+        it('renders the correct number of tags (non-string items)', function() {
+            // Arrange
+            $scope.tags = [
+                { text: 1 },
+                { text: true },
+                { text: 1.5 },
+                { text: {} },
+                { text: null },
+                { text: undefined }
+            ];
+
+            // Act
+            compile();
+
+            // Assert
+            expect(getTags().length).toBe(6);
+            expect(getTagText(0)).toBe('1');
+            expect(getTagText(1)).toBe('true');
+            expect(getTagText(2)).toBe('1.5');
+            expect(getTagText(3)).toBe('[object Object]');
+            expect(getTagText(4)).toBe('');
+            expect(getTagText(5)).toBe('');
+        });
+
         it('updates the model', function() {
             // Arrange
             compile();

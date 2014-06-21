@@ -134,6 +134,29 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(1)).toBe('Item2');
         });
 
+        it('renders all elements returned by the load function that aren\'t already added (non-string items)', function() {
+            // Act
+            tagsInput.getTags.and.returnValue([{ text: '1' }]);
+            loadSuggestions({
+                data: [
+                    { text: 1 },
+                    { text: 1.5 },
+                    { text: true },
+                    { text: {} },
+                    { text: null },
+                    { text: undefined }
+                ]
+            });
+
+            // Assert
+            expect(getSuggestions().length).toBe(5);
+            expect(getSuggestionText(0)).toBe('1.5');
+            expect(getSuggestionText(1)).toBe('true');
+            expect(getSuggestionText(2)).toBe('[object Object]');
+            expect(getSuggestionText(3)).toBe('');
+            expect(getSuggestionText(4)).toBe('');
+        });
+
         it('shows the suggestions list when there are items to show', function() {
             // Act
             loadSuggestions(1);
