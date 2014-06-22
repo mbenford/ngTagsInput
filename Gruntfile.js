@@ -20,6 +20,7 @@ module.exports = function(grunt) {
                     'src/auto-complete.js',
                     'src/transclude-append.js',
                     'src/autosize.js',
+                    'src/bind-attrs.js',
                     'src/configuration.js'
                 ],
                 out: 'build/<%= pkg.name %>.js',

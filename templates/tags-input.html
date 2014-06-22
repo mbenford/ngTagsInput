@@ -8,12 +8,11 @@
     </ul>
     <input type="text"
            class="input"
-           placeholder="{{options.placeholder}}"
-           tabindex="{{options.tabindex}}"
            ng-model="newTag.text"
            ng-change="newTagChange()"
            ng-trim="false"
            ng-class="{'invalid-tag': newTag.invalid}"
+           ti-bind-attrs="{placeholder: options.placeholder, tabindex: options.tabindex}"
            ti-autosize>
   </div>
 </div>
