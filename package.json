@@ -5,7 +5,7 @@
   },
   "name": "ng-tags-input",
   "prettyName": "ngTagsInput",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Tags input directive for AngularJS",
   "license": "MIT",
   "homepage": "http://mbenford.github.io/ngTagsInput",
