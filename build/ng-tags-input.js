@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-06-24 13:42:57 +0200
+ * Generated at 2014-06-24 14:14:11 +0200
  */
 (function() {
 'use strict';
@@ -335,8 +335,12 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                     shouldSelect = (key === KEYS.leftArrow || key === KEYS.rightArrow) && getInputText().length === 0;
                     if (shouldAdd) {
                         tagList.addText(getInputText());
+
+                        scope.$apply();
+                        e.preventDefault();
                     }
                     else if (shouldRemove) {
+                        
                         if (tagList.selected !== null) {
                             tag = tagList.remove(tagList.selected);
                             tagList.selected = null;
@@ -351,6 +355,8 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                                 scope.newTag.text = tag[options.displayProperty];
                             }
                         }
+                        scope.$apply();
+                        e.preventDefault();
                     } else if (shouldSelect) {
                         if (key === KEYS.rightArrow) {
                             if (tagList.selected === tagList.items.length - 1) {
@@ -365,9 +371,9 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                                 tagList.selected = tagList.selected - 1;
                             }
                         }
+                        scope.$apply();
+                        e.preventDefault();
                     }
-                    scope.$apply();
-                    e.preventDefault();
                 })
                 .on('focus', function() {
                     if (scope.hasFocus) {

@@ -260,8 +260,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     shouldSelect = (key === KEYS.leftArrow || key === KEYS.rightArrow) && getInputText().length === 0;
                     if (shouldAdd) {
                         tagList.addText(getInputText());
+
+                        scope.$apply();
+                        e.preventDefault();
                     }
                     else if (shouldRemove) {
+                        
                         if (tagList.selected !== null) {
                             tag = tagList.remove(tagList.selected);
                             tagList.selected = null;
@@ -276,6 +280,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                                 scope.newTag.text = tag[options.displayProperty];
                             }
                         }
+                        scope.$apply();
+                        e.preventDefault();
                     } else if (shouldSelect) {
                         if (key === KEYS.rightArrow) {
                             if (tagList.selected === tagList.items.length - 1) {
@@ -290,9 +296,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                                 tagList.selected = tagList.selected - 1;
                             }
                         }
+                        scope.$apply();
+                        e.preventDefault();
                     }
-                    scope.$apply();
-                    e.preventDefault();
                 })
                 .on('focus', function() {
                     if (scope.hasFocus) {
