@@ -164,7 +164,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             };
         },
         link: function(scope, element, attrs, ngModelCtrl) {
-            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace],
+            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.leftArrow, KEYS.rightArrow],
                 tagList = scope.tagList,
                 events = scope.events,
                 options = scope.options,
@@ -236,7 +236,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     var key = e.keyCode,
                         isModifier = e.shiftKey || e.altKey || e.ctrlKey || e.metaKey,
                         addKeys = {},
-                        shouldAdd, shouldRemove;
+                        shouldAdd, shouldRemove, shouldSelect, tag;
+
+                    // console.log(key);
 
                     if (isModifier || hotkeys.indexOf(key) === -1) {
                         return;
@@ -247,16 +249,16 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     addKeys[KEYS.space] = options.addOnSpace;
 
                     shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
-                    shouldRemove = !shouldAdd && key === KEYS.backspace && scope.newTag.text.length === 0;
 
+                    shouldRemove = !shouldAdd && key === KEYS.backspace && getInputText().length === 0;
+                    shouldSelect = (key === KEYS.leftArrow || key === KEYS.rightArrow) && getInputText().length === 0;
                     if (shouldAdd) {
-                        tagList.addText(scope.newTag.text);
+                        tagList.addText(getInputText());
 
                         scope.$apply();
                         e.preventDefault();
                     }
                     else if (shouldRemove) {
-                        var tag;
                         
                         if (tagList.selected !== null) {
                             tag = tagList.remove(tagList.selected);
@@ -270,6 +272,22 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                             }
                             if (tag && options.enableEditingLastTag) {
                                 scope.newTag.text = tag[options.displayProperty];
+                            }
+                        }
+                        scope.$apply();
+                        e.preventDefault();
+                    } else if (shouldSelect) {
+                        if (key === KEYS.rightArrow) {
+                            if (tagList.selected === tagList.items.length - 1) {
+                                tagList.selected = null;
+                            } else if (tagList.selected !== null) {
+                                tagList.selected++;
+                            }
+                        } else if (key === KEYS.leftArrow){
+                            if (tagList.selected === 0 || tagList.selected === null) {
+                                tagList.selected = tagList.items.length - 1;
+                            } else if (tagList.selected !== null) {
+                                tagList.selected = tagList.selected - 1;
                             }
                         }
                         scope.$apply();

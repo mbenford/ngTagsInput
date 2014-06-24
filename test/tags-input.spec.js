@@ -295,11 +295,12 @@ describe('tags-input directive', function() {
     });
 
     describe('select tag', function () {
-        it('selects the tag when clicking the tag', function() {
+        beforeEach(function () {
             // Arrange
             $scope.tags = generateTags(3);
             compile();
-
+        });
+        it('selects the tag when clicking the tag', function() {
             // Act
             getTag(1).find('span').click();
 
@@ -307,10 +308,6 @@ describe('tags-input directive', function() {
             expect(getTag(1)).toHaveClass('selected');
         });
         it('removes the tag when the tag is selected and the backspace is pressed', function() {
-            // Arrange
-            $scope.tags = generateTags(3);
-            compile();
-
             // Act
             getTag(1).find('span').click();
             sendBackspace();
@@ -318,6 +315,53 @@ describe('tags-input directive', function() {
             // Assert
             expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag3' }]);
             
+        });
+        it('selects the last tag when the left arrow is pressed and the input is empty', function() {
+            // Act
+            sendKeyDown(37);
+
+            // Assert
+            expect(getTag(2)).toHaveClass('selected');
+        });
+        it('does not select the last tag when the left arrow is pressed and the input is not empty', function() {
+            // Act
+            sendKeyPress(65);
+            sendKeyDown(37);
+
+            // Assert
+            expect(getTag(2)).not.toHaveClass('selected');
+        });
+        it('selects the previous tag when we have selected a tag other than the first tag and the left arrow is pressed', function() {
+            // Act
+            getTag(1).find('span').click();
+            sendKeyDown(37);
+
+            // Assert
+            expect(getTag(0)).toHaveClass('selected');
+        });
+        it('selects the last tag when we have selected the first tag and the left arrow is pressed', function() {
+            // Act
+            getTag(0).find('span').click();
+            sendKeyDown(37);
+
+            // Assert
+            expect(getTag(2)).toHaveClass('selected');
+        });
+        it('deselects the last tag when we have selected the last tag and the right arrow is pressed', function() {
+            // Act
+            getTag(2).find('span').click();
+            sendKeyDown(39);
+
+            // Assert
+            expect(getTag(2)).not.toHaveClass('selected');
+        });
+        it('selects the next tag when we have selected a tag other than the last tag and the right arrow is pressed', function() {
+            // Act
+            getTag(1).find('span').click();
+            sendKeyDown(39);
+
+            // Assert
+            expect(getTag(2)).toHaveClass('selected');
         });
     });
     

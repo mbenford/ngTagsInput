@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-06-23 19:51:27 +0200
+ * Generated at 2014-06-24 14:14:11 +0200
  */
 (function() {
 'use strict';
@@ -18,7 +18,9 @@ var KEYS = {
     space: 32,
     up: 38,
     down: 40,
-    comma: 188
+    comma: 188,
+    leftArrow: 37,
+    rightArrow: 39
 };
 
 function SimplePubSub() {
@@ -239,7 +241,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
             };
         }],
         link: function(scope, element, attrs, ngModelCtrl) {
-            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace],
+            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.leftArrow, KEYS.rightArrow],
                 tagList = scope.tagList,
                 events = scope.events,
                 options = scope.options,
@@ -316,7 +318,9 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                     var key = e.keyCode,
                         isModifier = e.shiftKey || e.altKey || e.ctrlKey || e.metaKey,
                         addKeys = {},
-                        shouldAdd, shouldRemove;
+                        shouldAdd, shouldRemove, shouldSelect, tag;
+
+                    // console.log(key);
 
                     if (isModifier || hotkeys.indexOf(key) === -1) {
                         return;
@@ -328,7 +332,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
 
                     shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
                     shouldRemove = !shouldAdd && key === KEYS.backspace && getInputText().length === 0;
-
+                    shouldSelect = (key === KEYS.leftArrow || key === KEYS.rightArrow) && getInputText().length === 0;
                     if (shouldAdd) {
                         tagList.addText(getInputText());
 
@@ -336,7 +340,6 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                         e.preventDefault();
                     }
                     else if (shouldRemove) {
-                        var tag;
                         
                         if (tagList.selected !== null) {
                             tag = tagList.remove(tagList.selected);
@@ -350,6 +353,22 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                             }
                             if (tag && options.enableEditingLastTag) {
                                 scope.newTag.text = tag[options.displayProperty];
+                            }
+                        }
+                        scope.$apply();
+                        e.preventDefault();
+                    } else if (shouldSelect) {
+                        if (key === KEYS.rightArrow) {
+                            if (tagList.selected === tagList.items.length - 1) {
+                                tagList.selected = null;
+                            } else if (tagList.selected !== null) {
+                                tagList.selected++;
+                            }
+                        } else if (key === KEYS.leftArrow){
+                            if (tagList.selected === 0 || tagList.selected === null) {
+                                tagList.selected = tagList.items.length - 1;
+                            } else if (tagList.selected !== null) {
+                                tagList.selected = tagList.selected - 1;
                             }
                         }
                         scope.$apply();
