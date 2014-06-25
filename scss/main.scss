@@ -1,10 +1,10 @@
-tags-input *, *:before, *:after {
+.tags-input *, *:before, *:after {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
 
-tags-input {
+.tags-input {
   .host {
     position: relative;
     margin-top: 5px;

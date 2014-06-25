@@ -297,7 +297,6 @@ module.exports = function(grunt) {
     grunt.registerTask('coverage', ['test', 'open:coverage']);
 
     grunt.registerTask('javascript-only', [
-        'test',
         'ngtemplates',
         'concat',
         'ngAnnotate',

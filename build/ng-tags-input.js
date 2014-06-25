@@ -1,11 +1,11 @@
 /*!
- * ngTagsInput v2.0.1
+ * ngTagsInput v2.1.0
  * http://mbenford.github.io/ngTagsInput
  *
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-06-22 02:05:14 -0300
+ * Generated at 2014-06-25 16:23:49 +0200
  */
 (function() {
 'use strict';
@@ -373,6 +373,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
         }
     };
 }]);
+
 
 /**
  * @ngdoc directive

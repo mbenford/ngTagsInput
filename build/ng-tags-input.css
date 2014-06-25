@@ -43,8 +43,10 @@
   font: 14px "Source Sans Pro", Helvetica, Arial, sans-serif;
   height: 26px;
   line-height: 25px;
+  border: 1px solid #acacac;
   border-radius: 3px;
-  background: #248ED5;
+  background: -webkit-linear-gradient(top, #f0f9ff 0%, #cbebff 47%, #a1dbff 100%);
+  background: linear-gradient(to bottom, #f0f9ff 0%, #cbebff 47%, #a1dbff 100%);
 }
 .tags-input .tags .tag-item.selected {
   background: -webkit-linear-gradient(top, #febbbb 0%, #fe9090 45%, #ff5c5c 100%);
@@ -58,7 +60,7 @@
   cursor: pointer;
   vertical-align: middle;
   font: bold 16px Arial, sans-serif;
-  color: #fff;
+  color: #585858;
 }
 .tags-input .tags .tag-item .remove-button:active {
   color: red;
@@ -67,10 +69,11 @@
   border: 0;
   outline: none;
   margin: 2px;
-  padding: 0 0 0 5px;
+  padding: 0;
+  padding-left: 5px;
   float: left;
   height: 26px;
-  font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 14px "Source Sans Pro", Helvetica, Arial, sans-serif;
 }
 .tags-input .tags .input.invalid-tag {
   color: red;
@@ -107,7 +110,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font: 16px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 16px "Source Sans Pro", Helvetica, Arial, sans-serif;
   color: black;
   background-color: white;
 }
@@ -120,7 +123,7 @@
   background-color: #0097cf;
 }
 .tags-input .autocomplete .suggestion-item em {
-  font: normal bold 16px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: normal bold 16px "Source Sans Pro", Helvetica, Arial, sans-serif;
   color: black;
   background-color: white;
 }
