@@ -1,7 +1,4 @@
-.idea/
-.project
-.settings/
-node_modules/
-coverage/
-*.log
-build/*.zip
+.idea
+node_modules
+bower_components
+.DS_Store
