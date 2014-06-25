@@ -10,7 +10,7 @@
  */
 tagsInput.directive('tiAutosize', function() {
     return {
-        restrict: 'A',
+        restrict: 'AE',
         require: 'ngModel',
         link: function(scope, element, attrs, ctrl) {
             var THRESHOLD = 3,

@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-06-25 16:23:49 +0200
+ * Generated at 2014-06-25 17:07:29 +0200
  */
 (function() {
 'use strict';
@@ -184,7 +184,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
     }
 
     return {
-        restrict: 'A',
+        restrict: 'AE',
         require: 'ngModel',
         scope: {
             tags: '=ngModel',
@@ -479,7 +479,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
     }
 
     return {
-        restrict: 'E',
+        restrict: 'AE',
         require: '^tagsInput',
         scope: { source: '&' },
         templateUrl: 'ngTagsInput/auto-complete.html',
@@ -614,6 +614,7 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
     };
 }]);
 
+
 /**
  * @ngdoc directive
  * @name tiTranscludeAppend
@@ -640,7 +641,7 @@ tagsInput.directive('tiTranscludeAppend', function() {
  */
 tagsInput.directive('tiAutosize', function() {
     return {
-        restrict: 'A',
+        restrict: 'AE',
         require: 'ngModel',
         link: function(scope, element, attrs, ctrl) {
             var THRESHOLD = 3,
@@ -684,6 +685,7 @@ tagsInput.directive('tiAutosize', function() {
         }
     };
 });
+
 
 /**
  * @ngdoc directive
