@@ -184,7 +184,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
     }
 
     return {
-        restrict: 'E',
+        restrict: 'A',
         require: 'ngModel',
         scope: {
             tags: '=ngModel',

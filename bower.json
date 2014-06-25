@@ -1,0 +1,17 @@
+{
+  "name": "ngTagsInput",
+  "version": "0.1.0",
+  "homepage": "https://github.com/vdclouis/ngTagsInput",
+  "authors": [
+    "Showpad"
+  ],
+  "description": "tags for inputs",
+  "keywords": [
+    "tags",
+    "input"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "angular": "~1.2.18"
+  }
+}
