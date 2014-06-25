@@ -22,8 +22,8 @@ function SimplePubSub() {
 }
 
 function makeObjectArray(array, key) {
-    array = array || [];
-    if (angular.isArray(array) && array.length > 0 && !angular.isObject(array[0])) {
+    array = angular.isArray(array) ? array : [];
+    if (array.length > 0 && !angular.isObject(array[0])) {
         array.forEach(function(item, index) {
             array[index] = {};
             array[index][key] = item;
