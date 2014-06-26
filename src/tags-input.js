@@ -116,7 +116,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         },
         replace: false,
         transclude: true,
-        templateUrl: 'ngTagsInput/tags-input.html',
+        templateUrl: 'ngTagsInput/tags-input.template.html',
         controller: function($scope, $attrs, $element) {
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 placeholder: [String, 'Add a tag'],
