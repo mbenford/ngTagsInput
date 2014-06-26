@@ -3,9 +3,10 @@
  * http://mbenford.github.io/ngTagsInput
  *
  * Copyright (c) 2013-2014 Michael Benford
+ * Edited by: @vdclouis
  * License: MIT
  *
- * Generated at 2014-06-26 09:15:44 +0200
+ * Generated at 2014-06-26 09:34:18 +0200
  */
 (function() {
 'use strict';
