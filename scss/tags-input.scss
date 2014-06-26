@@ -3,15 +3,13 @@
 
 .tags-input {
   .tags {
-    -moz-appearance: textfield;
-    -webkit-appearance: textfield;
     padding: 1px;
     overflow: hidden;
     word-wrap: break-word;
     cursor: text;
     background-color: $tags-bgcolor;
-    border: $tags-border;
-    box-shadow: $tags-border-shadow;
+    //border: $tags-border;
+    //box-shadow: $tags-border-shadow;
 
     &.focused {
       outline: none;
@@ -26,7 +24,7 @@
 
     .tag-item {
       margin: 2px;
-      padding: 0 5px;
+      padding: 0 8px;
       display: inline-block;
       float: left;
       font: $tag-font;
@@ -34,10 +32,18 @@
       line-height: $tag-height - 1px;
       border: $tag-border;
       border-radius: $tag-border-radius;
-      @include gradient($tag-color);
+      background: $tag-bg;
+      color: $tag-color;
+      @include transition(all .5s ease);
 
       &.selected {
-        @include gradient($tag-color-selected);
+        background: $tag-color-selected;
+
+        .remove-button {
+          &:hover {
+            color: $tag-bg;
+          }
+        }
       }
 
       .remove-button {
@@ -49,8 +55,9 @@
         vertical-align: middle;
         font: $remove-button-font;
         color: $remove-button-color;
+        @include transition(all .5s ease);
 
-        &:active {
+        &:hover {
           color: $remove-button-color-active;
         }
       }

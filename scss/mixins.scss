@@ -8,3 +8,11 @@
   -moz-box-shadow: $args;
   box-shadow: $args;
 }
+
+@mixin transition($args...) {
+  -webkit-transition: $args;
+  -moz-transition:    $args;
+  -ms-transition:     $args;
+  -o-transition:      $args;
+  transition:         $args;
+}
