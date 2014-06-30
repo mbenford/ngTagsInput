@@ -1,6 +1,19 @@
 # Contributing to ngTagsInput
 
-So you want to contribute to ngTagsInput... that's awesome! I really appreciate the help in making this project better. Here you will find everything you need to know in order to implement your contribution and send it as a pull request.
+So you want to contribute to ngTagsInput... that's awesome! I really appreciate the help in making this project better. Here you will find everything you need to know in order to solve problems, report bugs, request features and implement your contribution and send it as a pull request.
+
+
+## Asking a question
+
+If you have any questions on how to use ngTagsInput or how to solve a problem involving the directive, please create a question on [Stackoverflow](http://www.stackoverflow.com) using the `ng-tags-input` tag.
+
+## Reporting a bug
+
+If you find a bug in the code or an error in the documentation and want to report it, check whether it's already been submitted by using the [type: bug](https://github.com/mbenford/ngTagsInput/issues?labels=type%3A+bug) label. In case it hasn't yet, create a new issue and describe the problem you've found. You might want to include the versions of both ngTagsInput and Angular you're using.   
+
+## Requesting a feature
+
+You can request a new feature by simply submitting an issue. Just like with bugs, you may check first if someone else has already requested the feature you want by using the [type: feature](https://github.com/mbenford/ngTagsInput/issues?labels=type%3A+feature) label.
 
 ## Setting up your environment
 
@@ -137,6 +150,7 @@ Before submitting your pull request, consider the following:
         
 - Use the `test/test-page.html` file to test your changes in the browser, if you want to
 - Commit your changes by following the commit guidelines
+- Squash multiples commits into one
 
 You may want to rebase your branch on top of the latest version of the master branch. To do so is simple:
 
