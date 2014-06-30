@@ -1,3 +1,3 @@
 'use strict';
 
-var tagsInput = angular.module('ngTagsInput', []);
+var tagsInput = angular.module('spTags', []);

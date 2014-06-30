@@ -6,7 +6,7 @@
  * Edited by: @vdclouis
  * License: MIT
  *
- * Generated at 2014-06-26 09:34:18 +0200
+ * Generated at 2014-06-30 09:40:33 +0200
  */
 (function() {
 'use strict';
@@ -76,7 +76,8 @@ function safeToString(value) {
     return angular.isUndefined(value) || value == null ? '' : value.toString().trim();
 }
 
-var tagsInput = angular.module('ngTagsInput', []);
+var tagsInput = angular.module('spTags', []);
+
 
 /**
  * @ngdoc directive
