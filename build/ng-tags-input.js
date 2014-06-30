@@ -1,11 +1,11 @@
 /*!
- * ngTagsInput v2.0.1
+ * ngTagsInput v2.1.0
  * http://mbenford.github.io/ngTagsInput
  *
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-06-22 02:05:14 -0300
+ * Generated at 2014-06-25 11:23:55 -0600
  */
 (function() {
 'use strict';
@@ -44,7 +44,7 @@ function SimplePubSub() {
 
 function makeObjectArray(array, key) {
     array = array || [];
-    if (array.length > 0 && !angular.isObject(array[0])) {
+    if (angular.isArray(array) && array.length > 0 && !angular.isObject(array[0])) {
         array.forEach(function(item, index) {
             array[index] = {};
             array[index][key] = item;
