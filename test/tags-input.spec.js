@@ -317,7 +317,7 @@ describe('tags-input directive', function() {
             expect($scope.$digest).not.toHaveBeenCalled();
         });
     });
-    
+
     describe('tabindex option', function() {
         it('sets the input field tab index', function() {
             // Arrange/Act
@@ -421,6 +421,38 @@ describe('tags-input directive', function() {
 
             // Assert
             expect(isolateScope.options.addOnComma).toBe(true);
+        });
+    });
+
+    describe('add-on-semicolon option', function() {
+        it('adds a new tag when the semicolon key is pressed and the option is true', function() {
+            // Arrange
+            compile('add-on-semicolon="true"');
+
+            // Act
+            newTag('foo', KEYS.semicolon);
+
+            // Assert
+            expect($scope.tags).toEqual([{ text: 'foo' }]);
+        });
+
+        it('does not add a new tag when the semicolon key is pressed and the option is false', function() {
+            // Arrange
+            compile('add-on-semicolon="false"');
+
+            // Act
+            newTag('foo', KEYS.semicolon);
+
+            // Assert
+            expect($scope.tags).toEqual([]);
+        });
+
+        it('initializes the option to true', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.addOnSemicolon).toBe(true);
         });
     });
 
@@ -1011,7 +1043,7 @@ describe('tags-input directive', function() {
         describe('option is true', function() {
             beforeEach(function() {
                 compileWithForm('add-from-autocomplete-only="true"', 'name="tags"', 'allow-leftover-text="false"',
-                    'add-on-blur="true"', 'add-on-enter="true"', 'add-on-comma="true"', 'add-on-space="true"');
+                    'add-on-blur="true"', 'add-on-enter="true"', 'add-on-comma="true"', 'add-on-semicolon="true"', 'add-on-space="true"');
             });
 
             it('does not add a tag when the enter key is pressed', function() {
@@ -1025,6 +1057,14 @@ describe('tags-input directive', function() {
             it('does not add a tag when the comma key is pressed', function() {
                 // Act
                 newTag('foo', KEYS.comma);
+
+                // Assert
+                expect($scope.tags).toEqual([]);
+            });
+
+            it('does not add a tag when the semicolon key is pressed', function() {
+                // Act
+                newTag('foo', KEYS.semicolon);
 
                 // Assert
                 expect($scope.tags).toEqual([]);
@@ -1195,12 +1235,12 @@ describe('tags-input directive', function() {
         var hotkeys;
 
         beforeEach(function() {
-            compile('add-on-enter="true"', 'add-on-space="true"', 'add-on-comma="true"');
+            compile('add-on-enter="true"', 'add-on-space="true"', 'add-on-comma="true"', 'add-on-semicolon="true"');
         });
 
         describe('modifier key is on', function() {
             beforeEach(function() {
-                hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace];
+                hotkeys = [KEYS.enter, KEYS.comma, KEYS.semicolon, KEYS.space, KEYS.backspace];
             });
 
             it('does not prevent any hotkey from being propagated when the shift key is down', function() {
@@ -1232,7 +1272,7 @@ describe('tags-input directive', function() {
         describe('modifier key is off', function() {
             it('prevents enter, comma and space keys from being propagated when all modifiers are up', function() {
                 // Arrange
-                hotkeys = [KEYS.enter, KEYS.comma, KEYS.space];
+                hotkeys = [KEYS.enter, KEYS.comma, KEYS.semicolon, KEYS.space];
 
                 // Act/Assert
                 angular.forEach(hotkeys, function(key) {
