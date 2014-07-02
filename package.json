@@ -4,8 +4,8 @@
     "email": "michael@michaelbenford.net"
   },
   "name": "sp-tags",
-  "prettyName": "ngTagsInput",
-  "version": "2.1.0",
+  "prettyName": "Showpad Tags",
+  "version": "0.1.1",
   "description": "Tags input directive for AngularJS",
   "license": "MIT",
   "homepage": "http://mbenford.github.io/ngTagsInput",
