@@ -339,7 +339,7 @@ describe('tags-input directive', function() {
             expect($scope.$digest).not.toHaveBeenCalled();
         });
     });
-    
+
     describe('tabindex option', function() {
         it('sets the input field tab index', function() {
             // Arrange/Act
@@ -562,6 +562,76 @@ describe('tags-input directive', function() {
 
             // Assert
             expect(getInput().attr('type')).toBe('text');
+        });
+    });
+
+    describe('add-on-paste option', function() {
+        var body;
+        // mock object for clipboard event
+        var clipboardMock = {
+            clipboardData: {
+                getData: function(type) {
+                    return 'item1, item2; item3 item4';
+                }
+            }
+        };
+
+        it('does split the string into multiple tags if the separators are defined in the regex', function() {
+            // compile
+            compile('separator-list="/[,;| ]/"');
+
+            body = $document.find('body');
+            body.append(element);
+
+            isolateScope.newTagPasted(clipboardMock);
+            // Assert
+            expect($scope.tags).toEqual([{
+                'text': 'item1'
+            }, {
+                'text': 'item2'
+            }, {
+                'text': 'item3'
+            }, {
+                'text': 'item4'
+            }]);
+        });
+
+        it('does split the string into multiple tags if the separators are defined in the regex', function() {
+            // compile
+            compile('separator-list="/[,;| ]/"');
+
+            body = $document.find('body');
+            body.append(element);
+
+            isolateScope.newTagPasted(clipboardMock);
+            // Assert
+            expect($scope.tags).toEqual([{
+                'text': 'item1'
+            }, {
+                'text': 'item2'
+            }, {
+                'text': 'item3'
+            }, {
+                'text': 'item4'
+            }]);
+        });
+
+        it('doesn\'t split part of the string if the used separator is not defined in the regex', function() {
+            // compile
+            compile('separator-list="/[,;|]/"');
+
+            body = $document.find('body');
+            body.append(element);
+
+            isolateScope.newTagPasted(clipboardMock);
+            // Assert
+            expect($scope.tags).toEqual([{
+                'text': 'item1'
+            }, {
+                'text': 'item2'
+            }, {
+                'text': 'item3-item4'
+            }]);
         });
     });
 
