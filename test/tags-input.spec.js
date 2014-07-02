@@ -1106,6 +1106,21 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('on-blur option', function () {
+        it ('calls the provided callback when the input field loses focus', function() {
+            // Arrange
+            $scope.callback = jasmine.createSpy();
+            compile('on-blur="callback()"');
+
+            // Act
+            getInput().triggerHandler('blur');
+            $timeout.flush();
+
+            // Assert
+            expect($scope.callback).toHaveBeenCalled();
+        });
+    });
+
     describe('autocomplete registration', function() {
         var autocompleteObj;
 
