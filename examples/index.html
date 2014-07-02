@@ -1,8 +1,8 @@
 <html>
 <head>
     <script src="../bower_components/angular/angular.js"></script>
-    <script src="../build/ng-tags-input.js"></script>
-    <link rel="stylesheet" type="text/css" href="../build/ng-tags-input.css">
+    <script src="../build/sp-tags.js"></script>
+    <link rel="stylesheet" type="text/css" href="../build/sp-tags.css">
     <script>
         angular
             .module('myApp', ['spTags'])
@@ -21,7 +21,9 @@
 
     <!--<tags-input ng-model="tags"></tags-input>-->
 
-    <div class="tags-input" placeholder="Add some crazy tags..." tags-input ng-model="tags"></div>
+    <!--<div class="tags-input" placeholder="Add some crazy tags..." tags-input ng-model="tags"></div>-->
+
+    <input type="text" class="tags-input" name="test" placeholder="Tags..." tags-input ng-model="tags"/>
 
 </body>
 </html>

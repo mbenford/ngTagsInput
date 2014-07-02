@@ -20,7 +20,7 @@
  *                                             the input element when the directive loses focus.
  * @param {string=} [removeTagSymbol=×] Symbol character for the remove tag button.
  * @param {boolean=} [addOnEnter=true] Flag indicating that a new tag will be added on pressing the ENTER key.
- * @param {boolean=} [addOnSpace=false] Flag indicating that a new tag will be added on pressing the SPACE key.
+ * @param {boolean=} [addOnSpace=true] Flag indicating that a new tag will be added on pressing the SPACE key.
  * @param {boolean=} [addOnComma=true] Flag indicating that a new tag will be added on pressing the COMMA key.
  * @param {boolean=} [addOnBlur=true] Flag indicating that a new tag will be added when the input field loses focus.
  * @param {boolean=} [replaceSpacesWithDashes=true] Flag indicating that spaces will be replaced with dashes.
@@ -114,7 +114,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             onTagAdded: '&',
             onTagRemoved: '&'
         },
-        replace: false,
+        replace: true,
         transclude: true,
         templateUrl: 'ngTagsInput/tags-input.template.html',
         controller: function($scope, $attrs, $element) {
@@ -126,7 +126,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 minLength: [Number, 3],
                 maxLength: [Number],
                 addOnEnter: [Boolean, true],
-                addOnSpace: [Boolean, false],
+                addOnSpace: [Boolean, true],
                 addOnComma: [Boolean, true],
                 addOnBlur: [Boolean, true],
                 allowedTagsPattern: [RegExp, /.+/],
@@ -215,6 +215,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
 
             scope.newTagChange = function() {
                 events.trigger('input-change', scope.newTag.text);
+            };
+
+            scope.inputName = function() {
+                return attrs.name;
             };
 
             scope.$watch('tags', function(value) {
