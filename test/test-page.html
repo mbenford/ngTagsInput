@@ -50,7 +50,8 @@
                 placeholder="{{placeholder}}"
                 remove-tag-symbol="{{removeTagSymbol}}"
                 max-length="5"
-                add-from-autocomplete-only="false">
+                add-from-autocomplete-only="false"
+                on-blur="hideInputField()">
       <auto-complete source="loadItems2($query)"
                      debounce-delay="0"
                      min-length="1"
@@ -80,6 +81,13 @@
               { text: 'Green Arrow' },
               { text: 'Spiderman'}
             ];
+
+            $scope.hideInputField = function() {
+              // here we could trigger storing the tags
+
+              // hide the input field
+              $scope.visible = false;
+            }
 
             $scope.tags = [{ text: 'Batman' }, { text: 'Superman' }, { text:'Flash' }];
             $scope.placeholder = 'New tag';
