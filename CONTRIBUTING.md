@@ -9,7 +9,7 @@ If you have any questions on how to use ngTagsInput or how to solve a problem in
 
 ## Reporting a bug
 
-If you find a bug in the code or an error in the documentation and want to report it, check whether it's already been submitted by using the [type: bug](https://github.com/mbenford/ngTagsInput/issues?labels=type%3A+bug) label. In case it hasn't yet, create a new issue and describe the problem you've found. You might want to include the versions of both ngTagsInput and Angular you're using.   
+If you find a bug in the code or an error in the documentation and want to report it, check whether it's already been submitted by using the [type: bug](https://github.com/mbenford/ngTagsInput/issues?labels=type%3A+bug) label. In case it hasn't yet, create a new issue and describe the problem you've found. You might want to include the versions of both ngTagsInput and Angular you're using.
 
 ## Requesting a feature
 
@@ -28,11 +28,11 @@ Before writing your killing feature you need to have a few things set up:
 4. Clone your repository
 
         git clone https://github.com/<your_github_username>/ngTagsInput
-        
+
 5. Go to the ngTagsInput directory
 
         cd ngTagsInput
-        
+
 6. Add the main ngTagsInput repo as an upstream remote
 
         git remote add upstream https://github.com/mbenford/ngTagsInput
@@ -40,7 +40,7 @@ Before writing your killing feature you need to have a few things set up:
 7. Install the development dependencies
 
         npm install
-        
+
 That's it.
 
 ## Building from the source code
@@ -90,7 +90,7 @@ Each commit consists of a **header**, a **body** and a **footer**. The header ha
     <body>
     <BLANK LINE>
     <footer>
-    
+
 The subject line has a soft limit of 50 characters, and all remaining lines have a soft limit of 75 characters.
 
 #### Type
@@ -143,37 +143,42 @@ Before submitting your pull request, consider the following:
 - Make your changes in a new branch (this will help you rebase your code if/when needed)
 
         git checkout -b my-feature-branch
-              
+
+    **Important**:
+    Each feature/bugfix should reside in its own branch, and each branch should be based on the master branch. Avoid implementing a new feature/bugfix on top of another one because that makes code reviews harder and prevents pull requests from being selectively merged.
+
 - Make sure all tests pass
 
         grunt test
-        
+
 - Use the `test/test-page.html` file to test your changes in the browser, if you want to
 - Commit your changes by following the commit guidelines
-- Squash multiples commits into one
+- Squash multiples related commits into one
 
-You may want to rebase your branch on top of the latest version of the master branch. To do so is simple:
+You may need to rebase your branch on top of the latest version of the master branch. To do so is simple:
 
 1. Switch to `master` branch
 
-        git checkout master      
+        git checkout master
 
 2. Pull the latest changes from the server
 
         git pull upstream master
-        
+
+    **Note:** That command should **always** result in a fast-forward merge.
+
 3. Switch back to your feature branch
 
         git checkout my-feature-branch
-        
+
 4. Rebase it on top of the master branch (there might be conflicts you'll need to resolve)
 
         git rebase master -i
-        
+
 5. Push the changes into your remote repository
 
         git push
-        
+
 6. In GitHub, send a pull request to `ngTagsInput:master`
 
 That's it! Thank you for contributing!
@@ -181,5 +186,5 @@ That's it! Thank you for contributing!
 In case you need to do changes after creating a pull request, repeat steps 1 though 4 and force a push into your remote repository
 
     git push --force
-    
+
 That will update your pull request. You might want to update the PR page explaining the changes you have done.
