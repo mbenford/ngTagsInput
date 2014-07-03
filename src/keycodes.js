@@ -8,5 +8,6 @@ var KEYS = {
     space: 32,
     up: 38,
     down: 40,
-    comma: 188
+    comma: 188,
+    semicolon: 186
 };
