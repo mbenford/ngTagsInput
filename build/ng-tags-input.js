@@ -1,11 +1,11 @@
 /*!
- * ngTagsInput v2.0.1
+ * ngTagsInput v2.1.0
  * http://mbenford.github.io/ngTagsInput
  *
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-06-22 02:05:14 -0300
+ * Generated at 2014-07-06 01:59:07 -0300
  */
 (function() {
 'use strict';
@@ -20,6 +20,8 @@ var KEYS = {
     down: 40,
     comma: 188
 };
+
+var MAX_SAFE_INTEGER = 9007199254740991;
 
 function SimplePubSub() {
     var events = {};
@@ -90,9 +92,9 @@ var tagsInput = angular.module('ngTagsInput', []);
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
- * @param {number=} maxLength Maximum length allowed for a new tag.
- * @param {number=} minTags Sets minTags validation error key if the number of tags added is less than minTags.
- * @param {number=} maxTags Sets maxTags validation error key if the number of tags added is greater than maxTags.
+ * @param {number=} [maxLength=MAX_SAFE_INTEGER] Maximum length allowed for a new tag.
+ * @param {number=} [minTags=0] Sets minTags validation error key if the number of tags added is less than minTags.
+ * @param {number=} [maxTags=MAX_SAFE_INTEGER] Sets maxTags validation error key if the number of tags added is greater than maxTags.
  * @param {boolean=} [allowLeftoverText=false] Sets leftoverText validation error key if there is any leftover text in
  *                                             the input element when the directive loses focus.
  * @param {string=} [removeTagSymbol=×] Symbol character for the remove tag button.
@@ -127,7 +129,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
             var tagText = getTagText(tag);
 
             return tagText.length >= options.minLength &&
-                   tagText.length <= (options.maxLength || tagText.length) &&
+                   tagText.length <= options.maxLength &&
                    options.allowedTagsPattern.test(tagText) &&
                    !findInObjectArray(self.items, tag, options.displayProperty);
         };
@@ -195,27 +197,28 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
         transclude: true,
         templateUrl: 'ngTagsInput/tags-input.html',
         controller: ["$scope","$attrs","$element", function($scope, $attrs, $element) {
+            $scope.events = new SimplePubSub();
+
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 placeholder: [String, 'Add a tag'],
-                tabindex: [Number],
+                tabindex: [Number, null],
                 removeTagSymbol: [String, String.fromCharCode(215)],
                 replaceSpacesWithDashes: [Boolean, true],
                 minLength: [Number, 3],
-                maxLength: [Number],
+                maxLength: [Number, MAX_SAFE_INTEGER],
                 addOnEnter: [Boolean, true],
                 addOnSpace: [Boolean, false],
                 addOnComma: [Boolean, true],
                 addOnBlur: [Boolean, true],
                 allowedTagsPattern: [RegExp, /.+/],
                 enableEditingLastTag: [Boolean, false],
-                minTags: [Number],
-                maxTags: [Number],
+                minTags: [Number, 0],
+                maxTags: [Number, MAX_SAFE_INTEGER],
                 displayProperty: [String, 'text'],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false]
             });
 
-            $scope.events = new SimplePubSub();
             $scope.tagList = new TagList($scope.options, $scope.events);
 
             this.registerAutocomplete = function() {
@@ -249,7 +252,15 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                 tagList = scope.tagList,
                 events = scope.events,
                 options = scope.options,
-                input = element.find('input');
+                input = element.find('input'),
+                validationOptions = ['minTags', 'maxTags', 'allowLeftoverText'],
+                setElementValidity;
+
+            setElementValidity = function() {
+                ngModelCtrl.$setValidity('maxTags', scope.tags.length <= options.maxTags);
+                ngModelCtrl.$setValidity('minTags', scope.tags.length >= options.minTags);
+                ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
+            };
 
             events
                 .on('tag-added', scope.onTagAdded)
@@ -276,7 +287,12 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                             tagList.addText(scope.newTag.text);
                         }
 
-                        ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
+                        setElementValidity();
+                    }
+                })
+                .on('option-change', function(e) {
+                    if (validationOptions.indexOf(e.name) !== -1) {
+                        setElementValidity();
                     }
                 });
 
@@ -299,9 +315,8 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                 tagList.items = scope.tags;
             });
 
-            scope.$watch('tags.length', function(value) {
-                ngModelCtrl.$setValidity('maxTags', angular.isUndefined(options.maxTags) || value <= options.maxTags);
-                ngModelCtrl.$setValidity('minTags', angular.isUndefined(options.minTags) || value >= options.minTags);
+            scope.$watch('tags.length', function() {
+                setElementValidity();
             });
 
             input
@@ -776,6 +791,7 @@ tagsInput.provider('tagsInputConfig', function() {
                     if (interpolationStatus[directive] && interpolationStatus[directive][key]) {
                         attrs.$observe(key, function(value) {
                             updateValue(value);
+                            scope.events.trigger('option-change', { name: key, newValue: value });
                         });
                     }
                     else {
