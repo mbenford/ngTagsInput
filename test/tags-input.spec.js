@@ -833,6 +833,23 @@ describe('tags-input directive', function() {
             expect($scope.form.tags.$valid).toBe(true);
             expect($scope.form.tags.$error.minTags).toBe(false);
         });
+
+        it('re-validates the element when the min-tags option changes', function() {
+            // Arrange
+            compileWithForm('min-tags="2"', 'name="tags"');
+
+            $scope.tags = generateTags(2);
+            $scope.$digest();
+
+            // Act
+            isolateScope.options.minTags = 3;
+            isolateScope.events.trigger('option-change', { name: 'minTags' });
+            $scope.$digest();
+
+            // Assert
+            expect($scope.form.tags.$invalid).toBe(true);
+            expect($scope.form.tags.$error.minTags).toBe(true);
+        });
     });
 
 
@@ -882,6 +899,23 @@ describe('tags-input directive', function() {
             // Assert
             expect($scope.form.tags.$valid).toBe(true);
             expect($scope.form.tags.$error.maxTags).toBe(false);
+        });
+
+        it('re-validates the element when the max-tags option changes', function() {
+            // Arrange
+            compileWithForm('max-tags="2"', 'name="tags"');
+
+            $scope.tags = generateTags(2);
+            $scope.$digest();
+
+            // Act
+            isolateScope.options.maxTags = 1;
+            isolateScope.events.trigger('option-change', { name: 'maxTags' });
+            $scope.$digest();
+
+            // Assert
+            expect($scope.form.tags.$invalid).toBe(true);
+            expect($scope.form.tags.$error.maxTags).toBe(true);
         });
     });
 
@@ -996,6 +1030,22 @@ describe('tags-input directive', function() {
             // Assert
             expect($scope.form.tags.$valid).toBe(true);
             expect($scope.form.tags.$error.leftoverText).toBe(false);
+        });
+
+        it('re-validates the element when the allow-leftover-text option changes', function() {
+            // Arrange
+            compileWithForm('allow-leftover-text="true"', 'name="tags"');
+            newTag('foo');
+            newTag('Foo');
+            isolateScope.events.trigger('input-blur');
+
+            // Act
+            isolateScope.options.allowLeftoverText = false;
+            isolateScope.events.trigger('option-change', { name: 'allowLeftoverText' });
+
+            // Assert
+            expect($scope.form.tags.$invalid).toBe(true);
+            expect($scope.form.tags.$error.leftoverText).toBe(true);
         });
     });
 

@@ -50,7 +50,10 @@
                 placeholder="{{placeholder}}"
                 remove-tag-symbol="{{removeTagSymbol}}"
                 max-length="5"
-                add-from-autocomplete-only="false">
+                add-from-autocomplete-only="false"
+                min-tags="{{minTags}}"
+                max-tags="{{maxTags}}"
+                allow-leftover-text="{{allowLeftoverText}}">
       <auto-complete source="loadItems2($query)"
                      debounce-delay="0"
                      min-length="1"
@@ -62,9 +65,14 @@
     <p>Errors: {{form.tags.$error}}</p>
   </form>
 
-  <input type="text" ng-model="placeholder"/><span>{{placeholder}}</span>
-  <input type="text" ng-model="removeTagSymbol"/>
-  <input type="checkbox" ng-model="addOnEnter"/><span>{{addOnEnter}}</span>
+  <p><label>placeholder:<input type="text" ng-model="placeholder"/>{{placeholder}}</label></p>
+  <p><label>removeTagSymbol:<input type="text" ng-model="removeTagSymbol"/></label></p>
+  <p><label>addOnEnter:<input type="checkbox" ng-model="addOnEnter"/>{{addOnEnter}}</label></p>
+  <p><label>minTags:<input type="text" ng-model="minTags"/></label>{{minTags}}</p>
+  <p><label>maxTags:<input type="text" ng-model="maxTags"/></label>{{maxTags}}</p>
+  <p><label>allowLeftoverText:<input type="checkbox" ng-model="allowLeftoverText"/></label></p>
+
+<input type="text" ng-model="removeTagSymbol"/>
 
   <script type="text/javascript">
     angular.module('app', ['ngTagsInput'])
@@ -129,7 +137,10 @@
               .setActiveInterpolation('tagsInput', {
                 placeholder: true,
                 removeTagSymbol: true,
-                addOnEnter: true
+                addOnEnter: true,
+                allowLeftoverText: true,
+                maxTags: true,
+                minTags: true
               });
         });
   </script>

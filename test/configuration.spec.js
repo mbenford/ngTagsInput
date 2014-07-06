@@ -16,6 +16,7 @@ describe('configuration service', function() {
 
         attrs = {};
         $scope.options = {};
+        $scope.events = { trigger: angular.noop };
     });
 
     it('loads literal values from attributes', function() {
@@ -104,6 +105,30 @@ describe('configuration service', function() {
             prop3: false,
             prop4: /.*/
         });
+    });
+
+    it('triggers an event when an interpolated value change', function() {
+        // Arrange
+        provider.setActiveInterpolation('foo', { prop1: true });
+        $scope.$parent.prop1 = 'foobar';
+        attrs.prop1 = '{{ prop1 }}';
+
+        $scope.events = jasmine.createSpyObj('events', ['trigger']);
+
+        var callback;
+        attrs.$observe = jasmine.createSpy().and.callFake(function(name, cb) {
+            callback = cb;
+        });
+
+        // Act
+        service.load('foo', $scope, attrs, {
+            prop1: [String]
+        });
+
+        callback('barfoo');
+
+        // Assert
+        expect($scope.events.trigger).toHaveBeenCalledWith('option-change', { name: 'prop1', newValue: 'barfoo' });
     });
 
     it('loads default values when attributes are missing', function() {

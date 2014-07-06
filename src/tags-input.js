@@ -118,6 +118,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         transclude: true,
         templateUrl: 'ngTagsInput/tags-input.html',
         controller: function($scope, $attrs, $element) {
+            $scope.events = new SimplePubSub();
+
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 placeholder: [String, 'Add a tag'],
                 tabindex: [Number],
@@ -138,7 +140,6 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 addFromAutocompleteOnly: [Boolean, false]
             });
 
-            $scope.events = new SimplePubSub();
             $scope.tagList = new TagList($scope.options, $scope.events);
 
             this.registerAutocomplete = function() {
@@ -172,7 +173,15 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 tagList = scope.tagList,
                 events = scope.events,
                 options = scope.options,
-                input = element.find('input');
+                input = element.find('input'),
+                validationOptions = ['minTags', 'maxTags', 'allowLeftoverText'],
+                setElementValidity;
+
+            setElementValidity = function() {
+                ngModelCtrl.$setValidity('maxTags', angular.isUndefined(options.maxTags) || scope.tags.length <= options.maxTags);
+                ngModelCtrl.$setValidity('minTags', angular.isUndefined(options.minTags) || scope.tags.length >= options.minTags);
+                ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
+            };
 
             events
                 .on('tag-added', scope.onTagAdded)
@@ -199,7 +208,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                             tagList.addText(scope.newTag.text);
                         }
 
-                        ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
+                        setElementValidity();
+                    }
+                })
+                .on('option-change', function(e) {
+                    if (validationOptions.indexOf(e.name) !== -1) {
+                        setElementValidity();
                     }
                 });
 
@@ -222,9 +236,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 tagList.items = scope.tags;
             });
 
-            scope.$watch('tags.length', function(value) {
-                ngModelCtrl.$setValidity('maxTags', angular.isUndefined(options.maxTags) || value <= options.maxTags);
-                ngModelCtrl.$setValidity('minTags', angular.isUndefined(options.minTags) || value >= options.minTags);
+            scope.$watch('tags.length', function() {
+                setElementValidity();
             });
 
             input

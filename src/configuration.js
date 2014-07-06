@@ -74,6 +74,7 @@ tagsInput.provider('tagsInputConfig', function() {
                     if (interpolationStatus[directive] && interpolationStatus[directive][key]) {
                         attrs.$observe(key, function(value) {
                             updateValue(value);
+                            scope.events.trigger('option-change', { name: key, newValue: value });
                         });
                     }
                     else {
