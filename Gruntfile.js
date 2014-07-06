@@ -13,7 +13,7 @@ module.exports = function(grunt) {
         files: {
             js: {
                 src: [
-                    'src/keycodes.js',
+                    'src/constants.js',
                     'src/util.js',
                     'src/init.js',
                     'src/tags-input.js',

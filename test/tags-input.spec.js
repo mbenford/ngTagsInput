@@ -326,6 +326,14 @@ describe('tags-input directive', function() {
             // Assert
             expect(getInput().attr('tabindex')).toBe('1');
         });
+
+        it('initializes the option to null', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.tabindex).toBeNull();
+        });
     });
 
     describe('add-on-enter option', function() {
@@ -646,12 +654,12 @@ describe('tags-input directive', function() {
     });
 
     describe('max-length option', function() {
-        it('initializes the option to undefined', function() {
+        it('initializes the option to MAX_SAFE_INTEGER', function() {
             // Arrange/Act
             compile();
 
             // Assert
-            expect(isolateScope.options.maxLength).toBeUndefined();
+            expect(isolateScope.options.maxLength).toBe(MAX_SAFE_INTEGER);
         });
 
         it('adds a new tag if the input length is less than the max-length option', function() {
@@ -787,12 +795,12 @@ describe('tags-input directive', function() {
     });
 
     describe('min-tags option', function() {
-        it('initializes the option to undefined', function() {
+        it('initializes the option to 0', function() {
             // Arrange/Act
             compile();
 
             // Assert
-            expect(isolateScope.options.minTags).toBeUndefined();
+            expect(isolateScope.options.minTags).toBe(0);
         });
 
         it('makes the element invalid when the number of tags is less than the min-tags option', function() {
@@ -854,12 +862,12 @@ describe('tags-input directive', function() {
 
 
     describe('max-tags option', function() {
-        it('initializes the option to undefined', function() {
+        it('initializes the option to MAX_SAFE_INTEGER', function() {
             // Arrange/Act
             compile();
 
             // Assert
-            expect(isolateScope.options.maxTags).toBeUndefined();
+            expect(isolateScope.options.maxTags).toBe(MAX_SAFE_INTEGER);
         });
 
         it('makes the element invalid when the number of tags is greater than the max-tags option', function() {

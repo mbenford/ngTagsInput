@@ -13,9 +13,9 @@
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
- * @param {number=} maxLength Maximum length allowed for a new tag.
- * @param {number=} minTags Sets minTags validation error key if the number of tags added is less than minTags.
- * @param {number=} maxTags Sets maxTags validation error key if the number of tags added is greater than maxTags.
+ * @param {number=} [maxLength=MAX_SAFE_INTEGER] Maximum length allowed for a new tag.
+ * @param {number=} [minTags=0] Sets minTags validation error key if the number of tags added is less than minTags.
+ * @param {number=} [maxTags=MAX_SAFE_INTEGER] Sets maxTags validation error key if the number of tags added is greater than maxTags.
  * @param {boolean=} [allowLeftoverText=false] Sets leftoverText validation error key if there is any leftover text in
  *                                             the input element when the directive loses focus.
  * @param {string=} [removeTagSymbol=×] Symbol character for the remove tag button.
@@ -50,7 +50,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             var tagText = getTagText(tag);
 
             return tagText.length >= options.minLength &&
-                   tagText.length <= (options.maxLength || tagText.length) &&
+                   tagText.length <= options.maxLength &&
                    options.allowedTagsPattern.test(tagText) &&
                    !findInObjectArray(self.items, tag, options.displayProperty);
         };
@@ -122,19 +122,19 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
 
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 placeholder: [String, 'Add a tag'],
-                tabindex: [Number],
+                tabindex: [Number, null],
                 removeTagSymbol: [String, String.fromCharCode(215)],
                 replaceSpacesWithDashes: [Boolean, true],
                 minLength: [Number, 3],
-                maxLength: [Number],
+                maxLength: [Number, MAX_SAFE_INTEGER],
                 addOnEnter: [Boolean, true],
                 addOnSpace: [Boolean, false],
                 addOnComma: [Boolean, true],
                 addOnBlur: [Boolean, true],
                 allowedTagsPattern: [RegExp, /.+/],
                 enableEditingLastTag: [Boolean, false],
-                minTags: [Number],
-                maxTags: [Number],
+                minTags: [Number, 0],
+                maxTags: [Number, MAX_SAFE_INTEGER],
                 displayProperty: [String, 'text'],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false]
@@ -178,8 +178,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 setElementValidity;
 
             setElementValidity = function() {
-                ngModelCtrl.$setValidity('maxTags', angular.isUndefined(options.maxTags) || scope.tags.length <= options.maxTags);
-                ngModelCtrl.$setValidity('minTags', angular.isUndefined(options.minTags) || scope.tags.length >= options.minTags);
+                ngModelCtrl.$setValidity('maxTags', scope.tags.length <= options.maxTags);
+                ngModelCtrl.$setValidity('minTags', scope.tags.length >= options.minTags);
                 ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
             };
 
