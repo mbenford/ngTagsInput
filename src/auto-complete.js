@@ -136,6 +136,11 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
 
             scope.suggestionList = suggestionList;
 
+            scope.addSuggestionByIndex = function(index) {
+                suggestionList.select(index);
+                scope.addSuggestion();
+            };
+
             scope.addSuggestion = function() {
                 var added = false;
 

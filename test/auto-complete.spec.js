@@ -484,13 +484,13 @@ describe('autoComplete directive', function() {
 
             it('adds the selected suggestion when a mouse click is triggered', function() {
                 // Arrange
-                getSuggestion(1).mouseenter();
+                suggestionList.selected = null;
 
                 // Act
-                getSuggestion(1).click();
+                getSuggestion(0).click();
 
                 // Assert
-                expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item2' });
+                expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' });
             });
 
             it('focuses the input field when a suggestion is added via a mouse click', function() {
