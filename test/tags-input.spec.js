@@ -99,6 +99,14 @@ describe('tags-input directive', function() {
     }
 
     describe('basic features', function() {
+        it('initializes the model as an empty array', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect($scope.tags).toEqual([]);
+        });
+
         it('renders the correct number of tags', function() {
             // Arrange
             $scope.tags = [

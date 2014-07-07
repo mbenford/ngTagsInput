@@ -44,7 +44,8 @@
 <body ng-controller="Ctrl">
 <input type="checkbox" ng-model="visible"/>
   <form name="form">
-    <tags-input name="tags" ng-if="visible" ng-init="tags2=['item1', 'item2', 'item3']" ng-model="tags2" display-property="label"
+    <tags-input name="tags" ng-if="visible"
+                ng-model="tags"
                 add-on-enter="{{addOnEnter}}"
                 add-on-blur="true"
                 placeholder="{{placeholder}}"
@@ -54,7 +55,7 @@
                 min-tags="{{minTags}}"
                 max-tags="{{maxTags}}"
                 allow-leftover-text="{{allowLeftoverText}}">
-      <auto-complete source="loadItems2($query)"
+      <auto-complete source="loadItems($query)"
                      debounce-delay="0"
                      min-length="1"
                      max-results-to-show="10">
@@ -76,7 +77,7 @@
 
   <script type="text/javascript">
     angular.module('app', ['ngTagsInput'])
-        .controller('Ctrl', function($scope, $q, $timeout) {
+        .controller('Ctrl', function($scope, $q) {
             var superheroes = [
               { text: 'Batman <bruce@wayne.com>' },
               { text: 'Superman' },
@@ -92,7 +93,6 @@
             $scope.tags = [{ text: 'Batman' }, { text: 'Superman' }, { text:'Flash' }];
             $scope.placeholder = 'New tag';
             $scope.loadItems = function(query) {
-              console.log(query);
               var deferred = $q.defer();
               var items = [];
               for (var i = 0; i < superheroes.length; i++) {
@@ -100,17 +100,9 @@
                   items.push(superheroes[i]);
                 }
               }
-              $timeout(function() {
-                deferred.resolve(items);
-              }, 2000);
+              deferred.resolve(items);
               return deferred.promise;
             };
-
-            $scope.loadItems2 = function(query) {
-                var deferred = $q.defer();
-                deferred.resolve(['Item1', 'Item2', 'Item3', 'Item4', 'Item5']);
-                return deferred.promise;
-            }
         })
         .directive('limitTags', function() {
           return {
