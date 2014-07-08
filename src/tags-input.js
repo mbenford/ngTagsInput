@@ -227,68 +227,65 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 ngModelCtrl.$setValidity('minTags', angular.isUndefined(options.minTags) || value >= options.minTags);
             });
 
-            input
-                .on('keydown', function(e) {
-                    // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.
-                    // I've sent a PR to Angular addressing this issue and hopefully it'll be fixed soon.
-                    // https://github.com/angular/angular.js/pull/4833
-                    if (e.isImmediatePropagationStopped && e.isImmediatePropagationStopped()) {
-                        return;
+            scope.onKeyDownHandler = function(e) {
+                // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.
+                // I've sent a PR to Angular addressing this issue and hopefully it'll be fixed soon.
+                // https://github.com/angular/angular.js/pull/4833
+                if (e.isImmediatePropagationStopped && e.isImmediatePropagationStopped()) {
+                    return;
+                }
+
+                var key = e.keyCode,
+                    isModifier = e.shiftKey || e.altKey || e.ctrlKey || e.metaKey,
+                    addKeys = {},
+                    shouldAdd, shouldRemove;
+
+                if (isModifier || hotkeys.indexOf(key) === -1) {
+                    return;
+                }
+
+                addKeys[KEYS.enter] = options.addOnEnter;
+                addKeys[KEYS.comma] = options.addOnComma;
+                addKeys[KEYS.space] = options.addOnSpace;
+
+                shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
+                shouldRemove = !shouldAdd && key === KEYS.backspace && scope.newTag.text.length === 0;
+
+                if (shouldAdd) {
+                    tagList.addText(scope.newTag.text);
+                    e.preventDefault();
+                }
+                else if (shouldRemove) {
+                    var tag = tagList.removeLast();
+                    if (tag && options.enableEditingLastTag) {
+                        scope.newTag.text = tag[options.displayProperty];
                     }
+                    e.preventDefault();
+                }
+            };
 
-                    var key = e.keyCode,
-                        isModifier = e.shiftKey || e.altKey || e.ctrlKey || e.metaKey,
-                        addKeys = {},
-                        shouldAdd, shouldRemove;
+            scope.onFocusHandler = function(e) {
+                if (scope.hasFocus) {
+                    return;
+                }
+                scope.hasFocus = true;
+                events.trigger('input-focus');
 
-                    if (isModifier || hotkeys.indexOf(key) === -1) {
-                        return;
+            };
+
+            scope.onBlurHandler = function(e) {
+
+                $timeout(function() {
+                    var activeElement = $document.prop('activeElement'),
+                        lostFocusToBrowserWindow = activeElement === input[0],
+                        lostFocusToChildElement = element[0].contains(activeElement);
+
+                    if (lostFocusToBrowserWindow || !lostFocusToChildElement) {
+                        scope.hasFocus = false;
+                        events.trigger('input-blur');
                     }
-
-                    addKeys[KEYS.enter] = options.addOnEnter;
-                    addKeys[KEYS.comma] = options.addOnComma;
-                    addKeys[KEYS.space] = options.addOnSpace;
-
-                    shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
-                    shouldRemove = !shouldAdd && key === KEYS.backspace && scope.newTag.text.length === 0;
-
-                    if (shouldAdd) {
-                        tagList.addText(scope.newTag.text);
-
-                        scope.$apply();
-                        e.preventDefault();
-                    }
-                    else if (shouldRemove) {
-                        var tag = tagList.removeLast();
-                        if (tag && options.enableEditingLastTag) {
-                            scope.newTag.text = tag[options.displayProperty];
-                        }
-
-                        scope.$apply();
-                        e.preventDefault();
-                    }
-                })
-                .on('focus', function() {
-                    if (scope.hasFocus) {
-                        return;
-                    }
-                    scope.hasFocus = true;
-                    events.trigger('input-focus');
-
-                    scope.$apply();
-                })
-                .on('blur', function() {
-                    $timeout(function() {
-                        var activeElement = $document.prop('activeElement'),
-                            lostFocusToBrowserWindow = activeElement === input[0],
-                            lostFocusToChildElement = element[0].contains(activeElement);
-
-                        if (lostFocusToBrowserWindow || !lostFocusToChildElement) {
-                            scope.hasFocus = false;
-                            events.trigger('input-blur');
-                        }
-                    });
                 });
+            };
 
             element.find('div').on('click', function() {
                 input[0].focus();
