@@ -365,7 +365,7 @@ describe('tags-input directive', function() {
             expect($scope.callback).toHaveBeenCalled();
         });
     });
-    
+
     describe('tabindex option', function() {
         it('sets the input field tab index', function() {
             // Arrange/Act
@@ -1202,6 +1202,20 @@ describe('tags-input directive', function() {
             // Arrange
             $scope.callback = jasmine.createSpy();
             compile('on-tag-added="callback($tag)"');
+
+            // Act
+            newTag('foo');
+
+            // Assert
+            expect($scope.callback).toHaveBeenCalledWith({ text: 'foo' });
+        });
+    });
+
+    describe('on-invalid-tag option', function() {
+        it('calls the provided callback when a invalid tag is added', function() {
+            // Arrange
+            $scope.callback = jasmine.createSpy();
+            compile('on-invalid-tag="callback($tag)" allowed-tags-pattern="^[a-z]+@[a-z]+\\.com$"');
 
             // Act
             newTag('foo');

@@ -33,6 +33,7 @@
  *                                                   When this flag is true, addOnEnter, addOnComma, addOnSpace, addOnBlur and
  *                                                   allowLeftoverText values are ignored.
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
+ * @param {expression} onInvalidTag Expression to evaluate when a tag is invalid. The invalid tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
 tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) {
@@ -118,6 +119,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         scope: {
             tags: '=ngModel',
             onTagAdded: '&',
+            onInvalidTag: '&',
             onTagRemoved: '&'
         },
         replace: false,
@@ -195,6 +197,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
 
             events
                 .on('tag-added', scope.onTagAdded)
+                .on('invalid-tag', scope.onInvalidTag)
                 .on('tag-removed', scope.onTagRemoved)
                 .on('tag-added', function() {
                     scope.newTag.text = '';
