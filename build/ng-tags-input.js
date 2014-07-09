@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-07-09 01:05:30 -0300
+ * Generated at 2014-07-09 02:25:24 -0300
  */
 (function() {
 'use strict';
@@ -120,7 +120,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
         var self = {}, getTagText, setTagText, tagIsValid;
 
         getTagText = function(tag) {
-            return tag[options.displayProperty];
+            return safeToString(tag[options.displayProperty]);
         };
 
         setTagText = function(tag, text) {
@@ -130,7 +130,8 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
         tagIsValid = function(tag) {
             var tagText = getTagText(tag);
 
-            return tagText.length >= options.minLength &&
+            return tagText &&
+                   tagText.length >= options.minLength &&
                    tagText.length <= options.maxLength &&
                    options.allowedTagsPattern.test(tagText) &&
                    !findInObjectArray(self.items, tag, options.displayProperty);
@@ -145,7 +146,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
         };
 
         self.add = function(tag) {
-            var tagText = getTagText(tag).trim();
+            var tagText = getTagText(tag);
 
             if (options.replaceSpacesWithDashes) {
                 tagText = tagText.replace(/\s/g, '-');
@@ -157,7 +158,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                 self.items.push(tag);
                 events.trigger('tag-added', { $tag: tag });
             }
-            else {
+            else if (tagText) {
                 events.trigger('invalid-tag', { $tag: tag });
             }
 
