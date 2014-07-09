@@ -253,6 +253,18 @@ describe('tags-input directive', function() {
                 { text: 'Item3' }
             ]);
         });
+
+        it('does not add an empty tag', function() {
+            // Arrange
+            compile('min-length="0"', 'allowed-tags-pattern=".*"');
+
+            // Act
+            newTag('');
+
+            // Assert
+            expect($scope.tags).toEqual([]);
+            expect(isolateScope.newTag.invalid).toBeFalsy();
+        });
     });
 
     describe('focus outline', function() {
