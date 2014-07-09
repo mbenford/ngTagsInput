@@ -204,6 +204,34 @@ describe('configuration service', function() {
         });
     });
 
+    it('falls back to default values when invalid values are provided', function() {
+        // Arrange
+        provider.setDefaults('foo', {
+            prop1: 'foobar'
+        });
+
+        attrs.prop1 = 'foo-bar';
+        attrs.prop2 = 'foo-bar';
+        attrs.prop3 = 'foo-bar';
+        attrs.prop4 = 'foo-bar';
+
+        // Act
+        service.load('foo', $scope, attrs, {
+            prop1: [String, 'barfoo', function(value) { return !value; }],
+            prop2: [String, 'foobar', function(value) { return !value; }],
+            prop3: [String, 'foobaz', function(value) { return value; }],
+            prop4: [String, 'bazfoo']
+        });
+
+        // Assert
+        expect($scope.options).toEqual({
+            prop1: 'foobar',
+            prop2: 'foobar',
+            prop3: 'foo-bar',
+            prop4: 'foo-bar'
+        });
+    });
+
     it('returns the same object so calls can be chained', function() {
         expect(provider.setDefaults('foo', {})).toBe(provider);
         expect(provider.setActiveInterpolation('foo', {})).toBe(provider);

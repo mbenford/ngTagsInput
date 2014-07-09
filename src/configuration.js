@@ -53,13 +53,16 @@ tagsInput.provider('tagsInputConfig', function() {
 
         return {
             load: function(directive, scope, attrs, options) {
+                var defaultValidator = function() { return true; };
+
                 scope.options = {};
 
                 angular.forEach(options, function(value, key) {
-                    var type, localDefault, converter, getDefault, updateValue;
+                    var type, localDefault, validator, converter, getDefault, updateValue;
 
                     type = value[0];
                     localDefault = value[1];
+                    validator = value[2] || defaultValidator;
                     converter = converters[type];
 
                     getDefault = function() {
@@ -68,7 +71,7 @@ tagsInput.provider('tagsInputConfig', function() {
                     };
 
                     updateValue = function(value) {
-                        scope.options[key] = value ? converter(value) : getDefault();
+                        scope.options[key] = value && validator(value) ? converter(value) : getDefault();
                     };
 
                     if (interpolationStatus[directive] && interpolationStatus[directive][key]) {
