@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-07-07 01:14:38 -0300
+ * Generated at 2014-07-09 01:05:30 -0300
  */
 (function() {
 'use strict';
@@ -22,6 +22,7 @@ var KEYS = {
 };
 
 var MAX_SAFE_INTEGER = 9007199254740991;
+var SUPPORTED_INPUT_TYPES = ['text', 'email', 'url'];
 
 function SimplePubSub() {
     var events = {};
@@ -89,6 +90,7 @@ var tagsInput = angular.module('ngTagsInput', []);
  *
  * @param {string} ngModel Assignable angular expression to data-bind to.
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
+ * @param {string=} [input=text] Type of the input element. Only 'text', 'email' and 'url' are supported values.
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
@@ -185,6 +187,10 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
         return self;
     }
 
+    function validateType(type) {
+        return SUPPORTED_INPUT_TYPES.indexOf(type) !== -1;
+    }
+
     return {
         restrict: 'E',
         require: 'ngModel',
@@ -200,6 +206,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
             $scope.events = new SimplePubSub();
 
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
+                type: [String, 'text', validateType],
                 placeholder: [String, 'Add a tag'],
                 tabindex: [Number, null],
                 removeTagSymbol: [String, String.fromCharCode(215)],
@@ -775,13 +782,16 @@ tagsInput.provider('tagsInputConfig', function() {
 
         return {
             load: function(directive, scope, attrs, options) {
+                var defaultValidator = function() { return true; };
+
                 scope.options = {};
 
                 angular.forEach(options, function(value, key) {
-                    var type, localDefault, converter, getDefault, updateValue;
+                    var type, localDefault, validator, converter, getDefault, updateValue;
 
                     type = value[0];
                     localDefault = value[1];
+                    validator = value[2] || defaultValidator;
                     converter = converters[type];
 
                     getDefault = function() {
@@ -790,7 +800,7 @@ tagsInput.provider('tagsInputConfig', function() {
                     };
 
                     updateValue = function(value) {
-                        scope.options[key] = value ? converter(value) : getDefault();
+                        scope.options[key] = value && validator(value) ? converter(value) : getDefault();
                     };
 
                     if (interpolationStatus[directive] && interpolationStatus[directive][key]) {
@@ -812,7 +822,7 @@ tagsInput.provider('tagsInputConfig', function() {
 /* HTML templates */
 tagsInput.run(["$templateCache", function($templateCache) {
     $templateCache.put('ngTagsInput/tags-input.html',
-    "<div class=\"host\" tabindex=\"-1\" ti-transclude-append=\"\"><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul class=\"tag-list\"><li class=\"tag-item\" ng-repeat=\"tag in tagList.items track by track(tag)\" ng-class=\"{ selected: tag == tagList.selected }\"><span ng-bind=\"getDisplayText(tag)\"></span> <a class=\"remove-button\" ng-click=\"tagList.remove($index)\" ng-bind=\"options.removeTagSymbol\"></a></li></ul><input class=\"input\" ng-model=\"newTag.text\" ng-change=\"newTagChange()\" ng-trim=\"false\" ng-class=\"{'invalid-tag': newTag.invalid}\" ti-bind-attrs=\"{placeholder: options.placeholder, tabindex: options.tabindex}\" ti-autosize=\"\"></div></div>"
+    "<div class=\"host\" tabindex=\"-1\" ti-transclude-append=\"\"><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul class=\"tag-list\"><li class=\"tag-item\" ng-repeat=\"tag in tagList.items track by track(tag)\" ng-class=\"{ selected: tag == tagList.selected }\"><span ng-bind=\"getDisplayText(tag)\"></span> <a class=\"remove-button\" ng-click=\"tagList.remove($index)\" ng-bind=\"options.removeTagSymbol\"></a></li></ul><input class=\"input\" ng-model=\"newTag.text\" ng-change=\"newTagChange()\" ng-trim=\"false\" ng-class=\"{'invalid-tag': newTag.invalid}\" ti-bind-attrs=\"{type: options.type, placeholder: options.placeholder, tabindex: options.tabindex}\" ti-autosize=\"\"></div></div>"
   );
 
   $templateCache.put('ngTagsInput/auto-complete.html',

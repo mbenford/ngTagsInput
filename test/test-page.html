@@ -45,6 +45,7 @@
 <input type="checkbox" ng-model="visible"/>
   <form name="form">
     <tags-input name="tags" ng-if="visible"
+                type="{{type}}"
                 ng-model="tags"
                 add-on-enter="{{addOnEnter}}"
                 add-on-blur="true"
@@ -73,7 +74,9 @@
   <p><label>maxTags:<input type="text" ng-model="maxTags"/></label>{{maxTags}}</p>
   <p><label>allowLeftoverText:<input type="checkbox" ng-model="allowLeftoverText"/></label></p>
 
-<input type="text" ng-model="removeTagSymbol"/>
+  <input type="text" ng-model="removeTagSymbol"/>
+
+<input type="text" ng-model="type"/>
 
   <script type="text/javascript">
     angular.module('app', ['ngTagsInput'])
@@ -132,7 +135,8 @@
                 addOnEnter: true,
                 allowLeftoverText: true,
                 maxTags: true,
-                minTags: true
+                minTags: true,
+                type: true
               });
         });
   </script>
