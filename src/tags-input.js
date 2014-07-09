@@ -210,13 +210,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     ngModelCtrl.$setValidity('leftoverText', true);
                 })
                 .on('input-blur', function() {
-                    if (!options.addFromAutocompleteOnly) {
-                        if (options.addOnBlur) {
-                            tagList.addText(scope.newTag.text);
-                        }
-
-                        setElementValidity();
+                    if(!options.addFromAutocompleteOnly && options.addOnBlur) {
+                        tagList.addText(scope.newTag.text);
                     }
+                    setElementValidity();
                 })
                 .on('option-change', function(e) {
                     if (validationOptions.indexOf(e.name) !== -1) {

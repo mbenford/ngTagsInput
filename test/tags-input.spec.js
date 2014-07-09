@@ -1155,9 +1155,21 @@ describe('tags-input directive', function() {
                 expect(isolateScope.tags).toEqual([]);
             });
 
-            it('does not make the element invalid when it loses focus and there is any leftover text', function() {
+            it('should make the element invalid when it loses focus and there is any leftover text', function() {
                 // Arrange
                 isolateScope.newTag.text = 'foo';
+
+                // Act
+                isolateScope.events.trigger('input-blur');
+
+                // Assert
+                expect($scope.form.tags.$valid).toBe(false);
+                expect($scope.form.tags.$error.leftoverText).toBeTruthy();
+            });
+
+            it('does not make the element invalid when it loses focus and there is no leftover text', function() {
+                // Arrange
+                isolateScope.newTag.text = '';
 
                 // Act
                 isolateScope.events.trigger('input-blur');
