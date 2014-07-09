@@ -6,13 +6,12 @@
         <a class="remove-button" ng-click="tagList.remove($index)" ng-bind="options.removeTagSymbol"></a>
       </li>
     </ul>
-    <input type="text"
-           class="input"
+    <input class="input"
            ng-model="newTag.text"
            ng-change="newTagChange()"
            ng-trim="false"
            ng-class="{'invalid-tag': newTag.invalid}"
-           ti-bind-attrs="{placeholder: options.placeholder, tabindex: options.tabindex}"
+           ti-bind-attrs="{type: options.type, placeholder: options.placeholder, tabindex: options.tabindex}"
            ti-autosize>
   </div>
 </div>

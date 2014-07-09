@@ -37,6 +37,7 @@
         "generateArray": true,
         "customMatchers": true,
         "KEYS": true,
-        "MAX_SAFE_INTEGER": true
+        "MAX_SAFE_INTEGER": true,
+        "SUPPORTED_INPUT_TYPES": true
     }
 }

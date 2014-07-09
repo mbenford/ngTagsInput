@@ -12,3 +12,4 @@ var KEYS = {
 };
 
 var MAX_SAFE_INTEGER = 9007199254740991;
+var SUPPORTED_INPUT_TYPES = ['text', 'email', 'url'];

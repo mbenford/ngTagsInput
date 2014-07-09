@@ -523,8 +523,36 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('type option', function() {
+        it('sets the input\'s type property', function() {
+            SUPPORTED_INPUT_TYPES.forEach(function(type) {
+                // Arrange/Act
+                compile('type="' + type + '"');
+
+                // Assert
+                expect(getInput().attr('type')).toBe(type);
+            });
+        });
+
+        it('initializes the option to "text"', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.type).toBe('text');
+        });
+
+        it('falls back to "text" when unsupported values are provided', function() {
+            // Arrange/Act
+            compile('type="datetime"');
+
+            // Assert
+            expect(getInput().attr('type')).toBe('text');
+        });
+    });
+
     describe('placeholder option', function() {
-        it('sets the input field placeholder text', function() {
+        it('sets the input\'s placeholder text', function() {
             // Arrange/Act
             compile('placeholder="New tag"');
 
