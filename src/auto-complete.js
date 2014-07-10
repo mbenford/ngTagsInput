@@ -18,6 +18,8 @@
  * @param {boolean=} [highlightMatchedText=true] Flag indicating that the matched text will be highlighted in the
  *                                               suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
+ * @param {boolean=} [autoSelectFirstSuggestion=false] Flag indicating that the first suggestion will not be
+ *                                                     automatically selected once the suggestion box is shown.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
@@ -41,7 +43,11 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
             $timeout.cancel(debouncedLoadId);
         };
         self.show = function() {
-            self.selected = null;
+            if (self.items.length > 0 && options.autoSelectFirstSuggestion) {
+                self.select(0);
+            } else {
+                self.selected = null;
+            }
             self.visible = true;
         };
         self.load = function(query, tags) {
@@ -116,7 +122,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 debounceDelay: [Number, 100],
                 minLength: [Number, 3],
                 highlightMatchedText: [Boolean, true],
-                maxResultsToShow: [Number, 10]
+                maxResultsToShow: [Number, 10],
+                autoSelectFirstSuggestion: [Boolean, false]
             });
 
             options = scope.options;
