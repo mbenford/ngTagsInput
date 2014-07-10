@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-07-09 02:25:24 -0300
+ * Generated at 2014-07-10 11:37:20 +0100
  */
 (function() {
 'use strict';
@@ -415,6 +415,8 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
  * @param {boolean=} [highlightMatchedText=true] Flag indicating that the matched text will be highlighted in the
  *                                               suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
+ * @param {boolean=} [autoSelectFirstSuggestion=false] Flag indicating that the first suggestion will not be
+ *                                                     automatically selected once the suggestion box is shown.
  */
 tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputConfig", function($document, $timeout, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
@@ -438,7 +440,11 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
             $timeout.cancel(debouncedLoadId);
         };
         self.show = function() {
-            self.selected = null;
+            if (self.items.length > 0 && options.autoSelectFirstSuggestion) {
+                self.select(0);
+            } else {
+                self.selected = null;
+            }
             self.visible = true;
         };
         self.load = function(query, tags) {
@@ -513,7 +519,8 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
                 debounceDelay: [Number, 100],
                 minLength: [Number, 3],
                 highlightMatchedText: [Boolean, true],
-                maxResultsToShow: [Number, 10]
+                maxResultsToShow: [Number, 10],
+                autoSelectFirstSuggestion: [Boolean, false]
             });
 
             options = scope.options;
