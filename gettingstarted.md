@@ -9,7 +9,7 @@ priority: 0.80
 
 ## Installing
 
-After [downloading](downloads) all files, installing ngTagsInput is a 3-step process:
+After [downloading](download) all files, installing ngTagsInput is a 3-step process:
 
 - Add the ngTagsInput script file to your page &ndash; make sure it's added after the Angular script:
 
