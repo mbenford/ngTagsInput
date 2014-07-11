@@ -324,16 +324,16 @@ module.exports = function(grunt) {
         grunt.task.run(tasks);
     });
 
-    grunt.registerTask('release', [
-        'pack',
-        'compress',
-        'changelog',
-        'replace:changelog',
-        'shell:git',
-        'copy:bower',
-        'update-bower-version',
-        'shell:git_bower'
-    ]);
+//    grunt.registerTask('release', [
+//        'pack',
+//        'compress',
+//        'changelog',
+//        'replace:changelog',
+//        'shell:git',
+//        'copy:bower',
+//        'update-bower-version',
+//        'shell:git_bower'
+//    ]);
 
     grunt.registerTask('build', [
         'pack',

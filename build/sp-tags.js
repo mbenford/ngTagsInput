@@ -1,12 +1,12 @@
 /*!
- * Showpad Tags v0.1.1
+ * Showpad Tags v0.1.3
  * http://mbenford.github.io/ngTagsInput
  *
  * Copyright (c) 2013-2014 Michael Benford
  * Edited by: @vdclouis
  * License: MIT
  *
- * Generated at 2014-07-11 16:56:00 +0200
+ * Generated at 2014-07-11 17:08:23 +0200
  */
 (function() {
 'use strict';
