@@ -5,3 +5,4 @@ node_modules/
 coverage/
 *.log
 build/*.zip
+sauce.json
