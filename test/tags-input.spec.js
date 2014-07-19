@@ -76,8 +76,7 @@ describe('tags-input directive', function() {
 
         input.trigger(event);
         if (!event.isDefaultPrevented()) {
-            input.val(input.val() + String.fromCharCode(charCode));
-            input.trigger('input');
+            changeInputValue(input.val() + String.fromCharCode(charCode));
         }
     }
 
@@ -93,9 +92,12 @@ describe('tags-input directive', function() {
         if (!event.isDefaultPrevented()) {
             var input = getInput();
             var value = input.val();
-            input.val(value.substr(0, value.length - 1));
-            input.trigger('input');
+            changeInputValue(value.substr(0, value.length - 1));
         }
+    }
+
+    function changeInputValue(value) {
+        changeElementValue(getInput(), value);
     }
 
     describe('basic features', function() {
@@ -222,7 +224,7 @@ describe('tags-input directive', function() {
             newTag('Foo');
 
             // Act
-            getInput().val('foo').trigger('input');
+            changeInputValue('foo');
 
             // Assert
             expect(getInput()).not.toHaveClass('invalid-tag');
@@ -1244,7 +1246,7 @@ describe('tags-input directive', function() {
 
         it('empties the input field after a tag is added', function() {
             // Arrange
-            getInput().val('Tag').trigger('input');
+            changeInputValue('Tag');
 
             // Act
             autocompleteObj.addTag({ text: 'Tag' });

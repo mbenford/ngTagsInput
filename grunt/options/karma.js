@@ -16,6 +16,8 @@ module.exports = function(grunt) {
             sauceLabs: {
                 testName: 'ngTagsInput'
             },
+            recordVideo: false,
+            recordScreenshots: false,
             customLaunchers: grunt.file.readJSON('sauce.launchers.json'),
             reporters: ['progress', 'saucelabs']
         }

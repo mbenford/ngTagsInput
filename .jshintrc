@@ -35,6 +35,7 @@
         "safeToString": true,
         "replaceAll" : true,
         "generateArray": true,
+        "changeElementValue": true,
         "customMatchers": true,
         "KEYS": true,
         "MAX_SAFE_INTEGER": true,

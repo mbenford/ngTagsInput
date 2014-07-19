@@ -50,8 +50,7 @@ describe('autosize directive', function() {
         compile();
 
         // Act
-        element.val(text);
-        element.trigger('input');
+        changeElementValue(element, text);
 
         // Arrange
         expect(element.css('width')).toBe(getTextWidth(text));
@@ -104,8 +103,7 @@ describe('autosize directive', function() {
         compile();
 
         // Act
-        element.val('AAAAAAAAAAAAAA');
-        element.trigger('input');
+        changeElementValue(element, 'AAAAAAAAAAAAAA');
 
         // Assert
         expect(element.prop('style').width).toBe('');

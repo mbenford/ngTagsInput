@@ -1,34 +1,34 @@
 {
     "SL_Chrome": {
         "base": "SauceLabs",
-        "browserName": "chrome"
+        "browserName": "Chrome",
+        "version": "31"
     },
     "SL_Firefox": {
         "base": "SauceLabs",
-        "browserName": "firefox",
-        "version": "26"
+        "browserName": "Firefox",
+        "version": "29"
     },
     "SL_Safari": {
         "base": "SauceLabs",
-        "browserName": "safari",
+        "browserName": "Safari",
         "platform": "OS X 10.9",
         "version": "7"
     },
-    "SL_IE_9": {
+    "SL_Opera": {
         "base": "SauceLabs",
-        "browserName": "internet explorer",
-        "platform": "Windows 2008",
-        "version": "9"
+        "browserName": "Opera",
+        "version": "12"
     },
     "SL_IE_10": {
         "base": "SauceLabs",
-        "browserName": "internet explorer",
-        "platform": "Windows 2012",
+        "browserName": "Internet Explorer",
+        "platform": "Windows 8",
         "version": "10"
     },
     "SL_IE_11": {
         "base": "SauceLabs",
-        "browserName": "internet explorer",
+        "browserName": "Internet explorer",
         "platform": "Windows 8.1",
         "version": "11"
     }
