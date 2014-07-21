@@ -304,20 +304,8 @@ describe('tags-input directive', function() {
             expect(isolateScope.hasFocus).toBe(false);
             expect($scope.$digest).toHaveBeenCalled();
         });
-
-        it('does not trigger a digest cycle when the input field is focused already', function() {
-            // Arrange
-            isolateScope.hasFocus = true;
-            spyOn($scope, '$digest');
-
-            // Act
-            getInput().triggerHandler('focus');
-
-            // Assert
-            expect($scope.$digest).not.toHaveBeenCalled();
-        });
     });
-    
+
     describe('tabindex option', function() {
         it('sets the input field tab index', function() {
             // Arrange/Act
