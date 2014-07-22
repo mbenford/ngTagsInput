@@ -18,6 +18,10 @@
  * @param {boolean=} [highlightMatchedText=true] Flag indicating that the matched text will be highlighted in the
  *                                               suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
+ *
+ * @param {boolean=} {showOnEmpty=false} Flag indicating whether the dropdown will show on input focus. When using this
+ *                                       option the source expression should handle a null query to account for focus on
+ *                                       an empty input.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
@@ -44,8 +48,9 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
             self.selected = null;
             self.visible = true;
         };
-        self.load = function(query, tags) {
-            if (query.length < options.minLength) {
+        self.load = function (query, tags, override) {
+
+            if (!override && query.length < options.minLength) {
                 self.reset();
                 return;
             }
@@ -116,7 +121,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 debounceDelay: [Number, 100],
                 minLength: [Number, 3],
                 highlightMatchedText: [Boolean, true],
-                maxResultsToShow: [Number, 10]
+                maxResultsToShow: [Number, 10],
+                showOnEmpty: [Boolean, false]
             });
 
             options = scope.options;
@@ -174,7 +180,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 .on('input-change', function(value) {
                     if (value) {
                         suggestionList.load(value, tagsInput.getTags());
-                    } else {
+                    } else if (scope.options.showOnEmpty) {
+                        suggestionList.load(null, tagsInput.getTags(), true);
+                    }
+                    else {
                         suggestionList.reset();
                     }
                 })
@@ -226,6 +235,11 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 })
                 .on('input-blur', function() {
                     suggestionList.reset();
+                })
+                .on('input-focus', function () {
+                    if (scope.options.showOnEmpty) {
+                        suggestionList.load(null, tagsInput.getTags(), true);
+                    }
                 });
 
             documentClick = function() {
