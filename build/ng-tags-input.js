@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-07-09 02:25:24 -0300
+ * Generated at 2014-07-23 11:42:08 -0300
  */
 (function() {
 'use strict';
@@ -70,12 +70,22 @@ function findInObjectArray(array, obj, key) {
 }
 
 function replaceAll(str, substr, newSubstr) {
+    if (!substr) {
+        return str;
+    }
+
     var expression = substr.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
     return str.replace(new RegExp(expression, 'gi'), newSubstr);
 }
 
 function safeToString(value) {
     return angular.isUndefined(value) || value == null ? '' : value.toString().trim();
+}
+
+function encodeHTML(value) {
+    return value.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
 }
 
 var tagsInput = angular.module('ngTagsInput', []);
@@ -244,6 +254,9 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                     },
                     getTags: function() {
                         return $scope.tags;
+                    },
+                    getCurrentTagText: function() {
+                        return $scope.newTag.text;
                     },
                     getOptions: function() {
                         return $scope.options;
@@ -415,6 +428,9 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
  * @param {boolean=} [highlightMatchedText=true] Flag indicating that the matched text will be highlighted in the
  *                                               suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
+ * @param {boolean=} [loadOnDownArrow=false] Flag indicating that the source option will be evaluated when the down arrow
+ *                                           key is pressed and the suggestion list is closed. The current input value
+ *                                           is available as $query.
  */
 tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputConfig", function($document, $timeout, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
@@ -442,11 +458,6 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
             self.visible = true;
         };
         self.load = function(query, tags) {
-            if (query.length < options.minLength) {
-                self.reset();
-                return;
-            }
-
             $timeout.cancel(debouncedLoadId);
             debouncedLoadId = $timeout(function() {
                 self.query = query;
@@ -494,12 +505,6 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
         return self;
     }
 
-    function encodeHTML(value) {
-        return value.replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;');
-    }
-
     return {
         restrict: 'E',
         require: '^tagsInput',
@@ -513,7 +518,8 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
                 debounceDelay: [Number, 100],
                 minLength: [Number, 3],
                 highlightMatchedText: [Boolean, true],
-                maxResultsToShow: [Number, 10]
+                maxResultsToShow: [Number, 10],
+                loadOnDownArrow: [Boolean, false]
             });
 
             options = scope.options;
@@ -569,19 +575,13 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
                     suggestionList.reset();
                 })
                 .on('input-change', function(value) {
-                    if (value) {
+                    if (value && value.length >= options.minLength) {
                         suggestionList.load(value, tagsInput.getTags());
                     } else {
                         suggestionList.reset();
                     }
                 })
                 .on('input-keydown', function(e) {
-                    var key, handled;
-
-                    if (hotkeys.indexOf(e.keyCode) === -1) {
-                        return;
-                    }
-
                     // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.
                     // I've sent a PR to Angular addressing this issue and hopefully it'll be fixed soon.
                     // https://github.com/angular/angular.js/pull/4833
@@ -594,9 +594,14 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
                         return immediatePropagationStopped;
                     };
 
-                    if (suggestionList.visible) {
-                        key = e.keyCode;
+                    var key = e.keyCode,
                         handled = false;
+
+                    if (hotkeys.indexOf(key) === -1) {
+                        return;
+                    }
+
+                    if (suggestionList.visible) {
 
                         if (key === KEYS.down) {
                             suggestionList.selectNext();
@@ -613,12 +618,18 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","tagsInputCon
                         else if (key === KEYS.enter || key === KEYS.tab) {
                             handled = scope.addSuggestion();
                         }
-
-                        if (handled) {
-                            e.preventDefault();
-                            e.stopImmediatePropagation();
-                            scope.$apply();
+                    }
+                    else {
+                        if (key === KEYS.down && scope.options.loadOnDownArrow) {
+                            suggestionList.load(tagsInput.getCurrentTagText(), tagsInput.getTags());
+                            handled = true;
                         }
+                    }
+
+                    if (handled) {
+                        e.preventDefault();
+                        e.stopImmediatePropagation();
+                        scope.$apply();
                     }
                 })
                 .on('input-blur', function() {
