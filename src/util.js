@@ -46,10 +46,20 @@ function findInObjectArray(array, obj, key) {
 }
 
 function replaceAll(str, substr, newSubstr) {
+    if (!substr) {
+        return str;
+    }
+
     var expression = substr.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
     return str.replace(new RegExp(expression, 'gi'), newSubstr);
 }
 
 function safeToString(value) {
     return angular.isUndefined(value) || value == null ? '' : value.toString().trim();
+}
+
+function encodeHTML(value) {
+    return value.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
 }

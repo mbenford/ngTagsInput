@@ -18,9 +18,9 @@
  * @param {boolean=} [highlightMatchedText=true] Flag indicating that the matched text will be highlighted in the
  *                                               suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
- *
- * @param {boolean=} [showSuggestionOnDownkey=false] When true the suggestion box will load and become visible on down
- *                                                   down key trigger.
+ * @param {boolean=} [loadOnDownArrow=false] Flag indicating that the source option will be evaluated when the down arrow
+ *                                           key is pressed and the suggestion list is closed. The current input value
+ *                                           is available as $query.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
@@ -47,12 +47,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
             self.selected = null;
             self.visible = true;
         };
-        self.load = function(query, tags, override) {
-            if (!override && query.length < options.minLength) {
-                self.reset();
-                return;
-            }
-
+        self.load = function(query, tags) {
             $timeout.cancel(debouncedLoadId);
             debouncedLoadId = $timeout(function() {
                 self.query = query;
@@ -100,12 +95,6 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
         return self;
     }
 
-    function encodeHTML(value) {
-        return value.replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;');
-    }
-
     return {
         restrict: 'E',
         require: '^tagsInput',
@@ -120,7 +109,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 minLength: [Number, 3],
                 highlightMatchedText: [Boolean, true],
                 maxResultsToShow: [Number, 10],
-                showSuggestionsOnDownkey: [Boolean, false]
+                loadOnDownArrow: [Boolean, false]
             });
 
             options = scope.options;
@@ -176,20 +165,13 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                     suggestionList.reset();
                 })
                 .on('input-change', function(value) {
-                    if (value) {
+                    if (value && value.length >= options.minLength) {
                         suggestionList.load(value, tagsInput.getTags());
                     } else {
                         suggestionList.reset();
                     }
                 })
                 .on('input-keydown', function(e) {
-                    var key = e.keyCode,
-                        handled = false;
-
-                    if (hotkeys.indexOf(e.keyCode) === -1) {
-                        return;
-                    }
-
                     // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.
                     // I've sent a PR to Angular addressing this issue and hopefully it'll be fixed soon.
                     // https://github.com/angular/angular.js/pull/4833
@@ -201,6 +183,13 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                     e.isImmediatePropagationStopped = function() {
                         return immediatePropagationStopped;
                     };
+
+                    var key = e.keyCode,
+                        handled = false;
+
+                    if (hotkeys.indexOf(key) === -1) {
+                        return;
+                    }
 
                     if (suggestionList.visible) {
 
@@ -220,13 +209,13 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                             handled = scope.addSuggestion();
                         }
                     }
-                    else if(!suggestionList.visible){
-                        if(key === KEYS.down && scope.options.showSuggestionsOnDownkey){
-                            var val = e.currentTarget ? e.currentTarget.value : null;
-                            suggestionList.load(val && val.length > 0 ? val : null, tagsInput.getTags(), true);
+                    else {
+                        if (key === KEYS.down && scope.options.loadOnDownArrow) {
+                            suggestionList.load(tagsInput.getCurrentTagText(), tagsInput.getTags());
                             handled = true;
                         }
                     }
+
                     if (handled) {
                         e.preventDefault();
                         e.stopImmediatePropagation();

@@ -33,6 +33,7 @@
         "makeObjectArray": true,
         "findInObjectArray": true,
         "safeToString": true,
+        "encodeHTML": true,
         "replaceAll" : true,
         "generateArray": true,
         "changeElementValue": true,

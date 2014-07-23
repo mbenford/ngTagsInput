@@ -165,6 +165,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     getTags: function() {
                         return $scope.tags;
                     },
+                    getCurrentTagText: function() {
+                        return $scope.newTag.text;
+                    },
                     getOptions: function() {
                         return $scope.options;
                     },

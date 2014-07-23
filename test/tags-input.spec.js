@@ -1228,6 +1228,7 @@ describe('tags-input directive', function() {
                 focusInput: jasmine.any(Function),
                 on: jasmine.any(Function),
                 getTags: jasmine.any(Function),
+                getCurrentTagText: jasmine.any(Function),
                 getOptions: jasmine.any(Function)
             });
         });
@@ -1275,6 +1276,15 @@ describe('tags-input directive', function() {
 
             // Act/Assert
             expect(autocompleteObj.getTags()).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }]);
+        });
+
+        it('returns the current tag text', function() {
+            // Arrange
+            changeInputValue('ABC');
+            $scope.$digest();
+
+            // Act/Assert
+            expect(autocompleteObj.getCurrentTagText()).toBe('ABC');
         });
 
         it('returns the option list', function() {
