@@ -1,6 +1,17 @@
 language: node_js
 node_js:
-  - "0.10"
+- '0.10'
 before_script:
-  - npm install -g grunt-cli@0.1.11 karma-cli@0.0.4
+- npm install -g grunt-cli@0.1.11 karma-cli@0.0.4
 script: grunt travis
+deploy:
+  provider: s3
+  access_key_id: AKIAI55AELZBPQKVIAXQ
+  secret_access_key:
+    secure: fDp97fUYc19sXmMnnp4OZL8MQYyTXRkxTVJj9NSdFI4xFCu34igwlcJXwHt9uuzV2wVIQ3R9GsAVfSwZxD+XWz1qrzWRt3PIsR5J7I9ZiqE0DaCK9IBVepsz5BR/A/q9v3VWGW7o+wy419EKVuXGHCJMAUoHeQCGeb8gOKYpI3g=
+  bucket: ng-tags-input
+  local-dir: build
+  skip_cleanup: true
+  on:
+    repo: mbenford/ngTagsInput
+    branch: master

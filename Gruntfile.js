@@ -73,7 +73,7 @@ module.exports = function(grunt) {
     grunt.loadTasks('grunt/tasks');
 
     grunt.registerTask('test', ['jshint','karma:local']);
-    grunt.registerTask('travis', ['test', 'coveralls']);
+    grunt.registerTask('travis', ['pack', 'coveralls']);
     grunt.registerTask('coverage', ['test', 'open:coverage']);
 
     grunt.registerTask('javascript-only', [
