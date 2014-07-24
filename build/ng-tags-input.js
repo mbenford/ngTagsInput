@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2014 Michael Benford
  * License: MIT
  *
- * Generated at 2014-06-24 14:14:11 +0200
+ * Generated at 2014-07-24 17:44:47 +0200
  */
 (function() {
 'use strict';
@@ -184,7 +184,9 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
             tags: '=ngModel',
             onTagAdded: '&',
             onTagSelected: '&',
-            onTagRemoved: '&'
+            onTagRemoved: '&',
+            onInputBlur: '&',
+            onInputFocus: '&'
         },
         replace: false,
         transclude: true,
@@ -274,9 +276,11 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                     scope.newTag.invalid = null;
                 })
                 .on('input-focus', function() {
+                    scope.onInputFocus();
                     ngModelCtrl.$setValidity('leftoverText', true);
                 })
                 .on('input-blur', function() {
+                    scope.onInputBlur();
                     if (!options.addFromAutocompleteOnly) {
                         if (options.addOnBlur) {
                             tagList.addText(getInputText());

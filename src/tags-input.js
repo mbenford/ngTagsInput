@@ -109,7 +109,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             tags: '=ngModel',
             onTagAdded: '&',
             onTagSelected: '&',
-            onTagRemoved: '&'
+            onTagRemoved: '&',
+            onInputBlur: '&',
+            onInputFocus: '&'
         },
         replace: false,
         transclude: true,
@@ -199,9 +201,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     scope.newTag.invalid = null;
                 })
                 .on('input-focus', function() {
+                    scope.onInputFocus();
                     ngModelCtrl.$setValidity('leftoverText', true);
                 })
                 .on('input-blur', function() {
+                    scope.onInputBlur();
                     if (!options.addFromAutocompleteOnly) {
                         if (options.addOnBlur) {
                             tagList.addText(getInputText());
