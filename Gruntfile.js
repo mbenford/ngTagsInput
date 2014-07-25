@@ -106,10 +106,5 @@ module.exports = function(grunt) {
         'shell:git_bower'
     ]);
 
-    grunt.registerTask('build', [
-        'pack',
-        'shell:git_build'
-    ]);
-
     grunt.registerTask('default', ['pack']);
 };
