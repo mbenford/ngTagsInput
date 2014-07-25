@@ -4,5 +4,5 @@
 node_modules/
 coverage/
 *.log
-build/*.zip
+build/
 sauce.json
