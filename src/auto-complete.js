@@ -21,6 +21,9 @@
  * @param {boolean=} [loadOnDownArrow=false] Flag indicating that the source option will be evaluated when the down arrow
  *                                           key is pressed and the suggestion list is closed. The current input value
  *                                           is available as $query.
+ * @param {boolean=} {showOnEmpty=false} Flag indicating whether the dropdown will show on input focus. When using this
+ *                                       option the source expression should handle a null query to account for focus on
+ *                                       an empty input.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
@@ -109,7 +112,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 minLength: [Number, 3],
                 highlightMatchedText: [Boolean, true],
                 maxResultsToShow: [Number, 10],
-                loadOnDownArrow: [Boolean, false]
+                loadOnDownArrow: [Boolean, false],
+                showOnEmpty: [Boolean, false]
             });
 
             options = scope.options;
@@ -167,7 +171,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 .on('input-change', function(value) {
                     if (value && value.length >= options.minLength) {
                         suggestionList.load(value, tagsInput.getTags());
-                    } else {
+                    } else if (scope.options.showOnEmpty) {
+                        suggestionList.load('', tagsInput.getTags());
+                    }
+                    else {
                         suggestionList.reset();
                     }
                 })
@@ -224,6 +231,11 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 })
                 .on('input-blur', function() {
                     suggestionList.reset();
+                })
+                .on('input-focus', function () {
+                    if (scope.options.showOnEmpty) {
+                        suggestionList.load('', tagsInput.getTags(), true);
+                    }
                 });
 
             documentClick = function() {
