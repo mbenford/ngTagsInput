@@ -21,9 +21,8 @@
  * @param {boolean=} [loadOnDownArrow=false] Flag indicating that the source option will be evaluated when the down arrow
  *                                           key is pressed and the suggestion list is closed. The current input value
  *                                           is available as $query.
- * @param {boolean=} {showOnEmpty=false} Flag indicating whether the dropdown will show on input focus. When using this
- *                                       option the source expression should handle a null query to account for focus on
- *                                       an empty input.
+ * @param {boolean=} {loadOnEmpty=false} Flag indicating that the source option will be evaluated when the input content
+ *                                       becomes empty. The $query variable will be passed to the expression as an empty string.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
@@ -113,7 +112,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 highlightMatchedText: [Boolean, true],
                 maxResultsToShow: [Number, 10],
                 loadOnDownArrow: [Boolean, false],
-                showOnEmpty: [Boolean, false]
+                loadOnEmpty: [Boolean, false]
             });
 
             options = scope.options;
@@ -165,14 +164,15 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
             };
 
             tagsInput
-                .on('tag-added invalid-tag', function() {
+                .on('tag-added tag-removed invalid-tag input-blur', function() {
                     suggestionList.reset();
                 })
                 .on('input-change', function(value) {
-                    if (value && value.length >= options.minLength) {
+                    var shouldLoadSuggestions = value && value.length >= options.minLength ||
+                                                !value && options.loadOnEmpty;
+
+                    if (shouldLoadSuggestions) {
                         suggestionList.load(value, tagsInput.getTags());
-                    } else if (scope.options.showOnEmpty) {
-                        suggestionList.load('', tagsInput.getTags());
                     }
                     else {
                         suggestionList.reset();
@@ -228,28 +228,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                         e.stopImmediatePropagation();
                         scope.$apply();
                     }
-                })
-                .on('input-blur', function() {
-                    suggestionList.reset();
-                })
-                .on('input-focus', function () {
-                    if (scope.options.showOnEmpty) {
-                        suggestionList.load('', tagsInput.getTags(), true);
-                    }
                 });
-
-            documentClick = function() {
-                if (suggestionList.visible) {
-                    suggestionList.reset();
-                    scope.$apply();
-                }
-            };
-
-            $document.on('click', documentClick);
-
-            scope.$on('$destroy', function() {
-                $document.off('click', documentClick);
-            });
         }
     };
 });

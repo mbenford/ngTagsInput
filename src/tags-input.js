@@ -295,7 +295,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     if (scope.hasFocus) {
                         return;
                     }
-                    scope.events.trigger('input-focus');
+
                     scope.hasFocus = true;
                     events.trigger('input-focus');
 

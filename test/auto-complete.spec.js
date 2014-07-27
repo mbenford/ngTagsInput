@@ -1,18 +1,17 @@
 'use strict';
 
 describe('autoComplete directive', function() {
-    var $compile, $scope, $q, $timeout, $document,
+    var $compile, $scope, $q, $timeout,
         parentCtrl, element, isolateScope, suggestionList, deferred, tagsInput, eventHandlers;
 
     beforeEach(function() {
         module('ngTagsInput');
 
-        inject(function($rootScope, _$compile_, _$q_, _$timeout_, _$document_) {
+        inject(function($rootScope, _$compile_, _$q_, _$timeout_) {
             $scope = $rootScope;
             $compile = _$compile_;
             $q = _$q_;
             $timeout = _$timeout_;
-            $document = _$document_;
         });
 
         deferred = $q.defer();
@@ -212,13 +211,14 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('hides the suggestion box when the user clicks elsewhere on the page', function() {
+        it('hides the suggestion box when a tag is removed', function() {
             // Arrange
             suggestionList.show();
             $scope.$digest();
 
             // Act
-            $document.trigger('click');
+            eventHandlers['tag-removed']();
+            $scope.$digest();
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(false);
@@ -407,18 +407,6 @@ describe('autoComplete directive', function() {
                 { text: 'Item2' },
                 { text: 'Item3' }
             ]);
-        });
-
-        it('removes the event listeners on the document when the scope is destroyed', function() {
-            // Arrange
-            compile();
-            spyOn($document, 'off');
-
-            // Arrange
-            $scope.$destroy();
-
-            // Assert
-            expect($document.off).toHaveBeenCalled();
         });
     });
 
@@ -714,6 +702,40 @@ describe('autoComplete directive', function() {
         });
     });
 
+    describe('load-on-empty option', function(){
+        it('initialize the option to false', function(){
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.loadOnEmpty).toBe(false);
+        });
+
+        it('calls the load function when the input field becomes empty and the option is true', function(){
+            // Arrange
+            compile('load-on-empty="true"');
+
+            // Act
+            changeInputValue('');
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).toHaveBeenCalledWith('');
+        });
+
+        it('doesn\'t call the load function when the input field becomes empty and the option is false', function(){
+            // Arrange
+            compile('load-on-empty="false"');
+
+            // Act
+            changeInputValue('');
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).not.toHaveBeenCalled();
+        });
+    });
+
     describe('debounce-delay option', function() {
         it('initializes the option to 100 milliseconds', function() {
             // Arrange/Act
@@ -815,40 +837,6 @@ describe('autoComplete directive', function() {
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
-    });
-
-    describe('show-on-empty option', function(){
-        it('initialize the option to false', function(){
-            //Arrange
-            compile();
-
-            //Assert
-            expect(isolateScope.options.showOnEmpty).toBe(false);
-        });
-
-        it('shows the suggestion box when the input field becomes empty', function(){
-            //Arrange
-            compile('show-on-empty="true"');
-
-            //Act
-            changeInputValue('');
-            $timeout.flush();
-
-            expect($scope.loadItems).toHaveBeenCalledWith('');
-        });
-
-        it('shows the suggestion box when input is focused and input is empty', function(){
-            //Arrange
-            compile('show-on-empty="true"');
-
-            //Act
-            eventHandlers['input-focus']();
-            $timeout.flush();
-
-            //Assert
-            expect($scope.loadItems).toHaveBeenCalledWith('');
-        });
-
     });
 
     describe('highlight-matched-text option', function() {
