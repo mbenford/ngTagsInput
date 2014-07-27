@@ -23,6 +23,8 @@
  *                                           is available as $query.
  * @param {boolean=} {loadOnEmpty=false} Flag indicating that the source option will be evaluated when the input content
  *                                       becomes empty. The $query variable will be passed to the expression as an empty string.
+ * @param {boolean=} {loadOnFocus=false} Flag indicating that the source option will be evaluated when the input element
+ *                                       gains focus. The current input value is available as $query.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
@@ -104,7 +106,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
         templateUrl: 'ngTagsInput/auto-complete.html',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList, tagsInput, options, getItem, getDisplayText, documentClick;
+                suggestionList, tagsInput, options, getItem, getDisplayText, shouldLoadSuggestions;
 
             tagsInputConfig.load('autoComplete', scope, attrs, {
                 debounceDelay: [Number, 100],
@@ -112,7 +114,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 highlightMatchedText: [Boolean, true],
                 maxResultsToShow: [Number, 10],
                 loadOnDownArrow: [Boolean, false],
-                loadOnEmpty: [Boolean, false]
+                loadOnEmpty: [Boolean, false],
+                loadOnFocus: [Boolean, false]
             });
 
             options = scope.options;
@@ -128,6 +131,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
 
             getDisplayText = function(item) {
                 return safeToString(getItem(item));
+            };
+
+            shouldLoadSuggestions = function(value) {
+                return value && value.length >= options.minLength || !value && options.loadOnEmpty;
             };
 
             scope.suggestionList = suggestionList;
@@ -168,14 +175,17 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                     suggestionList.reset();
                 })
                 .on('input-change', function(value) {
-                    var shouldLoadSuggestions = value && value.length >= options.minLength ||
-                                                !value && options.loadOnEmpty;
-
-                    if (shouldLoadSuggestions) {
+                    if (shouldLoadSuggestions(value)) {
                         suggestionList.load(value, tagsInput.getTags());
                     }
                     else {
                         suggestionList.reset();
+                    }
+                })
+                .on('input-focus', function() {
+                    var value = tagsInput.getCurrentTagText();
+                    if (options.loadOnFocus && shouldLoadSuggestions(value)) {
+                        suggestionList.load(value, tagsInput.getTags());
                     }
                 })
                 .on('input-keydown', function(e) {

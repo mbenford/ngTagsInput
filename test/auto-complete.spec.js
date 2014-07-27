@@ -736,6 +736,42 @@ describe('autoComplete directive', function() {
         });
     });
 
+    describe('load-on-focus option', function() {
+        it('initializes the option to false', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.loadOnFocus).toBe(false);
+        });
+
+        it('calls the load function when the input element gains focus and the option is true', function() {
+            // Arrange
+            compile('load-on-focus="true"');
+            tagsInput.getCurrentTagText.and.returnValue('ABC');
+
+            // Act
+            eventHandlers['input-focus']();
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).toHaveBeenCalledWith('ABC');
+        });
+
+        it('doesn\' call the load function when the input element gains focus and the option is false', function() {
+            // Arrange
+            compile('load-on-focus="false"');
+            tagsInput.getCurrentTagText.and.returnValue('ABC');
+
+            // Act
+            eventHandlers['input-focus']();
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).not.toHaveBeenCalled();
+        });
+    });
+
     describe('debounce-delay option', function() {
         it('initializes the option to 100 milliseconds', function() {
             // Arrange/Act
