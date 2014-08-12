@@ -1,7 +1,8 @@
 module.exports = {
     build: {
         files: {
-            '<%= files.css.outMin %>': ['<%= files.css.out %>']
+            '<%= files.css.main.outMin %>': ['<%= files.css.main.out %>'],
+            '<%= files.css.bootstrap.outMin %>': ['<%= files.css.bootstrap.out %>']
         }
     }
 };

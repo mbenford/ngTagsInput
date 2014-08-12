@@ -5,11 +5,11 @@ tags-input .autocomplete {
   margin-top: 5px;
   position: absolute;
   padding: 5px 0;
-  z-index: $suggestion-box-z-index;
-  width: $suggestion-box-width;
-  background-color: $suggestion-box-color;
-  border: $suggestion-box-border;
-  @include box-shadow($suggestion-box-shadow);
+  z-index: $suggestions-z-index;
+  width: $suggestions-width;
+  background-color: $suggestions-bgcolor;
+  border: $suggestions-border;
+  @include box-shadow($suggestions-border-shadow);
 
   .suggestion-list {
     margin: 0;

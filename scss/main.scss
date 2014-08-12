@@ -1,14 +1,17 @@
-tags-input *, *:before, *:after {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
 tags-input {
+  display: block;
+
+  *, *:before, *:after {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
   .host {
     position: relative;
     margin-top: 5px;
     margin-bottom: 5px;
+    height: 100%;
 
     &:active {
       outline: none;

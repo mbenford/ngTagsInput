@@ -12,6 +12,7 @@ tags-input {
     background-color: $tags-bgcolor;
     border: $tags-border;
     box-shadow: $tags-border-shadow;
+    height: 100%;
 
     &.focused {
       outline: none;

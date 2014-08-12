@@ -5,7 +5,8 @@ module.exports = {
             noCache: true
         },
         files: {
-            '<%= files.css.out %>': ['<%= files.css.src %>']
+            '<%= files.css.main.out %>': ['<%= files.css.main.src %>'],
+            '<%= files.css.bootstrap.out %>': ['<%= files.css.bootstrap.src %>']
         }
     }
 };

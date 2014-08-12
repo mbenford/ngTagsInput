@@ -4,7 +4,9 @@
   <title>ngTagsInput Test Page</title>
   <script type="text/javascript" src="lib/angular.js"></script>
   <script type="text/javascript" src="../build/ng-tags-input.js"></script>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="../build/ng-tags-input.css"/>
+  <link rel="stylesheet" href="../build/ng-tags-input.bootstrap.css"/>
   <style>
     .foo .tags .input {
       font-size: 16px;
@@ -42,44 +44,54 @@
   </style>
 </head>
 <body ng-controller="Ctrl">
-<input type="checkbox" ng-model="visible"/>
-  <form name="form">
-    <tags-input name="tags" ng-if="visible"
-                type="{{type}}"
-                ng-model="tags"
-                add-on-enter="{{addOnEnter}}"
-                add-on-blur="true"
-                placeholder="{{placeholder}}"
-                remove-tag-symbol="{{removeTagSymbol}}"
-                max-length="5"
-                add-from-autocomplete-only="false"
-                min-tags="{{minTags}}"
-                max-tags="{{maxTags}}"
-                allow-leftover-text="{{allowLeftoverText}}">
-      <auto-complete source="loadItems($query)"
-                     debounce-delay="0"
-                     min-length="1"
-                     max-results-to-show="10"
-                     load-on-down-arrow="true"
-                     show-on-empty="true">
-      </auto-complete>
+    <p></p>
+    <tags-input ng-model="tags">
+        <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
     </tags-input>
-
-    <p>Valid: {{form.tags.$valid}}</p>
-    <p>Errors: {{form.tags.$error}}</p>
-  </form>
-
-  <p><label>placeholder:<input type="text" ng-model="placeholder"/>{{placeholder}}</label></p>
-  <p><label>removeTagSymbol:<input type="text" ng-model="removeTagSymbol"/></label></p>
-  <p><label>addOnEnter:<input type="checkbox" ng-model="addOnEnter"/>{{addOnEnter}}</label></p>
-  <p><label>minTags:<input type="text" ng-model="minTags"/></label>{{minTags}}</p>
-  <p><label>maxTags:<input type="text" ng-model="maxTags"/></label>{{maxTags}}</p>
-  <p><label>allowLeftoverText:<input type="checkbox" ng-model="allowLeftoverText"/></label></p>
-
-  <input type="text" ng-model="removeTagSymbol"/>
-
-<input type="text" ng-model="type"/>
-
+    <p></p>
+    <div class="input-group" style="width: 600px">
+        <span class="input-group-addon">@</span>
+        <tags-input ng-model="tags">
+            <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
+        </tags-input>
+        <span class="input-group-addon">.00</span>
+    </div>
+    <p></p>
+    <div class="input-group input-group-lg" style="width: 600px">
+        <span class="input-group-addon">@</span>
+        <tags-input ng-model="tags">
+            <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
+        </tags-input>
+        <span class="input-group-addon">.00</span>
+    </div>
+<p></p>
+    <div class="input-group input-group-sm" style="width: 600px">
+        <span class="input-group-addon">@</span>
+        <tags-input ng-model="tags">
+            <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
+        </tags-input>
+        <span class="input-group-addon">.00</span>
+    </div>
+    <p></p>
+    <div class="form-group has-success has-feedback" style="width: 500px">
+        <label class="control-label" for="inputSuccess2">Input with success</label>
+        <tags-input ng-model="tags">
+            <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
+        </tags-input>
+        <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+    </div>
+    <div class="form-group has-error has-feedback" style="width: 500px">
+      <label class="control-label" for="inputSuccess2">Input with success</label>
+      <tags-input ng-model="tags">
+        <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
+      </tags-input>
+      <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+    </div>
+    <div class="form-group has-success has-feedback" style="width: 500px">
+      <label class="control-label" for="inputSuccess2">Input with success</label>
+      <input type="text" class="form-control"/>
+      <span class="glyphicon glyphicon-ok form-control-feedback"></span>
+    </div>
   <script type="text/javascript">
     angular.module('app', ['ngTagsInput'])
         .controller('Ctrl', function($scope, $q) {

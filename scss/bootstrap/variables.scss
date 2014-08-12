@@ -1,0 +1,55 @@
+// tagsInput
+$tags-border:                           1px solid #ccc;
+$tags-border-radius:                    4px;
+$tags-border-shadow:                    inset 0 1px 1px rgba(0, 0, 0, .075);
+$tags-transition:                       border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+$tags-outline-border:                   1px solid #66afe9;
+$tags-outline-border-shadow:            inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+
+$tag-color:                             #fff;
+$tag-bgcolor:                           #428bca;
+$tag-border:                            1px solid #357ebd;
+$tag-border-radius:                     4px;
+
+$tag-color-selected:                    #fff;
+$tag-bgcolor-selected:                  #d9534f;
+$tag-border-selected:                   1px solid #d43f3a;
+
+$tags-height:                           34px;
+
+$tags-height-lg:                        46px;
+$tag-height-lg:                         38px;
+$tag-font-size-lg:                      18px;
+$tag-border-radius-lg:                  6px;
+$remove-button-font-size-lg:            20px;
+$input-font-size-lg:                    18px;
+
+$tags-height-sm:                        30px;
+$tag-height-sm:                         22px;
+$tag-font-size-sm:                      12px;
+$tag-border-radius-sm:                  3px;
+$remove-button-font-size-sm:            16px;
+$input-font-size-sm:                    12px;
+
+$tags-border-color-success:             #3c763d;
+$tags-outline-border-color-success:     #2b542c;
+$tags-outline-border-shadow-success:    inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #67b168;
+
+$tags-border-color-error:               #a94442;
+$tags-outline-border-color-error:       #843534;
+$tags-outline-border-shadow-error:      inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
+
+$tags-border-color-warning:             #8a6d3b;
+$tags-outline-border-color-warning:     #66512c;
+$tags-outline-border-shadow-warning:    inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #c0a16b;
+
+// autoComplete
+$suggestions-border-radius:             4px;
+
+$suggestion-color-selected:             #262626;
+$suggestion-bgcolor-selected:           #f5f5f5;
+
+$suggestion-highlight-color:            #000;
+$suggestion-highlight-bgcolor:          #fff;
+$suggestion-highlight-color-selected:   $suggestion-color-selected;
+$suggestion-highlight-bgcolor-selected: $suggestion-bgcolor-selected;
