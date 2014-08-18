@@ -13,6 +13,7 @@
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {string=} [type=text] Input type for the control.
+ * @param {string=} [autocomplete=on] Autocomplete option.
  * @param {number=} [minLength=3] Minimum length for a new tag.
  * @param {number=} maxLength Maximum length allowed for a new tag.
  * @param {number=} minTags Sets minTags validation error key if the number of tags added is less than minTags.
@@ -119,6 +120,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         controller: function($scope, $attrs, $element) {
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 type: [String, 'text'],
+                autoComplete: [String, 'on'],
                 placeholder: [String, 'Add a tag'],
                 tabindex: [Number],
                 removeTagSymbol: [String, String.fromCharCode(215)],
