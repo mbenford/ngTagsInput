@@ -120,7 +120,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         controller: function($scope, $attrs, $element) {
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 type: [String, 'text'],
-                autoComplete: [String, 'on'],
+                autocomplete: [String, 'on'],
                 placeholder: [String, 'Add a tag'],
                 tabindex: [Number],
                 removeTagSymbol: [String, String.fromCharCode(215)],
