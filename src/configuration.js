@@ -10,7 +10,9 @@
  * initialize options from HTML attributes.
  */
 tagsInput.provider('tagsInputConfig', function() {
-    var globalDefaults = {}, interpolationStatus = {};
+    var globalDefaults = {},
+        interpolationStatus = {},
+        autosizeThreshold = 3;
 
     /**
      * @ngdoc method
@@ -41,6 +43,20 @@ tagsInput.provider('tagsInputConfig', function() {
      */
     this.setActiveInterpolation = function(directive, options) {
         interpolationStatus[directive] = options;
+        return this;
+    };
+
+    /***
+     * @ngdoc method
+     * @name setTextAutosizeThreshold
+     * @methodOf tagsInputConfig
+     *
+     * @param {number} threshold Threshold to be used by the tagsInput directive to re-size the input element based on its contents.
+     *
+     * @returns {object} The service itself for chaining purposes.
+     */
+    this.setTextAutosizeThreshold = function(threshold) {
+        autosizeThreshold = threshold;
         return this;
     };
 
@@ -84,6 +100,9 @@ tagsInput.provider('tagsInputConfig', function() {
                         updateValue(attrs[key] && $interpolate(attrs[key])(scope.$parent));
                     }
                 });
+            },
+            getTextAutosizeThreshold: function() {
+                return autosizeThreshold;
             }
         };
     };

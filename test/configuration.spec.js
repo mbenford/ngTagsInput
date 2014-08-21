@@ -235,5 +235,18 @@ describe('configuration service', function() {
     it('returns the same object so calls can be chained', function() {
         expect(provider.setDefaults('foo', {})).toBe(provider);
         expect(provider.setActiveInterpolation('foo', {})).toBe(provider);
+        expect(provider.setTextAutosizeThreshold(10)).toBe(provider);
+    });
+
+    it('sets the threshold used to calculate the size of the input element', function() {
+        // Act
+        provider.setTextAutosizeThreshold(10);
+
+        // Assert
+        expect(service.getTextAutosizeThreshold()).toBe(10);
+    });
+
+    it('defaults the threshold used to calculate the size of the input element to 3', function() {
+        expect(service.getTextAutosizeThreshold()).toBe(3);
     });
 });

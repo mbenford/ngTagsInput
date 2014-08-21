@@ -8,12 +8,12 @@
  * @description
  * Automatically sets the input's width so its content is always visible. Used internally by tagsInput directive.
  */
-tagsInput.directive('tiAutosize', function() {
+tagsInput.directive('tiAutosize', function(tagsInputConfig) {
     return {
         restrict: 'A',
         require: 'ngModel',
         link: function(scope, element, attrs, ctrl) {
-            var THRESHOLD = 3,
+            var threshold = tagsInputConfig.getTextAutosizeThreshold(),
                 span, resize;
 
             span = angular.element('<span class="input"></span>');
@@ -38,7 +38,7 @@ tagsInput.directive('tiAutosize', function() {
                     span.css('display', 'none');
                 }
 
-                element.css('width', width ? width + THRESHOLD + 'px' : '');
+                element.css('width', width ? width + threshold + 'px' : '');
 
                 return originalValue;
             };
