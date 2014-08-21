@@ -9,7 +9,11 @@ module.exports = {
         files : [
             {
                 expand: true,
-                src : ['<%= files.js.outMin %>', '<%= files.css.main.outMin %>'],
+                src : [
+                    '<%= files.js.outMin %>',
+                    '<%= files.css.main.outMin %>',
+                    '<%= files.css.bootstrap.outMin %>'
+                ],
                 flatten: true
             }
         ]
@@ -21,7 +25,11 @@ module.exports = {
         files : [
             {
                 expand: true,
-                src : ['<%= files.js.out %>', '<%= files.css.main.out %>'],
+                src : [
+                    '<%= files.js.out %>',
+                    '<%= files.css.main.out %>',
+                    '<%= files.css.bootstrap.out %>'
+                ],
                 flatten: true
             }
         ]
