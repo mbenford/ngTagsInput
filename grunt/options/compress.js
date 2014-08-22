@@ -33,5 +33,28 @@ module.exports = {
                 flatten: true
             }
         ]
+    },
+    npm: {
+        options: {
+            archive: '<%= files.tgz.npm %>',
+            mode: 'tgz'
+        },
+        files : [
+            {
+                expand: true,
+                src : [
+                    '<%= files.js.out %>',
+                    '<%= files.css.main.out %>',
+                    '<%= files.css.bootstrap.out %>',
+                    '<%= files.js.outMin %>',
+                    '<%= files.css.main.outMin %>',
+                    '<%= files.css.bootstrap.outMin %>',
+                    'README.md',
+                    'package.json'
+                ],
+                dest: 'package/',
+                flatten: true
+            }
+        ]
     }
 };

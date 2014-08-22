@@ -55,6 +55,9 @@ module.exports = function(grunt) {
                 unminified: 'build/<%= pkg.name %>.zip',
                 minified: 'build/<%= pkg.name %>.min.zip'
             },
+            tgz: {
+                npm: 'build/<%= pkg.name %>.tgz'
+            },
             spec: {
                 src: 'test/*.spec.js'
             }
