@@ -13,6 +13,10 @@
         "type": "git",
         "url": "https://github.com/mbenford/ngTagsInput.git"
     },
+    "bugs": {
+        "url": "https://github.com/mbenford/ngTagsInput/issues"
+    },
+    "keywords": ["angular", "tags", "tags-input"],
     "scripts": {
         "test": "grunt test"
     },
