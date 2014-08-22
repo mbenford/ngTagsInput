@@ -1,3 +1,28 @@
+## 2.1.0 (2014-08-22)
+
+#### Bug Fixes
+
+* **autocomplete:** Fix suggestion selection on touch devices ([ef25a555](https://github.com/mbenford/ngTagsInput/commit/ef25a5555f358e9986635826788c2475c9f417ee))
+* **tagsInput:**
+  * Prevent an empty tag from being added ([c104c2b2](https://github.com/mbenford/ngTagsInput/commit/c104c2b2cdd19fe891c76e4a2b1f20d13e27369f), [#172](https://github.com/mbenford/ngTagsInput/issues/172))
+  * Set element's validity when options change ([e89f2682](https://github.com/mbenford/ngTagsInput/commit/e89f268218d75f23c6c14c426b7b7c7686fd8898), [#154](https://github.com/mbenford/ngTagsInput/issues/154))
+  * Replace interpolation with ngBind ([cadf8327](https://github.com/mbenford/ngTagsInput/commit/cadf83279c194b0135a5b5960987028c91c04e74))
+  * Remove dependency on interpolation symbols ([6598b556](https://github.com/mbenford/ngTagsInput/commit/6598b5562169c506e7645acbdac360e8d20c1054), [#151](https://github.com/mbenford/ngTagsInput/issues/151))
+  * Fix display of non-string items ([49734921](https://github.com/mbenford/ngTagsInput/commit/497349211ff17505208268fade98ed93e13fa082), [#150](https://github.com/mbenford/ngTagsInput/issues/150))
+
+#### Features
+
+* **autocomplete:**
+  * Add loadOnFocus option ([fe711f56](https://github.com/mbenford/ngTagsInput/commit/fe711f56eaa3fe4293527955e653b3f6bbd235a0))
+  * Add loadOnEmpty option ([28c615fa](https://github.com/mbenford/ngTagsInput/commit/28c615fa543cdcfa79107e3d9bddfdb73f85c87a))
+  * Add loadOnDownArrow option ([c44f110a](https://github.com/mbenford/ngTagsInput/commit/c44f110a539fe44f2255d51ee7e011b3d84bc38a), [#54](https://github.com/mbenford/ngTagsInput/issues/54))
+* **configuration:**
+  * Add setTextAutosizeThreshold method ([a1702e63](https://github.com/mbenford/ngTagsInput/commit/a1702e636128c8ec7fd14c9f0e7a235157696986), [#181](https://github.com/mbenford/ngTagsInput/issues/181))
+  * Add support for validation ([445877a1](https://github.com/mbenford/ngTagsInput/commit/445877a1325c31708f9bf7ea6a85e51647ce6a94))
+* **tagsInput:**
+  * Add support for some Bootstrap classes ([d6360655](https://github.com/mbenford/ngTagsInput/commit/d6360655d7444e4979ccfb6092f79ba0a82edfc6), [#78](https://github.com/mbenford/ngTagsInput/issues/78))
+  * Add type option ([3afe564d](https://github.com/mbenford/ngTagsInput/commit/3afe564d4be4f5726638132bb6329a259c9422fd), [#140](https://github.com/mbenford/ngTagsInput/issues/140))
+
 ## v2.0.1 (2014-04-13)
 
 #### Bug Fixes
