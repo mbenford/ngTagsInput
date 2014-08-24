@@ -1,6 +1,11 @@
 name: ngTagsInput Site
 markdown: redcarpet
-pygments: true
+highlighter: pygments
 exclude: ['node_modules','*.log']
 stable_version: 2.0.1
 production_url: http://mbenford.github.io/ngTagsInput
+
+collections:
+  pages:
+    output: true
+    permalink: /:path:output_ext
