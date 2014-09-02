@@ -696,6 +696,26 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('spellcheck option', function() {
+        it('sets the input\'s spellcheck property', function() {
+            ['true', 'false'].forEach(function(value) {
+                // Arrange/Act
+                compile('spellcheck="' + value + '"');
+
+                // Assert
+                expect(getInput().attr('spellcheck')).toBe(value);
+            });
+        });
+
+        it('initializes the option to "true"', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.spellcheck).toBe(true);
+        });
+    });
+
     describe('placeholder option', function() {
         it('sets the input\'s placeholder text', function() {
             // Arrange/Act

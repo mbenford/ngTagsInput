@@ -45,7 +45,7 @@
 </head>
 <body ng-controller="Ctrl">
     <p></p>
-    <tags-input ng-model="tags" add-on-blur="false" ng-focus="focus()" ng-blur="blur()" add-on-paste="true" paste-split-pattern="[,;|]">
+    <tags-input ng-model="tags" add-on-blur="false" ng-focus="focus()" ng-blur="blur()" add-on-paste="true" paste-split-pattern="[,;|]" spellcheck="false">
         <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
     </tags-input>
     <p></p>
