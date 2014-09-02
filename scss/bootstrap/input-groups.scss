@@ -1,35 +1,27 @@
-@import "forms";
+@import "../mixins";
 @import "variables";
 
-.input-group {
-  tags-input {
-    padding: 0;
-    display: table-cell;
+.input-group tags-input {
+  padding: 0;
+  display: table-cell;
+
+  &:not(:first-child) .tags {
+    @include border-left-radius(0)
   }
 
-  tags-input:not(:first-child) {
-    .tags {
-      @include border-left-radius(0)
-    }
-  }
-
-  tags-input:not(:last-child) {
-    .tags {
-      @include border-right-radius(0)
-    }
+  &:not(:last-child) .tags {
+    @include border-right-radius(0)
   }
 }
 
-.input-group-lg {
-  tags-input {
-    @extend .ti-input-lg;
-  }
+.input-group-lg tags-input {
+  @extend .ti-input-lg;
 
-  tags-input:first-child {
+  &:first-child .tags {
     @include border-left-radius($tag-border-radius-lg);
   }
 
-  tags-input:last-child {
+  &:last-child .tags {
     @include border-right-radius($tag-border-radius-lg);
   }
 }
@@ -37,11 +29,11 @@
 .input-group-sm tags-input {
   @extend .ti-input-sm;
 
-  tags-input:first-child {
+  &:first-child .tags {
     @include border-left-radius($tag-border-radius-sm);
   }
 
-  tags-input:last-child {
+  &:last-child .tags {
     @include border-right-radius($tag-border-radius-sm);
   }
 }
