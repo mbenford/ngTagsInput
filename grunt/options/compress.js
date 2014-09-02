@@ -49,12 +49,20 @@ module.exports = {
                     '<%= files.js.outMin %>',
                     '<%= files.css.main.outMin %>',
                     '<%= files.css.bootstrap.outMin %>',
+                ],
+                dest: 'package/build',
+                flatten: true
+            },
+            {
+                expand: true,
+                src: [
                     'README.md',
                     'package.json'
                 ],
                 dest: 'package/',
                 flatten: true
-            }
+            },
+
         ]
     }
 };
