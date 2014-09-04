@@ -36,4 +36,29 @@ angular.module("ngTagsInputSite", ['ngTagsInput'])
             deferred.resolve(['Tag1', 'Tag2', 'Tag3', 'Tag4', 'Tag5']);
             return deferred.promise;
         };
+    })
+    .controller('NavCtrl', function($scope) {
+        $scope.isActive = function(currentPage, page) {
+            return currentPage === page;
+        }
+    })
+    .directive('stickyOnScroll', function() {
+        return function(scope, element) {
+            $(window).scroll(function() {
+                if ($(window).scrollTop() < element.parent().offset().top) {
+                    element.css({
+                        position: 'relative',
+                        top: '0'
+                    });
+                }
+                else {
+                    element.css({
+                        position: 'fixed',
+                        top: 5 + 'px',
+                        width: element.parent().width() + 'px'
+                    });
+
+                }
+            });
+        }
     });

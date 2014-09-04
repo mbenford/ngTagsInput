@@ -4,7 +4,7 @@
 <body ng-app="ngTagsInputSite">
 {% include navbar.html %}
 
-<div class="container" ng-controller="{{ page.controller }}">
+<div class="container" {% if page.controller %}ng-controller="{{ page.controller }}"{% endif %}>
   {{ content }}
 </div>
 

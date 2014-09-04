@@ -3,13 +3,19 @@
   <meta name="description" content="{{ page.description }}"/>
   <meta charset="utf-8">
 
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.2/angular.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/font-awesome.min.css">
-  <link rel="stylesheet" href="css/ng-tags-input.min.css">
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/syntax.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ site.baseurl }}/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{{ site.baseurl }}/css/ng-tags-input.min.css">
+  {% if page.bootstrap %}
+  <link rel="stylesheet" href="{{ site.baseurl }}/css/ng-tags-input.bootstrap.min.css">
+  {% endif %}
+  <link rel="stylesheet" href="{{ site.baseurl }}/css/styles.css">
+  <link rel="stylesheet" href="{{ site.baseurl }}/css/syntax.css">
 
   {% include tracking.html %}
 </head>

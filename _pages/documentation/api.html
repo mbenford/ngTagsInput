@@ -4,9 +4,22 @@ title: Documentation - ngTagsInput
 description: Documentation for the ngTagsInput directive
 priority: 0.50
 ---
-<h1>Documentation</h1>
+<h1>API documentation</h1>
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-3">
+    <div class="sidebar-nav" sticky-on-scroll>
+      <div class="navbar navbar-default" role="navigation">
+        <ul class="nav navbar-nav">
+          <li class="header"><span>Directives</span></li>
+          <li><a href="#tagsInput">tagsInput</a></li>
+          <li><a href="#autoComplete">autoComplete</a></li>
+          <li class="header"><span>Services</span></li>
+          <li><a href="#tagsInputConfigProvider">tagsInputConfigProvider</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-9">
     <section>
       <h1 id="tagsInput"><code>tagsInput <small>(directive in module <strong>ngTagsInput</strong>)</small></code></h1>
       <section>
@@ -20,6 +33,7 @@ priority: 0.50
 <tags-input
         ng-model="{string}"
        [display-property="{string}"]
+       [input="{string}"]
        [tabindex="{number}"]
        [placeholder="{string}"]
        [min-length="{number}"]
@@ -63,6 +77,12 @@ priority: 0.50
                 <td>displayProperty</td>
                 <td><span class="label type type-string">string</span></td>
                 <td>Property to be rendered as the tag label.</td>
+                <td>text</td>
+              </tr>
+              <tr>
+                <td>input</td>
+                <td><span class="label type type-string">string</span></td>
+                <td>Type of the input element. Only 'text', 'email' and 'url' are supported values.</td>
                 <td>text</td>
               </tr>
               <tr>
@@ -203,7 +223,11 @@ priority: 0.50
     [debounce-delay="{number}"]
     [min-length="{number}"]
     [highlight-matched-text="{boolean}"]
-    [max-results-to-show="{number}"]>
+    [max-results-to-show="{number}"]
+    [load-on-down-arrow="{boolean}"]
+    [load-on-empty="{boolean}"]
+    [load-on-focus="{boolean}"]
+  >
   </auto-complete>
 </tags-input>
 {% endhighlight %}
@@ -251,6 +275,33 @@ priority: 0.50
             <td><span class="label type type-number">number</span></td>
             <td>Maximum number of results to be displayed at a time.</td>
             <td>10</td>
+          </tr>
+          <tr>
+            <td>loadOnDownArrow</td>
+            <td><span class="label type type-boolean">boolean</span></td>
+            <td>
+              Flag indicating that the source option will be evaluated when the down arrow key is pressed and the
+              suggestion list is closed. The current input value is available as $query.
+            </td>
+            <td>false</td>
+          </tr>
+          <tr>
+            <td>loadOnEmpty</td>
+            <td><span class="label type type-boolean">boolean</span></td>
+            <td>
+              Flag indicating that the source option will be evaluated when the input content becomes empty. The $query
+              variable will be passed to the expression as an empty string.
+            </td>
+            <td>false</td>
+          </tr>
+          tr>
+          <td>loadOnFocus</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>
+            Flag indicating that the source option will be evaluated when the input element gains focus. The current
+            input value is available as $query.
+          </td>
+          <td>false</td>
           </tr>
         </tbody>
       </table>
@@ -326,6 +377,31 @@ priority: 0.50
               <p>The service itself for chaining purposes.</p>
             </div>
           </li>
+          <li>
+            <h3>setTextAutosizeThreshold(threshold)</h3>
+            <div>
+              <p>Sets active interpolation for a set of options.</p>
+              <h5>Parameters</h5>
+              <table class="table table-bordered table-striped table-hover">
+                <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>threshold</td>
+                  <td><span class="label type type-number">number</span></td>
+                  <td>Threshold to be used by the tagsInput directive to re-size the input element based on its contents.</td>
+                </tr>
+                </tbody>
+              </table>
+              <h5>Returns</h5>
+              <p>The service itself for chaining purposes.</p>
+            </div>
+          </li>
         </ul>
       </section>
 
@@ -348,7 +424,8 @@ var app = angular.module('app', ['ngTagsInput'])
                 placeholder: true,
                 addOnEnter: true,
                 removeTagSymbol: true
-            });
+            })
+            .setTextAutosizeThreshold(15);
     });
 {% endhighlight %}
   </div>

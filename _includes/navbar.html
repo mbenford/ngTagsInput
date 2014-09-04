@@ -5,10 +5,20 @@
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li><a href="download">Download</a></li>
-          <li><a href="gettingstarted">Getting Started</a></li>
-          <li><a href="demos">Demos</a></li>
-          <li><a href="documentation">Documentation</a></li>
+          <li><a href="{{ site.baseurl }}/download">Download</a></li>
+          <li><a href="{{ site.baseurl }}/gettingstarted">Getting Started</a></li>
+          <li><a href="{{ site.baseurl }}/demos">Demos</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Documentation</a>
+            <ul class="dropdown-menu">
+              <li><a href="{{ site.baseurl }}/documentation/api">API</a></li>
+              <li class="dropdown-submenu">
+                <a tabindex="-1" href="#">Guides</a>
+                <ul class="dropdown-menu">
+                  <li><a tabindex="-1" href="{{ site.baseurl }}/documentation/guides/bootstrap">Integrating with Bootstrap</a></li>
+                </ul>
+            </ul>
+          </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><a href="http://github.com/mbenford/ngTagsInput"><i class="icon-github"></i> View on GitHub</a></li>
