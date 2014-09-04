@@ -1,3 +1,9 @@
+### 2.1.1 (2014-09-04)
+
+#### Bug Fixes
+
+* **tagsInput:** Fix has-success, has-warning and has-error classes ([2a098736](https://github.com/mbenford/ngTagsInput/commit/2a0987367db2d28106936fa39393964e35b61de7))
+
 ## 2.1.0 (2014-08-22)
 
 #### Bug Fixes
