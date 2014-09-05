@@ -6,79 +6,34 @@ priority: 0.80
 ---
 <h1>Download ngTagsInput <small>{{ site.stable_version }}</small></h1>
 
+<p>You can choose up to 4 ways to get ngTagsInput files:</p>
+
 <div class="row">
   <div class="col-md-6">
-    <h2>Production version</h2>
-    <div class="row">
-      <div class="col-md-12">
-        You can either download a package with the source code directly or tell Bower to do that for you. You can also
-        load the scripts from <a href="http://cdnjs.com/libraries/ng-tags-input/">CDNJS</a>.
-      </div>
-    </div>
-
-    <div class="row row-download">
-      <div class="col-md-12">
-        <h3>Source code</h3>
-        <a href="https://github.com/mbenford/ngTagsInput/releases/download/v{{ site.stable_version }}/ng-tags-input.min.zip" class="btn btn-primary btn-download">Minified</a>
-        <a href="https://github.com/mbenford/ngTagsInput/releases/download/v{{ site.stable_version }}/ng-tags-input.zip" class="btn btn-default btn-download">Unminified</a>
-      </div>
-    </div>
-
-    <div class="row row-download">
-      <div class="col-md-8">
-        <h3>Bower</h3>
-        <pre>bower install ng-tags-input#{{ site.stable_version }}</pre>
-      </div>
-    </div>
-
-    <div class="row row-download">
-      <div class="col-md-12">
-        Bower will download both minified and unminifed versions of the files. You should delete the one you don't intend to use.
-      </div>
-    </div>
-
-    <div class="row row-download">
-      <div class="col-md-12">
-        <div class="alert alert-info">
-          ngTagsInput requires <strong>Angular 1.2.1+</strong> and a <strong>modern web browser</strong>.
-        </div>
-      </div>
-      </div>
+    <h2>Direct download</h2>
+    <p>
+      <a href="https://github.com/mbenford/ngTagsInput/releases/download/v{{ site.stable_version }}/ng-tags-input.min.zip" class="btn btn-success btn-download">ng-tags-input.min.zip</a>
+      <a href="https://github.com/mbenford/ngTagsInput/releases/download/v{{ site.stable_version }}/ng-tags-input.zip" class="btn btn-success btn-download">ng-tags-input.zip</a>
+    </p>
+    <p>Older releases can be found on the <a href="https://github.com/mbenford/ngTagsInput/releases">releases page</a> on GitHub.</p>
   </div>
-
   <div class="col-md-6">
-    <h2>Development version</h2>
-    <div class="row">
-      <div class="col-md-12">
-        If you want to grab the development version, you can either download a compressed version of the repository or
-        you can clone it directly from GitHub.
-      </div>
-    </div>
-
-    <div class="row row-download">
-      <div class="col-md-12">
-        <h3>Source code</h3>
-        <a href="https://github.com/mbenford/ngTagsInput/archive/v{{ site.stable_version }}.tar.gz" class="btn btn-primary btn-download">.tar.gz</a>
-        <a href="https://github.com/mbenford/ngTagsInput/archive/v{{ site.stable_version }}.zip" class="btn btn-default btn-download">.zip</a>
-      </div>
-    </div>
-
-    <div class="row row-download">
-      <div class="col-md-12">
-        <h3>GitHub</h3>
-        <pre>git clone https://github.com/mbenford/ngTagsInput.git</pre>
-      </div>
-    </div>
-
-    <div class="row row-download">
-      <div class="col-md-12">
-        <p>
-          Additionally, in case you're interested in contributing to the development of this project, you're welcome
-          <a href="https://github.com/mbenford/ngTagsInput">to fork the repository</a> on Github and send your pull request.
-          The <a href="https://github.com/mbenford/ngTagsInput/blob/master/CONTRIBUTING.md">contributor's guide</a>
-          has everything you need to know. Be sure to check it out!
-        </p>
-      </div>
-    </div>
+    <h2>CDNJS</h2>
+    <p>
+      CDNJS hosts both minified and unminified versions of all Javascript and CSS files. <br/>Go to the <a href="http://www.cdnjs.com/libraries/ng-tags-input">ngTagsInput page</a>
+      and copy the links you want to use. Keep in mind that it might take some time for a recent release to be available.
+    </p>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <h2>NPM</h2>
+    <pre>$ npm install ng-tags-input@{{ site.stable_version }} --save</pre>
+    NPM will download both minified and unminifed versions of the files. You may want to delete the ones you don't intend to use.
+  </div>
+  <div class="col-md-6">
+    <h2>Bower</h2>
+    <pre>$ bower install ng-tags-input#{{ site.stable_version }} --save</pre>
+    Bower will download both minified and unminifed versions of the files. You may want to delete the ones you don't intend to use.
   </div>
 </div>
