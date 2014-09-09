@@ -113,6 +113,16 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
+        it('loads values from the load function even if the return value is not a promise', function() {
+            // Arrange
+            $scope.loadItems = jasmine.createSpy().and.returnValue(generateSuggestions(3));
+            // Act
+            suggestionList.load('', []);
+            $timeout.flush();
+            // Assert
+            expect(getSuggestions().length).toBe(3);
+        });
+
         it('renders all elements returned by the load function that aren\'t already added', function() {
             // Act
             tagsInput.getTags.and.returnValue([{ text: 'Item3' }]);
