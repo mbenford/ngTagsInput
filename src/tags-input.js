@@ -34,6 +34,7 @@
  *                                                   allowLeftoverText values are ignored.
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
+ * @param {expression} onTagClicked Expression to evaluate upon clicking an existing tag. The clicked tag is available as $tag.
  */
 tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) {
     function TagList(options, events) {
@@ -85,7 +86,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             return tag;
         };
 
-        self.remove = function(index) {
+        self.remove = function(index, event) {
+            if (event) { event.stopPropagation(); }
             var tag = self.items.splice(index, 1)[0];
             events.trigger('tag-removed', { $tag: tag });
             return tag;
@@ -105,6 +107,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             return tag;
         };
 
+        self.tagClick = function(index) {
+            var tag = self.items[index];
+            events.trigger('tag-clicked', { $tag: tag });
+        };
+
         return self;
     }
 
@@ -118,7 +125,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         scope: {
             tags: '=ngModel',
             onTagAdded: '&',
-            onTagRemoved: '&'
+            onTagRemoved: '&',
+            onTagClicked: '&'
         },
         replace: false,
         transclude: true,
@@ -196,6 +204,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             events
                 .on('tag-added', scope.onTagAdded)
                 .on('tag-removed', scope.onTagRemoved)
+                .on('tag-clicked', scope.onTagClicked)
                 .on('tag-added', function() {
                     scope.newTag.text = '';
                 })
