@@ -1722,6 +1722,34 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('on-tag-clicked option', function() {
+        it('calls the provided callback when a tag is clicked', function() {
+            // Arrange
+            $scope.tags = generateTags(3);
+            $scope.callback = jasmine.createSpy();
+            compile('on-tag-clicked="callback($tag)"');
+
+            // Act
+            getTag(1).click();
+
+            // Assert
+            expect($scope.callback).toHaveBeenCalledWith({ text: 'Tag2' });
+        });
+
+        it('doesn\'t call the provided callback when the remove button is clicked', function() {
+            // Arrange
+            $scope.tags = generateTags(3);
+            $scope.callback = jasmine.createSpy();
+            compile('on-tag-clicked="callback($tag)"');
+
+            // Act
+            getRemoveButton(1).click();
+
+            // Assert
+            expect($scope.callback).not.toHaveBeenCalled();
+        });
+    });
+
     describe('ng-disabled support', function () {
         it('disables the inner input element', function () {
             // Arrange/Act
