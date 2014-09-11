@@ -98,6 +98,9 @@ tagsInput.provider('tagsInputConfig', function() {
                     }
                     else {
                         updateValue(attrs[key] && $interpolate(attrs[key])(scope.$parent));
+                        if(key==='tabindex') {
+                            attrs[key] = -1; // fixes tab key entering input correctly
+                        }
                     }
                 });
             },

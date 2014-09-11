@@ -72,6 +72,24 @@ describe('configuration service', function() {
         });
     });
 
+    it('loads sets tabindex to -1 for root element', function() {
+        // Arrange
+        $scope.$parent.tabindex = 2;
+
+        attrs.tabindex = '{{ tabindex }}';
+
+        // Act
+        service.load('foo', $scope, attrs, {
+            tabindex: [Number]
+        });
+
+        // Assert
+        expect($scope.options).toEqual({
+            tabindex: 2
+        });
+        expect(attrs.tabindex).toEqual(-1);
+    });
+
     it('loads interpolated values from attributes as they change', function() {
         // Arrange
         provider.setActiveInterpolation('foo', { prop2: true, prop4: true });
