@@ -213,13 +213,13 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     ngModelCtrl.$setValidity('leftoverText', true);
 
                     //blur on outside tap when on touch device
-                    if('ontouchend' in window) {
-                        $(document).on('touchend.ngTagsInput', function(e) {
-                            if(!element[0].contains(e.target)) {
-                                if(input) input.blur(); //it has to be in a timeout to allow other events to fire first
+                    $(document).on('touchend.ngTagsInput', function(e) {
+                        if(!element[0].contains(e.target)) {
+                            if(input) {
+                                input.blur(); //it has to be in a timeout to allow other events to fire first
                             }
-                        });
-                    }
+                        }
+                    });
                 })
                 .on('input-blur', function() {
                     if (!options.addFromAutocompleteOnly) {

@@ -520,6 +520,21 @@ describe('tags-input directive', function() {
                 // Assert
                 expect($scope.tags).toEqual([]);
             });
+
+            it('adds a tag when the input field loses focus to any element on the page but the directive itself via a tap instead of a click', function() {
+                // Arrange
+                isolateScope.newTag.text = 'foo';
+                getInput().triggerHandler('focus');
+
+                // Act
+                var event = jQuery.Event('touchend', {});
+                $(document).trigger(event);
+
+                $timeout.flush();
+
+                // Assert
+                expect($scope.tags).toEqual([{ text: 'foo' }]);
+            });
         });
 
         describe('option is off', function() {
