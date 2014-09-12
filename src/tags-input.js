@@ -211,6 +211,15 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 })
                 .on('input-focus', function() {
                     ngModelCtrl.$setValidity('leftoverText', true);
+
+                    //blur on outside tap when on touch device
+                    if('ontouchend' in window) {
+                        $(document).on('touchend.ngTagsInput', function(e) {
+                            if(!element[0].contains(e.target)) {
+                                if(input) input.blur(); //it has to be in a timeout to allow other events to fire first
+                            }
+                        });
+                    }
                 })
                 .on('input-blur', function() {
                     if (!options.addFromAutocompleteOnly) {
@@ -220,6 +229,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
 
                         setElementValidity();
                     }
+                    $(document).off('touchend.ngTagsInput');
                 })
                 .on('option-change', function(e) {
                     if (validationOptions.indexOf(e.name) !== -1) {
