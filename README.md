@@ -70,7 +70,7 @@ Now all you have to do is add the scripts to your application. Just make sure th
 
 ## Options
 
-Check out the [documentation](http://mbenford.github.io/ngTagsInput/documentation) page for a detailed view of all available options.
+Check out the [documentation](http://mbenford.github.io/ngTagsInput/documentation/api) page for a detailed view of all available options.
 
 ## Demo
 
