@@ -20,6 +20,7 @@
     "scripts": {
         "test": "grunt test"
     },
+    "main": "build/ng-tags-input.min.js",
     "dependencies": {},
     "devDependencies": {
         "grunt": "0.4.2",
