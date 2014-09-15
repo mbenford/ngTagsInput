@@ -186,12 +186,22 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 input = element.find('input'),
                 validationOptions = ['minTags', 'maxTags', 'allowLeftoverText'],
                 setElementValidity,
+                blurOnTouch,
                 waitForBlur;
 
             setElementValidity = function() {
                 ngModelCtrl.$setValidity('maxTags', scope.tags.length <= options.maxTags);
                 ngModelCtrl.$setValidity('minTags', scope.tags.length >= options.minTags);
                 ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
+            };
+
+
+            blurOnTouch = function(e) {
+                if(!element[0].contains(e.target)) {
+                    if(input[0]) {
+                        input[0].blur();
+                    }
+                }
             };
 
             events
@@ -214,13 +224,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     ngModelCtrl.$setValidity('leftoverText', true);
 
                     //blur on outside tap when on touch device
-                    $(document).on('touchend.ngTagsInput', function(e) {
-                        if(!element[0].contains(e.target)) {
-                            if(input) {
-                                input.blur(); //it has to be in a timeout to allow other events to fire first
-                            }
-                        }
-                    });
+                    $document.on('touchend', blurOnTouch);
                 })
                 .on('input-blur', function() {
                     if (!options.addFromAutocompleteOnly) {
@@ -230,7 +234,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
 
                         setElementValidity();
                     }
-                    $(document).off('touchend.ngTagsInput');
+                    $document.off('touchend', blurOnTouch);
                 })
                 .on('option-change', function(e) {
                     if (validationOptions.indexOf(e.name) !== -1) {
