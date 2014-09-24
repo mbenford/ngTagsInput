@@ -1,4 +1,7 @@
 #Changelog
 
+##1.0.7
+* added semicolon as seperator
+
 ##1.0.6
-Fixed version numbers; added missing bower fields
+* Fixed version numbers; added missing bower fields
