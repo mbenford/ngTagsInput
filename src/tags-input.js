@@ -276,6 +276,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     shouldRemove = !shouldAdd && key === KEYS.backspace && scope.newTag.text.length === 0;
 
                     if (shouldAdd) {
+                        // Skip adding tag if input value is empty and enter key is pressed.
+                        // Allows form submission on-enter to proceed.
+                        if (!scope.newTag.text && key === KEYS.enter) {
+                            return;
+                        }
+
                         tagList.addText(scope.newTag.text);
 
                         scope.$apply();
