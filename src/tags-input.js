@@ -217,9 +217,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                         if (options.addOnBlur) {
                             tagList.addText(scope.newTag.text);
                         }
-
-                        setElementValidity();
                     }
+                    setElementValidity();
                 })
                 .on('option-change', function(e) {
                     if (validationOptions.indexOf(e.name) !== -1) {
