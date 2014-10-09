@@ -32,7 +32,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
 
         getDifference = function(array1, array2) {
             return array1.filter(function(item) {
-                return !findInObjectArray(array2, item, options.tagsInput.displayProperty);
+                return !findInObjectArray(array2, item, options.tagsInput.displayProperty, options.tagsInput.caseSensitive);
             });
         };
 
