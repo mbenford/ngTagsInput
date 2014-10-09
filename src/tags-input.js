@@ -34,6 +34,7 @@
  *                                                   allowLeftoverText values are ignored.
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
+ * @param {boolean=} [caseSensitive=false] Defines if the uniqueness check of each tag is case sensitive or not
  */
 tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) {
     function TagList(options, events) {
@@ -54,7 +55,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                    tagText.length >= options.minLength &&
                    tagText.length <= options.maxLength &&
                    options.allowedTagsPattern.test(tagText) &&
-                   !findInObjectArray(self.items, tag, options.displayProperty);
+                   !findInObjectArray(self.items, tag, options.displayProperty, options.caseSensitive);
         };
 
         self.items = [];
@@ -144,7 +145,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 maxTags: [Number, MAX_SAFE_INTEGER],
                 displayProperty: [String, 'text'],
                 allowLeftoverText: [Boolean, false],
-                addFromAutocompleteOnly: [Boolean, false]
+                addFromAutocompleteOnly: [Boolean, false],
+                caseSensitive: [Boolean, false]
             });
 
             $scope.tagList = new TagList($scope.options, $scope.events);
