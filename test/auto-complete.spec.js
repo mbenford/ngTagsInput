@@ -723,6 +723,56 @@ describe('autoComplete directive', function() {
             expect($scope.loadItems).toHaveBeenCalledWith('');
         });
 
+        it('calls the load function after a tag is added and the option is true', function(){
+            // Arrange
+            compile('load-on-empty="true"');
+            tagsInput.getCurrentTagText.and.returnValue('');
+
+            // Act
+            eventHandlers['tag-added']();
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).toHaveBeenCalledWith('');
+        });
+
+        it('doesn\'t call the load function after a tag is added and the option is false', function(){
+            // Arrange
+            compile('load-on-empty="false"');
+
+            // Act
+            eventHandlers['tag-added']();
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).not.toHaveBeenCalled();
+        });
+
+        it('calls the load function after a tag is removed and the option is true', function(){
+            // Arrange
+            compile('load-on-empty="true"');
+            tagsInput.getCurrentTagText.and.returnValue('');
+
+            // Act
+            eventHandlers['tag-removed']();
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).toHaveBeenCalledWith('');
+        });
+
+        it('doesn\'t call the load function after a tag is removed and the option is false', function(){
+            // Arrange
+            compile('load-on-empty="false"');
+
+            // Act
+            eventHandlers['tag-removed']();
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).not.toHaveBeenCalled();
+        });
+
         it('doesn\'t call the load function when the input field becomes empty and the option is false', function(){
             // Arrange
             compile('load-on-empty="false"');

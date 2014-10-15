@@ -338,8 +338,20 @@ describe('tags-input directive', function() {
             // Assert
             expect($scope.$digest).not.toHaveBeenCalled();
         });
+
+        it('always triggers the input-focus event', function () {
+            // Arrange
+            isolateScope.hasFocus = true;
+            spyOn(isolateScope.events, 'trigger');
+
+            // Act
+            getInput().triggerHandler('focus');
+
+            // Assert
+            expect(isolateScope.events.trigger).toHaveBeenCalledWith('input-focus');
+        });
     });
-    
+
     describe('tabindex option', function() {
         it('sets the input field tab index', function() {
             // Arrange/Act

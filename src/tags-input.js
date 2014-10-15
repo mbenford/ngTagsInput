@@ -292,13 +292,13 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     }
                 })
                 .on('focus', function() {
+                    events.trigger('input-focus');
+
                     if (scope.hasFocus) {
                         return;
                     }
 
                     scope.hasFocus = true;
-                    events.trigger('input-focus');
-
                     scope.$apply();
                 })
                 .on('blur', function() {

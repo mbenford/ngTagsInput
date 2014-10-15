@@ -106,7 +106,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
         templateUrl: 'ngTagsInput/auto-complete.html',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList, tagsInput, options, getItem, getDisplayText, shouldLoadSuggestions;
+                suggestionList, tagsInput, options, getItem, getDisplayText, shouldLoadSuggestions, loadOrReset;
 
             tagsInputConfig.load('autoComplete', scope, attrs, {
                 debounceDelay: [Number, 100],
@@ -137,6 +137,15 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 return value && value.length >= options.minLength || !value && options.loadOnEmpty;
             };
 
+            loadOrReset = function(value) {
+                if (shouldLoadSuggestions(value)) {
+                    suggestionList.load(value, tagsInput.getTags());
+                }
+                else {
+                    suggestionList.reset();
+                }
+            };
+
             scope.suggestionList = suggestionList;
 
             scope.addSuggestionByIndex = function(index) {
@@ -148,8 +157,9 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 var added = false;
 
                 if (suggestionList.selected) {
-                    tagsInput.addTag(suggestionList.selected);
+                    var toAdd = suggestionList.selected;
                     suggestionList.reset();
+                    tagsInput.addTag(toAdd);
                     tagsInput.focusInput();
 
                     added = true;
@@ -171,16 +181,14 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
             };
 
             tagsInput
-                .on('tag-added tag-removed invalid-tag input-blur', function() {
+                .on('invalid-tag input-blur', function() {
                     suggestionList.reset();
                 })
+                .on('tag-added tag-removed', function () {
+                    loadOrReset(tagsInput.getCurrentTagText());
+                })
                 .on('input-change', function(value) {
-                    if (shouldLoadSuggestions(value)) {
-                        suggestionList.load(value, tagsInput.getTags());
-                    }
-                    else {
-                        suggestionList.reset();
-                    }
+                    loadOrReset(value);
                 })
                 .on('input-focus', function() {
                     var value = tagsInput.getCurrentTagText();
