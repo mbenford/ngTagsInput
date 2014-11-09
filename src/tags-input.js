@@ -220,6 +220,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
 
                         setElementValidity();
                     }
+
+                    ngModelCtrl.$setTouched();
                 })
                 .on('option-change', function(e) {
                     if (validationOptions.indexOf(e.name) !== -1) {
