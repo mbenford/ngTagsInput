@@ -250,6 +250,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 setElementValidity();
             });
 
+            attrs.$observe('placeholder', function(value) {
+                options.placeholder = value || options.placeholder;
+            });
+
             input
                 .on('keydown', function(e) {
                     // This hack is needed because jqLite doesn't implement stopImmediatePropagation properly.

@@ -581,6 +581,19 @@ describe('tags-input directive', function() {
             // Assert
             expect(isolateScope.options.placeholder).toBe('Add a tag');
         });
+
+        it('reflects model changes', function() {
+            // Arrange
+            $scope.placeholderText = 'Foo';
+            compile('placeholder="{{placeholderText}}"');
+
+            // Arrange/Act
+            $scope.placeholderText = 'Bar';
+            $scope.$digest();
+
+            // Assert
+            expect(isolateScope.options.placeholder).toBe('Bar');
+        });
     });
 
     describe('remove-tag-symbol option', function() {
