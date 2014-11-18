@@ -198,6 +198,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 .on('tag-removed', scope.onTagRemoved)
                 .on('tag-added', function() {
                     scope.newTag.text = '';
+                    ngModelCtrl._leftoverText = '';
                 })
                 .on('tag-added tag-removed', function() {
                     ngModelCtrl.$setViewValue(scope.tags);
@@ -208,6 +209,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 .on('input-change', function() {
                     tagList.selected = null;
                     scope.newTag.invalid = null;
+                    ngModelCtrl._leftoverText = scope.newTag.text;
                 })
                 .on('input-focus', function() {
                     ngModelCtrl.$setValidity('leftoverText', true);
@@ -228,6 +230,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 });
 
             scope.newTag = { text: '', invalid: null };
+            ngModelCtrl._leftoverText = '';
 
             scope.getDisplayText = function(tag) {
                 return safeToString(tag[options.displayProperty]);
