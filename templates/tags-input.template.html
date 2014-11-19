@@ -12,6 +12,8 @@
                    name="inputName()"
                    ng-model="newTag.text"
                    ng-change="newTagChange()"
+                   autocorrect="off"
+                   spellcheck="false"
                    ng-trim="false"
                    ng-class="{'invalid-tag': newTag.invalid}"
                    ti-bind-attrs="{placeholder: options.placeholder, tabindex: options.tabindex}"

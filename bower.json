@@ -1,6 +1,6 @@
 {
   "name": "sp-tags",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "homepage": "https://github.com/vdclouis/spTags",
   "main": "sp-tags.js",
   "ignore": [],
