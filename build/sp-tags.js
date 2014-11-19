@@ -1,12 +1,12 @@
 /*!
- * Showpad Tags v0.1.6
+ * Showpad Tags v0.1.7
  * http://mbenford.github.io/ngTagsInput
  *
  * Copyright (c) 2013-2014 Michael Benford
  * Edited by: @vdclouis
  * License: MIT
  *
- * Generated at 2014-09-24 17:08:31 +0200
+ * Generated at 2014-11-19 10:04:51 +0100
  */
 (function() {
 'use strict';
@@ -804,7 +804,7 @@ tagsInput.provider('tagsInputConfig', function() {
 /* HTML templates */
 tagsInput.run(["$templateCache", function($templateCache) {
     $templateCache.put('ngTagsInput/tags-input.template.html',
-    "<div><div class=\"host\" tabindex=\"-1\" ti-transclude-append=\"\"><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul class=\"tag-list\"><li class=\"tag-item\" ng-repeat=\"tag in tagList.items track by track(tag)\" ng-class=\"{ selected: tag == tagList.selected }\"><span ng-bind=\"getDisplayText(tag)\"></span> <a class=\"remove-button\" ng-click=\"tagList.remove($index)\" ng-bind=\"options.removeTagSymbol\"></a></li></ul><input class=\"input\" name=\"inputName()\" ng-model=\"newTag.text\" ng-change=\"newTagChange()\" ng-trim=\"false\" ng-class=\"{'invalid-tag': newTag.invalid}\" ti-bind-attrs=\"{placeholder: options.placeholder, tabindex: options.tabindex}\" ti-autosize=\"\"></div></div></div>"
+    "<div><div class=\"host\" tabindex=\"-1\" ti-transclude-append=\"\"><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul class=\"tag-list\"><li class=\"tag-item\" ng-repeat=\"tag in tagList.items track by track(tag)\" ng-class=\"{ selected: tag == tagList.selected }\"><span ng-bind=\"getDisplayText(tag)\"></span> <a class=\"remove-button\" ng-click=\"tagList.remove($index)\" ng-bind=\"options.removeTagSymbol\"></a></li></ul><input class=\"input\" name=\"inputName()\" ng-model=\"newTag.text\" ng-change=\"newTagChange()\" autocorrect=\"off\" spellcheck=\"false\" ng-trim=\"false\" ng-class=\"{'invalid-tag': newTag.invalid}\" ti-bind-attrs=\"{placeholder: options.placeholder, tabindex: options.tabindex}\" ti-autosize=\"\"></div></div></div>"
   );
 
   $templateCache.put('ngTagsInput/auto-complete.template.html',
