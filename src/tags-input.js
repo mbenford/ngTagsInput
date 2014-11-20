@@ -54,7 +54,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                    tagText.length >= options.minLength &&
                    tagText.length <= options.maxLength &&
                    options.allowedTagsPattern.test(tagText) &&
-                   !findInObjectArray(self.items, tag, options.displayProperty);
+                (options.allowDuplicateTags || !findInObjectArray(self.items, tag, options.displayProperty));
         };
 
         self.items = [];
@@ -144,7 +144,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 maxTags: [Number, MAX_SAFE_INTEGER],
                 displayProperty: [String, 'text'],
                 allowLeftoverText: [Boolean, false],
-                addFromAutocompleteOnly: [Boolean, false]
+                addFromAutocompleteOnly: [Boolean, false],
+                allowDuplicateTags:[Boolean,false]
             });
 
             $scope.tagList = new TagList($scope.options, $scope.events);

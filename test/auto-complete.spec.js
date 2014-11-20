@@ -39,7 +39,7 @@ describe('autoComplete directive', function() {
             })
         };
 
-        parent = $compile('<tags-input ng-model="whatever"></tags-input>')($scope);
+        parent = $compile('<tags-input ng-model="whatever" ></tags-input>')($scope);
         $scope.$digest();
 
         parentCtrl = parent.controller('tagsInput');
@@ -407,6 +407,19 @@ describe('autoComplete directive', function() {
                 { text: 'Item2' },
                 { text: 'Item3' }
             ]);
+        });
+        it('renders all elements returned by the load function if filterUsedTags option is false', function() {
+            // Act
+            compile('filter-used-tags="false"');
+
+            tagsInput.getTags.and.returnValue([{ text: 'Item3' }]);
+            loadSuggestions(3);
+
+            // Assert
+            expect(getSuggestions().length).toBe(3);
+            expect(getSuggestionText(0)).toBe('Item1');
+            expect(getSuggestionText(1)).toBe('Item2');
+            expect(getSuggestionText(2)).toBe('Item3');
         });
     });
 

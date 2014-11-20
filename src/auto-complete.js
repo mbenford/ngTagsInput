@@ -65,7 +65,11 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                     }
 
                     items = makeObjectArray(items.data || items, options.tagsInput.displayProperty);
-                    items = getDifference(items, tags);
+                    if (options.filterUsedTags)
+                    {
+                        items = getDifference(items, tags);
+                    }
+
                     self.items = items.slice(0, options.maxResultsToShow);
 
                     if (self.items.length > 0) {
@@ -115,7 +119,9 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                 maxResultsToShow: [Number, 10],
                 loadOnDownArrow: [Boolean, false],
                 loadOnEmpty: [Boolean, false],
-                loadOnFocus: [Boolean, false]
+                loadOnFocus: [Boolean, false],
+                filterUsedTags:[Boolean,true]
+
             });
 
             options = scope.options;
