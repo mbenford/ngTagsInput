@@ -80,4 +80,26 @@ tags-input {
   &.ng-invalid .tags {
     @include box-shadow($tags-outline-box-shadow-invalid);
   }
+
+  .disabled {
+    &:focus {
+      outline: none;
+    }
+
+    .tags {
+      cursor: auto;
+
+      .tag-item {
+        @include gradient($tag-color-disabled);
+      }
+
+      .remove-button {
+        display: none;
+      }
+
+      .input {
+        display: none;
+      }
+    }
+  }
 }
