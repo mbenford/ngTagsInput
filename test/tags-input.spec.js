@@ -339,7 +339,7 @@ describe('tags-input directive', function() {
             expect($scope.$digest).not.toHaveBeenCalled();
         });
     });
-    
+
     describe('tabindex option', function() {
         it('sets the input field tab index', function() {
             // Arrange/Act
@@ -580,6 +580,33 @@ describe('tags-input directive', function() {
 
             // Assert
             expect(isolateScope.options.placeholder).toBe('Add a tag');
+        });
+    });
+
+    describe('mandatoryTags option', function() {
+
+        beforeEach(function() {
+            var mandatoryTagsOption = 'mandatory-tags=\'[{"text":"MandatoryTag1"},{"text":"MandatoryTag2"}]\'';
+            $scope.tags = generateTags(2);
+
+            compile(mandatoryTagsOption);
+        });
+
+        describe('tag list', function() {
+            it('renders mandatory tags before normal tags', function() {
+                expect(getTags().length).toBe(4);
+                expect(getTagText(0)).toBe('MandatoryTag1');
+                expect(getTagText(1)).toBe('MandatoryTag2');
+                expect(getTagText(2)).toBe('Tag1');
+                expect(getTagText(3)).toBe('Tag2');
+            });
+        });
+
+        describe('mandatory tag', function() {
+            it('cannot be removed by clicking', function() {
+                expect(getRemoveButton(0).length).toBe(0);
+                expect(getRemoveButton(1).length).toBe(0);
+            });
         });
     });
 

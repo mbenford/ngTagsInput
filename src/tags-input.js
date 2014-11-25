@@ -5,7 +5,7 @@
  * @name tagsInput
  * @module ngTagsInput
  *
- * @description
+
  * Renders an input box with tag editing support.
  *
  * @param {string} ngModel Assignable angular expression to data-bind to.
@@ -57,6 +57,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                    !findInObjectArray(self.items, tag, options.displayProperty);
         };
 
+        self.mandatoryItems = options.mandatoryTags;
         self.items = [];
 
         self.addText = function(text) {
@@ -129,6 +130,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 type: [String, 'text', validateType],
                 placeholder: [String, 'Add a tag'],
+                mandatoryTags: [Array, []],
                 tabindex: [Number, null],
                 removeTagSymbol: [String, String.fromCharCode(215)],
                 replaceSpacesWithDashes: [Boolean, true],

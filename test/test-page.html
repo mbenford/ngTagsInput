@@ -18,9 +18,8 @@
 
     .foo .tags .input {
       width: 1036px;
-      
     }
-    
+
     .foo .tags .tag-item {
       height: 50px;
     }
@@ -46,6 +45,11 @@
 <body ng-controller="Ctrl">
     <p></p>
     <tags-input ng-model="tags">
+        <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
+    </tags-input>
+    <p></p>
+    Mandatory Tags
+    <tags-input ng-model="tags" mandatory-tags="{{ mandatoryTags }}">
         <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
     </tags-input>
     <p></p>
@@ -108,6 +112,7 @@
             ];
 
             $scope.tags = [{ text: 'Batman' }, { text: 'Superman' }, { text:'Flash' }];
+            $scope.mandatoryTags = [{ text: 'Spiderman' }, { text: 'Aquaman' }];
             $scope.placeholder = 'New tag';
             $scope.loadItems = function(query) {
               var deferred = $q.defer();
