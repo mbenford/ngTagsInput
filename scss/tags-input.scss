@@ -37,6 +37,12 @@ tags-input {
       border-radius: $tag-border-radius;
       @include gradient($tag-color);
 
+      &.mandatory {
+        background: $tag-color-mandatory;
+        @include gradient($tag-color-mandatory);
+        border-color: $tag-border-mandatory;
+      }
+
       &.selected {
         @include gradient($tag-color-selected);
       }

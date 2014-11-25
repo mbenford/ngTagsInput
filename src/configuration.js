@@ -66,6 +66,7 @@ tagsInput.provider('tagsInputConfig', function() {
         converters[Number] = function(value) { return parseInt(value, 10); };
         converters[Boolean] = function(value) { return value.toLowerCase() === 'true'; };
         converters[RegExp] = function(value) { return new RegExp(value); };
+        converters[Array] = function(value) { return angular.fromJson(value); };
 
         return {
             load: function(directive, scope, attrs, options) {
