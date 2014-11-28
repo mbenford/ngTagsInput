@@ -8,6 +8,7 @@
     </ul>
     <input class="input"
            ng-model="newTag.text"
+           ng-keyup="newTagKeyup()"
            ng-change="newTagChange()"
            ng-trim="false"
            ng-class="{'invalid-tag': newTag.invalid}"
