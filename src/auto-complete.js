@@ -26,7 +26,7 @@
  * @param {boolean=} {loadOnFocus=false} Flag indicating that the source option will be evaluated when the input element
  *                                       gains focus. The current input value is available as $query.
  */
-tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInputConfig) {
+tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
         var self = {}, debouncedLoadId, getDifference, lastPromise;
 
@@ -56,7 +56,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
             debouncedLoadId = $timeout(function() {
                 self.query = query;
 
-                var promise = loadFn({ $query: query });
+                var promise = $q.when(loadFn({ $query: query }));
                 lastPromise = promise;
 
                 promise.then(function(items) {
