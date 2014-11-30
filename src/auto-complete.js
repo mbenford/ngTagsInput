@@ -75,7 +75,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, tagsInpu
                         self.reset();
                     }
                 });
-            }, options.debounceDelay, false);
+            }, options.debounceDelay, true);
         };
         self.selectNext = function() {
             self.select(++self.index);
