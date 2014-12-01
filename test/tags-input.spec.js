@@ -338,6 +338,34 @@ describe('tags-input directive', function() {
             // Assert
             expect($scope.$digest).not.toHaveBeenCalled();
         });
+
+        it('focuses the directive element when the input field receives focus', function() {
+            // Arrange
+            $scope.callback = jasmine.createSpy();
+            compile('ng-focus="callback()"');
+            var input = getInput()[0];
+
+            // Act
+            getInput().triggerHandler('focus');
+            $timeout.flush();
+
+            // Assert
+            expect($scope.callback).toHaveBeenCalled();
+        });
+
+        it('blurs the directive element when the input field loses focus', function() {
+            // Arrange
+            $scope.callback = jasmine.createSpy();
+            compile('ng-blur="callback()"');
+            var input = getInput()[0];
+
+            // Act
+            getInput().triggerHandler('blur');
+            $timeout.flush();
+
+            // Assert
+            expect($scope.callback).toHaveBeenCalled();
+        });
     });
     
     describe('tabindex option', function() {

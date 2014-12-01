@@ -210,9 +210,17 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     scope.newTag.invalid = null;
                 })
                 .on('input-focus', function() {
+
+                    // focus outer element
+                    element.triggerHandler('focus');
+
                     ngModelCtrl.$setValidity('leftoverText', true);
                 })
                 .on('input-blur', function() {
+
+                    // blur outer element
+                    element.triggerHandler('blur');
+
                     if (!options.addFromAutocompleteOnly) {
                         if (options.addOnBlur) {
                             tagList.addText(scope.newTag.text);
