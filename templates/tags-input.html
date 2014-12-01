@@ -9,6 +9,7 @@
     <input class="input"
            ng-model="newTag.text"
            ng-change="newTagChange()"
+           ng-paste="newTagPasted($event)"
            ng-trim="false"
            ng-class="{'invalid-tag': newTag.invalid}"
            ti-bind-attrs="{type: options.type, placeholder: options.placeholder, tabindex: options.tabindex}"
