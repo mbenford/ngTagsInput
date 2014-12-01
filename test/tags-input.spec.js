@@ -204,7 +204,17 @@ describe('tags-input directive', function() {
             // Assert
             expect($scope.tags).toEqual([{ text: 'foo' }]);
         });
+        it('allow duplicate tags if allowDuplicateTags option is true', function() {
+            // Arrange
+            compile('allow-duplicate-tags="true"');
 
+            // Act
+            newTag('foo');
+            newTag('Foo');
+
+            // Assert
+            expect($scope.tags).toEqual([{ text: 'foo' },{ text: 'Foo' }]);
+        });
         it('makes the input field invalid when a duplicate tag is tried to be added', function() {
             // Arrange
             compile();
