@@ -343,7 +343,6 @@ describe('tags-input directive', function() {
             // Arrange
             $scope.callback = jasmine.createSpy();
             compile('ng-focus="callback()"');
-            var input = getInput()[0];
 
             // Act
             getInput().triggerHandler('focus');
@@ -357,7 +356,6 @@ describe('tags-input directive', function() {
             // Arrange
             $scope.callback = jasmine.createSpy();
             compile('ng-blur="callback()"');
-            var input = getInput()[0];
 
             // Act
             getInput().triggerHandler('blur');
