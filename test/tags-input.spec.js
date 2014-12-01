@@ -180,6 +180,21 @@ describe('tags-input directive', function() {
             expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag3' }]);
         });
 
+        it('invokes a click event when a tag is clicked', function() {
+            // Arrange
+            $scope.tags = generateTags(3);
+            $scope.setClickedTag = function(tag) {
+                $scope.clickedTag = tag;
+            };
+            compile('on-tag-clicked="setClickedTag($tag)"');
+
+            // Act
+            getTag(1).click();
+
+            // Assert
+            expect($scope.clickedTag).toEqual({ text: 'Tag2' });
+        });
+
         it('sets focus on the input field when the container div is clicked', function() {
             // Arrange
             compile();
