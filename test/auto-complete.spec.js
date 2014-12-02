@@ -1030,4 +1030,25 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(2)).toBe('Item3');
         });
     });
+
+    describe('auto-select-first-suggestion option', function() {
+        it('initializes the option to false', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.autoSelectFirstSuggestion).toBe(false);
+        });
+
+        it('selects the first suggestion after the suggestion box is shown if true', function() {
+            // Arrange
+            compile('auto-select-first-suggestion="true"');
+
+            //Act
+            loadSuggestions(2);
+
+            // Assert
+            expect(getSuggestion(0).hasClass('selected')).toBe(true);
+        });
+    });
 });
