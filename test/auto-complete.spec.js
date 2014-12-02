@@ -5,6 +5,8 @@ describe('autoComplete directive', function() {
         parentCtrl, element, isolateScope, suggestionList, deferred, tagsInput, eventHandlers;
 
     beforeEach(function() {
+        jasmine.addMatchers(customMatchers);
+
         module('ngTagsInput');
 
         inject(function($rootScope, _$compile_, _$q_, _$timeout_) {
@@ -311,6 +313,7 @@ describe('autoComplete directive', function() {
         it('does not change the input value when the enter key is pressed and there is nothing selected', function() {
             // Arrange
             loadSuggestions(2);
+            suggestionList.selected = null;
 
             // Act
             sendKeyDown(KEYS.enter);
@@ -355,14 +358,6 @@ describe('autoComplete directive', function() {
             expect(getSuggestion(0).hasClass('selected')).toBe(false);
             expect(getSuggestion(1).hasClass('selected')).toBe(true);
             expect(getSuggestion(2).hasClass('selected')).toBe(false);
-        });
-
-        it('selects no suggestion after the suggestion box is shown', function() {
-            // Arrange/Act
-            loadSuggestions(2);
-
-            // Assert
-            expect(suggestionList.selected).toBeNull();
         });
 
         it('discards all load calls but the last one', function() {
@@ -1031,24 +1026,41 @@ describe('autoComplete directive', function() {
         });
     });
 
-    describe('auto-select-first-suggestion option', function() {
-        it('initializes the option to false', function() {
+    describe('select-first-match option', function() {
+        it('initializes the option to true', function() {
             // Arrange/Act
             compile();
 
             // Assert
-            expect(isolateScope.options.autoSelectFirstSuggestion).toBe(false);
+            expect(isolateScope.options.selectFirstMatch).toBe(true);
         });
 
-        it('selects the first suggestion after the suggestion box is shown if true', function() {
+        it('selects the first suggestion after the suggestion box is shown if the option is true', function() {
             // Arrange
-            compile('auto-select-first-suggestion="true"');
+            compile('select-first-match="true"');
 
             //Act
-            loadSuggestions(2);
+            loadSuggestions(3);
 
             // Assert
-            expect(getSuggestion(0).hasClass('selected')).toBe(true);
+            expect(getSuggestion(0)).toHaveClass('selected');
+            expect(getSuggestion(1)).not.toHaveClass('selected');
+            expect(getSuggestion(2)).not.toHaveClass('selected');
+
+        });
+
+        it('doesn\'t select any suggestion after the suggestion box is shown if the option is false', function() {
+            // Arrange
+            compile('select-first-match="false"');
+
+            //Act
+            loadSuggestions(3);
+
+            // Assert
+            expect(getSuggestion(0)).not.toHaveClass('selected');
+            expect(getSuggestion(1)).not.toHaveClass('selected');
+            expect(getSuggestion(2)).not.toHaveClass('selected');
+
         });
     });
 });

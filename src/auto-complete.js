@@ -25,8 +25,8 @@
  *                                       becomes empty. The $query variable will be passed to the expression as an empty string.
  * @param {boolean=} {loadOnFocus=false} Flag indicating that the source option will be evaluated when the input element
  *                                       gains focus. The current input value is available as $query.
- * @param {boolean=} [autoSelectFirstSuggestion=false] Flag indicating that the first suggestion will not be
- *                                                     automatically selected once the suggestion box is shown.
+ * @param {boolean=} [selectFirstMatch=true] Flag indicating that the first match will be automatically selected once
+ *                                           the suggestion list is shown.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig) {
     function SuggestionList(loadFn, options) {
@@ -50,9 +50,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             $timeout.cancel(debouncedLoadId);
         };
         self.show = function() {
-            if (self.items.length > 0 && options.autoSelectFirstSuggestion) {
+            if (options.selectFirstMatch) {
                 self.select(0);
-            } else {
+            }
+            else {
                 self.selected = null;
             }
             self.visible = true;
@@ -122,7 +123,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnDownArrow: [Boolean, false],
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
-                autoSelectFirstSuggestion: [Boolean, false]
+                selectFirstMatch: [Boolean, true]
             });
 
             options = scope.options;

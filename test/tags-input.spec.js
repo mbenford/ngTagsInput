@@ -5,6 +5,8 @@ describe('tags-input directive', function() {
         isolateScope, element;
 
     beforeEach(function() {
+        jasmine.addMatchers(customMatchers);
+
         module('ngTagsInput');
 
         inject(function(_$compile_, _$rootScope_, _$document_, _$timeout_) {
@@ -13,8 +15,6 @@ describe('tags-input directive', function() {
             $document = _$document_;
             $timeout = _$timeout_;
         });
-
-        jasmine.addMatchers(customMatchers);
     });
 
     function compile() {
