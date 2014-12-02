@@ -65,7 +65,7 @@ tagsInput.provider('tagsInputConfig', function() {
         converters[String] = function(value) { return value; };
         converters[Number] = function(value) { return parseInt(value, 10); };
         converters[Boolean] = function(value) { return value.toLowerCase() === 'true'; };
-        converters[RegExp] = function(value) { return new RegExp(value); };
+        converters[RegExp] = function(value) { return new RegExp(value, 'i'); };
 
         return {
             load: function(directive, scope, attrs, options) {
