@@ -1131,6 +1131,20 @@ describe('tags-input directive', function() {
             expect($scope.form.tags.$invalid).toBe(true);
             expect($scope.form.tags.$error.leftoverText).toBe(true);
         });
+
+        it('makes the leftover-text content available to the view', function () {
+            // Arrange
+            compileWithForm('allow-leftover-text="false"', 'name="tags"');
+            newTag('foo');
+            newTag('Foo');
+
+            // Act
+            isolateScope.events.trigger('input-blur');
+
+            // Assert
+            expect($scope.form.tags.$invalid).toBe(true);
+            expect($scope.form.tags._leftoverText).toEqual('Foo');
+        });
     });
 
     describe('add-from-autocomplete-only option', function() {
