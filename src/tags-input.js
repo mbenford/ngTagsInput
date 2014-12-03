@@ -187,12 +187,23 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 options = scope.options,
                 input = element.find('input'),
                 validationOptions = ['minTags', 'maxTags', 'allowLeftoverText'],
-                setElementValidity;
+                setElementValidity,
+                blurOnTouch,
+                waitForBlur;
 
             setElementValidity = function() {
                 ngModelCtrl.$setValidity('maxTags', scope.tags.length <= options.maxTags);
                 ngModelCtrl.$setValidity('minTags', scope.tags.length >= options.minTags);
                 ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
+            };
+
+
+            blurOnTouch = function(e) {
+                if(!element[0].contains(e.target)) {
+                    if(input[0]) {
+                        input[0].blur();
+                    }
+                }
             };
 
             events
@@ -216,6 +227,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     element.triggerHandler('focus');
 
                     ngModelCtrl.$setValidity('leftoverText', true);
+
+                    //blur on outside tap when on touch device
+                    $document.on('touchend', blurOnTouch);
                 })
                 .on('input-blur', function() {
                     element.triggerHandler('blur');
@@ -227,6 +241,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
 
                         setElementValidity();
                     }
+                    $document.off('touchend', blurOnTouch);
                 })
                 .on('option-change', function(e) {
                     if (validationOptions.indexOf(e.name) !== -1) {
@@ -309,7 +324,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     scope.$apply();
                 })
                 .on('blur', function() {
-                    $timeout(function() {
+                    waitForBlur = $timeout(function() {
                         var activeElement = $document.prop('activeElement'),
                             lostFocusToBrowserWindow = activeElement === input[0],
                             lostFocusToChildElement = element[0].contains(activeElement);
@@ -322,6 +337,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 });
 
             element.find('div').on('click', function() {
+                $timeout.cancel(waitForBlur);
                 input[0].focus();
             });
         }
