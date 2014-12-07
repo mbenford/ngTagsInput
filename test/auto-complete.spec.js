@@ -223,6 +223,7 @@ describe('autoComplete directive', function() {
 
             // Act
             sendKeyDown(KEYS.escape);
+            $scope.$digest();
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(false);
@@ -248,6 +249,7 @@ describe('autoComplete directive', function() {
 
             // Act
             sendKeyDown(KEYS.enter);
+            $scope.$digest();
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(false);

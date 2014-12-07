@@ -350,18 +350,6 @@ describe('tags-input directive', function() {
             expect($scope.$digest).toHaveBeenCalled();
         });
 
-        it('does not trigger a digest cycle when the input field is focused already', function() {
-            // Arrange
-            isolateScope.hasFocus = true;
-            spyOn($scope, '$digest');
-
-            // Act
-            getInput().triggerHandler('focus');
-
-            // Assert
-            expect($scope.$digest).not.toHaveBeenCalled();
-        });
-
         it('focuses the directive element when the input field receives focus', function() {
             // Arrange
             $scope.callback = jasmine.createSpy();

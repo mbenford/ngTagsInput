@@ -13,8 +13,10 @@ function SimplePubSub() {
             return this;
         },
         trigger: function(name, args) {
-            angular.forEach(events[name], function(handler) {
-                handler.call(null, args);
+            var handlers = events[name] || [];
+            handlers.every(function(handler) {
+                var retVal = handler.call(null, args);
+                return angular.isUndefined(retVal) || retVal;
             });
             return this;
         }

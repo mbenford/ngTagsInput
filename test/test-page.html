@@ -45,7 +45,7 @@
 </head>
 <body ng-controller="Ctrl">
     <p></p>
-    <tags-input ng-model="tags">
+    <tags-input ng-model="tags" type="email" add-on-blur="false" ng-focus="focus()" ng-blur="blur()">
         <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
     </tags-input>
     <p></p>
@@ -120,6 +120,13 @@
               deferred.resolve(items);
               return deferred.promise;
             };
+        $scope.focus = function() {
+            console.log('focus');
+        };
+
+        $scope.blur = function() {
+          console.log('blur');
+        };
         })
         .directive('limitTags', function() {
           return {
