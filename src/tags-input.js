@@ -203,6 +203,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     scope.newTag.text = '';
                 })
                 .on('tag-added tag-removed', function() {
+                    // Sets the element to its dirty state
+                    // In Angular 1.3 this will be replaced with $setDirty.
                     ngModelCtrl.$setViewValue(scope.tags);
                 })
                 .on('invalid-tag', function() {

@@ -267,6 +267,29 @@ describe('tags-input directive', function() {
             expect($scope.tags).toEqual([]);
             expect(isolateScope.newTag.invalid).toBeFalsy();
         });
+
+        it('sets the element as dirty when a tag is added', function() {
+            // Arrange
+            compileWithForm('name="tags"');
+
+            // Act
+            newTag('foo');
+
+            // Assert
+            expect($scope.form.tags.$dirty).toBe(true);
+        });
+
+        it('sets the element as dirty when a tag is removed', function() {
+            // Arrange
+            compileWithForm('name="tags"');
+            newTag('foo');
+
+            // Act
+            getRemoveButton(0).click();
+
+            // Assert
+            expect($scope.form.tags.$dirty).toBe(true);
+        });
     });
 
     describe('focus outline', function() {
