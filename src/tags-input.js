@@ -296,14 +296,6 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     // how to check simply input change is compare to scope.newTag.text and keyup input.val(), and IE also work.
                     // https://github.com/mbenford/ngTagsInput/pull/302
                     if( scope.newTag.text !== input.val() ){
-//                        var key = e.keyCode;
-//                        //scope.newTag.text = input.val();
-//                        for(var prop in [KEYS.up, KEYS.down]){
-//                            if( KEYS[prop] === key ){
-//                                scope.newTag.text = input.val();
-//                                break;
-//                            }
-//                        }
                         events.trigger('input-change', input.val());
                     }
                 })
