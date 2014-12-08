@@ -237,10 +237,6 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 return tag[options.displayProperty];
             };
 
-            scope.newTagKeyup = function() {
-                events.trigger('input-change', input.val());
-            };
-
             scope.newTagChange = function() {
                 events.trigger('input-change', scope.newTag.text);
             };
