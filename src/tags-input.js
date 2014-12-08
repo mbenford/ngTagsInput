@@ -292,7 +292,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     }
                 })
                 .on('keyup', function(e) {
-                    // non-ascii code ( 2byte more character unicode ) charecter input changing realize when keyup event happen.
+                    // if non-ascii code ( 2byte more character unicode ) charecter input for autocomplete filtering, it's realize when keyup event happen.
                     // how to check simply input change is compare to scope.newTag.text and keyup input.val(), and IE also work.
                     // https://github.com/mbenford/ngTagsInput/pull/302
                     if( scope.newTag.text !== input.val() ){
