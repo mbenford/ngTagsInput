@@ -1277,6 +1277,31 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('ng-disabled integration', function () {
+        it('disables the input', function () {
+            // Arrange/Act
+            compile('ng-disabled="true"');
+
+            // Assert
+            expect(getInput()[0].disabled).toBe(true);
+        });
+
+        it('is bound', function () {
+            // Arrange
+            $scope.disabled = false;
+            compile('ng-disabled="disabled"');
+            var input = getInput()[0];
+            expect(input.disabled).toBe(false);
+
+            // Act
+            $scope.disabled = true;
+            $scope.$digest();
+
+            // Assert
+            expect(input.disabled).toBe(true);
+        });
+    });
+
     describe('autocomplete registration', function() {
         var autocompleteObj;
 
