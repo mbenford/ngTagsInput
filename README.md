@@ -4,8 +4,8 @@ Tags input directive for AngularJS. Check out the [ngTagsInput website](http://m
 
 ## Requirements
 
- - AngularJS 1.2.1+ (v1.2.0 **is not** supported due to [an API change](https://github.com/angular/angular.js/commit/90f870) in Angular)
- - A modern browser
+ - AngularJS 1.2.24+ (v1.3 isn't officially supported yet)
+ - A modern browser (Chrome 31+, Firefox 29+, Safari 7+, Opera 12+, IE 10+)
 
 ## Installing
 
