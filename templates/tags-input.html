@@ -12,6 +12,7 @@
            ng-keydown="eventHandlers.input.keydown($event)"
            ng-focus="eventHandlers.input.focus($event)"
            ng-blur="eventHandlers.input.blur($event)"
+           ng-paste="eventHandlers.input.paste($event)"
            ng-trim="false"
            ng-class="{'invalid-tag': newTag.invalid}"
            ti-bind-attrs="{type: options.type, placeholder: options.placeholder, tabindex: options.tabindex}"

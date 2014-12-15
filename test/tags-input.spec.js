@@ -574,6 +574,100 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('add-on-paste option', function() {
+        var eventData;
+
+        beforeEach(function() {
+            eventData = {
+                clipboardData: jasmine.createSpyObj('clipboardData', ['getData']),
+                preventDefault: jasmine.createSpy()
+            };
+        });
+
+        it('initializes the option to false', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.addOnPaste).toBe(false);
+        });
+
+        it('splits the pasted text into tags if there is more than one tag and the option is true', function() {
+            // Arrange
+            compile('add-on-paste="true"');
+            eventData.clipboardData.getData.and.returnValue('tag1, tag2, tag3');
+
+            // Act
+            var event = jQuery.Event('paste', eventData);
+            getInput().trigger(event);
+
+            // Assert
+            expect($scope.tags).toEqual([
+                { text: 'tag1' },
+                { text: 'tag2' },
+                { text: 'tag3' }
+            ]);
+            expect(eventData.preventDefault).toHaveBeenCalled();
+        });
+
+        it('doesn\'t split the pasted text into tags if there is just one tag and the option is true', function() {
+            // Arrange
+            compile('add-on-paste="true"');
+            eventData.clipboardData.getData.and.returnValue('tag1');
+
+            // Act
+            var event = jQuery.Event('paste', eventData);
+            getInput().trigger(event);
+
+            // Assert
+            expect($scope.tags).toEqual([]);
+            expect(eventData.preventDefault).not.toHaveBeenCalled();
+        });
+
+        it('doesn\'t split the pasted text into tags if the option is false', function() {
+            // Arrange
+            compile('add-on-paste="false"');
+            eventData.clipboardData.getData.and.returnValue('tag1, tag2, tag3');
+
+            // Act
+            var event = jQuery.Event('paste', eventData);
+            getInput().trigger(event);
+
+            // Assert
+            expect($scope.tags).toEqual([]);
+            expect(eventData.preventDefault).not.toHaveBeenCalled();
+        });
+
+        describe('paste-split-pattern option', function() {
+            it('initializes the option to comma', function() {
+                // Arrange/Act
+                compile();
+
+                // Assert
+                expect(isolateScope.options.pasteSplitPattern).toEqual(/,/);
+            });
+
+            it('splits the pasted text into tags using the provided pattern', function() {
+                // Arrange
+                compile('add-on-paste="true"', 'paste-split-pattern="[,;|]"');
+                eventData.clipboardData.getData.and.returnValue('tag1, tag2; tag3| tag4');
+
+                // Act
+                var event = jQuery.Event('paste', eventData);
+                getInput().trigger(event);
+
+                // Assert
+                expect($scope.tags).toEqual([
+                    { text: 'tag1' },
+                    { text: 'tag2' },
+                    { text: 'tag3' },
+                    { text: 'tag4' }
+                ]);
+                expect(eventData.preventDefault).toHaveBeenCalled();
+            });
+        });
+    });
+
     describe('type option', function() {
         it('sets the input\'s type property', function() {
             SUPPORTED_INPUT_TYPES.forEach(function(type) {
@@ -701,7 +795,7 @@ describe('tags-input directive', function() {
             compile();
 
             // Assert
-            expect(isolateScope.options.allowedTagsPattern.toString()).toBe('/.+/');
+            expect(isolateScope.options.allowedTagsPattern).toEqual(/.+/);
         });
     });
 
