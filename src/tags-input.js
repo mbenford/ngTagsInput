@@ -280,19 +280,14 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 })
                 .on('input-focus', function() {
                     element.triggerHandler('focus');
-
                     ngModelCtrl.$setValidity('leftoverText', true);
                 })
                 .on('input-blur', function() {
-                    element.triggerHandler('blur');
-
-                    if (!options.addFromAutocompleteOnly) {
-                        if (options.addOnBlur) {
-                            tagList.addText(scope.newTag.text);
-                        }
-
-                        setElementValidity();
+                    if (options.addOnBlur && !options.addFromAutocompleteOnly) {
+                        tagList.addText(scope.newTag.text);
                     }
+                    element.triggerHandler('blur');
+                    setElementValidity();
                 })
                 .on('input-keydown', function(event) {
                     var key = event.keyCode,
