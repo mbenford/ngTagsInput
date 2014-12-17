@@ -82,7 +82,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                         self.reset();
                     }
                 });
-            }, options.debounceDelay, false);
+            }, options.debounceDelay, true);
         };
         self.selectNext = function() {
             self.select(++self.index);
