@@ -242,8 +242,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 setElementValidity;
 
             setElementValidity = function() {
-                ngModelCtrl.$setValidity('maxTags', scope.tags.length <= options.maxTags);
-                ngModelCtrl.$setValidity('minTags', scope.tags.length >= options.minTags);
+                var tagsLength = (scope.tags && scope.tags.length) || 0;
+                ngModelCtrl.$setValidity('maxTags', tagsLength <= options.maxTags);
+                ngModelCtrl.$setValidity('minTags', tagsLength >= options.minTags);
                 ngModelCtrl.$setValidity('leftoverText', scope.hasFocus || options.allowLeftoverText ? true : !scope.newTag.text);
             };
 
@@ -265,8 +266,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             };
 
             scope.$watch('tags', function(value) {
-                scope.tags = tiUtil.makeObjectArray(value, options.displayProperty);
-                tagList.items = scope.tags;
+                tagList.items = tiUtil.makeObjectArray(value, options.displayProperty);
             });
 
             scope.$watch('tags.length', function() {
@@ -335,6 +335,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     scope.newTag.setText('');
                 })
                 .on('tag-added tag-removed', function() {
+                    scope.tags = tagList.items;
                     // Ideally we should be able call $setViewValue here and let it in turn call $setDirty and $validate
                     // automatically, but since the model is an array, $setViewValue does nothing and it's up to us to do it.
                     // Unfortunately this won't trigger any registered $parser and there's no safe way to do it.
