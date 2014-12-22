@@ -206,8 +206,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                 setElementValidity;
 
             setElementValidity = function() {
-                ngModelCtrl.$setValidity('maxTags', scope.tags.length <= options.maxTags);
-                ngModelCtrl.$setValidity('minTags', scope.tags.length >= options.minTags);
+                var tagsLength = (scope.tags && scope.tags.length) || 0;
+                ngModelCtrl.$setValidity('maxTags', tagsLength <= options.maxTags);
+                ngModelCtrl.$setValidity('minTags', tagsLength >= options.minTags);
                 ngModelCtrl.$setValidity('leftoverText', scope.hasFocus || options.allowLeftoverText ? true : !scope.newTag.text);
             };
 
@@ -229,8 +230,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
             };
 
             scope.$watch('tags', function(value) {
-                scope.tags = tiUtil.makeObjectArray(value, options.displayProperty);
-                tagList.items = scope.tags;
+                tagList.items = tiUtil.makeObjectArray(value, options.displayProperty);
             });
 
             scope.$watch('tags.length', function() {
