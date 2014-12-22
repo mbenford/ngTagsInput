@@ -193,8 +193,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 setElementValidity;
 
             setElementValidity = function() {
-                ngModelCtrl.$setValidity('maxTags', scope.tags.length <= options.maxTags);
-                ngModelCtrl.$setValidity('minTags', scope.tags.length >= options.minTags);
+                var tagsLength = (scope.tags && scope.tags.length) || 0;
+                ngModelCtrl.$setValidity('maxTags', tagsLength <= options.maxTags);
+                ngModelCtrl.$setValidity('minTags', tagsLength >= options.minTags);
                 ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
             };
 
@@ -209,8 +210,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             };
 
             scope.$watch('tags', function(value) {
-                scope.tags = makeObjectArray(value, options.displayProperty);
-                tagList.items = scope.tags;
+                tagList.items = makeObjectArray(value, options.displayProperty);
             });
 
             scope.$watch('tags.length', function() {
@@ -266,7 +266,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 .on('tag-added tag-removed', function() {
                     // Sets the element to its dirty state
                     // In Angular 1.3 this will be replaced with $setDirty.
-                    ngModelCtrl.$setViewValue(scope.tags);
+                    scope.tags = tagList.items;
+                    ngModelCtrl.$setViewValue(tagList.items);
                 })
                 .on('invalid-tag', function() {
                     scope.newTag.invalid = true;
