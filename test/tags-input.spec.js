@@ -1189,6 +1189,42 @@ describe('tags-input directive', function() {
 
     });
 
+    describe('tag-item-class option', function() {
+        it('initializes the option to "text"', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.tagItemClass).toBe('text');
+        });
+
+        it('adds an html class to each tagItem', function() {
+            // Arrange
+            $scope.tags = generateTags(1);
+
+            // Act
+            compile();
+
+            // Assert
+            expect(getTag(0)).toHaveClass('tag-item-tag1');
+        });
+
+        it('adds an html class to each tagItem when selecting a different property', function() {
+            // Arrange
+            $scope.tags = [
+                {text: 'tag1', label: 'Customer Service'},
+                {text: 'tag2', label: 'Payment'}
+            ];
+
+            // Act
+            compile('tag-item-class="label"');
+
+            // Assert
+            expect(getTag(0)).toHaveClass('tag-item-customer-service');
+            expect(getTag(1)).toHaveClass('tag-item-payment');
+        });
+    });
+
     describe('allow-leftover-text option', function() {
         it('initializes the option to false', function() {
             // Arrange/Act

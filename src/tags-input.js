@@ -38,6 +38,7 @@
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onInvalidTag Expression to evaluate when a tag is invalid. The invalid tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
+ * @param {string=} [tagItemClass=text] Property to individualize tags by adding an html class to each tag-item.
  */
 tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) {
     function TagList(options, events) {
@@ -152,7 +153,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 displayProperty: [String, 'text'],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
-                spellcheck: [Boolean, true]
+                spellcheck: [Boolean, true],
+                tagItemClass: [String, 'text']
             });
 
             $scope.tagList = new TagList($scope.options, $scope.events);
@@ -202,6 +204,16 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
 
             scope.getDisplayText = function(tag) {
                 return safeToString(tag[options.displayProperty]);
+            };
+
+            scope.getTagClass = function(tag) {
+                var tagValue = safeToString(tag[options.tagItemClass]);
+                if (tagValue){
+                    return 'tag-item-' + tagValue
+                        .toLowerCase()
+                        .replace(/\W+/g, '-')
+                        .replace(/([a-z\d])([A-Z])/g, '$1-$2');
+                }
             };
 
             scope.track = function(tag) {
