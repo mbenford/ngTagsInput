@@ -116,6 +116,17 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         return SUPPORTED_INPUT_TYPES.indexOf(type) !== -1;
     }
 
+    /**
+     * validate comma key
+     *
+     * @param e
+     * @returns {boolean}
+     */
+    function validateComma(e) {
+        var originalEvent = e.originalEvent || e;
+        return (e.keyCode !== KEYS.comma) || (e.key || e.char) === ',' || originalEvent.keyIdentifier === 'U+002C';
+    }
+
     return {
         restrict: 'E',
         require: 'ngModel',
@@ -305,7 +316,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     addKeys[KEYS.comma] = options.addOnComma;
                     addKeys[KEYS.space] = options.addOnSpace;
 
-                    shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
+                    shouldAdd = !options.addFromAutocompleteOnly && addKeys[key] && validateComma(event);
                     shouldRemove = !shouldAdd && key === KEYS.backspace && scope.newTag.text.length === 0;
 
                     if (shouldAdd) {

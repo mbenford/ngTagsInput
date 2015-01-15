@@ -61,13 +61,13 @@ describe('tags-input directive', function() {
         return element.find('input');
     }
 
-    function newTag(tag, key) {
+    function newTag(tag, key, properties) {
         key = key || KEYS.enter;
 
         for(var i = 0; i < tag.length; i++) {
             sendKeyPress(tag.charCodeAt(i));
         }
-        sendKeyDown(key);
+        sendKeyDown(key, properties);
     }
 
     function sendKeyPress(charCode) {
@@ -465,18 +465,30 @@ describe('tags-input directive', function() {
             compile('add-on-comma="true"');
 
             // Act
-            newTag('foo', KEYS.comma);
+            newTag('foo', KEYS.comma, {key: ','});
 
             // Assert
             expect($scope.tags).toEqual([{ text: 'foo' }]);
         });
+
+        it('does not add a new tag when the < key is pressed and the comma option is true', function() {
+            // Arrange
+            compile('add-on-comma="true"');
+
+            // Act
+            newTag('foo', KEYS.comma, {key: '<'});
+
+            // Assert
+            expect($scope.tags).not.toEqual([{ text: 'foo' }]);
+        });
+
 
         it('does not add a new tag when the space key is pressed and the option is false', function() {
             // Arrange
             compile('add-on-comma="false"');
 
             // Act
-            newTag('foo', KEYS.comma);
+            newTag('foo', KEYS.comma, {key: ','});
 
             // Assert
             expect($scope.tags).toEqual([]);
@@ -1504,16 +1516,29 @@ describe('tags-input directive', function() {
             it('prevents enter, comma and space keys from being propagated when all modifiers are up', function() {
                 // Arrange
                 hotkeys = [KEYS.enter, KEYS.comma, KEYS.space];
+                var keys = ['Enter',',',' '];
 
                 // Act/Assert
-                angular.forEach(hotkeys, function(key) {
+                angular.forEach(hotkeys, function(key,index) {
                     expect(sendKeyDown(key, {
                         shiftKey: false,
                         ctrlKey: false,
                         altKey: false,
-                        metaKey: false
+                        metaKey: false,
+                        key: keys[index]
                     }).isDefaultPrevented()).toBe(true);
                 });
+            });
+
+            it('does not prevent "fake" comma key from being propagated when all modifiers are up', function() {
+                // Act/Assert
+                expect(sendKeyDown(KEYS.comma, {
+                    shiftKey: false,
+                    ctrlKey: false,
+                    altKey: false,
+                    metaKey: false,
+                    key: '<'
+                }).isDefaultPrevented()).not.toBe(true);
             });
 
             it('prevents the backspace key from being propagated when all modifiers are up', function() {
