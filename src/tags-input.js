@@ -185,7 +185,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             };
         },
         link: function(scope, element, attrs, ngModelCtrl) {
-            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace],
+            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.tab],
                 tagList = scope.tagList,
                 events = scope.events,
                 options = scope.options,
