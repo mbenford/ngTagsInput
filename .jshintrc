@@ -34,7 +34,7 @@
         "findInObjectArray": true,
         "safeToString": true,
         "encodeHTML": true,
-        "replaceAll" : true,
+        "safeHighlight" : true,
         "generateArray": true,
         "changeElementValue": true,
         "customMatchers": true,

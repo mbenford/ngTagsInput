@@ -1002,6 +1002,23 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(1)).toBe('Item &lt;2<em>&gt;</em>');
             expect(getSuggestionText(2)).toBe('Item &amp;3');
         });
+
+        it('doesn\'t highlight HTML entities in suggestions list', function() {
+            // Arrange
+            compile('highlight-matched-text="true"', 'min-length="1"');
+
+            // Act
+            loadSuggestions([
+                { text: 'a&a' },
+                { text: '&a' },
+                { text: 'a&' }
+            ], 'a');
+
+            // Assert
+            expect(getSuggestionText(0)).toBe('<em>a</em>&amp;<em>a</em>');
+            expect(getSuggestionText(1)).toBe('&amp;<em>a</em>');
+            expect(getSuggestionText(2)).toBe('<em>a</em>&amp;');
+        });
     });
 
     describe('max-results-to-show option', function() {

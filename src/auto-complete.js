@@ -169,7 +169,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 var text = getDisplayText(item);
                 text = encodeHTML(text);
                 if (options.highlightMatchedText) {
-                    text = replaceAll(text, encodeHTML(suggestionList.query), '<em>$&</em>');
+                    text = safeHighlight(text, encodeHTML(suggestionList.query));
                 }
                 return $sce.trustAsHtml(text);
             };

@@ -47,13 +47,19 @@ function findInObjectArray(array, obj, key) {
     return item;
 }
 
-function replaceAll(str, substr, newSubstr) {
-    if (!substr) {
+function safeHighlight(str, value) {
+    if (!value) {
         return str;
     }
 
-    var expression = substr.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
-    return str.replace(new RegExp(expression, 'gi'), newSubstr);
+    function escapeRegexChars(str) {
+        return str.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
+    }
+
+    var expression = new RegExp('&[^;]+;|' + escapeRegexChars(value), 'gi');
+    return str.replace(expression, function(match) {
+        return match === value ? '<em>' + value + '</em>' : match;
+    });
 }
 
 function safeToString(value) {
