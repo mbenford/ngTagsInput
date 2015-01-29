@@ -7,6 +7,7 @@ $tags-border:                           1px solid darkgray;
 $tags-border-shadow:                    1px 1px 1px 0 lightgray inset;
 $tags-outline-box-shadow:               0 0 3px 1px rgba(5, 139, 242, 0.6);
 $tags-outline-box-shadow-invalid:       0 0 3px 1px rgba(255, 0, 0, 0.6);
+$tags-bgcolor-disabled:					#eee;
 
 $tag-height:                            26px;
 $tag-font:                              14px $base-font-family;
@@ -15,6 +16,7 @@ $tag-border:                            1px solid rgb(172, 172, 172);
 $tag-border-radius:                     3px;
 $tag-color-selected:                    rgba(254, 187, 187, 1) 0%, rgba(254, 144, 144, 1) 45%, rgba(255, 92, 92, 1) 100%;
 $tag-color-invalid:                     #ff0000;
+$tag-opacity-disabled:                  0.65;
 
 $remove-button-color:                   #585858;
 $remove-button-color-active:            #ff0000;
