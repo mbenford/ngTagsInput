@@ -75,9 +75,30 @@ tags-input {
         display: none;
       }
     }
+
   }
 
   &.ng-invalid .tags {
     @include box-shadow($tags-outline-box-shadow-invalid);
+  }
+
+  [disabled] {
+    &:focus {
+      outline: none;
+    }
+    .tags {
+      background-color: $tags-bgcolor-disabled;
+      cursor: not-allowed;
+      .tag-item {
+        opacity: $tag-opacity-disabled;
+        .remove-button {
+          cursor: not-allowed;
+        }
+      }
+      .input[disabled] {
+        background-color: #EEE;
+        cursor: not-allowed;
+      }
+    }
   }
 }

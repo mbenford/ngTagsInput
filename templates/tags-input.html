@@ -1,9 +1,9 @@
-<div class="host" tabindex="-1" ng-click="eventHandlers.host.click()" ti-transclude-append>
+<div class="host" tabindex="-1" ng-click="disabled || eventHandlers.host.click()" ti-transclude-append ng-disabled="disabled">
   <div class="tags" ng-class="{focused: hasFocus}">
     <ul class="tag-list">
       <li class="tag-item" ng-repeat="tag in tagList.items track by track(tag)" ng-class="{ selected: tag == tagList.selected }">
         <span ng-bind="getDisplayText(tag)"></span>
-        <a class="remove-button" ng-click="tagList.remove($index)" ng-bind="options.removeTagSymbol"></a>
+        <a class="remove-button" ng-click="disabled || tagList.remove($index)" ng-bind="options.removeTagSymbol"></a>
       </li>
     </ul>
     <input class="input"
@@ -15,6 +15,7 @@
            ng-paste="eventHandlers.input.paste($event)"
            ng-trim="false"
            ng-class="{'invalid-tag': newTag.invalid}"
+           ng-disabled="disabled"
            ti-bind-attrs="{type: options.type, placeholder: options.placeholder, tabindex: options.tabindex, spellcheck: options.spellcheck}"
            ti-autosize>
   </div>
