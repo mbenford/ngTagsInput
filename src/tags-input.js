@@ -121,9 +121,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         require: 'ngModel',
         scope: {
             tags: '=ngModel',
-            onTagAdded: '&',
-            onInvalidTag: '&',
-            onTagRemoved: '&'
+            ontagadded: '&',
+            oninvalidtag: '&',
+            ontagremoved: '&'
         },
         replace: false,
         transclude: true,
@@ -257,9 +257,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             };
 
             events
-                .on('tag-added', scope.onTagAdded)
-                .on('invalid-tag', scope.onInvalidTag)
-                .on('tag-removed', scope.onTagRemoved)
+                .on('tag-added', scope.ontagadded)
+                .on('invalid-tag', scope.oninvalidtag)
+                .on('tag-removed', scope.ontagremoved)
                 .on('tag-added', function() {
                     scope.newTag.text = '';
                 })
