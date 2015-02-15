@@ -107,7 +107,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
     }
 
     return {
-        restrict: 'E',
+        restrict: 'EA',
         require: '^tagsInput',
         scope: { source: '&' },
         templateUrl: 'ngTagsInput/auto-complete.html',
