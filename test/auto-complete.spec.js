@@ -784,6 +784,64 @@ describe('autoComplete directive', function() {
         });
     });
 
+    describe('load-on-add-remove option', function() {
+        it('initialize the option to false', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.loadOnAddRemove).toBe(false);
+        });
+
+        it('calls the load function when a tag is added and the option is true', function(){
+            // Arrange
+            compile('load-on-add-remove="true"');
+
+            // Act
+            eventHandlers['tag-added']();
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).toHaveBeenCalled();
+        });
+
+        it('doesn\t call the load function when a tag is added and the option is false', function(){
+            // Arrange
+            compile('load-on-add-remove="false"');
+
+            // Act
+            eventHandlers['tag-added']();
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).not.toHaveBeenCalled();
+        });
+
+        it('calls the load function when a tag is removed and the option is true', function(){
+            // Arrange
+            compile('load-on-add-remove="true"');
+
+            // Act
+            eventHandlers['tag-removed']();
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).toHaveBeenCalled();
+        });
+
+        it('doesn\'t call the load function when a tag is removed and the option is false', function(){
+            // Arrange
+            compile('load-on-add-remove="false"');
+
+            // Act
+            eventHandlers['tag-removed']();
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).not.toHaveBeenCalled();
+        });
+    });
+
     describe('debounce-delay option', function() {
         it('initializes the option to 100 milliseconds', function() {
             // Arrange/Act

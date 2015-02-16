@@ -25,6 +25,9 @@
  *                                       becomes empty. The $query variable will be passed to the expression as an empty string.
  * @param {boolean=} {loadOnFocus=false} Flag indicating that the source option will be evaluated when the input element
  *                                       gains focus. The current input value is available as $query.
+ * @param {boolean=} {loadOnAddRemove=false} Flag indicating that the source option will be evaluated when a tag is added or 
+                                             removed. The current input value will be empty so loadOnEmpty is treated as true if
+ *                                           this value is true.
  * @param {boolean=} [selectFirstMatch=true] Flag indicating that the first match will be automatically selected once
  *                                           the suggestion list is shown.
  */
@@ -123,6 +126,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnDownArrow: [Boolean, false],
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
+                loadOnAddRemove: [Boolean, false],
                 selectFirstMatch: [Boolean, true]
             });
 
@@ -142,7 +146,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             };
 
             shouldLoadSuggestions = function(value) {
-                return value && value.length >= options.minLength || !value && options.loadOnEmpty;
+                return (value && value.length >= options.minLength) || (!value && (options.loadOnEmpty || options.loadOnAddRemove));
             };
 
             scope.suggestionList = suggestionList;
@@ -157,10 +161,11 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
 
                 if (suggestionList.selected) {
                     tagsInput.addTag(suggestionList.selected);
-                    suggestionList.reset();
-                    tagsInput.focusInput();
-
-                    added = true;
+                    if (!options.loadOnAddRemove){
+                        suggestionList.reset();
+                        tagsInput.focusInput();
+                        added = true;
+                    }
                 }
                 return added;
             };
@@ -179,8 +184,17 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             };
 
             tagsInput
-                .on('tag-added tag-removed invalid-tag input-blur', function() {
+                .on('invalid-tag input-blur', function() {
                     suggestionList.reset();
+                })
+                .on('tag-added tag-removed', function() {
+                    var value = tagsInput.getCurrentTagText();
+                    if (options.loadOnAddRemove && shouldLoadSuggestions(value)) {
+                        suggestionList.load(value, tagsInput.getTags());
+                    }
+                    else {
+                        suggestionList.reset();
+                    }
                 })
                 .on('input-change', function(value) {
                     if (shouldLoadSuggestions(value)) {
