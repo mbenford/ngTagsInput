@@ -74,7 +74,7 @@
   color: #ccc;
 }
 .tags-input .tags .input {
-  border: 0;
+  border: none;
   outline: none;
   margin: 2px;
   padding: 0;
@@ -82,6 +82,7 @@
   float: left;
   height: 26px;
   font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  box-shadow: none;
 }
 .tags-input .tags .input.invalid-tag {
   color: #ff0000;

@@ -62,7 +62,7 @@
         }
 
         .input {
-            border: 0;
+            border: none;
             outline: none;
             margin: 2px;
             padding: 0;
@@ -70,6 +70,7 @@
             float: left;
             height: $tag-height;
             font: $input-font;
+            box-shadow: none;
 
             &.invalid-tag {
                 color: $tag-color-invalid;
