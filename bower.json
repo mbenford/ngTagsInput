@@ -14,7 +14,8 @@
     ".travis.yml",
     "Gruntfile.js",
     "karma.conf.js",
-    "sauce.launchers.json"
+    "sauce.launchers.json",
+    "CONTRIBUTING.md"
   ],
   "authors": [
     "Showpad"
