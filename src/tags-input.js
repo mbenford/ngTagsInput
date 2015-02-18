@@ -127,20 +127,20 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         },
         replace: false,
         transclude: true,
-        templateUrl: 'ngTagsInput/tags-input.html',
+        templateUrl: 'ngTagsInput/tags-input.template.html',
         controller: function($scope, $attrs, $element) {
             $scope.events = new SimplePubSub();
 
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 type: [String, 'text', validateType],
-                placeholder: [String, 'Add a tag'],
+                placeholder: [String, 'Enter email addresses'],
                 tabindex: [Number, null],
                 removeTagSymbol: [String, String.fromCharCode(215)],
                 replaceSpacesWithDashes: [Boolean, true],
                 minLength: [Number, 3],
                 maxLength: [Number, MAX_SAFE_INTEGER],
                 addOnEnter: [Boolean, true],
-                addOnSpace: [Boolean, false],
+                addOnSpace: [Boolean, true],
                 addOnComma: [Boolean, true],
                 addOnBlur: [Boolean, true],
                 addOnPaste: [Boolean, false],
@@ -152,7 +152,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 displayProperty: [String, 'text'],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
-                spellcheck: [Boolean, true]
+                spellcheck: [Boolean, false]
             });
 
             $scope.tagList = new TagList($scope.options, $scope.events);

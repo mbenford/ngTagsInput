@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2015 Michael Benford
  * License: MIT
  *
- * Generated at 2015-02-18 14:12:22 +0100
+ * Generated at 2015-02-18 14:50:16 +0100
  */
 (function() {
 'use strict';
@@ -225,20 +225,20 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
         },
         replace: false,
         transclude: true,
-        templateUrl: 'ngTagsInput/tags-input.html',
+        templateUrl: 'ngTagsInput/tags-input.template.html',
         controller: ["$scope","$attrs","$element", function($scope, $attrs, $element) {
             $scope.events = new SimplePubSub();
 
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 type: [String, 'text', validateType],
-                placeholder: [String, 'Add a tag'],
+                placeholder: [String, 'Enter email addresses'],
                 tabindex: [Number, null],
                 removeTagSymbol: [String, String.fromCharCode(215)],
                 replaceSpacesWithDashes: [Boolean, true],
                 minLength: [Number, 3],
                 maxLength: [Number, MAX_SAFE_INTEGER],
                 addOnEnter: [Boolean, true],
-                addOnSpace: [Boolean, false],
+                addOnSpace: [Boolean, true],
                 addOnComma: [Boolean, true],
                 addOnBlur: [Boolean, true],
                 addOnPaste: [Boolean, false],
@@ -250,7 +250,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                 displayProperty: [String, 'text'],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
-                spellcheck: [Boolean, true]
+                spellcheck: [Boolean, false]
             });
 
             $scope.tagList = new TagList($scope.options, $scope.events);
@@ -543,10 +543,10 @@ tagsInput.directive('autoComplete', ["$document","$timeout","$sce","$q","tagsInp
     }
 
     return {
-        restrict: 'E',
+        restrict: 'AE',
         require: '^tagsInput',
         scope: { source: '&' },
-        templateUrl: 'ngTagsInput/auto-complete.html',
+        templateUrl: 'ngTagsInput/auto-complete.template.html',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
                 suggestionList, tagsInput, options, getItem, getDisplayText, shouldLoadSuggestions;
@@ -876,11 +876,11 @@ tagsInput.provider('tagsInputConfig', function() {
 
 /* HTML templates */
 tagsInput.run(["$templateCache", function($templateCache) {
-    $templateCache.put('ngTagsInput/tags-input.html',
+    $templateCache.put('ngTagsInput/tags-input.template.html',
     "<div class=\"host\" tabindex=\"-1\" ng-click=\"eventHandlers.host.click()\" ti-transclude-append=\"\"><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul class=\"tag-list\"><li class=\"tag-item\" ng-repeat=\"tag in tagList.items track by track(tag)\" ng-class=\"{ selected: tag == tagList.selected }\"><span ng-bind=\"getDisplayText(tag)\"></span> <a class=\"remove-button\" ng-click=\"tagList.remove($index)\" ng-bind=\"options.removeTagSymbol\"></a></li></ul><input class=\"input\" ng-model=\"newTag.text\" ng-change=\"eventHandlers.input.change(newTag.text)\" ng-keydown=\"eventHandlers.input.keydown($event)\" ng-focus=\"eventHandlers.input.focus($event)\" ng-blur=\"eventHandlers.input.blur($event)\" ng-paste=\"eventHandlers.input.paste($event)\" ng-trim=\"false\" ng-class=\"{'invalid-tag': newTag.invalid}\" ti-bind-attrs=\"{type: options.type, placeholder: options.placeholder, tabindex: options.tabindex, spellcheck: options.spellcheck}\" ti-autosize=\"\"></div></div>"
   );
 
-  $templateCache.put('ngTagsInput/auto-complete.html',
+  $templateCache.put('ngTagsInput/auto-complete.template.html',
     "<div class=\"autocomplete\" ng-show=\"suggestionList.visible\"><ul class=\"suggestion-list\"><li class=\"suggestion-item\" ng-repeat=\"item in suggestionList.items track by track(item)\" ng-class=\"{selected: item == suggestionList.selected}\" ng-click=\"addSuggestionByIndex($index)\" ng-mouseenter=\"suggestionList.select($index)\" ng-bind-html=\"highlight(item)\"></li></ul></div>"
   );
 }]);

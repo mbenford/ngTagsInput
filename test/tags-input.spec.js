@@ -455,7 +455,7 @@ describe('tags-input directive', function() {
             compile();
 
             // Assert
-            expect(isolateScope.options.addOnSpace).toBe(false);
+            expect(isolateScope.options.addOnSpace).toBe(true);
         });
     });
 
@@ -712,7 +712,7 @@ describe('tags-input directive', function() {
             compile();
 
             // Assert
-            expect(isolateScope.options.spellcheck).toBe(true);
+            expect(isolateScope.options.spellcheck).toBe(false);
         });
     });
 
@@ -730,7 +730,7 @@ describe('tags-input directive', function() {
             compile();
 
             // Assert
-            expect(isolateScope.options.placeholder).toBe('Add a tag');
+            expect(isolateScope.options.placeholder).toBe('Enter email addresses');
         });
     });
 
