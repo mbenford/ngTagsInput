@@ -13,6 +13,7 @@
     "input"
   ],
   "dependencies": {
-    "angular": "~1.2"
+    "angular": "~1.2",
+    "modernizr": "~2.8.3"
   }
 }

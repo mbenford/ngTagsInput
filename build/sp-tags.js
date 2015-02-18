@@ -2,11 +2,11 @@
  * Showpad Tags v0.1.8
  * http://mbenford.github.io/ngTagsInput
  *
- * Copyright (c) 2013-2014 Michael Benford
+ * Copyright (c) 2013-2015 Michael Benford
  * Edited by: @vdclouis
  * License: MIT
  *
- * Generated at 2014-11-19 10:05:41 +0100
+ * Generated at 2015-02-18 11:45:29 +0100
  */
 (function() {
 'use strict';
@@ -234,7 +234,14 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                         return $scope.tagList.add(tag);
                     },
                     focusInput: function() {
-                        input[0].focus();
+                        if (!Modernizr.svg) {
+                            setTimeout(function () {
+                                input[0].focus();
+                            }, 40);
+                        } else {
+                            input[0].focus();
+                        }
+
                     },
                     getTags: function() {
                         return $scope.tags;
@@ -378,7 +385,13 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                 });
 
             element.find('div').on('click', function() {
-                input[0].focus();
+                if (!Modernizr.svg) {
+                    setTimeout(function () {
+                        input[0].focus();
+                    }, 40);
+                } else {
+                    input[0].focus();
+                }
             });
         }
     };

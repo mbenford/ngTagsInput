@@ -154,7 +154,14 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                         return $scope.tagList.add(tag);
                     },
                     focusInput: function() {
-                        input[0].focus();
+                        if (!Modernizr.svg) {
+                            setTimeout(function () {
+                                input[0].focus();
+                            }, 40);
+                        } else {
+                            input[0].focus();
+                        }
+
                     },
                     getTags: function() {
                         return $scope.tags;
@@ -298,7 +305,13 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 });
 
             element.find('div').on('click', function() {
-                input[0].focus();
+                if (!Modernizr.svg) {
+                    setTimeout(function () {
+                        input[0].focus();
+                    }, 40);
+                } else {
+                    input[0].focus();
+                }
             });
         }
     };
