@@ -1,22 +1,22 @@
-tags-input {
+.tags-input {
   display: block;
 }
-tags-input *, tags-input *:before, tags-input *:after {
+.tags-input *, .tags-input *:before, .tags-input *:after {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-tags-input .host {
+.tags-input .host {
   position: relative;
   margin-top: 5px;
   margin-bottom: 5px;
   height: 100%;
 }
-tags-input .host:active {
+.tags-input .host:active {
   outline: none;
 }
 
-tags-input .tags {
+.tags-input .tags {
   -moz-appearance: textfield;
   -webkit-appearance: textfield;
   padding: 1px;
@@ -28,18 +28,18 @@ tags-input .tags {
   box-shadow: 1px 1px 1px 0 lightgray inset;
   height: 100%;
 }
-tags-input .tags.focused {
+.tags-input .tags.focused {
   outline: none;
   -webkit-box-shadow: 0 0 3px 1px rgba(5, 139, 242, 0.6);
   -moz-box-shadow: 0 0 3px 1px rgba(5, 139, 242, 0.6);
   box-shadow: 0 0 3px 1px rgba(5, 139, 242, 0.6);
 }
-tags-input .tags .tag-list {
+.tags-input .tags .tag-list {
   margin: 0;
   padding: 0;
   list-style-type: none;
 }
-tags-input .tags .tag-item {
+.tags-input .tags .tag-item {
   margin: 2px;
   padding: 0 5px;
   display: inline-block;
@@ -52,11 +52,11 @@ tags-input .tags .tag-item {
   background: -webkit-linear-gradient(top, #f0f9ff 0%, #cbebff 47%, #a1dbff 100%);
   background: linear-gradient(to bottom, #f0f9ff 0%, #cbebff 47%, #a1dbff 100%);
 }
-tags-input .tags .tag-item.selected {
+.tags-input .tags .tag-item.selected {
   background: -webkit-linear-gradient(top, #febbbb 0%, #fe9090 45%, #ff5c5c 100%);
   background: linear-gradient(to bottom, #febbbb 0%, #fe9090 45%, #ff5c5c 100%);
 }
-tags-input .tags .tag-item .remove-button {
+.tags-input .tags .tag-item .remove-button {
   margin: 0 0 0 5px;
   padding: 0;
   border: none;
@@ -66,10 +66,10 @@ tags-input .tags .tag-item .remove-button {
   font: bold 16px Arial, sans-serif;
   color: #585858;
 }
-tags-input .tags .tag-item .remove-button:active {
+.tags-input .tags .tag-item .remove-button:active {
   color: #ff0000;
 }
-tags-input .tags .input {
+.tags-input .tags .input {
   border: 0;
   outline: none;
   margin: 2px;
@@ -79,19 +79,19 @@ tags-input .tags .input {
   height: 26px;
   font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-tags-input .tags .input.invalid-tag {
+.tags-input .tags .input.invalid-tag {
   color: #ff0000;
 }
-tags-input .tags .input::-ms-clear {
+.tags-input .tags .input::-ms-clear {
   display: none;
 }
-tags-input.ng-invalid .tags {
+.tags-input.ng-invalid .tags {
   -webkit-box-shadow: 0 0 3px 1px rgba(255, 0, 0, 0.6);
   -moz-box-shadow: 0 0 3px 1px rgba(255, 0, 0, 0.6);
   box-shadow: 0 0 3px 1px rgba(255, 0, 0, 0.6);
 }
 
-tags-input .autocomplete {
+.tags-input .autocomplete {
   margin-top: 5px;
   position: absolute;
   padding: 5px 0;
@@ -103,12 +103,12 @@ tags-input .autocomplete {
   -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
-tags-input .autocomplete .suggestion-list {
+.tags-input .autocomplete .suggestion-list {
   margin: 0;
   padding: 0;
   list-style-type: none;
 }
-tags-input .autocomplete .suggestion-item {
+.tags-input .autocomplete .suggestion-item {
   padding: 5px 10px;
   cursor: pointer;
   white-space: nowrap;
@@ -118,15 +118,15 @@ tags-input .autocomplete .suggestion-item {
   color: #000;
   background-color: #fff;
 }
-tags-input .autocomplete .suggestion-item.selected {
+.tags-input .autocomplete .suggestion-item.selected {
   color: #fff;
   background-color: #0097cf;
 }
-tags-input .autocomplete .suggestion-item.selected em {
+.tags-input .autocomplete .suggestion-item.selected em {
   color: #fff;
   background-color: #0097cf;
 }
-tags-input .autocomplete .suggestion-item em {
+.tags-input .autocomplete .suggestion-item em {
   font: normal bold 16px "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #000;
   background-color: #fff;

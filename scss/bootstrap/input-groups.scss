@@ -1,7 +1,7 @@
 @import "../mixins";
 @import "variables";
 
-.input-group tags-input {
+.input-group .tags-input {
   padding: 0;
   display: table-cell;
 
@@ -14,7 +14,7 @@
   }
 }
 
-.input-group-lg tags-input {
+.input-group-lg .tags-input {
   @extend .ti-input-lg;
 
   &:first-child .tags {
@@ -26,7 +26,7 @@
   }
 }
 
-.input-group-sm tags-input {
+.input-group-sm .tags-input {
   @extend .ti-input-sm;
 
   &:first-child .tags {
