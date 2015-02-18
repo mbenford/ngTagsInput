@@ -10,7 +10,9 @@
  * initialize options from HTML attributes.
  */
 tagsInput.provider('tagsInputConfig', function() {
-    var globalDefaults = {}, interpolationStatus = {};
+    var globalDefaults = {},
+        interpolationStatus = {},
+        autosizeThreshold = 3;
 
     /**
      * @ngdoc method
@@ -44,6 +46,20 @@ tagsInput.provider('tagsInputConfig', function() {
         return this;
     };
 
+    /***
+     * @ngdoc method
+     * @name setTextAutosizeThreshold
+     * @methodOf tagsInputConfig
+     *
+     * @param {number} threshold Threshold to be used by the tagsInput directive to re-size the input element based on its contents.
+     *
+     * @returns {object} The service itself for chaining purposes.
+     */
+    this.setTextAutosizeThreshold = function(threshold) {
+        autosizeThreshold = threshold;
+        return this;
+    };
+
     this.$get = function($interpolate) {
         var converters = {};
         converters[String] = function(value) { return value; };
@@ -53,13 +69,16 @@ tagsInput.provider('tagsInputConfig', function() {
 
         return {
             load: function(directive, scope, attrs, options) {
+                var defaultValidator = function() { return true; };
+
                 scope.options = {};
 
                 angular.forEach(options, function(value, key) {
-                    var type, localDefault, converter, getDefault, updateValue;
+                    var type, localDefault, validator, converter, getDefault, updateValue;
 
                     type = value[0];
                     localDefault = value[1];
+                    validator = value[2] || defaultValidator;
                     converter = converters[type];
 
                     getDefault = function() {
@@ -68,18 +87,22 @@ tagsInput.provider('tagsInputConfig', function() {
                     };
 
                     updateValue = function(value) {
-                        scope.options[key] = value ? converter(value) : getDefault();
+                        scope.options[key] = value && validator(value) ? converter(value) : getDefault();
                     };
 
                     if (interpolationStatus[directive] && interpolationStatus[directive][key]) {
                         attrs.$observe(key, function(value) {
                             updateValue(value);
+                            scope.events.trigger('option-change', { name: key, newValue: value });
                         });
                     }
                     else {
                         updateValue(attrs[key] && $interpolate(attrs[key])(scope.$parent));
                     }
                 });
+            },
+            getTextAutosizeThreshold: function() {
+                return autosizeThreshold;
             }
         };
     };

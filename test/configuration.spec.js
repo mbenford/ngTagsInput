@@ -16,6 +16,7 @@ describe('configuration service', function() {
 
         attrs = {};
         $scope.options = {};
+        $scope.events = { trigger: angular.noop };
     });
 
     it('loads literal values from attributes', function() {
@@ -106,6 +107,30 @@ describe('configuration service', function() {
         });
     });
 
+    it('triggers an event when an interpolated value change', function() {
+        // Arrange
+        provider.setActiveInterpolation('foo', { prop1: true });
+        $scope.$parent.prop1 = 'foobar';
+        attrs.prop1 = '{{ prop1 }}';
+
+        $scope.events = jasmine.createSpyObj('events', ['trigger']);
+
+        var callback;
+        attrs.$observe = jasmine.createSpy().and.callFake(function(name, cb) {
+            callback = cb;
+        });
+
+        // Act
+        service.load('foo', $scope, attrs, {
+            prop1: [String]
+        });
+
+        callback('barfoo');
+
+        // Assert
+        expect($scope.events.trigger).toHaveBeenCalledWith('option-change', { name: 'prop1', newValue: 'barfoo' });
+    });
+
     it('loads default values when attributes are missing', function() {
         // Act
         service.load('foo', $scope, attrs, {
@@ -179,8 +204,49 @@ describe('configuration service', function() {
         });
     });
 
+    it('falls back to default values when invalid values are provided', function() {
+        // Arrange
+        provider.setDefaults('foo', {
+            prop1: 'foobar'
+        });
+
+        attrs.prop1 = 'foo-bar';
+        attrs.prop2 = 'foo-bar';
+        attrs.prop3 = 'foo-bar';
+        attrs.prop4 = 'foo-bar';
+
+        // Act
+        service.load('foo', $scope, attrs, {
+            prop1: [String, 'barfoo', function(value) { return !value; }],
+            prop2: [String, 'foobar', function(value) { return !value; }],
+            prop3: [String, 'foobaz', function(value) { return value; }],
+            prop4: [String, 'bazfoo']
+        });
+
+        // Assert
+        expect($scope.options).toEqual({
+            prop1: 'foobar',
+            prop2: 'foobar',
+            prop3: 'foo-bar',
+            prop4: 'foo-bar'
+        });
+    });
+
     it('returns the same object so calls can be chained', function() {
         expect(provider.setDefaults('foo', {})).toBe(provider);
         expect(provider.setActiveInterpolation('foo', {})).toBe(provider);
+        expect(provider.setTextAutosizeThreshold(10)).toBe(provider);
+    });
+
+    it('sets the threshold used to calculate the size of the input element', function() {
+        // Act
+        provider.setTextAutosizeThreshold(10);
+
+        // Assert
+        expect(service.getTextAutosizeThreshold()).toBe(10);
+    });
+
+    it('defaults the threshold used to calculate the size of the input element to 3', function() {
+        expect(service.getTextAutosizeThreshold()).toBe(3);
     });
 });

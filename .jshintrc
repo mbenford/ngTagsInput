@@ -33,9 +33,13 @@
         "makeObjectArray": true,
         "findInObjectArray": true,
         "safeToString": true,
-        "replaceAll" : true,
-        "KEYS": true,
+        "encodeHTML": true,
+        "safeHighlight" : true,
         "generateArray": true,
-        "customMatchers": true
+        "changeElementValue": true,
+        "customMatchers": true,
+        "KEYS": true,
+        "MAX_SAFE_INTEGER": true,
+        "SUPPORTED_INPUT_TYPES": true
     }
 }

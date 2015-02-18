@@ -1,0 +1,91 @@
+@import "../mixins";
+@import "variables";
+
+tags-input {
+  &.ti-input-lg {
+    min-height: $tags-height-lg;
+
+    .tags {
+      border-radius: $tag-border-radius-lg;
+
+      .tag-item {
+        height: $tag-height-lg;
+        line-height: $tag-height-lg - 1px;
+        font-size: $tag-font-size-lg;
+        border-radius: $tag-border-radius-lg;
+
+        .remove-button {
+          font-size: $remove-button-font-size-lg;
+        }
+      }
+
+      .input {
+        height: $tag-height-lg;
+        font-size: $input-font-size-lg;
+      }
+    }
+  }
+
+  &.ti-input-sm {
+    min-height: $tags-height-sm;
+
+    .tags {
+      border-radius: $tag-border-radius-sm;
+
+      .tag-item {
+        height: $tag-height-sm;
+        line-height: $tag-height-sm - 1px;
+        font-size: $tag-font-size-sm;
+        border-radius: $tag-border-radius-sm;
+
+        .remove-button {
+          font-size: $remove-button-font-size-sm;
+        }
+      }
+
+      .input {
+        height: $tag-height-sm;
+        font-size: $input-font-size-sm;
+      }
+    }
+  }
+}
+
+.has-feedback tags-input {
+  .tags {
+    padding-right: 30px;
+  }
+}
+
+.has-success tags-input {
+  .tags {
+    border-color: $tags-border-color-success;
+
+    &.focused {
+      border-color: $tags-outline-border-color-success;
+      @include box-shadow($tags-outline-border-shadow-success)
+    }
+  }
+}
+
+.has-error tags-input {
+  .tags {
+    border-color: $tags-border-color-error;
+
+    &.focused {
+      border-color: $tags-outline-border-color-error;
+      @include box-shadow($tags-outline-border-shadow-error)
+    }
+  }
+}
+
+.has-warning tags-input {
+  .tags {
+    border-color: $tags-border-color-warning;
+
+    &.focused {
+      border-color: $tags-outline-border-color-warning;
+      @include box-shadow($tags-outline-border-shadow-warning)
+    }
+  }
+}

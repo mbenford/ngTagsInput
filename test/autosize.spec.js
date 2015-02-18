@@ -1,11 +1,18 @@
 'use strict';
 
 describe('autosize directive', function() {
-    var $scope, $compile,
+    var $scope, $compile, tagsInputConfigMock,
         element, style, container;
 
     beforeEach(function() {
         module('ngTagsInput');
+
+        tagsInputConfigMock = jasmine.createSpyObj('tagsInputConfig', ['getTextAutosizeThreshold']);
+        tagsInputConfigMock.getTextAutosizeThreshold.and.returnValue(3);
+
+        module(function($provide) {
+            $provide.value('tagsInputConfig', tagsInputConfigMock);
+        });
 
         inject(function($rootScope, _$compile_) {
             $scope = $rootScope;
@@ -31,13 +38,14 @@ describe('autosize directive', function() {
         $scope.$digest();
     }
 
-    function getTextWidth(text) {
+    function getTextWidth(text, threshold) {
         var width, span = angular.element('<span class="input"></span>');
+        threshold = threshold || 3;
 
         span.css('white-space', 'pre');
         span.text(text);
         container.append(span);
-        width = parseInt(span.prop('offsetWidth'), 10) + 3;
+        width = parseInt(span.prop('offsetWidth'), 10) + threshold;
 
         span.remove();
 
@@ -50,8 +58,7 @@ describe('autosize directive', function() {
         compile();
 
         // Act
-        element.val(text);
-        element.trigger('input');
+        changeElementValue(element, text);
 
         // Arrange
         expect(element.css('width')).toBe(getTextWidth(text));
@@ -104,10 +111,22 @@ describe('autosize directive', function() {
         compile();
 
         // Act
-        element.val('AAAAAAAAAAAAAA');
-        element.trigger('input');
+        changeElementValue(element, 'AAAAAAAAAAAAAA');
 
         // Assert
         expect(element.prop('style').width).toBe('');
+    });
+
+    it('overrides the threshold', function() {
+        // Arrange
+        var text = 'AAAAAAAAAAAAAA';
+        tagsInputConfigMock.getTextAutosizeThreshold.and.returnValue(20);
+        compile();
+
+        // Act
+        changeElementValue(element, text);
+
+        // Assert
+        expect(element.css('width')).toBe(getTextWidth(text, 20));
     });
 });

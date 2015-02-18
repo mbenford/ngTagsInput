@@ -1,15 +1,18 @@
 @import "mixins";
 @import "variables";
 
-.tags-input {
+tags-input {
   .tags {
+    -moz-appearance: textfield;
+    -webkit-appearance: textfield;
     padding: 1px;
     overflow: hidden;
     word-wrap: break-word;
     cursor: text;
     background-color: $tags-bgcolor;
-    //border: $tags-border;
-    //box-shadow: $tags-border-shadow;
+    border: $tags-border;
+    box-shadow: $tags-border-shadow;
+    height: 100%;
 
     &.focused {
       outline: none;
@@ -24,26 +27,18 @@
 
     .tag-item {
       margin: 2px;
-      padding: 0 8px;
+      padding: 0 5px;
       display: inline-block;
       float: left;
       font: $tag-font;
       height: $tag-height;
-      line-height: $tag-height;
+      line-height: $tag-height - 1px;
       border: $tag-border;
       border-radius: $tag-border-radius;
-      background: $tag-bg;
-      color: $tag-color;
-      @include transition(all .5s ease);
+      @include gradient($tag-color);
 
       &.selected {
-        background: $tag-color-selected;
-
-        .remove-button {
-          &:hover {
-            color: $tag-bg;
-          }
-        }
+        @include gradient($tag-color-selected);
       }
 
       .remove-button {
@@ -55,9 +50,8 @@
         vertical-align: middle;
         font: $remove-button-font;
         color: $remove-button-color;
-        @include transition(all .5s ease);
 
-        &:hover {
+        &:active {
           color: $remove-button-color-active;
         }
       }

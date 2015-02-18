@@ -13,8 +13,10 @@ function SimplePubSub() {
             return this;
         },
         trigger: function(name, args) {
-            angular.forEach(events[name], function(handler) {
-                handler.call(null, args);
+            var handlers = events[name] || [];
+            handlers.every(function(handler) {
+                var retVal = handler.call(null, args);
+                return angular.isUndefined(retVal) || retVal;
             });
             return this;
         }
@@ -45,11 +47,27 @@ function findInObjectArray(array, obj, key) {
     return item;
 }
 
-function replaceAll(str, substr, newSubstr) {
-    var expression = substr.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
-    return str.replace(new RegExp(expression, 'gi'), newSubstr);
+function safeHighlight(str, value) {
+    if (!value) {
+        return str;
+    }
+
+    function escapeRegexChars(str) {
+        return str.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
+    }
+
+    var expression = new RegExp('&[^;]+;|' + escapeRegexChars(value), 'gi');
+    return str.replace(expression, function(match) {
+        return match === value ? '<em>' + value + '</em>' : match;
+    });
 }
 
 function safeToString(value) {
     return angular.isUndefined(value) || value == null ? '' : value.toString().trim();
+}
+
+function encodeHTML(value) {
+    return value.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
 }

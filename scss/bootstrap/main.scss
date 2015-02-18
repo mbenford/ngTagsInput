@@ -1,0 +1,73 @@
+@import "../mixins";
+@import "variables";
+
+tags-input {
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  min-height: $tags-height;
+
+  .host {
+    margin: 0;
+  }
+
+  .tags {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border: $tags-border;
+    border-radius: $tags-border-radius;
+    @include box-shadow($tags-border-shadow);
+    @include transition($tags-transition);
+
+    .tag-item {
+      color: $tag-color;
+      background: $tag-bgcolor;
+      border: $tag-border;
+      border-radius: $tag-border-radius;
+
+      &.selected {
+        color: $tag-color-selected;
+        background: $tag-bgcolor-selected;
+        border: $tag-border-selected;
+      }
+
+      .remove-button:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .tags.focused {
+    border: $tags-outline-border;
+    @include box-shadow($tags-outline-border-shadow);
+  }
+
+  .autocomplete {
+    border-radius: $suggestions-border-radius;
+
+    .suggestion-item {
+      &.selected {
+        color: $suggestion-color-selected;
+        background-color: $suggestion-bgcolor-selected;
+
+        em {
+          color: $suggestion-highlight-color-selected;
+          background-color: $suggestion-highlight-bgcolor-selected;
+        }
+      }
+
+      em {
+        color: $suggestion-highlight-color;
+        background-color: $suggestion-highlight-bgcolor;
+      }
+    }
+  }
+
+  &.ng-invalid .tags {
+    border-color: #843534;
+    @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483)
+  }
+}
+
+@import "input-groups";
+@import "forms";

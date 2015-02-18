@@ -1,0 +1,39 @@
+@import "../mixins";
+@import "variables";
+
+.input-group tags-input {
+  padding: 0;
+  display: table-cell;
+
+  &:not(:first-child) .tags {
+    @include border-left-radius(0)
+  }
+
+  &:not(:last-child) .tags {
+    @include border-right-radius(0)
+  }
+}
+
+.input-group-lg tags-input {
+  @extend .ti-input-lg;
+
+  &:first-child .tags {
+    @include border-left-radius($tag-border-radius-lg);
+  }
+
+  &:last-child .tags {
+    @include border-right-radius($tag-border-radius-lg);
+  }
+}
+
+.input-group-sm tags-input {
+  @extend .ti-input-sm;
+
+  &:first-child .tags {
+    @include border-left-radius($tag-border-radius-sm);
+  }
+
+  &:last-child .tags {
+    @include border-right-radius($tag-border-radius-sm);
+  }
+}
