@@ -1,9 +1,5 @@
 .idea/
-.project
-.settings/
 node_modules/
-coverage/
 *.log
-build/
-sauce.json
 /tmp
+coverage/
