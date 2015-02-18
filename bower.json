@@ -1,0 +1,27 @@
+{
+  "name": "sp-tags",
+  "version": "1.0.0",
+  "homepage": "https://github.com/showpad/angular-tags",
+  "ignore": [
+    "grunt",
+    "node_modules",
+    "scss",
+    "src",
+    "templates",
+    "test",
+    ".gitignore",
+    ".jshintrc",
+    ".travis.yml",
+    "Gruntfile.js",
+    "karma.conf.js",
+    "sauce.launchers.json"
+  ],
+  "authors": [
+    "Showpad"
+  ],
+  "description": "tags for inputs",
+  "keywords": [
+    "tags",
+    "input"
+  ]
+}
