@@ -3,21 +3,22 @@ $base-font-family:                      'Helvetica Neue', Helvetica, Arial, sans
 
 // tagsInput
 $tags-bgcolor:                          #fff;
-$tags-border:                           1px solid darkgray;
-$tags-border-shadow:                    1px 1px 1px 0 lightgray inset;
-$tags-outline-box-shadow:               0 0 3px 1px rgba(5, 139, 242, 0.6);
-$tags-outline-box-shadow-invalid:       0 0 3px 1px rgba(255, 0, 0, 0.6);
+$tags-border:                           none;
+$tags-border-shadow:                    none;
+$tags-outline-box-shadow:               none;
+$tags-outline-box-shadow-invalid:       none;
 
 $tag-height:                            26px;
 $tag-font:                              14px $base-font-family;
-$tag-color:                             rgba(240, 249, 255, 1) 0%, rgba(203, 235, 255, 1) 47%, rgba(161, 219, 255, 1) 100%;
-$tag-border:                            1px solid rgb(172, 172, 172);
-$tag-border-radius:                     3px;
-$tag-color-selected:                    rgba(254, 187, 187, 1) 0%, rgba(254, 144, 144, 1) 45%, rgba(255, 92, 92, 1) 100%;
+$tag-color:                             #fff;
+$tag-bg:                                rgba(0, 122, 255, 1);
+$tag-border:                            none;
+$tag-border-radius:                     13px;
+$tag-color-selected:                    #ccc;
 $tag-color-invalid:                     #ff0000;
 
-$remove-button-color:                   #585858;
-$remove-button-color-active:            #ff0000;
+$remove-button-color:                   #fff;
+$remove-button-color-active:            #ccc;
 $remove-button-font:                    bold 16px Arial, sans-serif;
 
 $input-font:                            $tag-font;
