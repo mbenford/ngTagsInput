@@ -40,7 +40,7 @@
   padding: 0 8px;
   display: inline-block;
   float: left;
-  font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 14px "Source Sans Pro", Helvetica, sans-serif;
   height: 26px;
   line-height: 26px;
   border: none;
@@ -81,7 +81,7 @@
   padding-left: 5px;
   float: left;
   height: 26px;
-  font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 14px "Source Sans Pro", Helvetica, sans-serif;
   box-shadow: none;
 }
 .tags-input .tags .input.invalid-tag {
@@ -119,7 +119,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font: 16px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: 16px "Source Sans Pro", Helvetica, sans-serif;
   color: #000;
   background-color: #fff;
 }
@@ -132,7 +132,7 @@
   background-color: #0097cf;
 }
 .tags-input .autocomplete .suggestion-item em {
-  font: normal bold 16px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font: normal bold 16px "Source Sans Pro", Helvetica, sans-serif;
   color: #000;
   background-color: #fff;
 }

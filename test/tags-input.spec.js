@@ -584,12 +584,12 @@ describe('tags-input directive', function() {
             };
         });
 
-        it('initializes the option to false', function() {
+        it('initializes the option to true', function() {
             // Arrange/Act
             compile();
 
             // Assert
-            expect(isolateScope.options.addOnPaste).toBe(false);
+            expect(isolateScope.options.addOnPaste).toBe(true);
         });
 
         it('splits the pasted text into tags if there is more than one tag and the option is true', function() {

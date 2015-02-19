@@ -143,7 +143,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 addOnSpace: [Boolean, true],
                 addOnComma: [Boolean, true],
                 addOnBlur: [Boolean, true],
-                addOnPaste: [Boolean, false],
+                addOnPaste: [Boolean, true],
                 pasteSplitPattern: [RegExp, /,/],
                 allowedTagsPattern: [RegExp, /.+/],
                 enableEditingLastTag: [Boolean, false],

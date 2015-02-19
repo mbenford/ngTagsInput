@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2015 Michael Benford
  * License: MIT
  *
- * Generated at 2015-02-18 15:28:52 +0100
+ * Generated at 2015-02-19 10:39:18 +0100
  */
 (function() {
 'use strict';
@@ -241,7 +241,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                 addOnSpace: [Boolean, true],
                 addOnComma: [Boolean, true],
                 addOnBlur: [Boolean, true],
-                addOnPaste: [Boolean, false],
+                addOnPaste: [Boolean, true],
                 pasteSplitPattern: [RegExp, /,/],
                 allowedTagsPattern: [RegExp, /.+/],
                 enableEditingLastTag: [Boolean, false],
