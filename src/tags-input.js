@@ -24,6 +24,7 @@
  * @param {boolean=} [addOnSpace=false] Flag indicating that a new tag will be added on pressing the SPACE key.
  * @param {boolean=} [addOnComma=true] Flag indicating that a new tag will be added on pressing the COMMA key.
  * @param {boolean=} [addOnBlur=true] Flag indicating that a new tag will be added when the input field loses focus.
+ * @param {boolean=} [addOnTab=false] Flag indicating that a new tag will be added on pressing the TAB key.
  * @param {boolean=} [addOnPaste=false] Flag indicating that the text pasted into the input field will be split into tags.
  * @param {string=} [pasteSplitPattern=,] Regular expression used to split the pasted text into tags.
  * @param {boolean=} [replaceSpacesWithDashes=true] Flag indicating that spaces will be replaced with dashes.
@@ -143,6 +144,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 addOnSpace: [Boolean, false],
                 addOnComma: [Boolean, true],
                 addOnBlur: [Boolean, true],
+                addOnTab: [Boolean, false],
                 addOnPaste: [Boolean, false],
                 pasteSplitPattern: [RegExp, /,/],
                 allowedTagsPattern: [RegExp, /.+/],
@@ -184,7 +186,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             };
         },
         link: function(scope, element, attrs, ngModelCtrl) {
-            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace],
+            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.tab],
                 tagList = scope.tagList,
                 events = scope.events,
                 options = scope.options,
@@ -304,6 +306,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     addKeys[KEYS.enter] = options.addOnEnter;
                     addKeys[KEYS.comma] = options.addOnComma;
                     addKeys[KEYS.space] = options.addOnSpace;
+                    addKeys[KEYS.tab] = options.addOnTab && scope.newTag.text.length !== 0;
 
                     shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
                     shouldRemove = !shouldAdd && key === KEYS.backspace && scope.newTag.text.length === 0;
