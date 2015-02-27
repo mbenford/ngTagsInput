@@ -1,9 +1,22 @@
 {
   "name": "sp-tags",
-  "version": "0.1.8",
-  "homepage": "https://github.com/vdclouis/spTags",
-  "main": "sp-tags.js",
-  "ignore": [],
+  "version": "1.0.0",
+  "homepage": "https://github.com/showpad/angular-tags",
+  "ignore": [
+    "grunt",
+    "node_modules",
+    "scss",
+    "src",
+    "templates",
+    "test",
+    ".gitignore",
+    ".jshintrc",
+    ".travis.yml",
+    "Gruntfile.js",
+    "karma.conf.js",
+    "sauce.launchers.json",
+    "CONTRIBUTING.md"
+  ],
   "authors": [
     "Showpad"
   ],
@@ -11,9 +24,5 @@
   "keywords": [
     "tags",
     "input"
-  ],
-  "dependencies": {
-    "angular": "~1.2",
-    "modernizr": "~2.8.3"
-  }
+  ]
 }

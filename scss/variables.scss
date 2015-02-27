@@ -1,5 +1,5 @@
 // general
-$base-font-family:                      'Source Sans Pro', Helvetica, Arial, sans-serif;
+$base-font-family:                      'Source Sans Pro', Helvetica, sans-serif;
 
 // tagsInput
 $tags-bgcolor:                          #fff;
@@ -10,8 +10,8 @@ $tags-outline-box-shadow-invalid:       none;
 
 $tag-height:                            26px;
 $tag-font:                              14px $base-font-family;
-$tag-bg:                                rgba(0, 122, 255, 1);
 $tag-color:                             #fff;
+$tag-bg:                                rgba(0, 122, 255, 1);
 $tag-border:                            none;
 $tag-border-radius:                     13px;
 $tag-color-selected:                    #ccc;
@@ -24,11 +24,11 @@ $remove-button-font:                    bold 16px Arial, sans-serif;
 $input-font:                            $tag-font;
 
 // autoComplete
-$suggestion-box-z-index:                999;
-$suggestion-box-width:                  100%;
-$suggestion-box-color:                  #fff;
-$suggestion-box-border:                 1px solid rgba(0, 0, 0, 0.2);
-$suggestion-box-shadow:                 0 5px 10px rgba(0, 0, 0, 0.2);
+$suggestions-z-index:                   999;
+$suggestions-width:                     100%;
+$suggestions-bgcolor:                   #fff;
+$suggestions-border:                    1px solid rgba(0, 0, 0, 0.2);
+$suggestions-border-shadow:             0 5px 10px rgba(0, 0, 0, 0.2);
 
 $suggestion-font:                       16px $base-font-family;
 $suggestion-color:                      #000;

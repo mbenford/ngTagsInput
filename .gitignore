@@ -1,6 +1,5 @@
-.idea
-node_modules
-bower_components
-.DS_Store
-coverage
-tmp
+.idea/
+node_modules/
+*.log
+/tmp
+coverage/

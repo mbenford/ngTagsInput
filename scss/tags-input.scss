@@ -2,88 +2,87 @@
 @import "variables";
 
 .tags-input {
-  .tags {
-    padding: 1px;
-    overflow: hidden;
-    word-wrap: break-word;
-    cursor: text;
-    background-color: $tags-bgcolor;
-    //border: $tags-border;
-    //box-shadow: $tags-border-shadow;
+    .tags {
+        padding: 1px;
+        overflow: hidden;
+        word-wrap: break-word;
+        cursor: text;
+        background-color: $tags-bgcolor;
+        height: 100%;
 
-    &.focused {
-      outline: none;
-      @include box-shadow($tags-outline-box-shadow);
-    }
-
-    .tag-list {
-      margin: 0;
-      padding: 0;
-      list-style-type: none;
-    }
-
-    .tag-item {
-      margin: 2px;
-      padding: 0 8px;
-      display: inline-block;
-      float: left;
-      font: $tag-font;
-      height: $tag-height;
-      line-height: $tag-height;
-      border: $tag-border;
-      border-radius: $tag-border-radius;
-      background: $tag-bg;
-      color: $tag-color;
-      @include transition(all .5s ease);
-
-      &.selected {
-        background: $tag-color-selected;
-
-        .remove-button {
-          &:hover {
-            color: $tag-bg;
-          }
+        &.focused {
+            outline: none;
+            @include box-shadow($tags-outline-box-shadow);
         }
-      }
 
-      .remove-button {
-        margin: 0 0 0 5px;
-        padding: 0;
-        border: none;
-        background: none;
-        cursor: pointer;
-        vertical-align: middle;
-        font: $remove-button-font;
-        color: $remove-button-color;
-        @include transition(all .5s ease);
-
-        &:hover {
-          color: $remove-button-color-active;
+        .tag-list {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
         }
-      }
+
+        .tag-item {
+            margin: 2px;
+            padding: 0 8px;
+            display: inline-block;
+            float: left;
+            font: $tag-font;
+            height: $tag-height;
+            line-height: $tag-height;
+            border: $tag-border;
+            border-radius: $tag-border-radius;
+            background: $tag-bg;
+            color: $tag-color;
+            @include transition(all .4s ease);
+
+            &.selected {
+                background: $tag-color-selected;
+                .remove-button {
+                    &:hover {
+                        color: $tag-bg;
+                    }
+                }
+            }
+
+            .remove-button {
+                margin: 0 0 0 5px;
+                padding: 0;
+                border: none;
+                background: none;
+                cursor: pointer;
+                vertical-align: middle;
+                font: $remove-button-font;
+                color: $remove-button-color;
+                @include transition(all .5s ease);
+
+                &:hover {
+                    color: $remove-button-color-active;
+                }
+            }
+        }
+
+        .input {
+            border: none;
+            outline: none;
+            margin: 2px;
+            padding: 0;
+            padding-left: 5px;
+            float: left;
+            height: $tag-height;
+            font: $input-font;
+            box-shadow: none;
+
+            &.invalid-tag {
+                color: $tag-color-invalid;
+            }
+
+            &::-ms-clear {
+                display: none;
+            }
+        }
     }
 
-    .input {
-      border: 0;
-      outline: none;
-      margin: 2px;
-      padding: 0;
-      padding-left: 5px;
-      float: left;
-      height: $tag-height;
-      font: $input-font;
-
-      &.invalid-tag {
-        color: $tag-color-invalid;
-      }
-
-      &::-ms-clear {
-        display: none;
-      }
+    &.ng-invalid .tags {
+        @include box-shadow($tags-outline-box-shadow-invalid);
     }
-  }
-
-  &.ng-invalid .tags {
-    @include box-shadow($tags-outline-box-shadow-invalid);
-  }
 }
