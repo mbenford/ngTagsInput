@@ -1,73 +1,88 @@
 'use strict';
 
-function SimplePubSub() {
-    var events = {};
-    return {
-        on: function(names, handler) {
-            names.split(' ').forEach(function(name) {
-                if (!events[name]) {
-                    events[name] = [];
-                }
-                events[name].push(handler);
-            });
-            return this;
-        },
-        trigger: function(name, args) {
-            var handlers = events[name] || [];
-            handlers.every(function(handler) {
-                var retVal = handler.call(null, args);
-                return angular.isUndefined(retVal) || retVal;
-            });
-            return this;
-        }
+tagsInput.factory('tiUtil', function($timeout) {
+    var self = {};
+
+    self.debounce = function(fn, delay) {
+        var timeoutId;
+        return function() {
+            var args = arguments;
+            $timeout.cancel(timeoutId);
+            timeoutId = $timeout(function() { fn.apply(null, args); }, delay);
+        };
     };
-}
 
-function makeObjectArray(array, key) {
-    array = array || [];
-    if (array.length > 0 && !angular.isObject(array[0])) {
-        array.forEach(function(item, index) {
-            array[index] = {};
-            array[index][key] = item;
-        });
-    }
-    return array;
-}
-
-function findInObjectArray(array, obj, key) {
-    var item = null;
-    for (var i = 0; i < array.length; i++) {
-        // I'm aware of the internationalization issues regarding toLowerCase()
-        // but I couldn't come up with a better solution right now
-        if (safeToString(array[i][key]).toLowerCase() === safeToString(obj[key]).toLowerCase()) {
-            item = array[i];
-            break;
+    self.makeObjectArray = function(array, key) {
+        array = array || [];
+        if (array.length > 0 && !angular.isObject(array[0])) {
+            array.forEach(function(item, index) {
+                array[index] = {};
+                array[index][key] = item;
+            });
         }
-    }
-    return item;
-}
+        return array;
+    };
 
-function safeHighlight(str, value) {
-    if (!value) {
-        return str;
-    }
+    self.findInObjectArray = function(array, obj, key) {
+        var item = null;
+        for (var i = 0; i < array.length; i++) {
+            // I'm aware of the internationalization issues regarding toLowerCase()
+            // but I couldn't come up with a better solution right now
+            if (self.safeToString(array[i][key]).toLowerCase() === self.safeToString(obj[key]).toLowerCase()) {
+                item = array[i];
+                break;
+            }
+        }
+        return item;
+    };
 
-    function escapeRegexChars(str) {
-        return str.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
-    }
+    self.safeHighlight = function(str, value) {
+        if (!value) {
+            return str;
+        }
 
-    var expression = new RegExp('&[^;]+;|' + escapeRegexChars(value), 'gi');
-    return str.replace(expression, function(match) {
-        return match === value ? '<em>' + value + '</em>' : match;
-    });
-}
+        function escapeRegexChars(str) {
+            return str.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
+        }
 
-function safeToString(value) {
-    return angular.isUndefined(value) || value == null ? '' : value.toString().trim();
-}
+        var expression = new RegExp('&[^;]+;|' + escapeRegexChars(value), 'gi');
+        return str.replace(expression, function(match) {
+            return match === value ? '<em>' + value + '</em>' : match;
+        });
+    };
 
-function encodeHTML(value) {
-    return value.replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;');
-}
+    self.safeToString = function(value) {
+        return angular.isUndefined(value) || value == null ? '' : value.toString().trim();
+    };
+
+    self.encodeHTML = function(value) {
+        return value.replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+    };
+
+    self.simplePubSub = function() {
+        var events = {};
+        return {
+            on: function(names, handler) {
+                names.split(' ').forEach(function(name) {
+                    if (!events[name]) {
+                        events[name] = [];
+                    }
+                    events[name].push(handler);
+                });
+                return this;
+            },
+            trigger: function(name, args) {
+                var handlers = events[name] || [];
+                handlers.every(function(handler) {
+                    var retVal = handler.call(null, args);
+                    return angular.isUndefined(retVal) || retVal;
+                });
+                return this;
+            }
+        };
+    };
+
+    return self;
+});

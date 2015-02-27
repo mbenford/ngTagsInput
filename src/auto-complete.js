@@ -28,13 +28,13 @@
  * @param {boolean=} [selectFirstMatch=true] Flag indicating that the first match will be automatically selected once
  *                                           the suggestion list is shown.
  */
-tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig) {
+tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
     function SuggestionList(loadFn, options) {
         var self = {}, debouncedLoadId, getDifference, lastPromise;
 
         getDifference = function(array1, array2) {
             return array1.filter(function(item) {
-                return !findInObjectArray(array2, item, options.tagsInput.displayProperty);
+                return !tiUtil.findInObjectArray(array2, item, options.tagsInput.displayProperty);
             });
         };
 
@@ -58,32 +58,30 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             }
             self.visible = true;
         };
-        self.load = function(query, tags) {
-            $timeout.cancel(debouncedLoadId);
-            debouncedLoadId = $timeout(function() {
-                self.query = query;
+        self.load = tiUtil.debounce(function(query, tags) {
+            self.query = query;
 
-                var promise = $q.when(loadFn({ $query: query }));
-                lastPromise = promise;
+            var promise = $q.when(loadFn({ $query: query }));
+            lastPromise = promise;
 
-                promise.then(function(items) {
-                    if (promise !== lastPromise) {
-                        return;
-                    }
+            promise.then(function(items) {
+                if (promise !== lastPromise) {
+                    return;
+                }
 
-                    items = makeObjectArray(items.data || items, options.tagsInput.displayProperty);
-                    items = getDifference(items, tags);
-                    self.items = items.slice(0, options.maxResultsToShow);
+                items = tiUtil.makeObjectArray(items.data || items, options.tagsInput.displayProperty);
+                items = getDifference(items, tags);
+                self.items = items.slice(0, options.maxResultsToShow);
 
-                    if (self.items.length > 0) {
-                        self.show();
-                    }
-                    else {
-                        self.reset();
-                    }
-                });
-            }, options.debounceDelay, false);
-        };
+                if (self.items.length > 0) {
+                    self.show();
+                }
+                else {
+                    self.reset();
+                }
+            });
+        }, options.debounceDelay);
+
         self.selectNext = function() {
             self.select(++self.index);
         };
@@ -138,7 +136,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             };
 
             getDisplayText = function(item) {
-                return safeToString(getItem(item));
+                return tiUtil.safeToString(getItem(item));
             };
 
             shouldLoadSuggestions = function(value) {
@@ -167,9 +165,9 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
 
             scope.highlight = function(item) {
                 var text = getDisplayText(item);
-                text = encodeHTML(text);
+                text = tiUtil.encodeHTML(text);
                 if (options.highlightMatchedText) {
-                    text = safeHighlight(text, encodeHTML(suggestionList.query));
+                    text = tiUtil.safeHighlight(text, tiUtil.encodeHTML(suggestionList.query));
                 }
                 return $sce.trustAsHtml(text);
             };

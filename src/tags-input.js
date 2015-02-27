@@ -39,12 +39,12 @@
  * @param {expression} onInvalidTag Expression to evaluate when a tag is invalid. The invalid tag is available as $tag.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
-tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) {
+tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, tiUtil) {
     function TagList(options, events) {
         var self = {}, getTagText, setTagText, tagIsValid;
 
         getTagText = function(tag) {
-            return safeToString(tag[options.displayProperty]);
+            return tiUtil.safeToString(tag[options.displayProperty]);
         };
 
         setTagText = function(tag, text) {
@@ -58,7 +58,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                    tagText.length >= options.minLength &&
                    tagText.length <= options.maxLength &&
                    options.allowedTagsPattern.test(tagText) &&
-                   !findInObjectArray(self.items, tag, options.displayProperty);
+                   !tiUtil.findInObjectArray(self.items, tag, options.displayProperty);
         };
 
         self.items = [];
@@ -129,7 +129,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         transclude: true,
         templateUrl: 'ngTagsInput/tags-input.html',
         controller: function($scope, $attrs, $element) {
-            $scope.events = new SimplePubSub();
+            $scope.events = tiUtil.simplePubSub();
 
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 type: [String, 'text', validateType],
@@ -201,7 +201,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             scope.newTag = { text: '', invalid: null };
 
             scope.getDisplayText = function(tag) {
-                return safeToString(tag[options.displayProperty]);
+                return tiUtil.safeToString(tag[options.displayProperty]);
             };
 
             scope.track = function(tag) {
@@ -209,7 +209,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             };
 
             scope.$watch('tags', function(value) {
-                scope.tags = makeObjectArray(value, options.displayProperty);
+                scope.tags = tiUtil.makeObjectArray(value, options.displayProperty);
                 tagList.items = scope.tags;
             });
 
