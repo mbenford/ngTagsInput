@@ -1,4 +1,9 @@
-# ngTagsInput [![Build Status](https://travis-ci.org/mbenford/ngTagsInput.png?branch=master)](https://travis-ci.org/mbenford/ngTagsInput) [![Coverage Status](https://coveralls.io/repos/mbenford/ngTagsInput/badge.png?branch=master)](https://coveralls.io/r/mbenford/ngTagsInput?branch=master) [![devDependency Status](https://david-dm.org/mbenford/ngTagsInput/dev-status.png)](https://david-dm.org/mbenford/ngTagsInput#info=devDependencies) [![Stories in Ready](https://badge.waffle.io/mbenford/ngtagsinput.png?label=status%3A%20in%20progress&title=In%20progress)](https://waffle.io/mbenford/ngtagsinput)
+# ngTagsInput 
+
+[![Travis](https://img.shields.io/travis/mbenford/ngTagsInput.svg?style=flat)]()
+[![Coveralls](https://img.shields.io/coveralls/mbenford/ngTagsInput.svg?style=flat)]()
+[![David](https://img.shields.io/david/dev/mbenford/ngTagsInput.svg?style=flat)]()
+[![GitHub release](https://img.shields.io/github/release/mbenford/ngTagsInput.svg)]()
 
 Tags input directive for AngularJS. Check out the [ngTagsInput website](http://mbenford.github.io/ngTagsInput) for more information.
 
@@ -78,7 +83,7 @@ You can see the directive in action in the [demo page](http://mbenford.github.io
 
 ## Contributing
 
-See the [CONTRIBUTING](https://github.com/mbenford/ngTagsInput/blob/master/CONTRIBUTING.md) file.
+Before posting an issue or sending a pull request, make sure to read the [CONTRIBUTING](https://github.com/mbenford/ngTagsInput/blob/master/CONTRIBUTING.md) file.
 
 ## License
 
