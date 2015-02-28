@@ -1,9 +1,9 @@
 # ngTagsInput 
 
-[![Travis](https://img.shields.io/travis/mbenford/ngTagsInput.svg?style=flat)]()
-[![Coveralls](https://img.shields.io/coveralls/mbenford/ngTagsInput.svg?style=flat)]()
-[![David](https://img.shields.io/david/dev/mbenford/ngTagsInput.svg?style=flat)]()
-[![GitHub release](https://img.shields.io/github/release/mbenford/ngTagsInput.svg)]()
+[![Travis](https://img.shields.io/travis/mbenford/ngTagsInput.svg?style=flat)](https://travis-ci.org/mbenford/ngTagsInput)
+[![Coveralls](https://img.shields.io/coveralls/mbenford/ngTagsInput.svg?style=flat)](https://coveralls.io/r/mbenford/ngTagsInput?branch=master)
+[![David](https://img.shields.io/david/dev/mbenford/ngTagsInput.svg?style=flat)](https://david-dm.org/mbenford/ngTagsInput#info=devDependencies)
+[![GitHub release](https://img.shields.io/github/release/mbenford/ngTagsInput.svg)](https://github.com/mbenford/ngTagsInput/releases)
 
 Tags input directive for AngularJS. Check out the [ngTagsInput website](http://mbenford.github.io/ngTagsInput) for more information.
 
