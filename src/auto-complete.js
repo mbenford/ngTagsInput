@@ -30,7 +30,7 @@
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
     function SuggestionList(loadFn, options) {
-        var self = {}, debouncedLoadId, getDifference, lastPromise;
+        var self = {}, getDifference, lastPromise;
 
         getDifference = function(array1, array2) {
             return array1.filter(function(item) {
@@ -46,8 +46,6 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             self.index = -1;
             self.selected = null;
             self.query = null;
-
-            $timeout.cancel(debouncedLoadId);
         };
         self.show = function() {
             if (options.selectFirstMatch) {

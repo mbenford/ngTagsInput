@@ -23,14 +23,14 @@ module.exports = function(grunt) {
             js: {
                 src: [
                     'src/constants.js',
-                    'src/util.js',
                     'src/init.js',
                     'src/tags-input.js',
                     'src/auto-complete.js',
                     'src/transclude-append.js',
                     'src/autosize.js',
                     'src/bind-attrs.js',
-                    'src/configuration.js'
+                    'src/configuration.js',
+                    'src/util.js'
                 ],
                 out: 'build/<%= pkg.name %>.js',
                 outMin: 'build/<%= pkg.name %>.min.js'

@@ -1,5 +1,13 @@
 'use strict';
 
+/***
+ * @ngdoc factory
+ * @name tiUtil
+ * @module ngTagsInput
+ *
+ * @description
+ * Helper methods used internally by the directive. Should not be used directly from user code.
+ */
 tagsInput.factory('tiUtil', function($timeout) {
     var self = {};
 
