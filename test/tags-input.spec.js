@@ -1,5 +1,4 @@
 'use strict';
-
 describe('tags-input directive', function() {
     var $compile, $scope, $timeout, $document,
         isolateScope, element;
@@ -1198,6 +1197,57 @@ describe('tags-input directive', function() {
                 { label: 'Item1' },
                 { label: 'Item2' },
                 { label: 'Item3' }
+            ]);
+        });
+
+    });
+
+    describe('track-by option', function() {
+        it('defaults to null', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.trackBy).toBe(null);
+        });
+
+        it('throws an ng-repeat error if there are duplicates and trackBy is not specified', function() {
+            var error;
+            // Arrange
+            $scope.tags = [
+                { id: 1, text: 'Tag1' },
+                { id: 2, text: 'Tag1' },
+                { id: 3, text: 'Tag1' },
+            ];
+
+            // Act
+            try {
+                compile();
+            } catch (err) {
+                error = err;
+            }
+
+            // Assert
+            expect(error).toBeTruthy();
+            expect(error.message.indexOf('[ngRepeat:dupes]')).toBe(0);
+        });
+
+        it('works if trackBy is set', function() {
+            // Arrange
+            $scope.tags = [
+                { id: 1, text: 'Tag1' },
+                { id: 2, text: 'Tag1' },
+                { id: 3, text: 'Tag1' },
+            ];
+
+            // Act
+            compile('track-by="id"');
+
+            // Assert
+            expect($scope.tags).toEqual([
+                { id: 1, text: 'Tag1' },
+                { id: 2, text: 'Tag1' },
+                { id: 3, text: 'Tag1' }
             ]);
         });
 

@@ -10,6 +10,7 @@
  *
  * @param {string} ngModel Assignable angular expression to data-bind to.
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
+ * @param {string=} [trackBy=null] Property to be used in the ng-repeat track by option.
  * @param {string=} [type=text] Type of the input element. Only 'text', 'email' and 'url' are supported values.
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
@@ -150,6 +151,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                 minTags: [Number, 0],
                 maxTags: [Number, MAX_SAFE_INTEGER],
                 displayProperty: [String, 'text'],
+                trackBy: [String, null],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
                 spellcheck: [Boolean, true]
@@ -205,7 +207,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
             };
 
             scope.track = function(tag) {
-                return tag[options.displayProperty];
+                return tag[options.trackBy || options.displayProperty];
             };
 
             scope.$watch('tags', function(value) {
