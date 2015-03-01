@@ -332,6 +332,20 @@ describe('tags-input directive', function() {
             expect($scope.$digest).toHaveBeenCalled();
         });
 
+        it('does nothing when the focused property is true and the input field gains focus', function() {
+            // Arrange
+            isolateScope.hasFocus = true;
+            spyOn($scope, '$digest');
+            spyOn(isolateScope.events, 'trigger');
+
+            // Act
+            getInput().triggerHandler('focus');
+
+            // Assert
+            expect(isolateScope.hasFocus).toBe(true);
+            expect(isolateScope.events.trigger).not.toHaveBeenCalled();
+        });
+
         it('sets the focused property to false when the input field loses focus', function() {
             // Arrange
             var body = $document.find('body');
