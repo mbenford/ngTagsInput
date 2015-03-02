@@ -198,7 +198,14 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                 ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
             };
 
-            scope.newTag = { text: '', invalid: null };
+            scope.newTag = {
+                text: '',
+                invalid: null,
+                setText: function(value) {
+                    this.text = value;
+                    events.trigger('input-change', value);
+                }
+            };
 
             scope.getDisplayText = function(tag) {
                 return tiUtil.safeToString(tag[options.displayProperty]);
@@ -261,7 +268,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                 .on('invalid-tag', scope.onInvalidTag)
                 .on('tag-removed', scope.onTagRemoved)
                 .on('tag-added', function() {
-                    scope.newTag.text = '';
+                    scope.newTag.setText('');
                 })
                 .on('tag-added tag-removed', function() {
                     // Sets the element to its dirty state
@@ -315,7 +322,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                     else if (shouldRemove) {
                         var tag = tagList.removeLast();
                         if (tag && options.enableEditingLastTag) {
-                            scope.newTag.text = tag[options.displayProperty];
+                            scope.newTag.setText(tag[options.displayProperty]);
                         }
 
                         event.preventDefault();

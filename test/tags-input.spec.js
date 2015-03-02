@@ -233,12 +233,14 @@ describe('tags-input directive', function() {
         it('empties the input field after a tag is added directly', function() {
             // Arrange
             compile();
+            spyOn(isolateScope.events, 'trigger').and.callThrough();
 
             // Act
             newTag('foo');
 
             // Assert
             expect(getInput().val()).toBe('');
+            expect(isolateScope.events.trigger).toHaveBeenCalledWith('input-change', '');
         });
 
         it('converts an array of strings into an array of objects', function() {
@@ -933,12 +935,15 @@ describe('tags-input directive', function() {
 
             describe('backspace is pressed once', function() {
                 it('moves the last tag back into the input field when the input field is empty', function() {
+                    // Arrange
+                    spyOn(isolateScope.events, 'trigger').and.callThrough();
                     // Act
                     sendBackspace();
 
                     // Assert
                     expect(getInput().val()).toBe('Tag3');
                     expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }]);
+                    expect(isolateScope.events.trigger).toHaveBeenCalledWith('input-change', 'Tag3');
                 });
 
                 it('does nothing when the input field is not empty', function() {

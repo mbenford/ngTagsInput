@@ -17,7 +17,13 @@ describe('autoComplete directive', function() {
         });
 
         deferred = $q.defer();
-        eventHandlers = {};
+        eventHandlers = {
+            call: function(name, args) {
+                if (this[name]) {
+                    this[name].call(null, args);
+                }
+            }
+        };
         $scope.loadItems = jasmine.createSpy().and.returnValue(deferred.promise);
 
         compile();
@@ -65,13 +71,13 @@ describe('autoComplete directive', function() {
 
     function sendKeyDown(keyCode) {
         var event = jQuery.Event('keydown', { keyCode: keyCode });
-        eventHandlers['input-keydown'](event);
+        eventHandlers.call('input-keydown', event);
 
         return event;
     }
 
     function changeInputValue(value) {
-        eventHandlers['input-change'](value);
+        eventHandlers.call('input-change', value);
         $scope.$digest();
     }
 
@@ -229,17 +235,17 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('hides the suggestion box when a tag is removed', function() {
+        it('doesn\'t hide the suggestion box when a tag is removed', function() {
             // Arrange
             suggestionList.show();
             $scope.$digest();
 
             // Act
-            eventHandlers['tag-removed']();
+            eventHandlers.call('tag-removed');
             $scope.$digest();
 
             // Assert
-            expect(isSuggestionsBoxVisible()).toBe(false);
+            expect(isSuggestionsBoxVisible()).toBe(true);
         });
 
         it('hides the suggestion box after adding the selected suggestion to the input field', function() {
@@ -260,7 +266,7 @@ describe('autoComplete directive', function() {
             suggestionList.visible = true;
 
             // Act
-            eventHandlers['input-blur']();
+            eventHandlers.call('input-blur');
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(false);
@@ -271,7 +277,7 @@ describe('autoComplete directive', function() {
             suggestionList.visible = true;
 
             // Act
-            eventHandlers['tag-added']();
+            eventHandlers.call('tag-added');
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(false);
@@ -282,7 +288,7 @@ describe('autoComplete directive', function() {
             suggestionList.visible = true;
 
             // Act
-            eventHandlers['invalid-tag']();
+            eventHandlers.call('invalid-tag');
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(false);
@@ -763,7 +769,7 @@ describe('autoComplete directive', function() {
             tagsInput.getCurrentTagText.and.returnValue('ABC');
 
             // Act
-            eventHandlers['input-focus']();
+            eventHandlers.call('input-focus');
             $timeout.flush();
 
             // Assert
@@ -776,7 +782,7 @@ describe('autoComplete directive', function() {
             tagsInput.getCurrentTagText.and.returnValue('ABC');
 
             // Act
-            eventHandlers['input-focus']();
+            eventHandlers.call('input-focus');
             $timeout.flush();
 
             // Assert
