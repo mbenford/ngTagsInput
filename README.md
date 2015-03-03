@@ -4,6 +4,7 @@
 [![Coveralls](https://img.shields.io/coveralls/mbenford/ngTagsInput.svg?style=flat)](https://coveralls.io/r/mbenford/ngTagsInput?branch=master)
 [![David](https://img.shields.io/david/dev/mbenford/ngTagsInput.svg?style=flat)](https://david-dm.org/mbenford/ngTagsInput#info=devDependencies)
 [![GitHub release](https://img.shields.io/github/release/mbenford/ngTagsInput.svg)](https://github.com/mbenford/ngTagsInput/releases)
+[![Gratipay](https://img.shields.io/gratipay/mbenford.svg)](https://gratipay.com/mbenford)
 
 Tags input directive for AngularJS. Check out the [ngTagsInput website](http://mbenford.github.io/ngTagsInput) for more information.
 
@@ -36,7 +37,7 @@ Now all you have to do is add the scripts to your application. Just make sure th
  1. Add the `ngTagsInput` module as a dependency in your AngularJS app;
  2. Add the custom directive `<tags-input>` to the HTML file where you want to use an input tag control and bind it to a property of your model. That property, if it exists, must be an array of objects and each object must have a property named `text` containing the tag text;
  3. Set up the options that make sense to your application;
- 4. Enable autocomplete, if you want to use it, by adding the directive `<auto-complete>` inside the `<tags-input>` tag, and bind it to a function of your model. That function must return a promise that eventually resolves to an array of objects (same rule from step 2 applies here);
+ 4. Enable autocomplete, if you want to use it, by adding the directive `<auto-complete>` inside the `<tags-input>` tag, and bind it to a function of your model. That function must return either an array of objects or a promise that eventually resolves to an array of objects (same rule from step 2 applies here);
  5. Customize the CSS classes, if you want to.
  6. You're done!
 
