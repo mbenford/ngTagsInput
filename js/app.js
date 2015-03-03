@@ -1,5 +1,5 @@
 angular.module("ngTagsInputSite", ['ngTagsInput'])
-    .service('data', function($http, $q) {
+    .service('data', function($http) {
         var files = {};
 
         this.load = function(name, file) {
@@ -9,15 +9,10 @@ angular.module("ngTagsInputSite", ['ngTagsInput'])
         };
 
         this.search = function(name, query) {
-            var items, deferred = $q.defer();
-
-            items = _.chain(files[name])
+            return _.chain(files[name])
                 .filter(function(x) { return x.toLowerCase().indexOf(query.toLowerCase()) > -1; })
                 .take(10)
                 .value();
-
-            deferred.resolve(items);
-            return deferred.promise;
         }
     })
     .controller('HomeCtrl', function($scope, data) {
@@ -32,9 +27,7 @@ angular.module("ngTagsInputSite", ['ngTagsInput'])
         $scope.tags = ['Tag1', 'Tag2', 'Tag3'];
 
         $scope.loadItems = function($query) {
-            var deferred = $q.defer();
-            deferred.resolve(['Tag1', 'Tag2', 'Tag3', 'Tag4', 'Tag5']);
-            return deferred.promise;
+            return ['Tag1', 'Tag2', 'Tag3', 'Tag4', 'Tag5'];
         };
     })
     .controller('NavCtrl', function($scope) {

@@ -62,14 +62,14 @@ Autocomplete support is available through the *auto-complete* tag:
 ```
 
 You should pass a function of the scope to the <em>source</em> attribute. That function will be called for every
-keystroke on the input field and will be provided with its current value. That function also must return a promise which
-eventually resolves to either an array of objects or an object with a *data* property containing an array of
-objects (e.g. *$http promises*).
+keystroke (not quite on every keystroke, since there's a debounce delay) on the input field and will be provided with
+its current value (through the <em>$query</em> argument). That function also must return either an array of objects or a
+promise which eventually resolves to either an array of objects or an object with a *data* property containing an array
+of objects (e.g. *$http promises*).
   
-Given the above code and assuming that the *loadItems* function will return a promise that resolves to an array
-containing 5 items - say, *{ text: 'Tag1' }*, *{ text: 'Tag2' }*, *{ text: 'Tag3' }*, *{ text: 'Tag4' }*
-and *{ text: 'Tag5' }* - the result will be the following (you need to type at least 3 characters before the 
-autocomplete kicks in):
+Given the above code and assuming that the *loadItems* function will return an array containing 5 items - say,
+*{ text: 'Tag1' }*, *{ text: 'Tag2' }*, *{ text: 'Tag3' }*, *{ text: 'Tag4' }* and *{ text: 'Tag5' }* - the result will
+be the following (you need to type at least 3 characters before the autocomplete kicks in):
 
 <tags-input ng-model="tags">
   <auto-complete source="loadItems($query)"></auto-complete>

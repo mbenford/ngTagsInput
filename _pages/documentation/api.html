@@ -46,12 +46,16 @@ priority: 0.50
        [add-on-space="{boolean}"]
        [add-on-comma="{boolean}"]
        [add-on-blur="{boolean}"]
+       [add-on-paste="{boolean}"]
+       [paste-split-pattern="{string}"]
        [replace-spaces-with-dashes="{boolean}"]
        [allowed-tags-pattern="{string}"]
        [enable-editing-last-tag="{boolean}"]
        [add-from-autocomplete-only="{boolean}"]
+       [spellcheck="{boolean}"]
        [on-tag-added="{expression}"]
-       [on-tag-removed="{expression}"]>
+       [on-tag-removed="{expression}"]
+       [on-invalid-tag="{expression}"]>
 </tags-input>
 {% endhighlight %}
         </section>
@@ -161,6 +165,18 @@ priority: 0.50
                 <td>true</td>
               </tr>
               <tr>
+                <td>addOnPaste</td>
+                <td><span class="label type type-boolean">boolean</span></td>
+                <td>Flag indicating that the text pasted into the input field will be split into tags.</td>
+                <td>false</td>
+              </tr>
+              <tr>
+                <td>pasteSplitPattern</td>
+                <td><span class="label type type-string">string</span></td>
+                <td>Regular expression used to split the pasted text into tags.</td>
+                <td>,</td>
+              </tr>
+              <tr>
                 <td>replaceSpacesWithDashes</td>
                 <td><span class="label type type-boolean">boolean</span></td>
                 <td>Flag indicating that spaces will be replaced with dashes.</td>
@@ -191,6 +207,12 @@ priority: 0.50
                 <td>false</td>
               </tr>
               <tr>
+                <td>spellcheck</td>
+                <td><span class="label type type-boolean">boolean</span></td>
+                <td>Flag indicating whether the browser's spellcheck is enabled for the input field or not.</td>
+                <td>true</td>
+              </tr>
+              <tr>
                 <td>onTagAdded</td>
                 <td><span class="label type type-expression">expression</span></td>
                 <td>Expression to evaluate upon adding a new tag. The new tag is available as <em>$tag</em>.</td>
@@ -200,6 +222,12 @@ priority: 0.50
                 <td>onTagRemoved</td>
                 <td><span class="label type type-expression">expression</span></td>
                 <td>Expression to evaluate upon removing an existing tag. The removed tag is available as <em>$tag</em>.</td>
+                <td>&ndash;</td>
+              </tr>
+              <tr>
+                <td>onInvalidTag</td>
+                <td><span class="label type type-expression">expression</span></td>
+                <td>Expression to evaluate when a tag is invalid. The invalid tag is available as <em>$tag</em>.</td>
                 <td>&ndash;</td>
               </tr>
             </tbody>
@@ -227,7 +255,7 @@ priority: 0.50
     [load-on-down-arrow="{boolean}"]
     [load-on-empty="{boolean}"]
     [load-on-focus="{boolean}"]
-  >
+    [select-first-match="{boolean}"]>
   </auto-complete>
 </tags-input>
 {% endhighlight %}
@@ -294,21 +322,29 @@ priority: 0.50
             </td>
             <td>false</td>
           </tr>
-          tr>
-          <td>loadOnFocus</td>
-          <td><span class="label type type-boolean">boolean</span></td>
-          <td>
-            Flag indicating that the source option will be evaluated when the input element gains focus. The current
-            input value is available as $query.
-          </td>
-          <td>false</td>
+          <tr>
+            <td>loadOnFocus</td>
+            <td><span class="label type type-boolean">boolean</span></td>
+            <td>
+              Flag indicating that the source option will be evaluated when the input element gains focus. The current
+              input value is available as $query.
+            </td>
+            <td>false</td>
+          </tr>
+          <tr>
+            <td>selectFirstMatch</td>
+            <td><span class="label type type-boolean">boolean</span></td>
+            <td>
+              Flag indicating that the first match will be automatically selected once the suggestion list is shown.
+            </td>
+            <td>true</td>
           </tr>
         </tbody>
       </table>
     </section>
 
     <section>
-      <h1 id="tagsInputConfigProvider" ><code>tagsInputConfigProvider <small>(service in module <strong>ngTagsInput</strong>)</small></code></h1>
+      <h1 id="tagsInputConfigProvider"><code>tagsInputConfigProvider <small>(service in module <strong>ngTagsInput</strong>)</small></code></h1>
       <section>
         <h2>Description</h2>
         <p>Sets global configuration settings for both <em>tagsInput</em> and <em>autoComplete</em> directives.</p>
