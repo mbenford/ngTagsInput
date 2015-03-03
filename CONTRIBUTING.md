@@ -65,6 +65,18 @@ In addition to `pack` there are other useful tasks you might want to use:
 
 Even though ngTagsInput isn't a big project, there are a few guidelines I'd like you to follow so everything remains organized and consistent. I can't stress enough how important following theses guidelines is. Failing to do so will slow down the review process of your pull request and might prevent it from being accepted.
 
+## TL;DR
+
+The following checklist should help you be sure you have covered all the bases. You should answer *yes* to all questions
+before sending your pull request:
+
+- Have you written tests for all changes you made?
+- Have you updated the docs? (in case you have changed the directive's public API)
+- Have you built the directive by running `grunt pack`?
+- Have you squashed multiple commits into one?
+- Does your commit message comply with the [commit message guidelines](#commit-message-guidelines)?
+- Have you rebased your branch on top of the master branch?
+
 ## Coding guidelines
 
 No endless list of conventions and standards here; just three simple guidelines:
@@ -186,3 +198,4 @@ In case you need to do changes after creating a pull request, repeat steps 1 tho
     git push --force
 
 That will update your pull request. You might want to update the PR page explaining the changes you have done.
+
