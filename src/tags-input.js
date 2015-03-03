@@ -119,12 +119,20 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
     /**
      * validate comma key
      *
+     * Event properties to verify ','
+     * Chrome: keyIdentifier: "U+002C"
+     * FF: key
+     * IE: char|key
+     * Safari: -
+     *
      * @param e
      * @returns {boolean}
      */
     function validateComma(e) {
         var originalEvent = e.originalEvent || e;
-        return (e.keyCode !== KEYS.comma) || (e.key || e.char) === ',' || originalEvent.keyIdentifier === 'U+002C';
+        var char = e.key || e.char || originalEvent.keyIdentifier;
+        var unsupported = typeof char === 'undefined';
+        return (unsupported || e.keyCode !== KEYS.comma) || char === ',' || char === 'U+002C';
     }
 
     return {
