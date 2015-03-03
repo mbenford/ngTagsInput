@@ -1,21 +1,21 @@
 'use strict';
 
 describe('autoComplete directive', function() {
-    var $compile, $scope, $q, $timeout,
+    var $compile, $scope, $q, $timeout,$templateCache,
         parentCtrl, element, isolateScope, suggestionList, deferred, tagsInput, eventHandlers;
 
     beforeEach(function() {
+
         jasmine.addMatchers(customMatchers);
 
         module('ngTagsInput');
-
-        inject(function($rootScope, _$compile_, _$q_, _$timeout_) {
+        inject(function($rootScope, _$compile_, _$q_, _$timeout_,_$templateCache_){
+            $templateCache = _$templateCache_;
             $scope = $rootScope;
             $compile = _$compile_;
             $q = _$q_;
             $timeout = _$timeout_;
         });
-
         deferred = $q.defer();
         eventHandlers = {
             call: function(name, args) {
@@ -26,6 +26,9 @@ describe('autoComplete directive', function() {
         };
         $scope.loadItems = jasmine.createSpy().and.returnValue(deferred.promise);
 
+        $templateCache.put('custom_template.html',
+            '{{text}} - {{author}}'
+        );
         compile();
     });
 
@@ -1087,5 +1090,43 @@ describe('autoComplete directive', function() {
             expect(getSuggestion(2)).not.toHaveClass('selected');
 
         });
+    });
+    describe('custom template feature', function() {
+        it('initializes templateHtml to undefined', function() {
+            compile();
+            expect(isolateScope.options.templateHtml).toBe(undefined);
+        });
+        it('initializes templateHtmlUrl to undefined', function() {
+            compile();
+            expect(isolateScope.options.templateHtmlUrl).toBe(undefined);
+        });
+        it('uses default template for suggestion if option templateHtmlUrl is not specified', function() {
+            compile();
+            loadSuggestions({
+                data: [
+                    { text: 'Superman', author:'Jerry Siegel' },
+                    { text: 'Spiderman', author:'Stan Lee' }
+                ]
+            });
+            expect(getSuggestionText(0)).toBe('Superman');
+            expect(getSuggestionText(1)).toBe('Spiderman');
+        });
+        it('uses custom template for suggestion if option templateHtmlUrl is specified', function() {
+            compile('template-html-url="custom_template.html"');
+            expect(isolateScope.options.templateHtmlUrl).toBe('custom_template.html');
+            expect(isolateScope.options.templateHtml).toBe('{{text}} - {{author}}');
+            loadSuggestions({
+                data: [
+                    { text: 'Superman', author:'Jerry Siegel' },
+                    { text: 'Spiderman', author:'Stan Lee' }
+                ]
+            });
+            expect(getSuggestionText(0)).toBe('Superman - Jerry Siegel');
+            expect(getSuggestionText(1)).toBe('Spiderman - Stan Lee');
+        });
+
+        
+
+      
     });
 });
