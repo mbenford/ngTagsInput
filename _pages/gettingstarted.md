@@ -78,6 +78,9 @@ be the following (you need to type at least 3 characters before the autocomplete
 Just like the *tags-input* directive, several options are available for you to customize how the autocomplete will work.
 Check them out on the [API documentation]({{ site.baseurl }}/documentation/api) page.
 
+**IMPORTANT**: The *autocomplete* directive **does not** perform any filtering whatsoever. It provides your code with the
+text typed by the user so you can return a matching list of suggestions by using an appropriate solution for your application.
+
 ## Appearance
 
 By default, ngTagsInput uses a stylesheet that tries to mimic the look-and-feel of an ordinary input element. In 
