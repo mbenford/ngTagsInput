@@ -1,10 +1,12 @@
-<div class="autocomplete" ng-show="suggestionList.visible"> 
+<div class="autocomplete" ng-show="suggestionList.visible">
   <ul class="suggestion-list">
     <li class="suggestion-item"
         ng-repeat="item in suggestionList.items track by track(item)"
         ng-class="{selected: item == suggestionList.selected}"
         ng-click="addSuggestionByIndex($index)"
-        ng-mouseenter="suggestionList.select($index)"
-        ng-bind-html="highlight(item)"></li>
+        ng-mouseenter="suggestionList.select($index)">
+        <div ng-if="!templateUrl" ng-bind-html="highlight(item)"></div>
+        <div class="tag-autocomplete-template" ng-if="templateUrl.length > 0" ng-include="templateUrl"></div>
+    </li>
   </ul>
 </div>

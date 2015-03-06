@@ -82,7 +82,7 @@ module.exports = function(grunt) {
     require('load-grunt-tasks')(grunt);
     grunt.loadTasks('grunt/tasks');
 
-    grunt.registerTask('test', ['jshint','karma:local']);
+    grunt.registerTask('test', ['jshint']);
     grunt.registerTask('coverage', ['test', 'open:coverage']);
 
     grunt.registerTask('travis', [

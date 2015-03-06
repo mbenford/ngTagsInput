@@ -26,7 +26,9 @@ tags-input .autocomplete {
     font: $suggestion-font;
     color: $suggestion-color;
     background-color: $suggestion-bgcolor;
-
+    .tag-autocomplete-template {
+      text-align: left;
+    }
     &.selected {
       color: $suggestion-color-selected;
       background-color: $suggestion-bgcolor-selected;

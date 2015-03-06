@@ -123,7 +123,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
             tags: '=ngModel',
             onTagAdded: '&',
             onInvalidTag: '&',
-            onTagRemoved: '&'
+            onTagRemoved: '&',
+            templateUrl: '@'
         },
         replace: false,
         transclude: true,

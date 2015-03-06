@@ -2,7 +2,8 @@
   <div class="tags" ng-class="{focused: hasFocus}">
     <ul class="tag-list">
       <li class="tag-item" ng-repeat="tag in tagList.items track by track(tag)" ng-class="{ selected: tag == tagList.selected }">
-        <span ng-bind="getDisplayText(tag)"></span>
+        <span ng-if="!templateUrl" ng-bind="getDisplayText(tag)"></span>
+        <div class="tag-template" ng-if="templateUrl.length > 0" ng-include="templateUrl"></div>
         <a class="remove-button" ng-click="tagList.remove($index)" ng-bind="options.removeTagSymbol"></a>
       </li>
     </ul>

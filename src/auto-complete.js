@@ -105,7 +105,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
     return {
         restrict: 'E',
         require: '^tagsInput',
-        scope: { source: '&' },
+        scope: {
+            source: '&',
+            templateUrl: '@'
+        },
         templateUrl: 'ngTagsInput/auto-complete.html',
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
