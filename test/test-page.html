@@ -43,12 +43,22 @@
     }
   </style>
 </head>
+<script type="text/ng-template" id="custome_template.html">
+ {{text}} - {{author}}
+</script>
 <body ng-controller="Ctrl">
+
     <p></p>
     <tags-input ng-model="tags" add-on-blur="false" ng-focus="focus()" ng-blur="blur()" add-on-paste="true" paste-split-pattern="[,;|]" spellcheck="false">
         <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
     </tags-input>
     <p></p>
+      <span class="input-group-addon">Custome Autocomplete</span>
+      <p></p>
+     <tags-input ng-model="tags" add-on-blur="false" ng-focus="focus()" ng-blur="blur()" add-on-paste="true" paste-split-pattern="[,;|]" spellcheck="false">
+        <auto-complete template-html-url="custome_template.html" source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
+    </tags-input>
+     <p></p>
     <div class="input-group" style="width: 600px">
         <span class="input-group-addon">@</span>
         <tags-input ng-model="tags">
@@ -96,15 +106,15 @@
     angular.module('app', ['ngTagsInput'])
         .controller('Ctrl', function($scope, $q) {
             var superheroes = [
-              { text: 'Batman <bruce@wayne.com>' },
-              { text: 'Superman' },
-              { text: 'Flash' },
-              { text: 'Iron Man' },
-              { text: 'Hulk' },
-              { text: 'Wolverine' },
-              { text: 'Green Lantern' },
-              { text: 'Green Arrow' },
-              { text: 'Spiderman'}
+              { text: 'Batman <bruce@wayne.com>', author:'Bob Kane' },
+              { text: 'Superman', author:'Jerry Siegel' },
+              { text: 'Flash', author:'Gardner Fox' },
+              { text: 'Iron Man', author:'Stan Lee' },
+              { text: 'Hulk', author:'Stan Lee' },
+              { text: 'Wolverine', author:'Len Wein' },
+              { text: 'Green Lantern', author:'Bill Finger' },
+              { text: 'Green Arrow', author:'George Papp' },
+              { text: 'Spiderman', author:'Stan Lee'}
             ];
 
             $scope.tags = [{ text: 'Batman' }, { text: 'Superman' }, { text:'Flash' }];

@@ -27,8 +27,9 @@
  *                                       gains focus. The current input value is available as $query.
  * @param {boolean=} [selectFirstMatch=true] Flag indicating that the first match will be automatically selected once
  *                                           the suggestion list is shown.
+ * @param {string=} [templateHtmlUrl=undefined] Url to load custom template html.
  */
-tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
+tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, $interpolate, $http, $templateCache, tagsInputConfig, tiUtil) {
     function SuggestionList(loadFn, options) {
         var self = {}, getDifference, lastPromise;
 
@@ -119,10 +120,16 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnDownArrow: [Boolean, false],
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
-                selectFirstMatch: [Boolean, true]
+                selectFirstMatch: [Boolean, true],
+                templateHtmlUrl:[String, undefined]
             });
 
             options = scope.options;
+            if (angular.isDefined(options.templateHtmlUrl)){
+                $http.get(options.templateHtmlUrl, {cache: $templateCache}).then(function(result){
+                    options.templateHtml = result.data;
+                });
+            }
 
             tagsInput = tagsInputCtrl.registerAutocomplete();
             options.tagsInput = tagsInput.getOptions();
@@ -162,12 +169,21 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             };
 
             scope.highlight = function(item) {
-                var text = getDisplayText(item);
-                text = tiUtil.encodeHTML(text);
-                if (options.highlightMatchedText) {
-                    text = tiUtil.safeHighlight(text, tiUtil.encodeHTML(suggestionList.query));
+                if (angular.isDefined(options.templateHtml)){
+                    var custome_text = $interpolate(options.templateHtml)(item);
+                    if (options.highlightMatchedText) {
+                        custome_text = tiUtil.safeHighlight(custome_text, tiUtil.encodeHTML(suggestionList.query));
+                    }
+                    return $sce.trustAsHtml(custome_text);
                 }
-                return $sce.trustAsHtml(text);
+                else{
+                    var text = getDisplayText(item);
+                    text = tiUtil.encodeHTML(text);
+                    if (options.highlightMatchedText) {
+                        text = tiUtil.safeHighlight(text, tiUtil.encodeHTML(suggestionList.query));
+                    }
+                    return $sce.trustAsHtml(text);
+                }
             };
 
             scope.track = function(item) {
