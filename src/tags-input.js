@@ -28,6 +28,7 @@
  * @param {string=} [pasteSplitPattern=,] Regular expression used to split the pasted text into tags.
  * @param {boolean=} [replaceSpacesWithDashes=true] Flag indicating that spaces will be replaced with dashes.
  * @param {string=} [allowedTagsPattern=.+] Regular expression that determines whether a new tag is valid.
+ * @param {string=} [allowedTagsPatternOnOpenText=.+] Regular expression that determines whether a new tag is valid when coming from free input
  * @param {boolean=} [enableEditingLastTag=false] Flag indicating that the last tag will be moved back into
  *                                                the new tag input box instead of being removed when the backspace key
  *                                                is pressed and the input box is empty.
@@ -51,12 +52,13 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
             tag[options.displayProperty] = text;
         };
 
-        tagIsValid = function(tag) {
+        tagIsValid = function(tag, autocomplete) {
             var tagText = getTagText(tag);
 
             return tagText &&
                    tagText.length >= options.minLength &&
                    tagText.length <= options.maxLength &&
+                   (autocomplete || options.allowedTagsPatternOnOpenText.test(tagText)) &&
                    options.allowedTagsPattern.test(tagText) &&
                    !tiUtil.findInObjectArray(self.items, tag, options.displayProperty);
         };
@@ -69,7 +71,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
             return self.add(tag);
         };
 
-        self.add = function(tag) {
+        self.add = function(tag, autocomplete) {
             var tagText = getTagText(tag);
 
             if (options.replaceSpacesWithDashes) {
@@ -78,7 +80,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
 
             setTagText(tag, tagText);
 
-            if (tagIsValid(tag)) {
+            if (tagIsValid(tag, autocomplete)) {
                 self.items.push(tag);
                 events.trigger('tag-added', { $tag: tag });
             }
@@ -147,6 +149,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                 addOnPaste: [Boolean, false],
                 pasteSplitPattern: [RegExp, /,/],
                 allowedTagsPattern: [RegExp, /.+/],
+                allowedTagsPatternOnOpenText: [RegExp, /.+/],
                 enableEditingLastTag: [Boolean, false],
                 minTags: [Number, 0],
                 maxTags: [Number, MAX_SAFE_INTEGER],
@@ -163,7 +166,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
 
                 return {
                     addTag: function(tag) {
-                        return $scope.tagList.add(tag);
+                        return $scope.tagList.add(tag, true);
                     },
                     focusInput: function() {
                         input[0].focus();
