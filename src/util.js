@@ -6,7 +6,7 @@
  * @module ngTagsInput
  *
  * @description
- * Helper methods used internally by the directive. Should not be used directly from user code.
+ * Helper methods used internally by the directive. Should not be called directly from user code.
  */
 tagsInput.factory('tiUtil', function($timeout) {
     var self = {};
@@ -53,6 +53,9 @@ tagsInput.factory('tiUtil', function($timeout) {
             return str.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
         }
 
+        str = self.encodeHTML(str);
+        value = self.encodeHTML(value);
+
         var expression = new RegExp('&[^;]+;|' + escapeRegexChars(value), 'gi');
         return str.replace(expression, function(match) {
             return match === value ? '<em>' + value + '</em>' : match;
@@ -64,7 +67,8 @@ tagsInput.factory('tiUtil', function($timeout) {
     };
 
     self.encodeHTML = function(value) {
-        return value.replace(/&/g, '&amp;')
+        return self.safeToString(value)
+            .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
             .replace(/>/g, '&gt;');
     };

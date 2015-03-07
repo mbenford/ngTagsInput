@@ -140,10 +140,10 @@ describe('tiUtil factory', function() {
             expect(tiUtil.safeHighlight('abc', 'b')).toBe('a<em>b</em>c');
         });
 
-        it('doesn\'t highlight HTML entities', function() {
-            expect(tiUtil.safeHighlight('a&amp;a', 'a')).toBe('<em>a</em>&amp;<em>a</em>');
-            expect(tiUtil.safeHighlight('g&gt;g', 'g')).toBe('<em>g</em>&gt;<em>g</em>');
-            expect(tiUtil.safeHighlight('l&lt;l', 'l')).toBe('<em>l</em>&lt;<em>l</em>');
+        it('highlights HTML entities', function() {
+            expect(tiUtil.safeHighlight('a&a', '&')).toBe('a<em>&amp;</em>a');
+            expect(tiUtil.safeHighlight('a>a', '>')).toBe('a<em>&gt;</em>a');
+            expect(tiUtil.safeHighlight('a<a', '<')).toBe('a<em>&lt;</em>a');
         });
     });
 

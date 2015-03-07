@@ -6,6 +6,7 @@
   <script type="text/javascript" src="lib/ng-stats.min.js"></script>
   <script type="text/javascript" src="../build/ng-tags-input.js"></script>
   <link rel="stylesheet" href="../build/ng-tags-input.css"/>
+
   <style>
     .stats {
       position: fixed;
@@ -13,49 +14,81 @@
       right: 0;
       padding: 10px;
       margin: 10px;
+      z-index: 9999;
       background-color: #000;
       color: lime;
       font: 15px "Lucida Console", Monaco, monospace;
     }
   </style>
 </head>
-<body ng-controller="Ctrl">
-    <tags-input ng-model="tags" add-on-blur="false" ng-focus="focus()" ng-blur="blur()" add-on-paste="true" paste-split-pattern="[,;|]" spellcheck="false">
-        <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
-    </tags-input>
 
-    <div class="stats" angular-stats watch-count=".watch-count" digest-length=".digest-length">
-      $watch : <span class="watch-count"></span><br />
-      $digest: <span class="digest-length"></span>ms
+<body ng-controller="Ctrl">
+  <tags-input ng-model="tags" add-on-blur="false" ng-focus="focus()" ng-blur="blur()" add-on-paste="true" paste-split-pattern="[,;|]" spellcheck="false" display-property="name">
+      <auto-complete source="loadItems($query)" min-length="1" load-on-down-arrow="true" load-on-focus="true" load-on-empty="true" template="inline-template"></auto-complete>
+  </tags-input>
+
+  <script type="text/ng-template" id="inline-template">
+    <div>
+      <div style="float: left">
+        <img ng-src="{{data.picture}}" width="64" height="64"/>
+      </div>
+      <div style="float:left; margin-left: 5px">
+        <div><span ng-bind-html="util.highlight(data.name)"></span></div>
+        <div style="margin-top: 5px">
+          <div><span style="font-style: italic; font-size: 14px">{{data.realname}}</span></div>
+          <div><span style="font-style: italic; font-size: 14px">{{data.city}}</span></div>
+        </div>
+      </div>
     </div>
+  </script>
+
+  <div class="stats" angular-stats watch-count=".watch-count" digest-length=".digest-length">
+    $watch : <span class="watch-count"></span><br />
+    $digest: <span class="digest-length"></span>ms
+  </div>
 
   <script type="text/javascript">
     angular.module('app', ['ngTagsInput', 'angularStats'])
-        .controller('Ctrl', function($scope, $q) {
+        .controller('Ctrl', function($scope) {
             var superheroes = [
-              { text: 'Batman <bruce@wayne.com>' },
-              { text: 'Superman' },
-              { text: 'Flash' },
-              { text: 'Iron Man' },
-              { text: 'Hulk' },
-              { text: 'Wolverine' },
-              { text: 'Green Lantern' },
-              { text: 'Green Arrow' },
-              { text: 'Spiderman'}
+              {
+                name: 'Batman',
+                realname: 'Bruce Wayne',
+                city: 'Gotham City',
+                picture: 'http://www.xboxachievements.com/forum/customavatars/avatar393936_1.gif'
+              },
+              {
+                name: 'Superman',
+                realname: 'Clark Kent',
+                city: 'Metropolis',
+                picture: 'http://s6047.storage.proboards.com/3246047/a/N03FIKtlEA7eli2Bighw.jpg'
+              },
+              {
+                name: 'Iron Man',
+                realname: 'Tony Stark',
+                city: 'New York',
+                picture: 'http://static.planetminecraft.com/files/avatar/1641115_0.jpg'
+              },
+              {
+                name: 'Spiderman',
+                realname: 'Peter Park',
+                city: 'New York',
+                picture: 'http://avatarbox.net/avatars/img30/spider_m_a_n_avatar_picture_39548.jpg'
+              },
+              {
+                name: 'Green Lantern',
+                realname: 'Hal Jordan',
+                city: 'Coast City',
+                picture: 'http://www.hcrealms.com/forum/image.php?u=23873&dateline=1332599251'
+              },
             ];
 
-            $scope.tags = [{ text: 'Batman' }, { text: 'Superman' }, { text:'Flash' }];
+            $scope.tags = [];
             $scope.placeholder = 'New tag';
             $scope.loadItems = function(query) {
-              var deferred = $q.defer();
-              var items = [];
-              for (var i = 0; i < superheroes.length; i++) {
-                if (superheroes[i].text.indexOf(query) > -1) {
-                  items.push(superheroes[i]);
-                }
-              }
-              deferred.resolve(items);
-              return deferred.promise;
+              return superheroes.filter(function(superhero) {
+                return superhero.name.indexOf(query) > -1;
+              });
             };
 
             $scope.focus = function() {
