@@ -3,97 +3,34 @@
 <head>
   <title>ngTagsInput Test Page</title>
   <script type="text/javascript" src="lib/angular.js"></script>
+  <script type="text/javascript" src="lib/ng-stats.min.js"></script>
   <script type="text/javascript" src="../build/ng-tags-input.js"></script>
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="../build/ng-tags-input.css"/>
-  <link rel="stylesheet" href="../build/ng-tags-input.bootstrap.css"/>
   <style>
-    .foo .tags .input {
-      font-size: 16px;
-      font-weight: bold;
-      letter-spacing: 4px;
-      border-left: 3px solid;
-      padding-left: 3px;
-    }
-
-    .foo .tags .input {
-      width: 1036px;
-      
-    }
-    
-    .foo .tags .tag-item {
-      height: 50px;
-    }
-
-    .foo.ng-pristine .tags {
-      background-color: green;
-    }
-    .foo.ng-dirty .tags {
-      background-color: brown;
-    }
-    .foo.ng-valid .tags {
-      background-color: yellow;
-    }
-    .foo.ng-invalid .tags {
-      background-color: red;
-    }
-
-    .foo .autocomplete .suggestion-item.selected {
-      background-color: green;
+    .stats {
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      padding: 10px;
+      margin: 10px;
+      background-color: #000;
+      color: lime;
+      font: 15px "Lucida Console", Monaco, monospace;
     }
   </style>
 </head>
 <body ng-controller="Ctrl">
-    <p></p>
     <tags-input ng-model="tags" add-on-blur="false" ng-focus="focus()" ng-blur="blur()" add-on-paste="true" paste-split-pattern="[,;|]" spellcheck="false">
         <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
     </tags-input>
-    <p></p>
-    <div class="input-group" style="width: 600px">
-        <span class="input-group-addon">@</span>
-        <tags-input ng-model="tags">
-            <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
-        </tags-input>
-        <span class="input-group-addon">.00</span>
+
+    <div class="stats" angular-stats watch-count=".watch-count" digest-length=".digest-length">
+      $watch : <span class="watch-count"></span><br />
+      $digest: <span class="digest-length"></span>ms
     </div>
-    <p></p>
-    <div class="input-group input-group-lg" style="width: 600px">
-        <span class="input-group-addon">@</span>
-        <tags-input ng-model="tags">
-            <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
-        </tags-input>
-        <span class="input-group-addon">.00</span>
-    </div>
-<p></p>
-    <div class="input-group input-group-sm" style="width: 600px">
-        <span class="input-group-addon">@</span>
-        <tags-input ng-model="tags">
-            <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
-        </tags-input>
-        <span class="input-group-addon">.00</span>
-    </div>
-    <p></p>
-    <div class="form-group has-success has-feedback" style="width: 500px">
-        <label class="control-label" for="inputSuccess2">Input with success</label>
-        <tags-input ng-model="tags">
-            <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
-        </tags-input>
-        <span class="glyphicon glyphicon-ok form-control-feedback"></span>
-    </div>
-    <div class="form-group has-error has-feedback" style="width: 500px">
-      <label class="control-label" for="inputSuccess2">Input with success</label>
-      <tags-input ng-model="tags">
-        <auto-complete source="loadItems($query)" load-on-down-arrow="true"></auto-complete>
-      </tags-input>
-      <span class="glyphicon glyphicon-remove form-control-feedback"></span>
-    </div>
-    <div class="form-group has-success has-feedback" style="width: 500px">
-      <label class="control-label" for="inputSuccess2">Input with success</label>
-      <input type="text" class="form-control"/>
-      <span class="glyphicon glyphicon-ok form-control-feedback"></span>
-    </div>
+
   <script type="text/javascript">
-    angular.module('app', ['ngTagsInput'])
+    angular.module('app', ['ngTagsInput', 'angularStats'])
         .controller('Ctrl', function($scope, $q) {
             var superheroes = [
               { text: 'Batman <bruce@wayne.com>' },
