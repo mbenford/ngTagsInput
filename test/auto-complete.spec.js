@@ -1088,4 +1088,32 @@ describe('autoComplete directive', function() {
 
         });
     });
+
+    describe('display-property option', function() {
+        it('initializes the option to ""', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.displayProperty).toBe('');
+        });
+
+        it('renders the correct display text', function() {
+            // Arrange
+            compile('display-property="label"');
+
+            // Act
+            loadSuggestions([
+                { label: 'Item1' },
+                { label: 'Item2' },
+                { label: 'Item3' }
+            ]);
+
+            // Assert
+            expect(getSuggestions().length).toBe(3);
+            expect(getSuggestionText(0)).toBe('Item1');
+            expect(getSuggestionText(1)).toBe('Item2');
+            expect(getSuggestionText(2)).toBe('Item3');
+        });
+    });
 });

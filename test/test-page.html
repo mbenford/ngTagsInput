@@ -29,6 +29,13 @@
       $digest: <span class="digest-length"></span>ms
     </div>
 
+
+    <p></p>
+    Track-property and overwritten display-property for auto-complete (search for Dan)
+    <tags-input ng-model="empTags" key-property="email" display-property="name">
+        <auto-complete source="loadEmps($query)" load-on-down-arrow="true" display-property="email" min-length="1"></auto-complete>
+    </tags-input>
+
   <script type="text/javascript">
     angular.module('app', ['ngTagsInput', 'angularStats'])
         .controller('Ctrl', function($scope, $q) {
@@ -57,6 +64,32 @@
               deferred.resolve(items);
               return deferred.promise;
             };
+
+            var emps = [
+              { name: 'Dan', email: 'dan@test.com' },
+              { name: 'George', email: 'george@test.com' },
+              { name: 'Christina', email: 'christina@test.com' },
+              { name: 'Sally', email: 'sally@test.com' },
+              { name: 'Dan', email: 'dan2@test.com' },
+              { name: 'Steph', email: 'steph@test.com' },
+              { name: 'Bob', email: 'bob@test.com' },
+              { name: 'Sebastian', email: 'sebastian@test.com' }
+            ];
+
+            $scope.empTags = [emps[0], emps[3], emps[5]];
+
+            $scope.loadEmps = function(query) {
+              var deferred = $q.defer();
+              var items = [];
+              for (var i = 0; i < emps.length; i++) {
+                if (emps[i].name.toLowerCase().indexOf(query.toLowerCase()) > -1) {
+                  items.push(emps[i]);
+                }
+              }
+              deferred.resolve(items);
+              return deferred.promise;
+            };
+
         $scope.focus = function() {
             console.log('focus');
         };
