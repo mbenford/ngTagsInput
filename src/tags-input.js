@@ -10,6 +10,7 @@
  *
  * @param {string} ngModel Assignable angular expression to data-bind to.
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
+ * @param {string=} [keyProperty=text] Property to be used for tracking items in the ng-repeat.
  * @param {string=} [type=text] Type of the input element. Only 'text', 'email' and 'url' are supported values.
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
@@ -42,9 +43,12 @@
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
 tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, tiUtil) {
-
     function TagList(options, events, onTagAdding, onTagRemoving) {
-        var self = {}, getTagText, setTagText, tagIsValid;
+        var self = {}, getTagText, setTagText, tagIsValid, getIdProperty;
+
+        getIdProperty = function() {
+            return options.keyProperty || options.displayProperty;
+        };
 
         getTagText = function(tag) {
             return tiUtil.safeToString(tag[options.displayProperty]);
@@ -61,7 +65,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                    tagText.length >= options.minLength &&
                    tagText.length <= options.maxLength &&
                    options.allowedTagsPattern.test(tagText) &&
-                   !tiUtil.findInObjectArray(self.items, tag, options.displayProperty) &&
+                   !tiUtil.findInObjectArray(self.items, tag, getIdProperty()) &&
                    onTagAdding({ $tag: tag });
         };
 
@@ -160,6 +164,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                 minTags: [Number, 0],
                 maxTags: [Number, MAX_SAFE_INTEGER],
                 displayProperty: [String, 'text'],
+                keyProperty: [String, ''],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
                 spellcheck: [Boolean, true]
@@ -224,7 +229,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
             };
 
             scope.track = function(tag) {
-                return tag[options.displayProperty];
+                return tag[options.keyProperty || options.displayProperty];
             };
 
             scope.$watch('tags', function(value) {

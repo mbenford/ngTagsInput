@@ -11,6 +11,7 @@
  * @param {expression} source Expression to evaluate upon changing the input content. The input value is available as
  *                            $query. The result of the expression must be a promise that eventually resolves to an
  *                            array of strings.
+ * @param {string=} [displayProperty=text] Property to be rendered as the autocomplete label.
  * @param {number=} [debounceDelay=100] Amount of time, in milliseconds, to wait before evaluating the expression in
  *                                      the source option after the last keystroke.
  * @param {number=} [minLength=3] Minimum number of characters that must be entered before evaluating the expression
@@ -30,11 +31,15 @@
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
     function SuggestionList(loadFn, options) {
-        var self = {}, getDifference, lastPromise;
+        var self = {}, getDifference, lastPromise, getIdProperty;
+
+        getIdProperty = function() {
+            return options.tagsInput.keyProperty || options.displayProperty || options.tagsInput.displayProperty;
+        };
 
         getDifference = function(array1, array2) {
             return array1.filter(function(item) {
-                return !tiUtil.findInObjectArray(array2, item, options.tagsInput.displayProperty);
+                return !tiUtil.findInObjectArray(array2, item, getIdProperty());
             });
         };
 
@@ -67,7 +72,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                     return;
                 }
 
-                items = tiUtil.makeObjectArray(items.data || items, options.tagsInput.displayProperty);
+                items = tiUtil.makeObjectArray(items.data || items, getIdProperty());
                 items = getDifference(items, tags);
                 self.items = items.slice(0, options.maxResultsToShow);
 
@@ -119,7 +124,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnDownArrow: [Boolean, false],
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
-                selectFirstMatch: [Boolean, true]
+                selectFirstMatch: [Boolean, true],
+                displayProperty: [String, '']
             });
 
             options = scope.options;
@@ -130,7 +136,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             suggestionList = new SuggestionList(scope.source, options);
 
             getItem = function(item) {
-                return item[options.tagsInput.displayProperty];
+                return item[options.displayProperty || options.tagsInput.displayProperty];
             };
 
             getDisplayText = function(item) {
@@ -171,7 +177,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             };
 
             scope.track = function(item) {
-                return getItem(item);
+                return options.tagsInput.keyProperty ? item[options.tagsInput.keyProperty] : getItem(item);
             };
 
             tagsInput
