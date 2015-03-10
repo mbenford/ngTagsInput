@@ -35,6 +35,7 @@
  *                                                   When this flag is true, addOnEnter, addOnComma, addOnSpace, addOnBlur and
  *                                                   allowLeftoverText values are ignored.
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
+ * @param {expression} customTagClasses Expression to provide the tag with custom classes for styling. The tag is available as $tag. This method must return an array of classes.
  * @param {expression} onTagAdding Expression to evaluate that will be invoked before adding a new tag. The new tag is available as $tag. This method must return either true or false. If false, the tag will not be added.
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onInvalidTag Expression to evaluate when a tag is invalid. The invalid tag is available as $tag.
@@ -129,6 +130,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
         require: 'ngModel',
         scope: {
             tags: '=ngModel',
+            customTagClasses: '&',
             onTagAdding: '&',
             onTagAdded: '&',
             onInvalidTag: '&',
@@ -221,6 +223,18 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
 
             scope.getDisplayText = function(tag) {
                 return tiUtil.safeToString(tag[options.displayProperty]);
+            };
+
+            scope.getTagClasses = function(tag) {
+              var classes = [];
+              if(tag === tagList.selected){
+                classes.push('selected');
+              }
+              var customClasses = scope.customTagClasses();
+              if(customClasses){
+                classes = classes.concat(customClasses);
+              }
+              return classes;
             };
 
             scope.track = function(tag) {

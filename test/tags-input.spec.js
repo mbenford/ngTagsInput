@@ -1365,6 +1365,20 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('custom-tag-classes option', function(){
+        it('adds the custom classes', function(){
+            // Arrange
+            $scope.customClasses = jasmine.createSpy().and.returnValue(['custom-class']);
+            compile('custom-tag-classes="customClasses($tag)"');
+
+            // Act
+            newTag('foo');
+
+            // Assert
+            expect(getTag(0)).toHaveClass('custom-class');
+        });
+    });
+
     describe('on-tag-added option', function() {
         it('calls the provided callback when a new tag is added', function() {
             // Arrange
