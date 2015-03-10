@@ -1,46 +1,48 @@
 @import "mixins";
 @import "variables";
 
-tags-input .autocomplete {
-  margin-top: 5px;
-  position: absolute;
-  padding: 5px 0;
-  z-index: $suggestions-z-index;
-  width: $suggestions-width;
-  background-color: $suggestions-bgcolor;
-  border: $suggestions-border;
-  @include box-shadow($suggestions-border-shadow);
+tags-input, [data-tags-input], [tags-input] {
+  .autocomplete {
+    margin-top: 5px;
+    position: absolute;
+    padding: 5px 0;
+    z-index: $suggestions-z-index;
+    width: $suggestions-width;
+    background-color: $suggestions-bgcolor;
+    border: $suggestions-border;
+    @include box-shadow($suggestions-border-shadow);
 
-  .suggestion-list {
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
-  }
-
-  .suggestion-item {
-    padding: 5px 10px;
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font: $suggestion-font;
-    color: $suggestion-color;
-    background-color: $suggestion-bgcolor;
-
-    &.selected {
-      color: $suggestion-color-selected;
-      background-color: $suggestion-bgcolor-selected;
-
-      em {
-        color: $suggestion-highlight-color-selected;
-        background-color: $suggestion-highlight-bgcolor-selected;
-      }
+    .suggestion-list {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
     }
 
-    em {
-      font: $suggestion-highlight-font;
-      color: $suggestion-highlight-color;
-      background-color: $suggestion-highlight-bgcolor;
+    .suggestion-item {
+      padding: 5px 10px;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font: $suggestion-font;
+      color: $suggestion-color;
+      background-color: $suggestion-bgcolor;
+
+      &.selected {
+        color: $suggestion-color-selected;
+        background-color: $suggestion-bgcolor-selected;
+
+        em {
+        color: $suggestion-highlight-color-selected;
+        background-color: $suggestion-highlight-bgcolor-selected;
+        }
+      }
+
+      em {
+        font: $suggestion-highlight-font;
+        color: $suggestion-highlight-color;
+        background-color: $suggestion-highlight-bgcolor;
+      }
     }
   }
 }
