@@ -205,6 +205,42 @@ describe('tags-input directive', function() {
             expect($scope.tags).toEqual([{ text: 'foo' }]);
         });
 
+        it('will not add a tag based on custom logic specified by the on-tag-adding option', function() {
+            // Arrange
+            $scope.tagIsNotInvalid = function(newTag) {
+                return (newTag.text !== 'INVALID');
+            };
+
+            compile('on-tag-adding="tagIsNotInvalid($tag)"');
+
+            // Act
+            newTag('foo');
+            newTag('bar');
+            newTag('INVALID');
+
+            // Assert
+            expect($scope.tags).toEqual([{ text: 'foo' }, { text: 'bar' }]);
+        });
+
+        it('will not remove a tag based on custom logic specified by the on-tag-removing option', function() {
+            // Arrange
+            $scope.tagIsNotPermanent = function(newTag) {
+                return (newTag.text !== 'PERMANENT');
+            };
+
+            compile('on-tag-removing="tagIsNotPermanent($tag)"');
+
+            // Act
+            newTag('foo');
+            newTag('PERMANENT');
+            newTag('bar');
+
+            getRemoveButton(1).click();
+
+            // Assert
+            expect($scope.tags).toEqual([{ text: 'foo' }, { text: 'PERMANENT' }, { text: 'bar' }]);
+        });
+
         it('makes the input field invalid when a duplicate tag is tried to be added', function() {
             // Arrange
             compile();

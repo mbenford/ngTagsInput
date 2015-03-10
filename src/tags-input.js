@@ -35,12 +35,16 @@
  *                                                   When this flag is true, addOnEnter, addOnComma, addOnSpace, addOnBlur and
  *                                                   allowLeftoverText values are ignored.
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
+ * @param {expression} onTagAdding Expression to evaluate that will be invoked before adding a new tag. The new tag is available as $tag. This method must return either true or false. If false, the tag will not be added.
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onInvalidTag Expression to evaluate when a tag is invalid. The invalid tag is available as $tag.
+ * @param {expression} onTagRemoving Expression to evaluate that will be invoked before removing a tag. The tag is available as $tag. This method must return either true or false. If false, the tag will not be removed.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
 tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, tiUtil) {
-    function TagList(options, events) {
+
+    function TagList(options, events, additionalCallbacks) {
+
         var self = {}, getTagText, setTagText, tagIsValid;
 
         getTagText = function(tag) {
@@ -53,12 +57,18 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
 
         tagIsValid = function(tag) {
             var tagText = getTagText(tag);
+            var okToAddTag = additionalCallbacks.onTagAdding({ $tag: tag });
+            var valid = tagText &&
+                     tagText.length >= options.minLength &&
+                     tagText.length <= options.maxLength &&
+                     options.allowedTagsPattern.test(tagText) &&
+                     !tiUtil.findInObjectArray(self.items, tag, options.displayProperty);
 
-            return tagText &&
-                   tagText.length >= options.minLength &&
-                   tagText.length <= options.maxLength &&
-                   options.allowedTagsPattern.test(tagText) &&
-                   !tiUtil.findInObjectArray(self.items, tag, options.displayProperty);
+            if (okToAddTag !== undefined) {
+                valid = valid && okToAddTag;
+            }
+
+            return valid;
         };
 
         self.items = [];
@@ -90,9 +100,14 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
         };
 
         self.remove = function(index) {
-            var tag = self.items.splice(index, 1)[0];
-            events.trigger('tag-removed', { $tag: tag });
-            return tag;
+            var tag = self.items[index];
+            var okToRemoveTag = additionalCallbacks.onTagRemoving({ $tag: tag });
+
+            if (okToRemoveTag === undefined || okToRemoveTag)  {
+                self.items.splice(index, 1);
+                events.trigger('tag-removed', { $tag: tag });
+                return tag;
+            }
         };
 
         self.removeLast = function() {
@@ -121,8 +136,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
         require: 'ngModel',
         scope: {
             tags: '=ngModel',
+            onTagAdding: '&',
             onTagAdded: '&',
             onInvalidTag: '&',
+            onTagRemoving: '&',
             onTagRemoved: '&'
         },
         replace: false,
@@ -155,7 +172,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                 spellcheck: [Boolean, true]
             });
 
-            $scope.tagList = new TagList($scope.options, $scope.events);
+            var additionalCallbacks = {
+                onTagAdding: $scope.onTagAdding,
+                onTagRemoving: $scope.onTagRemoving
+            };
+
+            $scope.tagList = new TagList($scope.options, $scope.events, additionalCallbacks);
 
             this.registerAutocomplete = function() {
                 var input = $element.find('input');
