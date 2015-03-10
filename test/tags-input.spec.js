@@ -1377,6 +1377,27 @@ describe('tags-input directive', function() {
             // Assert
             expect(getTag(0)).toHaveClass('custom-class');
         });
+
+        it('adds dynamic classes based on the tag', function(){
+          // Arrange
+          $scope.tags = [
+              {id: 1, text: 'Tag1', class: 'tag-1-class'},
+              {id: 2, text: 'Tag2', class: 'tag-2-class'},
+              {id: 3, text: 'Tag3', class: 'tag-3-class'}
+          ];
+          $scope.customClasses = jasmine.createSpy().and.callFake(function(tag){
+            return [tag.class];
+          });
+
+          // Act
+          compile('custom-tag-classes="customClasses($tag)"');
+
+          // Assert
+          expect(getTags().length).toBe(3);
+          expect(getTag(0)).toHaveClass($scope.tags[0].class);
+          expect(getTag(1)).toHaveClass($scope.tags[1].class);
+          expect(getTag(2)).toHaveClass($scope.tags[2].class);
+        });
     });
 
     describe('on-tag-added option', function() {

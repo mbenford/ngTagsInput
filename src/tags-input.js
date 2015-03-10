@@ -230,7 +230,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
               if(tag === tagList.selected){
                 classes.push('selected');
               }
-              var customClasses = scope.customTagClasses();
+              var customClasses = scope.customTagClasses({ $tag: tag });
               if(customClasses){
                 classes = classes.concat(customClasses);
               }
