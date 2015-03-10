@@ -197,4 +197,38 @@ describe('tiUtil factory', function() {
         });
     });
 
+    describe('handleUndefinedResult', function() {
+        it('wraps the provided function and change its return value if it\'s undefined', function() {
+            // Arrange
+            var fn = function() { return; };
+
+            // Act
+            var result = tiUtil.handleUndefinedResult(fn, 'foobar')();
+
+            // Act/Assert
+            expect(result).toBe('foobar');
+        });
+
+        it('wraps the provided function and does not change its return value if it\'s defined', function() {
+            // Arrange
+            var fn = function() { return 1; };
+
+            // Act
+            var result = tiUtil.handleUndefinedResult(fn, 'foobar')();
+
+            // Act/Assert
+            expect(result).toBe(1);
+        });
+
+        it('re-passes the provided arguments to the wrapped function', function() {
+            // Arrange
+            var fn = function(a, b) { return a + b; };
+
+            // Act
+            var result = tiUtil.handleUndefinedResult(fn)(1, 2);
+
+            // Assert
+            expect(result).toBe(3);
+        });
+    });
 });

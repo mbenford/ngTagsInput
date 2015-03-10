@@ -69,6 +69,13 @@ tagsInput.factory('tiUtil', function($timeout) {
             .replace(/>/g, '&gt;');
     };
 
+    self.handleUndefinedResult = function(fn, valueIfUndefined) {
+        return function() {
+            var result = fn.apply(null, arguments);
+            return angular.isUndefined(result) ? valueIfUndefined : result;
+        };
+    };
+
     self.simplePubSub = function() {
         var events = {};
         return {
@@ -84,8 +91,7 @@ tagsInput.factory('tiUtil', function($timeout) {
             trigger: function(name, args) {
                 var handlers = events[name] || [];
                 handlers.every(function(handler) {
-                    var retVal = handler.call(null, args);
-                    return angular.isUndefined(retVal) || retVal;
+                    return self.handleUndefinedResult(handler, true)(args);
                 });
                 return this;
             }

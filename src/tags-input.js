@@ -43,8 +43,7 @@
  */
 tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, tiUtil) {
 
-    function TagList(options, events, additionalCallbacks) {
-
+    function TagList(options, events, onTagAdding, onTagRemoving) {
         var self = {}, getTagText, setTagText, tagIsValid;
 
         getTagText = function(tag) {
@@ -57,18 +56,13 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
 
         tagIsValid = function(tag) {
             var tagText = getTagText(tag);
-            var okToAddTag = additionalCallbacks.onTagAdding({ $tag: tag });
-            var valid = tagText &&
-                     tagText.length >= options.minLength &&
-                     tagText.length <= options.maxLength &&
-                     options.allowedTagsPattern.test(tagText) &&
-                     !tiUtil.findInObjectArray(self.items, tag, options.displayProperty);
 
-            if (okToAddTag !== undefined) {
-                valid = valid && okToAddTag;
-            }
-
-            return valid;
+            return tagText &&
+                   tagText.length >= options.minLength &&
+                   tagText.length <= options.maxLength &&
+                   options.allowedTagsPattern.test(tagText) &&
+                   !tiUtil.findInObjectArray(self.items, tag, options.displayProperty) &&
+                   onTagAdding({ $tag: tag });
         };
 
         self.items = [];
@@ -101,9 +95,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
 
         self.remove = function(index) {
             var tag = self.items[index];
-            var okToRemoveTag = additionalCallbacks.onTagRemoving({ $tag: tag });
 
-            if (okToRemoveTag === undefined || okToRemoveTag)  {
+            if (onTagRemoving({ $tag: tag }))  {
                 self.items.splice(index, 1);
                 events.trigger('tag-removed', { $tag: tag });
                 return tag;
@@ -172,12 +165,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                 spellcheck: [Boolean, true]
             });
 
-            var additionalCallbacks = {
-                onTagAdding: $scope.onTagAdding,
-                onTagRemoving: $scope.onTagRemoving
-            };
-
-            $scope.tagList = new TagList($scope.options, $scope.events, additionalCallbacks);
+            $scope.tagList = new TagList($scope.options, $scope.events,
+                tiUtil.handleUndefinedResult($scope.onTagAdding, true),
+                tiUtil.handleUndefinedResult($scope.onTagRemoving, true));
 
             this.registerAutocomplete = function() {
                 var input = $element.find('input');
