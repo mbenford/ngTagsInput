@@ -1,3 +1,24 @@
+## 2.2.0 (2015-03-02)
+
+#### Bug Fixes
+
+* **autocomplete:**
+  * Fix loadOnEmpty behavior ([c63eb05e](https://github.com/mbenford/ngTagsInput/commit/c63eb05e2e78698299eed1537995ea149c9a5b6a), [#205](https://github.com/mbenford/ngTagsInput/issues/205))
+  * Correctly highlight HTML entities ([315f3a2b](https://github.com/mbenford/ngTagsInput/commit/315f3a2b0f9a34a98a203162d452a3c7520bb6f4), [#200](https://github.com/mbenford/ngTagsInput/issues/200))
+* **tagsInput:**
+  * Add spellcheck option ([166f8358](https://github.com/mbenford/ngTagsInput/commit/166f8358ce1f8c42b54390d3b52a71f5803c1e5a))
+  * Ignore addFromAutocompleteOnly on input-blur ([e4767c2d](https://github.com/mbenford/ngTagsInput/commit/e4767c2da75ee8d197c804f15620d107495a91a4))
+
+#### Features
+
+* **autocomplete:** 
+ * Add autoSelectFirstSuggestion option ([0993bbdf](https://github.com/mbenford/ngTagsInput/commit/0993bbdf5ac85f0af5e62c5fa76c13a2aecfa0c7), [#136](https://github.com/mbenford/ngTagsInput/issues/136))
+  * Remove requirement for the source option to return a promise ([10932fbb](https://github.com/mbenford/ngTagsInput/commit/10932fbb18b0887927ae71bb1f9e1d1d0f0f4e26), [#237](https://github.com/mbenford/ngTagsInput/issues/237))
+* **tagsInput:**
+  * Add addOnPaste and pasteSplitPattern options ([9ad32fbd](https://github.com/mbenford/ngTagsInput/commit/9ad32fbd5c3f1d7237bccd73c44796c0eaa91e0d))
+  * Add onInvalidTag option ([e5c57b8e](https://github.com/mbenford/ngTagsInput/commit/e5c57b8ec77b4840e6f383e0bee9a0ce2f6ff0dc))
+  * Enable ngFocus and ngBlur native directives ([210b86f7](https://github.com/mbenford/ngTagsInput/commit/210b86f74538564adcabd0ab22522866888acad8))
+
 ## 2.1.1 (2014-09-04)
 
 #### Bug Fixes

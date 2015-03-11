@@ -11,6 +11,7 @@
  * @param {expression} source Expression to evaluate upon changing the input content. The input value is available as
  *                            $query. The result of the expression must be a promise that eventually resolves to an
  *                            array of strings.
+ * @param {string=} [displayProperty=text] Property to be rendered as the autocomplete label.
  * @param {number=} [debounceDelay=100] Amount of time, in milliseconds, to wait before evaluating the expression in
  *                                      the source option after the last keystroke.
  * @param {number=} [minLength=3] Minimum number of characters that must be entered before evaluating the expression
@@ -28,13 +29,17 @@
  * @param {boolean=} [selectFirstMatch=true] Flag indicating that the first match will be automatically selected once
  *                                           the suggestion list is shown.
  */
-tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig) {
+tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
     function SuggestionList(loadFn, options) {
-        var self = {}, debouncedLoadId, getDifference, lastPromise;
+        var self = {}, getDifference, lastPromise, getIdProperty;
+
+        getIdProperty = function() {
+            return options.tagsInput.keyProperty || options.displayProperty || options.tagsInput.displayProperty;
+        };
 
         getDifference = function(array1, array2) {
             return array1.filter(function(item) {
-                return !findInObjectArray(array2, item, options.tagsInput.displayProperty);
+                return !tiUtil.findInObjectArray(array2, item, getIdProperty());
             });
         };
 
@@ -46,8 +51,6 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             self.index = -1;
             self.selected = null;
             self.query = null;
-
-            $timeout.cancel(debouncedLoadId);
         };
         self.show = function() {
             if (options.selectFirstMatch) {
@@ -58,32 +61,30 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             }
             self.visible = true;
         };
-        self.load = function(query, tags) {
-            $timeout.cancel(debouncedLoadId);
-            debouncedLoadId = $timeout(function() {
-                self.query = query;
+        self.load = tiUtil.debounce(function(query, tags) {
+            self.query = query;
 
-                var promise = $q.when(loadFn({ $query: query }));
-                lastPromise = promise;
+            var promise = $q.when(loadFn({ $query: query }));
+            lastPromise = promise;
 
-                promise.then(function(items) {
-                    if (promise !== lastPromise) {
-                        return;
-                    }
+            promise.then(function(items) {
+                if (promise !== lastPromise) {
+                    return;
+                }
 
-                    items = makeObjectArray(items.data || items, options.tagsInput.displayProperty);
-                    items = getDifference(items, tags);
-                    self.items = items.slice(0, options.maxResultsToShow);
+                items = tiUtil.makeObjectArray(items.data || items, getIdProperty());
+                items = getDifference(items, tags);
+                self.items = items.slice(0, options.maxResultsToShow);
 
-                    if (self.items.length > 0) {
-                        self.show();
-                    }
-                    else {
-                        self.reset();
-                    }
-                });
-            }, options.debounceDelay, false);
-        };
+                if (self.items.length > 0) {
+                    self.show();
+                }
+                else {
+                    self.reset();
+                }
+            });
+        }, options.debounceDelay);
+
         self.selectNext = function() {
             self.select(++self.index);
         };
@@ -123,7 +124,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnDownArrow: [Boolean, false],
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
-                selectFirstMatch: [Boolean, true]
+                selectFirstMatch: [Boolean, true],
+                displayProperty: [String, '']
             });
 
             options = scope.options;
@@ -134,11 +136,11 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             suggestionList = new SuggestionList(scope.source, options);
 
             getItem = function(item) {
-                return item[options.tagsInput.displayProperty];
+                return item[options.displayProperty || options.tagsInput.displayProperty];
             };
 
             getDisplayText = function(item) {
-                return safeToString(getItem(item));
+                return tiUtil.safeToString(getItem(item));
             };
 
             shouldLoadSuggestions = function(value) {
@@ -167,19 +169,19 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
 
             scope.highlight = function(item) {
                 var text = getDisplayText(item);
-                text = encodeHTML(text);
+                text = tiUtil.encodeHTML(text);
                 if (options.highlightMatchedText) {
-                    text = replaceAll(text, encodeHTML(suggestionList.query), '<em>$&</em>');
+                    text = tiUtil.safeHighlight(text, tiUtil.encodeHTML(suggestionList.query));
                 }
                 return $sce.trustAsHtml(text);
             };
 
             scope.track = function(item) {
-                return getItem(item);
+                return options.tagsInput.keyProperty ? item[options.tagsInput.keyProperty] : getItem(item);
             };
 
             tagsInput
-                .on('tag-added tag-removed invalid-tag input-blur', function() {
+                .on('tag-added invalid-tag input-blur', function() {
                     suggestionList.reset();
                 })
                 .on('input-change', function(value) {

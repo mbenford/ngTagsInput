@@ -49,9 +49,10 @@ tagsInput.provider('tagsInputConfig', function() {
     /***
      * @ngdoc method
      * @name setTextAutosizeThreshold
+     * @description Sets the threshold used by the tagsInput directive to re-size the inner input field element based on its contents.
      * @methodOf tagsInputConfig
      *
-     * @param {number} threshold Threshold to be used by the tagsInput directive to re-size the input element based on its contents.
+     * @param {number} threshold Threshold value, in pixels.
      *
      * @returns {object} The service itself for chaining purposes.
      */

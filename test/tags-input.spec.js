@@ -199,6 +199,42 @@ describe('tags-input directive', function() {
             expect($scope.tags).toEqual([{ text: 'foo' }]);
         });
 
+        it('will not add a tag based on custom logic specified by the on-tag-adding option', function() {
+            // Arrange
+            $scope.tagIsNotInvalid = function(newTag) {
+                return (newTag.text !== 'INVALID');
+            };
+
+            compile('on-tag-adding="tagIsNotInvalid($tag)"');
+
+            // Act
+            newTag('foo');
+            newTag('bar');
+            newTag('INVALID');
+
+            // Assert
+            expect($scope.tags).toEqual([{ text: 'foo' }, { text: 'bar' }]);
+        });
+
+        it('will not remove a tag based on custom logic specified by the on-tag-removing option', function() {
+            // Arrange
+            $scope.tagIsNotPermanent = function(newTag) {
+                return (newTag.text !== 'PERMANENT');
+            };
+
+            compile('on-tag-removing="tagIsNotPermanent($tag)"');
+
+            // Act
+            newTag('foo');
+            newTag('PERMANENT');
+            newTag('bar');
+
+            getRemoveButton(1).click();
+
+            // Assert
+            expect($scope.tags).toEqual([{ text: 'foo' }, { text: 'PERMANENT' }, { text: 'bar' }]);
+        });
+
         it('makes the input field invalid when a duplicate tag is tried to be added', function() {
             // Arrange
             compile();
@@ -227,12 +263,14 @@ describe('tags-input directive', function() {
         it('empties the input field after a tag is added directly', function() {
             // Arrange
             compile();
+            spyOn(isolateScope.events, 'trigger').and.callThrough();
 
             // Act
             newTag('foo');
 
             // Assert
             expect(getInput().val()).toBe('');
+            expect(isolateScope.events.trigger).toHaveBeenCalledWith('input-change', '');
         });
 
         it('converts an array of strings into an array of objects', function() {
@@ -324,6 +362,20 @@ describe('tags-input directive', function() {
             // Assert
             expect(isolateScope.hasFocus).toBe(true);
             expect($scope.$digest).toHaveBeenCalled();
+        });
+
+        it('does nothing when the focused property is true and the input field gains focus', function() {
+            // Arrange
+            isolateScope.hasFocus = true;
+            spyOn($scope, '$digest');
+            spyOn(isolateScope.events, 'trigger');
+
+            // Act
+            getInput().triggerHandler('focus');
+
+            // Assert
+            expect(isolateScope.hasFocus).toBe(true);
+            expect(isolateScope.events.trigger).not.toHaveBeenCalled();
         });
 
         it('sets the focused property to false when the input field loses focus', function() {
@@ -913,12 +965,15 @@ describe('tags-input directive', function() {
 
             describe('backspace is pressed once', function() {
                 it('moves the last tag back into the input field when the input field is empty', function() {
+                    // Arrange
+                    spyOn(isolateScope.events, 'trigger').and.callThrough();
                     // Act
                     sendBackspace();
 
                     // Assert
                     expect(getInput().val()).toBe('Tag3');
                     expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }]);
+                    expect(isolateScope.events.trigger).toHaveBeenCalledWith('input-change', 'Tag3');
                 });
 
                 it('does nothing when the input field is not empty', function() {
@@ -1180,7 +1235,73 @@ describe('tags-input directive', function() {
                 { label: 'Item3' }
             ]);
         });
+    });
 
+    describe('key-property option', function () {
+        it('initializes the option to an empty string', function () {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.keyProperty).toBe('');
+        });
+
+        it('renders tags with duplicate labels but different keys', function () {
+            // Arrange
+            $scope.tags= [
+                { id: 1, text: 'Tag' },
+                { id: 2, text: 'Tag' }
+            ];
+
+            // Act
+            compile('key-property="id"');
+
+            // Assert
+            expect(getTagText(0)).toBe('Tag');
+            expect(getTagText(1)).toBe('Tag');
+        });
+
+        it('fails to render tags with duplicate keys', function () {
+            // Arrange
+            $scope.tags= [
+                { id: 1, text: 'Tag' },
+                { id: 1, text: 'Tag' }
+            ];
+
+            // Act/Assert
+            expect(function() { compile('key-property="id"'); }).toThrowError();
+        });
+
+        it('adds tags with duplicate labels but different keys', function () {
+            // Arrange
+            $scope.tags = [
+                { id: 1, text: 'Tag' }
+            ];
+            compile('key-property="id"');
+
+            // Act
+            isolateScope.tagList.add({ id: 2, text: 'Tag' });
+
+            // Assert
+            expect($scope.tags).toEqual([
+                { id: 1, text: 'Tag' },
+                { id: 2, text: 'Tag' }
+            ]);
+        });
+
+        it('doesn\'t allow tags with duplicate keys', function () {
+            // Arrange
+            $scope.tags = [
+                { id: 1, text: 'Tag' }
+            ];
+            compile('key-property="id"');
+
+            // Act
+            isolateScope.tagList.add({ id: 1, text: 'Other' });
+
+            // Assert
+            expect($scope.tags).toEqual([{ id: 1, text: 'Tag' }]);
+        });
     });
 
     describe('allow-leftover-text option', function() {

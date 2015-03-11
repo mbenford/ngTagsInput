@@ -10,6 +10,7 @@
  *
  * @param {string} ngModel Assignable angular expression to data-bind to.
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
+ * @param {string=} [keyProperty=text] Property to be used as a unique identifier for the tag.
  * @param {string=} [type=text] Type of the input element. Only 'text', 'email' and 'url' are supported values.
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
@@ -35,16 +36,18 @@
  *                                                   When this flag is true, addOnEnter, addOnComma, addOnSpace, addOnBlur and
  *                                                   allowLeftoverText values are ignored.
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
+ * @param {expression} onTagAdding Expression to evaluate that will be invoked before adding a new tag. The new tag is available as $tag. This method must return either true or false. If false, the tag will not be added.
  * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression} onInvalidTag Expression to evaluate when a tag is invalid. The invalid tag is available as $tag.
+ * @param {expression} onTagRemoving Expression to evaluate that will be invoked before removing a tag. The tag is available as $tag. This method must return either true or false. If false, the tag will not be removed.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
-tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) {
-    function TagList(options, events) {
+tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, tiUtil) {
+    function TagList(options, events, onTagAdding, onTagRemoving) {
         var self = {}, getTagText, setTagText, tagIsValid;
 
         getTagText = function(tag) {
-            return safeToString(tag[options.displayProperty]);
+            return tiUtil.safeToString(tag[options.displayProperty]);
         };
 
         setTagText = function(tag, text) {
@@ -58,7 +61,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                    tagText.length >= options.minLength &&
                    tagText.length <= options.maxLength &&
                    options.allowedTagsPattern.test(tagText) &&
-                   !findInObjectArray(self.items, tag, options.displayProperty);
+                   !tiUtil.findInObjectArray(self.items, tag, options.keyProperty || options.displayProperty) &&
+                   onTagAdding({ $tag: tag });
         };
 
         self.items = [];
@@ -90,9 +94,13 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         };
 
         self.remove = function(index) {
-            var tag = self.items.splice(index, 1)[0];
-            events.trigger('tag-removed', { $tag: tag });
-            return tag;
+            var tag = self.items[index];
+
+            if (onTagRemoving({ $tag: tag }))  {
+                self.items.splice(index, 1);
+                events.trigger('tag-removed', { $tag: tag });
+                return tag;
+            }
         };
 
         self.removeLast = function() {
@@ -121,15 +129,17 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
         require: 'ngModel',
         scope: {
             tags: '=ngModel',
+            onTagAdding: '&',
             onTagAdded: '&',
             onInvalidTag: '&',
+            onTagRemoving: '&',
             onTagRemoved: '&'
         },
         replace: false,
         transclude: true,
         templateUrl: 'ngTagsInput/tags-input.html',
         controller: function($scope, $attrs, $element) {
-            $scope.events = new SimplePubSub();
+            $scope.events = tiUtil.simplePubSub();
 
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 type: [String, 'text', validateType],
@@ -150,12 +160,15 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 minTags: [Number, 0],
                 maxTags: [Number, MAX_SAFE_INTEGER],
                 displayProperty: [String, 'text'],
+                keyProperty: [String, ''],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
                 spellcheck: [Boolean, true]
             });
 
-            $scope.tagList = new TagList($scope.options, $scope.events);
+            $scope.tagList = new TagList($scope.options, $scope.events,
+                tiUtil.handleUndefinedResult($scope.onTagAdding, true),
+                tiUtil.handleUndefinedResult($scope.onTagRemoving, true));
 
             this.registerAutocomplete = function() {
                 var input = $element.find('input');
@@ -199,18 +212,26 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
             };
 
-            scope.newTag = { text: '', invalid: null };
+            scope.newTag = {
+                text: '',
+                invalid: null,
+                setText: function(value) {
+                    this.text = value;
+                    events.trigger('input-change', value);
+                }
+            };
 
             scope.getDisplayText = function(tag) {
-                return safeToString(tag[options.displayProperty]);
+                return tiUtil.safeToString(tag[options.displayProperty]);
             };
 
             scope.track = function(tag) {
-                return tag[options.displayProperty];
+                return tag[options.keyProperty || options.displayProperty];
             };
 
             scope.$watch('tags', function(value) {
-                tagList.items = makeObjectArray(value, options.displayProperty);
+                scope.tags = tiUtil.makeObjectArray(value, options.displayProperty);
+                tagList.items = scope.tags;
             });
 
             scope.$watch('tags.length', function() {
@@ -261,7 +282,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 .on('invalid-tag', scope.onInvalidTag)
                 .on('tag-removed', scope.onTagRemoved)
                 .on('tag-added', function() {
-                    scope.newTag.text = '';
+                    scope.newTag.setText('');
                 })
                 .on('tag-added tag-removed', function() {
                     // Sets the element to its dirty state
@@ -316,7 +337,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                     else if (shouldRemove) {
                         var tag = tagList.removeLast();
                         if (tag && options.enableEditingLastTag) {
-                            scope.newTag.text = tag[options.displayProperty];
+                            scope.newTag.setText(tag[options.displayProperty]);
                         }
 
                         event.preventDefault();
