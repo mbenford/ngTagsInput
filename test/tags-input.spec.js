@@ -1244,7 +1244,7 @@ describe('tags-input directive', function() {
     });
 
     describe('key-property option', function () {
-        it('initializes the option to ""', function () {
+        it('initializes the option to an empty string', function () {
             // Arrange/Act
             compile();
 
@@ -1252,7 +1252,7 @@ describe('tags-input directive', function() {
             expect(isolateScope.options.keyProperty).toBe('');
         });
 
-        it('allows settings tags with duplicate labels', function () {
+        it('renders tags with duplicate labels but different keys', function () {
             // Arrange
             $scope.tags= [
                 { id: 1, text: 'Tag' },
@@ -1263,10 +1263,22 @@ describe('tags-input directive', function() {
             compile('key-property="id"');
 
             // Assert
-            // no exception
+            expect(getTagText(0)).toBe('Tag');
+            expect(getTagText(1)).toBe('Tag');
         });
 
-        it('allows tracking tags by a custom property', function () {
+        it('fails to render tags with duplicate keys', function () {
+            // Arrange
+            $scope.tags= [
+                { id: 1, text: 'Tag' },
+                { id: 1, text: 'Tag' }
+            ];
+
+            // Act/Assert
+            expect(function() { compile('key-property="id"'); }).toThrowError();
+        });
+
+        it('adds tags with duplicate labels but different keys', function () {
             // Arrange
             $scope.tags = [
                 { id: 1, text: 'Tag' }
@@ -1277,14 +1289,13 @@ describe('tags-input directive', function() {
             isolateScope.tagList.add({ id: 2, text: 'Tag' });
 
             // Assert
-            expect(isolateScope.newTag.invalid).toBeFalsy();
             expect($scope.tags).toEqual([
                 { id: 1, text: 'Tag' },
                 { id: 2, text: 'Tag' }
             ]);
         });
 
-        it('fails with duplicate track properties', function () {
+        it('doesn\'t allow tags with duplicate keys', function () {
             // Arrange
             $scope.tags = [
                 { id: 1, text: 'Tag' }
@@ -1295,10 +1306,7 @@ describe('tags-input directive', function() {
             isolateScope.tagList.add({ id: 1, text: 'Other' });
 
             // Assert
-            expect(isolateScope.newTag.invalid).toBeTruthy();
-            expect($scope.tags).toEqual([
-                { id: 1, text: 'Tag' }
-            ]);
+            expect($scope.tags).toEqual([{ id: 1, text: 'Tag' }]);
         });
     });
 

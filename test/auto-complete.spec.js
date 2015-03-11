@@ -1090,7 +1090,7 @@ describe('autoComplete directive', function() {
     });
 
     describe('display-property option', function() {
-        it('initializes the option to ""', function() {
+        it('initializes the option to an empty string', function() {
             // Arrange/Act
             compile();
 

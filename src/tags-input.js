@@ -10,7 +10,7 @@
  *
  * @param {string} ngModel Assignable angular expression to data-bind to.
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
- * @param {string=} [keyProperty=text] Property to be used for tracking items in the ng-repeat.
+ * @param {string=} [keyProperty=text] Property to be used as a unique identifier for the tag.
  * @param {string=} [type=text] Type of the input element. Only 'text', 'email' and 'url' are supported values.
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
@@ -44,11 +44,7 @@
  */
 tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, tiUtil) {
     function TagList(options, events, onTagAdding, onTagRemoving) {
-        var self = {}, getTagText, setTagText, tagIsValid, getIdProperty;
-
-        getIdProperty = function() {
-            return options.keyProperty || options.displayProperty;
-        };
+        var self = {}, getTagText, setTagText, tagIsValid;
 
         getTagText = function(tag) {
             return tiUtil.safeToString(tag[options.displayProperty]);
@@ -65,7 +61,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                    tagText.length >= options.minLength &&
                    tagText.length <= options.maxLength &&
                    options.allowedTagsPattern.test(tagText) &&
-                   !tiUtil.findInObjectArray(self.items, tag, getIdProperty()) &&
+                   !tiUtil.findInObjectArray(self.items, tag, options.keyProperty || options.displayProperty) &&
                    onTagAdding({ $tag: tag });
         };
 
