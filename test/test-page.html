@@ -57,13 +57,14 @@
               deferred.resolve(items);
               return deferred.promise;
             };
-        $scope.focus = function() {
-            console.log('focus');
-        };
 
-        $scope.blur = function() {
-          console.log('blur');
-        };
+            $scope.focus = function() {
+                console.log('focus');
+            };
+
+            $scope.blur = function() {
+              console.log('blur');
+            };
         })
         .directive('limitTags', function() {
           return {
