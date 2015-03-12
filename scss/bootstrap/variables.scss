@@ -5,11 +5,13 @@ $tags-border-shadow:                    inset 0 1px 1px rgba(0, 0, 0, .075);
 $tags-transition:                       border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 $tags-outline-border:                   1px solid #66afe9;
 $tags-outline-border-shadow:            inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+$tags-bgcolor-disabled:					#eee;
 
 $tag-color:                             #fff;
 $tag-bgcolor:                           #428bca;
 $tag-border:                            1px solid #357ebd;
 $tag-border-radius:                     4px;
+$tag-opacity-disabled:                  0.65;
 
 $tag-color-selected:                    #fff;
 $tag-bgcolor-selected:                  #d9534f;
