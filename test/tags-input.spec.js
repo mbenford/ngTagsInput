@@ -14,6 +14,8 @@ describe('tags-input directive', function() {
             $scope = _$rootScope_;
             $document = _$document_;
             $timeout = _$timeout_;
+
+            $scope.tags = [];
         });
     });
 
@@ -101,13 +103,6 @@ describe('tags-input directive', function() {
     }
 
     describe('basic features', function() {
-        it('initializes the model as an empty array', function() {
-            // Arrange/Act
-            compile();
-
-            // Assert
-            expect($scope.tags).toEqual([]);
-        });
 
         it('renders the correct number of tags', function() {
             // Arrange
@@ -160,7 +155,6 @@ describe('tags-input directive', function() {
             newTag(' Tag2');
             newTag(' Tag3 ');
 
-            // Assert
             expect($scope.tags).toEqual([
                 { text: 'Tag1' },
                 { text: 'Tag2' },
