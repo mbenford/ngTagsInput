@@ -82,22 +82,31 @@ tags-input {
     @include box-shadow($tags-outline-box-shadow-invalid);
   }
 
-  [disabled] {
-    &:focus {
+  &[disabled] {
+    .host:focus {
       outline: none;
     }
+
     .tags {
       background-color: $tags-bgcolor-disabled;
-      cursor: not-allowed;
+      cursor: default;
+
       .tag-item {
         opacity: $tag-opacity-disabled;
+        @include gradient($tag-color-disabled);
+
         .remove-button {
-          cursor: not-allowed;
+          cursor: default;
+
+          &:active {
+            color: $remove-button-color;
+          }
         }
       }
-      .input[disabled] {
-        background-color: #EEE;
-        cursor: not-allowed;
+
+      .input {
+        background-color: $tags-bgcolor-disabled;
+        cursor: default;
       }
     }
   }

@@ -237,8 +237,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                 setElementValidity();
             });
 
-            attrs.$observe('disabled', function (disabled) {
-                scope.disabled = !!disabled;
+            attrs.$observe('disabled', function(value) {
+                scope.disabled = value;
             });
 
             scope.eventHandlers = {

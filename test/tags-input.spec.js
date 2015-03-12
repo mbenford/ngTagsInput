@@ -1488,8 +1488,8 @@ describe('tags-input directive', function() {
         });
     });
 
-    describe('ng-disabled integration', function () {
-        it('disables the input', function () {
+    describe('ng-disabled support', function () {
+        it('disables the inner input element', function () {
             // Arrange/Act
             compile('ng-disabled="true"');
 
@@ -1497,11 +1497,12 @@ describe('tags-input directive', function() {
             expect(getInput()[0].disabled).toBe(true);
         });
 
-        it('disables possibility to set focus on the input field by clicking the container div element', function() {
+        it('doesn\'t focus the input field when the container div is clicked', function() {
             // Arrange
-            compile('ng-disabled="true"');
             var input = getInput()[0];
             spyOn(input, 'focus');
+
+            compile('ng-disabled="true"');
 
             // Act
             element.find('div').click();
@@ -1510,23 +1511,10 @@ describe('tags-input directive', function() {
             expect(input.focus).not.toHaveBeenCalled();
         });
 
-        it('disables possibility to set focus on the input field by clicking the input element', function() {
+        it('doesn\'t remove existing tags', function() {
             // Arrange
             compile('ng-disabled="true"');
-            var input = getInput()[0];
-            spyOn(input, 'focus');
-
-            // Act
-            input.click();
-
-            // Assert
-            expect(input.focus).not.toHaveBeenCalled();
-        });
-
-        it('disables function of remove button', function() {
-            // Arrange
             $scope.tags = generateTags(1);
-            compile('ng-disabled="true"');
 
             // Act
             getRemoveButton(0).click();
@@ -1535,23 +1523,18 @@ describe('tags-input directive', function() {
             expect($scope.tags).toEqual([{ text: 'Tag1' }]);
         });
 
-        it('is bound', function () {
+        it('monitors the disabled attribute', function () {
             // Arrange
             $scope.disabled = false;
             compile('ng-disabled="disabled"');
-            var input = getInput()[0];
-            expect(input.disabled).toBe(false);
 
             // Act
             $scope.disabled = true;
             $scope.$digest();
 
             // Assert
-            expect(input.disabled).toBe(true);
+            expect(isolateScope.disabled).toBe(true);
         });
-
-
-
     });
 
     describe('autocomplete registration', function() {
