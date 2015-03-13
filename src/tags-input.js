@@ -98,24 +98,42 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
 
             if (onTagRemoving({ $tag: tag }))  {
                 self.items.splice(index, 1);
+                self.clearSelection();
                 events.trigger('tag-removed', { $tag: tag });
                 return tag;
             }
         };
 
-        self.removeLast = function() {
-            var tag, lastTagIndex = self.items.length - 1;
-
-            if (options.enableEditingLastTag || self.selected) {
-                self.selected = null;
-                tag = self.remove(lastTagIndex);
+        self.select = function(index) {
+            if (index < 0) {
+                index = self.items.length - 1;
             }
-            else if (!self.selected) {
-                self.selected = self.items[lastTagIndex];
+            else if (index >= self.items.length) {
+                index = 0;
             }
 
-            return tag;
+            self.index = index;
+            self.selected = self.items[index];
         };
+
+        self.selectPrior = function() {
+            self.select(--self.index);
+        };
+
+        self.selectNext = function() {
+            self.select(++self.index);
+        };
+
+        self.removeSelected = function() {
+            return self.remove(self.index);
+        };
+
+        self.clearSelection = function() {
+            self.selected = null;
+            self.index = -1;
+        };
+
+        self.clearSelection();
 
         return self;
     }
@@ -197,7 +215,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
             };
         },
         link: function(scope, element, attrs, ngModelCtrl) {
-            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace],
+            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.delete, KEYS.left, KEYS.right],
                 tagList = scope.tagList,
                 events = scope.events,
                 options = scope.options,
@@ -301,7 +319,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                     }
                 })
                 .on('input-change', function() {
-                    tagList.selected = null;
+                    tagList.clearSelection();
                     scope.newTag.invalid = null;
                 })
                 .on('input-focus', function() {
@@ -319,7 +337,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                     var key = event.keyCode,
                         isModifier = event.shiftKey || event.altKey || event.ctrlKey || event.metaKey,
                         addKeys = {},
-                        shouldAdd, shouldRemove;
+                        shouldAdd, shouldRemove, shouldSelect, shouldEditLastTag;
 
                     if (isModifier || hotkeys.indexOf(key) === -1) {
                         return;
@@ -330,18 +348,36 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                     addKeys[KEYS.space] = options.addOnSpace;
 
                     shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
-                    shouldRemove = !shouldAdd && key === KEYS.backspace && scope.newTag.text.length === 0;
+                    shouldRemove = (key === KEYS.backspace || key === KEYS.delete) && tagList.selected;
+                    shouldEditLastTag = key === KEYS.backspace && scope.newTag.text.length === 0 && options.enableEditingLastTag;
+                    shouldSelect = (key === KEYS.backspace || key === KEYS.left || key === KEYS.right) && scope.newTag.text.length === 0 && !options.enableEditingLastTag;
 
                     if (shouldAdd) {
                         tagList.addText(scope.newTag.text);
-                        event.preventDefault();
                     }
-                    else if (shouldRemove) {
-                        var tag = tagList.removeLast();
-                        if (tag && options.enableEditingLastTag) {
+                    else if (shouldEditLastTag) {
+                        var tag;
+
+                        tagList.selectPrior();
+                        tag = tagList.removeSelected();
+
+                        if (tag) {
                             scope.newTag.setText(tag[options.displayProperty]);
                         }
+                    }
+                    else if (shouldRemove) {
+                        tagList.removeSelected();
+                    }
+                    else if (shouldSelect) {
+                        if (key === KEYS.left || key === KEYS.backspace) {
+                            tagList.selectPrior();
+                        }
+                        else if (key === KEYS.right) {
+                            tagList.selectNext();
+                        }
+                    }
 
+                    if (shouldAdd || shouldSelect || shouldRemove || shouldEditLastTag) {
                         event.preventDefault();
                     }
                 })

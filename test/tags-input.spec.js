@@ -178,6 +178,8 @@ describe('tags-input directive', function() {
 
             // Assert
             expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag3' }]);
+            expect(isolateScope.tagList.selected).toBe(null);
+            expect(isolateScope.tagList.index).toBe(-1);
         });
 
         it('sets focus on the input field when the container div is clicked', function() {
@@ -1031,6 +1033,8 @@ describe('tags-input directive', function() {
 
                     // Assert
                     expect(getTag(2)).not.toHaveClass('selected');
+                    expect(isolateScope.tagList.selected).toBe(null);
+                    expect(isolateScope.tagList.index).toBe(-1);
                 });
             });
 
@@ -1043,6 +1047,8 @@ describe('tags-input directive', function() {
                     // Assert
                     expect(getInput().val()).toBe('');
                     expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }]);
+                    expect(isolateScope.tagList.selected).toBe(null);
+                    expect(isolateScope.tagList.index).toBe(-1);
                 });
 
                 it('does nothing when the input field is not empty', function() {
@@ -1451,6 +1457,78 @@ describe('tags-input directive', function() {
 
                 // Assert
                 expect(isolateScope.tags).toEqual([]);
+            });
+        });
+    });
+
+    describe('navigation through tags', function() {
+        describe('navigation is enabled', function() {
+            beforeEach(function() {
+                compile('enable-editing-last-tag="false"');
+            });
+
+            it('selects the leftward tag when the left arrow key is pressed and the input is empty', function() {
+                // Arrange
+                $scope.tags = generateTags(3);
+                $scope.$digest();
+
+                // Act/Assert
+                sendKeyDown(KEYS.left);
+                expect(isolateScope.tagList.selected).toBe($scope.tags[2]);
+
+                sendKeyDown(KEYS.left);
+                expect(isolateScope.tagList.selected).toBe($scope.tags[1]);
+
+                sendKeyDown(KEYS.left);
+                expect(isolateScope.tagList.selected).toBe($scope.tags[0]);
+
+                sendKeyDown(KEYS.left);
+                expect(isolateScope.tagList.selected).toBe($scope.tags[2]);
+            });
+
+            it('selects the rightward tag when the right arrow key is pressed and the input is empty', function() {
+                // Arrange
+                $scope.tags = generateTags(3);
+                $scope.$digest();
+
+                // Act/Assert
+                sendKeyDown(KEYS.right);
+                expect(isolateScope.tagList.selected).toBe($scope.tags[0]);
+
+                sendKeyDown(KEYS.right);
+                expect(isolateScope.tagList.selected).toBe($scope.tags[1]);
+
+                sendKeyDown(KEYS.right);
+                expect(isolateScope.tagList.selected).toBe($scope.tags[2]);
+
+                sendKeyDown(KEYS.right);
+                expect(isolateScope.tagList.selected).toBe($scope.tags[0]);
+            });
+
+            it('removes the selected tag when the backspace key is pressed', function() {
+                // Arrange
+                $scope.tags = generateTags(3);
+                $scope.$digest();
+                sendKeyDown(KEYS.left);
+
+                // Act
+                sendKeyDown(KEYS.backspace);
+
+                // Assert
+                expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }]);
+            });
+
+            it('removes the selected tag when the delete key is pressed', function() {
+                // Arrange
+                $scope.tags = generateTags(3);
+                $scope.$digest();
+                sendKeyDown(KEYS.left);
+
+                // Act
+                sendKeyDown(KEYS.delete);
+
+                // Assert
+                expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }]);
             });
         });
     });
