@@ -1347,6 +1347,22 @@ describe('tags-input directive', function() {
             expect($scope.form.tags.$error.leftoverText).toBe(false);
         });
 
+        it('does not make the element invalid when some tag is removed and there is any leftover text', function() {
+            // Arrange
+            compileWithForm('allow-leftover-text="false"', 'name="tags"');
+            isolateScope.hasFocus = true;
+            newTag('foo');
+            newTag('Foo');
+            changeInputValue('some text');
+
+            // Act
+            getRemoveButton(0).click();
+
+            // Assert
+            expect($scope.form.tags.$valid).toBe(true);
+            expect($scope.form.tags.$error.leftoverText).toBe(false);
+        });
+
         it('makes the element valid and removes the leftoverText error when it gains focus', function() {
             // Arrange
             compileWithForm('name="tags"');

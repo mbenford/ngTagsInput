@@ -208,7 +208,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
             setElementValidity = function() {
                 ngModelCtrl.$setValidity('maxTags', scope.tags.length <= options.maxTags);
                 ngModelCtrl.$setValidity('minTags', scope.tags.length >= options.minTags);
-                ngModelCtrl.$setValidity('leftoverText', options.allowLeftoverText ? true : !scope.newTag.text);
+                ngModelCtrl.$setValidity('leftoverText', scope.hasFocus || options.allowLeftoverText ? true : !scope.newTag.text);
             };
 
             scope.newTag = {
