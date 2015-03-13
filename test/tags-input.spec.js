@@ -328,6 +328,14 @@ describe('tags-input directive', function() {
             // Assert
             expect($scope.form.tags.$dirty).toBe(true);
         });
+
+        it('sets the input\'s autocomplete attribute to off', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(getInput().attr('autocomplete')).toBe('off');
+        });
     });
 
     describe('focus outline', function() {
