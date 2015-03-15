@@ -660,60 +660,63 @@ describe('tags-input directive', function() {
             expect(isolateScope.options.addOnPaste).toBe(false);
         });
 
-        it('splits the pasted text into tags if there is more than one tag and the option is true', function() {
-            // Arrange
-            compile('add-on-paste="true"');
-            eventData.clipboardData.getData.and.callFake(function(args) {
-                return args === 'text/plain' ? 'tag1, tag2, tag3' : null;
+
+        describe('option is true', function() {
+            var eventSetups = {
+                vanillaJS: function() {
+                    eventData.clipboardData.getData.and.callFake(function(args) {
+                        return args === 'text/plain' ? 'tag1, tag2, tag3' : null;
+                    });
+                },
+                ie: function() {
+                    $window.clipboardData = eventData.clipboardData;
+                    delete eventData.clipboardData;
+                    $window.clipboardData.getData.and.callFake(function(args) {
+                        return args === 'Text' ? 'tag1, tag2, tag3' : null;
+                    });
+                },
+                jquery: function() {
+                    eventData.originalEvent = { clipboardData: eventData.clipboardData };
+                    delete eventData.clipboardData;
+                    eventData.originalEvent.clipboardData.getData.and.callFake(function(args) {
+                        return args === 'text/plain' ? 'tag1, tag2, tag3' : null;
+                    });
+                }
+            };
+
+            angular.forEach(eventSetups, function(setup, name) {
+                it('splits the pasted text into tags if there is more than one tag (' + name + ')', function() {
+                    // Arrange
+                    compile('add-on-paste="true"');
+                    setup();
+
+                    // Act
+                    var event = jQuery.Event('paste', eventData);
+                    getInput().trigger(event);
+
+                    // Assert
+                    expect($scope.tags).toEqual([
+                        { text: 'tag1' },
+                        { text: 'tag2' },
+                        { text: 'tag3' }
+                    ]);
+                    expect(eventData.preventDefault).toHaveBeenCalled();
+                });
             });
 
-            // Act
-            var event = jQuery.Event('paste', eventData);
-            getInput().trigger(event);
+            it('doesn\'t split the pasted text into tags if there is just one tag', function() {
+                // Arrange
+                compile('add-on-paste="true"');
+                eventData.clipboardData.getData.and.returnValue('tag1');
 
-            // Assert
-            expect($scope.tags).toEqual([
-                { text: 'tag1' },
-                { text: 'tag2' },
-                { text: 'tag3' }
-            ]);
-            expect(eventData.preventDefault).toHaveBeenCalled();
-        });
+                // Act
+                var event = jQuery.Event('paste', eventData);
+                getInput().trigger(event);
 
-        it('splits the pasted text into tags if there is more than one tag and the option is true (IE only)', function() {
-            // Arrange
-            compile('add-on-paste="true"');
-            $window.clipboardData = eventData.clipboardData;
-            delete eventData.clipboardData;
-            $window.clipboardData.getData.and.callFake(function(args) {
-                return args === 'Text' ? 'tag1, tag2, tag3' : null;
+                // Assert
+                expect($scope.tags).toEqual([]);
+                expect(eventData.preventDefault).not.toHaveBeenCalled();
             });
-
-            // Act
-            var event = jQuery.Event('paste', eventData);
-            getInput().trigger(event);
-
-            // Assert
-            expect($scope.tags).toEqual([
-                { text: 'tag1' },
-                { text: 'tag2' },
-                { text: 'tag3' }
-            ]);
-            expect(eventData.preventDefault).toHaveBeenCalled();
-        });
-
-        it('doesn\'t split the pasted text into tags if there is just one tag and the option is true', function() {
-            // Arrange
-            compile('add-on-paste="true"');
-            eventData.clipboardData.getData.and.returnValue('tag1');
-
-            // Act
-            var event = jQuery.Event('paste', eventData);
-            getInput().trigger(event);
-
-            // Assert
-            expect($scope.tags).toEqual([]);
-            expect(eventData.preventDefault).not.toHaveBeenCalled();
         });
 
         it('doesn\'t split the pasted text into tags if the option is false', function() {

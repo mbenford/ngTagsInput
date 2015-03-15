@@ -289,7 +289,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     },
                     paste: function($event) {
                         $event.getTextData = function() {
-                            return $event.clipboardData ? $event.clipboardData.getData('text/plain') : $window.clipboardData.getData('Text');
+                            var clipboardData = $event.clipboardData || ($event.originalEvent && $event.originalEvent.clipboardData);
+                            return clipboardData ? clipboardData.getData('text/plain') : $window.clipboardData.getData('Text');
                         };
                         events.trigger('input-paste', $event);
                     }
