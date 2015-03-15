@@ -2,18 +2,19 @@
 
 describe('tags-input directive', function() {
     var $compile, $scope, $timeout, $document,
-        isolateScope, element;
+        $window, isolateScope, element;
 
     beforeEach(function() {
         jasmine.addMatchers(customMatchers);
 
         module('ngTagsInput');
 
-        inject(function(_$compile_, _$rootScope_, _$document_, _$timeout_) {
+        inject(function(_$compile_, _$rootScope_, _$document_, _$timeout_, _$window_) {
             $compile = _$compile_;
             $scope = _$rootScope_;
             $document = _$document_;
             $timeout = _$timeout_;
+            $window = _$window_;
         });
     });
 
@@ -652,6 +653,25 @@ describe('tags-input directive', function() {
 
             // Assert
             expect(isolateScope.options.addOnPaste).toBe(false);
+        });
+
+        it('works in IE', function() {
+            // Arrange
+            compile('add-on-paste="true"');
+            $window.clipboardData = eventData.clipboardData;
+            eventData.clipboardData = undefined;
+            $window.clipboardData.getData.and.returnValue('tag1, tag2, tag3');
+
+            // Act
+            var event = jQuery.Event('paste', eventData);
+            getInput().trigger(event);
+
+            // Assert
+            expect($scope.tags).toEqual([
+                { text: 'tag1' },
+                { text: 'tag2' },
+                { text: 'tag3' }
+            ]);
         });
 
         it('splits the pasted text into tags if there is more than one tag and the option is true', function() {

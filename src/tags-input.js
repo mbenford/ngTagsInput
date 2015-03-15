@@ -42,7 +42,7 @@
  * @param {expression} onTagRemoving Expression to evaluate that will be invoked before removing a tag. The tag is available as $tag. This method must return either true or false. If false, the tag will not be removed.
  * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  */
-tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, tiUtil) {
+tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInputConfig, tiUtil) {
     function TagList(options, events, onTagAdding, onTagRemoving) {
         var self = {}, getTagText, setTagText, tagIsValid;
 
@@ -383,7 +383,13 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig, 
                 })
                 .on('input-paste', function(event) {
                     if (options.addOnPaste) {
-                        var data = event.clipboardData.getData('text/plain');
+                        var data;
+                        if(event.clipboardData) {
+                            data = event.clipboardData.getData('text/plain');
+                        }
+                        else {
+                            data = $window.clipboardData.getData('Text');
+                        }
                         var tags = data.split(options.pasteSplitPattern);
                         if (tags.length > 1) {
                             tags.forEach(function(tag) {
