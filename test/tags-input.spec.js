@@ -1,8 +1,8 @@
 'use strict';
 
 describe('tags-input directive', function() {
-    var $compile, $scope, $timeout, $document,
-        $window, isolateScope, element;
+    var $compile, $scope, $timeout, $document, $window,
+        isolateScope, element;
 
     beforeEach(function() {
         jasmine.addMatchers(customMatchers);
@@ -638,13 +638,18 @@ describe('tags-input directive', function() {
     });
 
     describe('add-on-paste option', function() {
-        var eventData;
+        var eventData, windowClipboardData;
 
         beforeEach(function() {
             eventData = {
                 clipboardData: jasmine.createSpyObj('clipboardData', ['getData']),
                 preventDefault: jasmine.createSpy()
             };
+            windowClipboardData = $window.clipboardData;
+        });
+
+        afterEach(function() {
+            $window.clipboardData = windowClipboardData;
         });
 
         it('initializes the option to false', function() {
@@ -655,12 +660,12 @@ describe('tags-input directive', function() {
             expect(isolateScope.options.addOnPaste).toBe(false);
         });
 
-        it('works in IE', function() {
+        it('splits the pasted text into tags if there is more than one tag and the option is true', function() {
             // Arrange
             compile('add-on-paste="true"');
-            $window.clipboardData = eventData.clipboardData;
-            eventData.clipboardData = undefined;
-            $window.clipboardData.getData.and.returnValue('tag1, tag2, tag3');
+            eventData.clipboardData.getData.and.callFake(function(args) {
+                return args === 'text/plain' ? 'tag1, tag2, tag3' : null;
+            });
 
             // Act
             var event = jQuery.Event('paste', eventData);
@@ -672,12 +677,17 @@ describe('tags-input directive', function() {
                 { text: 'tag2' },
                 { text: 'tag3' }
             ]);
+            expect(eventData.preventDefault).toHaveBeenCalled();
         });
 
-        it('splits the pasted text into tags if there is more than one tag and the option is true', function() {
+        it('splits the pasted text into tags if there is more than one tag and the option is true (IE only)', function() {
             // Arrange
             compile('add-on-paste="true"');
-            eventData.clipboardData.getData.and.returnValue('tag1, tag2, tag3');
+            $window.clipboardData = eventData.clipboardData;
+            delete eventData.clipboardData;
+            $window.clipboardData.getData.and.callFake(function(args) {
+                return args === 'Text' ? 'tag1, tag2, tag3' : null;
+            });
 
             // Act
             var event = jQuery.Event('paste', eventData);

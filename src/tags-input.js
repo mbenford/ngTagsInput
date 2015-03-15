@@ -288,6 +288,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                         });
                     },
                     paste: function($event) {
+                        $event.getTextData = function() {
+                            return $event.clipboardData ? $event.clipboardData.getData('text/plain') : $window.clipboardData.getData('Text');
+                        };
                         events.trigger('input-paste', $event);
                     }
                 },
@@ -383,14 +386,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 })
                 .on('input-paste', function(event) {
                     if (options.addOnPaste) {
-                        var data;
-                        if(event.clipboardData) {
-                            data = event.clipboardData.getData('text/plain');
-                        }
-                        else {
-                            data = $window.clipboardData.getData('Text');
-                        }
+                        var data = event.getTextData();
                         var tags = data.split(options.pasteSplitPattern);
+
                         if (tags.length > 1) {
                             tags.forEach(function(tag) {
                                 tagList.addText(tag);
