@@ -9,6 +9,7 @@
  * Renders an input box with tag editing support.
  *
  * @param {string} ngModel Assignable angular expression to data-bind to.
+ * @param {string} newTagText Assignable angular expression for data-binding to the underlying input for a new tag.
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
  * @param {string=} [keyProperty=text] Property to be used as a unique identifier for the tag.
  * @param {string=} [type=text] Type of the input element. Only 'text', 'email' and 'url' are supported values.
@@ -147,6 +148,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
         require: 'ngModel',
         scope: {
             tags: '=ngModel',
+            newTagText: '=?',
             onTagAdding: '&',
             onTagAdded: '&',
             onInvalidTag: '&',
@@ -237,6 +239,18 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     events.trigger('input-change', value);
                 }
             };
+
+            scope.$watch('newTag.text', function(value) {
+                if(scope.newTag.text !== scope.newTagText) {
+                    scope.newTagText = value;
+                }
+            });
+
+            scope.$watch('newTagText', function(value) {
+                if(scope.newTag.text !== scope.newTagText) {
+                    scope.newTag.setText(value);
+                }
+            });
 
             scope.getDisplayText = function(tag) {
                 return tiUtil.safeToString(tag[options.displayProperty]);

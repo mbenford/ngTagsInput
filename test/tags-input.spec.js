@@ -440,6 +440,33 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('new-tag-text option', function() {
+        it('updates as text is typed into the input field', function() {
+            // Arrange
+            compile('new-tag-text="innerModel"');
+
+            // Act
+            sendKeyPress('f'.charCodeAt(0));
+            sendKeyPress('o'.charCodeAt(0));
+            sendKeyPress('o'.charCodeAt(0));
+
+            // Assert
+            expect($scope.innerModel).toEqual('foo');
+        });
+
+        it('updates the input field as the scope\'s model changes', function() {
+            // Arrange
+            compile('new-tag-text="innerModel"');
+
+            // Act
+            $scope.innerModel = 'foo';
+            $scope.$digest();
+
+            // Assert
+            expect(getInput().val()).toEqual('foo');
+        });
+    });
+
     describe('tabindex option', function() {
         it('sets the input field tab index', function() {
             // Arrange/Act
