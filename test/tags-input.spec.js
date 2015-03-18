@@ -37,8 +37,8 @@ describe('tags-input directive', function() {
     }
 
     function generateTags(count) {
-        return generateArray(count, function(index) {
-            return { text: 'Tag' + index };
+        return range(count, function(index) {
+            return { text: 'Tag' + (index + 1) };
         });
     }
 

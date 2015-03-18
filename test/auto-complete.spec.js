@@ -102,8 +102,8 @@ describe('autoComplete directive', function() {
     }
 
     function generateSuggestions(count) {
-        return generateArray(count, function(index) {
-            return { text: 'Item' + index };
+        return range(count, function(index) {
+            return { text: 'Item' + (index + 1) };
         });
     }
 
@@ -444,6 +444,57 @@ describe('autoComplete directive', function() {
                 { text: 'Item2' },
                 { text: 'Item3' }
             ]);
+        });
+
+        describe('auto scrolling', function() {
+            var style;
+
+            beforeEach(function() {
+                style = angular.element('<style> .suggestion-list { position: relative; overflow-y: auto; max-height: 100px }</style>').appendTo('head');
+                element.appendTo('body');
+            });
+
+            afterEach(function() {
+                style.remove();
+                element.remove();
+            });
+
+            function isVisible(index) {
+                var suggestion = getSuggestion(index),
+                    container = suggestion.parent();
+
+                return suggestion.prop('offsetTop') + suggestion.prop('offsetHeight') <= container.prop('clientHeight') + container.scrollTop() &&
+                    suggestion.prop('offsetTop') >= container.scrollTop();
+            }
+
+            range(5).forEach(function(index) {
+                index += 5;
+
+                it('scrolls the container down so the selected suggestion is visible #' + index, function() {
+                    // Arrange
+                    loadSuggestions(10);
+
+                    // Act
+                    suggestionList.select(index);
+
+                    // Assert
+                    expect(isVisible(index)).toBe(true);
+                });
+            });
+
+            range(5).forEach(function(index) {
+                it('scrolls the container up so the selected suggestion is visible #' + index, function() {
+                    // Arrange
+                    loadSuggestions(10);
+                    getSuggestionsBox().find('ul').scrollTop(100);
+
+                    // Act
+                    suggestionList.select(index);
+
+                    // Assert
+                    expect(isVisible(index)).toBe(true);
+                });
+            });
         });
     });
 

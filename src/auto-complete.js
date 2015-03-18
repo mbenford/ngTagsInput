@@ -31,7 +31,7 @@
  * @param {string=} [template=] URL or id of a custom template for rendering each element of the autocomplete list.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
-    function SuggestionList(loadFn, options) {
+    function SuggestionList(loadFn, options, events) {
         var self = {}, getDifference, lastPromise, getTagId;
 
         getTagId = function() {
@@ -101,6 +101,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             }
             self.index = index;
             self.selected = self.items[index];
+            events.trigger('suggestion-selected', index);
         };
 
         self.reset();
@@ -108,12 +109,30 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
         return self;
     }
 
+    function scrollToElement(root, index) {
+        var element = root.find('li').eq(index),
+            parent = element.parent(),
+            elementTop = element.prop('offsetTop'),
+            elementHeight = element.prop('offsetHeight'),
+            parentHeight = parent.prop('clientHeight'),
+            parentScrollTop = parent.prop('scrollTop');
+
+        if (elementTop < parentScrollTop) {
+            parent.prop('scrollTop', elementTop);
+        }
+        else if (elementTop + elementHeight > parentHeight + parentScrollTop) {
+            parent.prop('scrollTop', elementTop + elementHeight - parentHeight);
+        }
+    }
+
     return {
         restrict: 'E',
         require: '^tagsInput',
         scope: { source: '&' },
         templateUrl: 'ngTagsInput/auto-complete.html',
-        controller: function($scope, $attrs) {
+        controller: function($scope, $element, $attrs) {
+            $scope.events = tiUtil.simplePubSub();
+
             tagsInputConfig.load('autoComplete', $scope, $attrs, {
                 template: [String, 'ngTagsInput/auto-complete-match.html'],
                 debounceDelay: [Number, 100],
@@ -127,7 +146,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 displayProperty: [String, '']
             });
 
-            $scope.suggestionList = new SuggestionList($scope.source, $scope.options);
+            $scope.suggestionList = new SuggestionList($scope.source, $scope.options, $scope.events);
 
             this.registerAutocompleteMatch = function() {
                 return {
@@ -145,6 +164,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 suggestionList = scope.suggestionList,
                 tagsInput = tagsInputCtrl.registerAutocomplete(),
                 options = scope.options,
+                events = scope.events,
                 shouldLoadSuggestions;
 
             options.tagsInput = tagsInput.getOptions();
@@ -232,6 +252,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                         return false;
                     }
                 });
+
+            events.on('suggestion-selected', function(index) {
+                scrollToElement(element, index);
+            });
         }
     };
 });

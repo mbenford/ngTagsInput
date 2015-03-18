@@ -15,6 +15,9 @@ tags-input .autocomplete {
     margin: 0;
     padding: 0;
     list-style-type: none;
+    max-height: 280px;
+    overflow-y: auto;
+    position: relative;
   }
 
   .suggestion-item {

@@ -29,7 +29,7 @@
         "spyOn": true,
         "require": true,
         "tagsInput": true,
-        "generateArray": true,
+        "range": true,
         "changeElementValue": true,
         "customMatchers": true,
         "KEYS": true,

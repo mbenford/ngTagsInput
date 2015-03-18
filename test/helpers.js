@@ -1,9 +1,9 @@
 'use strict';
 
-function generateArray(count, callback) {
+function range(count, callback) {
     var array = [];
-    for (var i = 1; i <= count; i++) {
-        array.push(callback(i));
+    for (var i = 0; i < count; i++) {
+        array.push(callback ? callback(i) : i);
     }
     return array;
 }
