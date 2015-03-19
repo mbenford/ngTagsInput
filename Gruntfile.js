@@ -107,6 +107,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('release', [
+        'sauce',
         'pack',
         'compress',
         'changelog',
