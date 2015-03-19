@@ -355,6 +355,19 @@ describe('autoComplete directive', function() {
             expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' });
         });
 
+        it('adds a copy of the selected suggestion', function() {
+            // Arrange
+            loadSuggestions(2);
+            suggestionList.select(0);
+            var item = suggestionList.items[0];
+
+            // Act
+            isolateScope.addSuggestion();
+
+            // Assert
+            expect(tagsInput.addTag.calls.argsFor(0)[0]).not.toBe(item);
+        });
+
         it('does not change the input value when the enter key is pressed and there is nothing selected', function() {
             // Arrange
             loadSuggestions(2);
