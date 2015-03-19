@@ -133,6 +133,41 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             self.index = -1;
         };
 
+        self.selectedTag = null;
+        self._isEdit = false;
+        self._undoValue = null;
+
+        self.closeEdit = function() {
+            self._isEdit = false;
+        };
+
+        self.edited = function() {
+            events.trigger('tag-edit');
+            self.closeEdit();
+        };
+
+        self.cancelEdit = function() {
+            self.selectedTag.value = self._undoValue;
+
+            events.trigger('tag-edit');
+            self.closeEdit();
+        };
+
+        self.isEdit = function() {
+            return self._isEdit;
+        };
+
+        self.selectTag = function(item) {
+            // deselect on enter, if in editing
+            self.selectedTag = item;
+            self._undoValue = item.value;
+            self._isEdit = true;
+        };
+
+        self.isSelectedTag = function(item) {
+            return self.selectedTag === item;
+        };
+
         self.clearSelection();
 
         return self;
@@ -309,7 +344,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 .on('tag-added', function() {
                     scope.newTag.setText('');
                 })
-                .on('tag-added tag-removed', function() {
+                .on('tag-added tag-removed tag-edit', function() {
                     // Sets the element to its dirty state
                     // In Angular 1.3 this will be replaced with $setDirty.
                     ngModelCtrl.$setViewValue(scope.tags);
