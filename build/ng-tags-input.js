@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2015 Michael Benford
  * License: MIT
  *
- * Generated at 2015-03-19 11:51:49 +0700
+ * Generated at 2015-03-19 16:19:16 +0700
  */
 (function() {
 'use strict';
@@ -160,6 +160,41 @@ tagsInput.directive('tagsInput', ["$timeout", "$document", "$window", "tagsInput
         self.clearSelection = function() {
             self.selected = null;
             self.index = -1;
+        };
+
+        self.selectedTag = null;
+        self._isEdit = false;
+        self._undoValue = null;
+
+        self.closeEdit = function() {
+            self._isEdit = false;
+        };
+
+        self.edited = function() {
+            events.trigger('tag-edit');
+            self.closeEdit();
+        };
+
+        self.cancelEdit = function() {
+            self.selectedTag.value = self._undoValue;
+
+            events.trigger('tag-edit');
+            self.closeEdit();
+        };
+
+        self.isEdit = function() {
+            return self._isEdit;
+        };
+
+        self.selectTag = function(item) {
+            // deselect on enter, if in editing
+            self.selectedTag = item;
+            self._undoValue = item.value;
+            self._isEdit = true;
+        };
+
+        self.isSelectedTag = function(item) {
+            return self.selectedTag === item;
         };
 
         self.clearSelection();
@@ -338,7 +373,7 @@ tagsInput.directive('tagsInput', ["$timeout", "$document", "$window", "tagsInput
                 .on('tag-added', function() {
                     scope.newTag.setText('');
                 })
-                .on('tag-added tag-removed', function() {
+                .on('tag-added tag-removed tag-edit', function() {
                     // Sets the element to its dirty state
                     // In Angular 1.3 this will be replaced with $setDirty.
                     ngModelCtrl.$setViewValue(scope.tags);
@@ -794,6 +829,34 @@ tagsInput.directive('tiBindAttrs', function() {
     };
 });
 
+tagsInput.directive('ngEnter', function () {
+	return function (scope, element, attrs) {
+		element.bind('keydown keypress', function (event) {
+			if(event.which === 13) {
+				scope.$apply(function (){
+					scope.$eval(attrs.ngEnter);
+				});
+
+				event.preventDefault();
+			}
+		});
+	};
+});
+
+tagsInput.directive('ngEscape', function () {
+	return function (scope, element, attrs) {
+		element.bind('keydown keypress', function (event) {
+			if(event.which === 27) {
+				scope.$apply(function (){
+					scope.$eval(attrs.ngEscape);
+				});
+
+				event.preventDefault();
+			}
+		});
+	};
+});
+
 /**
  * @ngdoc service
  * @name tagsInputConfig
@@ -1012,7 +1075,7 @@ tagsInput.factory('tiUtil', ["$timeout", function($timeout) {
 /* HTML templates */
 tagsInput.run(["$templateCache", function($templateCache) {
     $templateCache.put('ngTagsInput/tags-input.html',
-    "<div class=\"host\" tabindex=\"-1\" ng-click=\"disabled || eventHandlers.host.click()\" ti-transclude-append><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul class=\"tag-list\"><li class=\"tag-item\" ng-repeat=\"tag in tagList.items track by track(tag)\" ng-class=\"{ selected: tag == tagList.selected }\"><span ng-bind=\"getDisplayText(tag)\"></span> <a class=\"remove-button\" ng-click=\"disabled || tagList.remove($index)\" ng-bind=\"options.removeTagSymbol\"></a></li></ul><input class=\"input\" autocomplete=\"off\" ng-model=\"newTag.text\" ng-change=\"eventHandlers.input.change(newTag.text)\" ng-keydown=\"eventHandlers.input.keydown($event)\" ng-focus=\"eventHandlers.input.focus($event)\" ng-blur=\"eventHandlers.input.blur($event)\" ng-paste=\"eventHandlers.input.paste($event)\" ng-trim=\"false\" ng-class=\"{'invalid-tag': newTag.invalid}\" ng-disabled=\"disabled\" ti-bind-attrs=\"{type: options.type, placeholder: options.placeholder, tabindex: options.tabindex, spellcheck: options.spellcheck}\" ti-autosize></div></div>"
+    "<div class=\"host\" tabindex=\"-1\" ti-transclude-append><div class=\"tags\" ng-class=\"{focused: hasFocus}\"><ul class=\"tag-list\"><li class=\"tag-item\" ng-repeat=\"tag in tagList.items track by track(tag)\" ng-class=\"{ selected: tag == tagList.selected }\" ng-dblclick=\"tagList.selectTag(tag)\"><div ng-hide=\"tagList.isEdit() && tagList.isSelectedTag(tag)\"><span ng-bind=\"getDisplayText(tag)\"></span> <a class=\"remove-button\" ng-click=\"tagList.remove($index)\" ng-bind=\"options.removeTagSymbol\"></a></div><div ng-show=\"tagList.isEdit() && tagList.isSelectedTag(tag)\"><input autofocus class=\"input\" ng-enter=\"tagList.edited()\" ng-escape=\"tagList.cancelEdit()\" ng-model=\"tag.value\"></div></li></ul><input class=\"input\" autocomplete=\"off\" ng-model=\"newTag.text\" ng-change=\"eventHandlers.input.change(newTag.text)\" ng-keydown=\"eventHandlers.input.keydown($event)\" ng-focus=\"eventHandlers.input.focus($event)\" ng-blur=\"eventHandlers.input.blur($event)\" ng-paste=\"eventHandlers.input.paste($event)\" ng-trim=\"false\" ng-class=\"{'invalid-tag': newTag.invalid}\" ng-disabled=\"disabled\" ti-bind-attrs=\"{type: options.type, placeholder: options.placeholder, tabindex: options.tabindex, spellcheck: options.spellcheck}\" ti-autosize></div></div>"
   );
 
   $templateCache.put('ngTagsInput/auto-complete.html',
