@@ -133,6 +133,14 @@ describe('tiUtil factory', function() {
         it('returns null when the provided array is empty', function() {
             expect(tiUtil.findInObjectArray([], { prop: 'foo' }, 'prop')).toBe(null);
         });
+
+        it('uses a custom comparer to find an item within an array', function() {
+            // Arrange
+            var caseSensitiveComparer = function(a, b) { return a === b; };
+
+            // Act/Assert
+            expect(tiUtil.findInObjectArray(array, { prop: 'BAR' }, 'prop', caseSensitiveComparer)).toBe(null);
+        });
     });
 
     describe('safeHighlight', function() {

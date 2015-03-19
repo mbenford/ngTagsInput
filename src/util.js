@@ -31,17 +31,24 @@ tagsInput.factory('tiUtil', function($timeout) {
         return array;
     };
 
-    self.findInObjectArray = function(array, obj, key) {
+    self.findInObjectArray = function(array, obj, key, comparer) {
         var item = null;
-        for (var i = 0; i < array.length; i++) {
-            // I'm aware of the internationalization issues regarding toLowerCase()
-            // but I couldn't come up with a better solution right now
-            if (self.safeToString(array[i][key]).toLowerCase() === self.safeToString(obj[key]).toLowerCase()) {
-                item = array[i];
-                break;
+        comparer = comparer || self.defaultComparer;
+
+        array.some(function(element) {
+            if (comparer(element[key], obj[key])) {
+                item = element;
+                return true;
             }
-        }
+        });
+
         return item;
+    };
+
+    self.defaultComparer = function(a, b) {
+        // I'm aware of the internationalization issues regarding toLowerCase()
+        // but I couldn't come up with a better solution right now
+        return self.safeToString(a).toLowerCase() === self.safeToString(b).toLowerCase();
     };
 
     self.safeHighlight = function(str, value) {
