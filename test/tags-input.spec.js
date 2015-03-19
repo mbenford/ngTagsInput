@@ -9,12 +9,16 @@ describe('tags-input directive', function() {
 
         module('ngTagsInput');
 
-        inject(function(_$compile_, _$rootScope_, _$document_, _$timeout_, _$window_) {
+        $window = { document: document };
+        module(function($provide) {
+            $provide.value('$window', $window);
+        });
+
+        inject(function(_$compile_, _$rootScope_, _$document_, _$timeout_) {
             $compile = _$compile_;
             $scope = _$rootScope_;
             $document = _$document_;
             $timeout = _$timeout_;
-            $window = _$window_;
         });
     });
 
