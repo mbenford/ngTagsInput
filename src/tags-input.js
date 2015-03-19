@@ -77,7 +77,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             var tagText = getTagText(tag);
 
             if (options.replaceSpacesWithDashes) {
-                tagText = tagText.replace(/\s/g, '-');
+                tagText = tiUtil.replaceSpacesWithDashes(tagText);
             }
 
             setTagText(tag, tagText);

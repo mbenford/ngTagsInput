@@ -87,6 +87,10 @@ tagsInput.factory('tiUtil', function($timeout) {
         };
     };
 
+    self.replaceSpacesWithDashes = function(str) {
+        return self.safeToString(str).replace(/\s/g, '-');
+    };
+
     self.simplePubSub = function() {
         var events = {};
         return {

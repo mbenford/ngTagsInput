@@ -239,4 +239,17 @@ describe('tiUtil factory', function() {
             expect(result).toBe(3);
         });
     });
+
+    describe('replaceSpacesWithDashes', function() {
+        it('replaces spaces with dashes within the provided string', function() {
+            expect(tiUtil.replaceSpacesWithDashes('a b c')).toBe('a-b-c');
+            expect(tiUtil.replaceSpacesWithDashes('a     b     c')).toBe('a-----b-----c');
+            expect(tiUtil.replaceSpacesWithDashes('a b c ')).toBe('a-b-c');
+            expect(tiUtil.replaceSpacesWithDashes(' a b c')).toBe('a-b-c');
+            expect(tiUtil.replaceSpacesWithDashes(' a b c ')).toBe('a-b-c');
+            expect(tiUtil.replaceSpacesWithDashes('')).toBe('');
+            expect(tiUtil.replaceSpacesWithDashes(null)).toBe('');
+            expect(tiUtil.replaceSpacesWithDashes()).toBe('');
+        });
+    });
 });

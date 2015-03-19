@@ -132,6 +132,24 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(1)).toBe('Item2');
         });
 
+        it('renders all elements returned by the load function that aren\'t already added (replaceSpaceWithDashes on)', function() {
+            // Act
+            tagsInput.getOptions.and.returnValue({ displayProperty: 'text', replaceSpacesWithDashes: true });
+            compile();
+
+            tagsInput.getTags.and.returnValue([{ text: 'Item-3' }]);
+            loadSuggestions([
+                { text: 'Item 1'},
+                { text: 'Item 2'},
+                { text: 'Item 3'},
+            ]);
+
+            // Assert
+            expect(getSuggestions().length).toBe(2);
+            expect(getSuggestionText(0)).toBe('Item 1');
+            expect(getSuggestionText(1)).toBe('Item 2');
+        });
+
         it('renders all elements returned by the load function that aren\'t already added ($http promise)', function() {
             // Act
             tagsInput.getTags.and.returnValue([{ text: 'Item3' }]);
