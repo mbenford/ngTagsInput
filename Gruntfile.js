@@ -30,6 +30,7 @@ module.exports = function(grunt) {
                     'src/transclude-append.js',
                     'src/autosize.js',
                     'src/bind-attrs.js',
+                    'src/enter-escape.js',
                     'src/configuration.js',
                     'src/util.js'
                 ],
