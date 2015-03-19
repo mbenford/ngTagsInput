@@ -87,6 +87,7 @@ module.exports = function(grunt) {
     grunt.registerTask('coverage', ['test', 'open:coverage']);
 
     grunt.registerTask('travis', [
+        'sauce',
         'pack',
         'compress',
         'copy:travis',

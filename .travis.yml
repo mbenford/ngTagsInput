@@ -16,3 +16,7 @@ deploy:
   on:
     repo: mbenford/ngTagsInput
     branch: master
+env:
+  global:
+    - secure: fTAoSkukYG14LWmA5iBU4+uGSAqNXIywVSQ3fzKJFLbHEnIv5B8Zi6z8Ka+IkX2QAE6HITR0jRM92VQ6ifS624+QtOl63Qfhv+DXnfyZow2poHgqfY1OaVI7aZJfc2mfEYINSqhcZSVC6vmUergDsYI9PW25SZNqDVnygrTggWM=
+    - secure: OkD+Jv13JQ3fs+VgxQIGe/SiKQa4pMtjQj/j7beZvkx32gZSXpsZHZvNezWdejjj4sSszq8GeI5CrchxaKAcfDADd9rvv8F88bWF5ft4cUUGfCmI2jspn6B5yShHPbvRhjim0LZifZI6fZJ61N9l9jnEt69i9a+p+cXfrqY+OJA=
