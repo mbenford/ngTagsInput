@@ -1282,22 +1282,17 @@ describe('autoComplete directive', function() {
             expect(getSuggestionScope(2).data).toEqual({ id: 3, text: 'Item3', image: 'item3.jpg' });
         });
 
-        it('makes the util object available to the template', function() {
+        it('makes helper functions available to the template', function() {
             // Arrange
             compile();
 
             // Act
-            loadSuggestions([
-                { text: 'Item1' },
-                { text: 'Item2' },
-                { text: 'Item3' }
-            ]);
+            loadSuggestions(1);
 
             // Assert
-            var utilObj = { highlight: jasmine.any(Function), getDisplayText: jasmine.any(Function) };
-            expect(getSuggestionScope(0).util).toEqual(utilObj);
-            expect(getSuggestionScope(1).util).toEqual(utilObj);
-            expect(getSuggestionScope(2).util).toEqual(utilObj);
+            var scope = getSuggestionScope(0);
+            expect(scope.$highlight).not.toBeUndefined();
+            expect(scope.$getDisplayText).not.toBeUndefined();
         });
     });
 });

@@ -20,16 +20,14 @@ tagsInput.directive('tiAutocompleteMatch', function($sce, tiUtil) {
 
             scope.template = options.template;
 
-            scope.util = {
-                highlight: function(text) {
-                    if (options.highlightMatchedText) {
-                        text = tiUtil.safeHighlight(text, autoComplete.getQuery());
-                    }
-                    return $sce.trustAsHtml(text);
-                },
-                getDisplayText: function() {
-                    return tiUtil.safeToString(scope.data[options.displayProperty || options.tagsInput.displayProperty]);
+            scope.$highlight = function(text) {
+                if (options.highlightMatchedText) {
+                    text = tiUtil.safeHighlight(text, autoComplete.getQuery());
                 }
+                return $sce.trustAsHtml(text);
+            };
+            scope.$getDisplayText =  function() {
+                return tiUtil.safeToString(scope.data[options.displayProperty || options.tagsInput.displayProperty]);
             };
         }
     };
