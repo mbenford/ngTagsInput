@@ -160,6 +160,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             $scope.events = tiUtil.simplePubSub();
 
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
+                template: [String, 'ngTagsInput/tag-item.html'],
                 type: [String, 'text', validateType],
                 placeholder: [String, 'Add a tag'],
                 tabindex: [Number, null],
@@ -213,6 +214,20 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     }
                 };
             };
+
+            this.registerTagItem = function() {
+                return {
+                    getOptions: function() {
+                        return $scope.options;
+                    },
+                    removeTag: function(index) {
+                        if ($scope.disabled) {
+                            return;
+                        }
+                        $scope.tagList.remove(index);
+                    }
+                };
+            };
         },
         link: function(scope, element, attrs, ngModelCtrl) {
             var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.delete, KEYS.left, KEYS.right],
@@ -240,10 +255,6 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     this.text = value;
                     events.trigger('input-change', value);
                 }
-            };
-
-            scope.getDisplayText = function(tag) {
-                return tiUtil.safeToString(tag[options.displayProperty]);
             };
 
             scope.track = function(tag) {
@@ -301,6 +312,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 },
                 host: {
                     click: function() {
+                        if (scope.disabled) {
+                            return;
+                        }
                         input[0].focus();
                     }
                 }

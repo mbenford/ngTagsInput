@@ -25,6 +25,7 @@ module.exports = function(grunt) {
                     'src/constants.js',
                     'src/init.js',
                     'src/tags-input.js',
+                    'src/tag-item.js',
                     'src/auto-complete.js',
                     'src/auto-complete-match.js',
                     'src/transclude-append.js',
@@ -49,7 +50,12 @@ module.exports = function(grunt) {
                 }
             },
             html: {
-                src: ['templates/tags-input.html', 'templates/auto-complete.html', 'templates/auto-complete-match.html'],
+                src: [
+                    'templates/tags-input.html',
+                    'templates/tag-item.html',
+                    'templates/auto-complete.html',
+                    'templates/auto-complete-match.html'
+                ],
                 out: 'tmp/templates.js'
             },
             zip: {

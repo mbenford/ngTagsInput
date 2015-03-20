@@ -9,16 +9,12 @@ describe('tags-input directive', function() {
 
         module('ngTagsInput');
 
-        $window = { document: document };
-        module(function($provide) {
-            $provide.value('$window', $window);
-        });
-
-        inject(function(_$compile_, _$rootScope_, _$document_, _$timeout_) {
+        inject(function(_$compile_, _$rootScope_, _$document_, _$timeout_, _$window_) {
             $compile = _$compile_;
             $scope = _$rootScope_;
             $document = _$document_;
             $timeout = _$timeout_;
+            $window = _$window_;
         });
     });
 
@@ -55,11 +51,11 @@ describe('tags-input directive', function() {
     }
 
     function getTagText(index) {
-        return getTag(index).find('span').html();
+        return getTag(index).find('ti-tag-item > ng-include > span').html();
     }
 
     function getRemoveButton(index) {
-        return getTag(index).find('a').first();
+        return getTag(index).find('ti-tag-item > ng-include > a').first();
     }
 
     function getInput() {
@@ -649,11 +645,13 @@ describe('tags-input directive', function() {
                 clipboardData: jasmine.createSpyObj('clipboardData', ['getData']),
                 preventDefault: jasmine.createSpy()
             };
-            windowClipboardData = $window.clipboardData;
+            windowClipboardData = null;
         });
 
         afterEach(function() {
-            $window.clipboardData = windowClipboardData;
+            if (windowClipboardData) {
+                $window.clipboardData = windowClipboardData;
+            }
         });
 
         it('initializes the option to false', function() {
@@ -664,27 +662,28 @@ describe('tags-input directive', function() {
             expect(isolateScope.options.addOnPaste).toBe(false);
         });
 
-
         describe('option is true', function() {
             var eventSetups = {
-                vanillaJS: function() {
+                jqLite: function(returnValue) {
                     eventData.clipboardData.getData.and.callFake(function(args) {
-                        return args === 'text/plain' ? 'tag1, tag2, tag3' : null;
+                        return args === 'text/plain' ? returnValue : null;
                     });
                 },
-                ie: function() {
-                    $window.clipboardData = eventData.clipboardData;
-                    delete eventData.clipboardData;
-                    $window.clipboardData.getData.and.callFake(function(args) {
-                        return args === 'Text' ? 'tag1, tag2, tag3' : null;
-                    });
-                },
-                jquery: function() {
+                jQuery: function(returnValue) {
                     eventData.originalEvent = { clipboardData: eventData.clipboardData };
                     delete eventData.clipboardData;
                     eventData.originalEvent.clipboardData.getData.and.callFake(function(args) {
-                        return args === 'text/plain' ? 'tag1, tag2, tag3' : null;
+                        return args === 'text/plain' ? returnValue : null;
                     });
+                },
+                ie: function(returnValue) {
+                    delete eventData.clipboardData;
+                    windowClipboardData = $window.clipboardData;
+                    $window.clipboardData = {
+                        getData: function(args) {
+                            return args === 'Text' ? returnValue : null;
+                        }
+                    };
                 }
             };
 
@@ -692,7 +691,7 @@ describe('tags-input directive', function() {
                 it('splits the pasted text into tags if there is more than one tag (' + name + ')', function() {
                     // Arrange
                     compile('add-on-paste="true"');
-                    setup();
+                    setup('tag1, tag2, tag3');
 
                     // Act
                     var event = jQuery.Event('paste', eventData);
@@ -706,20 +705,20 @@ describe('tags-input directive', function() {
                     ]);
                     expect(eventData.preventDefault).toHaveBeenCalled();
                 });
-            });
 
-            it('doesn\'t split the pasted text into tags if there is just one tag', function() {
-                // Arrange
-                compile('add-on-paste="true"');
-                eventData.clipboardData.getData.and.returnValue('tag1');
+                it('doesn\'t split the pasted text into tags if there is just one tag (' + name + ')', function() {
+                    // Arrange
+                    compile('add-on-paste="true"');
+                    setup('Tag1');
 
-                // Act
-                var event = jQuery.Event('paste', eventData);
-                getInput().trigger(event);
+                    // Act
+                    var event = jQuery.Event('paste', eventData);
+                    getInput().trigger(event);
 
-                // Assert
-                expect($scope.tags).toEqual([]);
-                expect(eventData.preventDefault).not.toHaveBeenCalled();
+                    // Assert
+                    expect($scope.tags).toEqual([]);
+                    expect(eventData.preventDefault).not.toHaveBeenCalled();
+                });
             });
         });
 
@@ -1498,6 +1497,102 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('template option', function() {
+        var $templateCache;
+
+        function getTagContent(index) {
+            return getTag(index)
+                .find('ti-tag-item > ng-include')
+                .children()
+                .removeAttr('class')
+                .parent()
+                .html();
+        }
+
+        function getTagScope(index) {
+            return getTag(index)
+                .find('ti-tag-item > ng-include')
+                .children()
+                .scope();
+        }
+
+        beforeEach(function() {
+            inject(function(_$templateCache_) {
+                $templateCache = _$templateCache_;
+            });
+        });
+
+        it('initializes the option to the default template file', function() {
+            expect(isolateScope.options.template).toBe('ngTagsInput/tag-item.html');
+        });
+
+        it('loads and uses the provided template', function() {
+            // Arrange
+            $templateCache.put('customTemplate', '<span>{{data.id}}</span><span>{{data.text}}</span>');
+            compile('template="customTemplate"');
+
+            // Act
+            $scope.tags = [
+                { id: 1, text: 'Item1' },
+                { id: 2, text: 'Item2' },
+                { id: 3, text: 'Item3' }
+            ];
+            $scope.$digest();
+
+            // Assert
+            expect(getTagContent(0)).toBe('<span>1</span><span>Item1</span>');
+            expect(getTagContent(1)).toBe('<span>2</span><span>Item2</span>');
+            expect(getTagContent(2)).toBe('<span>3</span><span>Item3</span>');
+        });
+
+        it('makes the tag data available to the template', function() {
+            // Arrange
+            compile();
+
+            // Act
+            $scope.tags = [
+                { id: 1, text: 'Item1', image: 'item1.jpg' },
+                { id: 2, text: 'Item2', image: 'item2.jpg' },
+                { id: 3, text: 'Item3', image: 'item3.jpg' }
+            ];
+            $scope.$digest();
+
+            // Assert
+            expect(getTagScope(0).data).toEqual({ id: 1, text: 'Item1', image: 'item1.jpg' });
+            expect(getTagScope(1).data).toEqual({ id: 2, text: 'Item2', image: 'item2.jpg' });
+            expect(getTagScope(2).data).toEqual({ id: 3, text: 'Item3', image: 'item3.jpg' });
+        });
+
+        it('makes tags\' indexes available to the template', function() {
+            // Arrange
+            compile();
+
+            // Act
+            $scope.tags = generateTags(3);
+            $scope.$digest();
+
+            // Assert
+            expect(getTagScope(0).$index).toBe(0);
+            expect(getTagScope(1).$index).toBe(1);
+            expect(getTagScope(2).$index).toBe(2);
+        });
+
+        it('makes helper functions available to the template', function() {
+            // Arrange
+            compile();
+
+            // Act
+            $scope.tags = generateTags(1);
+            $scope.$digest();
+
+            // Assert
+            var scope = getTagScope(0);
+            expect(scope.$getDisplayText).not.toBeUndefined();
+            expect(scope.$removeTag).not.toBeUndefined();
+        });
+    });
+
+
     describe('navigation through tags', function() {
         describe('navigation is enabled', function() {
             beforeEach(function() {
@@ -1638,10 +1733,10 @@ describe('tags-input directive', function() {
 
         it('doesn\'t focus the input field when the container div is clicked', function() {
             // Arrange
+            compile('ng-disabled="true"');
+
             var input = getInput()[0];
             spyOn(input, 'focus');
-
-            compile('ng-disabled="true"');
 
             // Act
             element.find('div').click();
@@ -1654,6 +1749,7 @@ describe('tags-input directive', function() {
             // Arrange
             compile('ng-disabled="true"');
             $scope.tags = generateTags(1);
+            $scope.$digest();
 
             // Act
             getRemoveButton(0).click();

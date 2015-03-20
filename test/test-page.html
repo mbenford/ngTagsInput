@@ -24,10 +24,16 @@
 
 <body ng-controller="Ctrl">
   <tags-input ng-model="tags" add-on-blur="false" ng-focus="focus()" ng-blur="blur()" add-on-paste="true" paste-split-pattern="[,;|]" spellcheck="false" display-property="name">
-      <auto-complete source="loadItems($query)" min-length="1" load-on-down-arrow="true" load-on-focus="true" load-on-empty="true" template="inline-template"></auto-complete>
+      <auto-complete source="loadItems($query)" min-length="1" load-on-down-arrow="true" load-on-focus="true" load-on-empty="true" template="inline-template2"></auto-complete>
   </tags-input>
 
   <script type="text/ng-template" id="inline-template">
+    <img ng-src="{{data.picture}}" width="20" height="20"/>
+    <span>{{$index + 1}}-{{$getDisplayText()}}</span>
+    <a ng-click="$removeTag()">X</a>
+  </script>
+
+  <script type="text/ng-template" id="inline-template2">
     <div>
       <div style="float: left">
         <img ng-src="{{data.picture}}" width="64" height="64"/>

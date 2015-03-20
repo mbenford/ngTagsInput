@@ -6,7 +6,7 @@
  * @module ngTagsInput
  *
  * @description
- * Represents an autocomplete match. Used internally by the tagsInput directive.
+ * Represents an autocomplete match. Used internally by the autoComplete directive.
  */
 tagsInput.directive('tiAutocompleteMatch', function($sce, tiUtil) {
     return {
