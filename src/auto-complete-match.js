@@ -12,13 +12,14 @@ tagsInput.directive('tiAutocompleteMatch', function($sce, tiUtil) {
     return {
         restrict: 'E',
         require: '^autoComplete',
-        template: '<ng-include src="template"></ng-include>',
+        template: '<ng-include src="$$template"></ng-include>',
         scope: { data: '=' },
         link: function(scope, element, attrs, autoCompleteCtrl) {
             var autoComplete = autoCompleteCtrl.registerAutocompleteMatch(),
                 options = autoComplete.getOptions();
 
-            scope.template = options.template;
+            scope.$$template = options.template;
+            scope.$index = scope.$parent.$index;
 
             scope.$highlight = function(text) {
                 if (options.highlightMatchedText) {

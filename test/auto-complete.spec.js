@@ -1282,6 +1282,19 @@ describe('autoComplete directive', function() {
             expect(getSuggestionScope(2).data).toEqual({ id: 3, text: 'Item3', image: 'item3.jpg' });
         });
 
+        it('makes suggestions\' indexes available to the template', function() {
+            // Arrange
+            compile();
+
+            // Act
+            loadSuggestions(3);
+
+            // Assert
+            expect(getSuggestionScope(0).$index).toBe(0);
+            expect(getSuggestionScope(1).$index).toBe(1);
+            expect(getSuggestionScope(2).$index).toBe(2);
+        });
+
         it('makes helper functions available to the template', function() {
             // Arrange
             compile();
