@@ -229,6 +229,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 ngModelCtrl.$setValidity('leftoverText', scope.hasFocus || options.allowLeftoverText ? true : !scope.newTag.text);
             };
 
+            ngModelCtrl.$isEmpty = function(value) {
+                return !value || !value.length;
+            };
+
             scope.newTag = {
                 text: '',
                 invalid: null,

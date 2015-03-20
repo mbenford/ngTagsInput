@@ -1676,6 +1676,36 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('ng-required support', function() {
+        it('sets the required validation key when there is no tags', function() {
+            // Arrange/Act
+            compileWithForm('name="tags"', 'ng-required="true"');
+
+            // Assert
+            expect($scope.form.tags.$invalid).toBe(true);
+            expect($scope.form.tags.$error.required).toBe(true);
+        });
+
+        it('doesn\'t set the required validation key when there is any tags', function() {
+            // Arrange/Act
+            $scope.tags = ['Tag'];
+            compileWithForm('name="tags"', 'ng-required="true"');
+
+            // Assert
+            expect($scope.form.tags.$invalid).toBe(false);
+            expect($scope.form.tags.$error.required).toBe(false);
+        });
+
+        it('doesn\'t set the required validation key when ng-required is false', function() {
+            // Arrange/Act
+            compileWithForm('name="tags"', 'ng-required="false"');
+
+            // Assert
+            expect($scope.form.tags.$invalid).toBe(false);
+            expect($scope.form.tags.$error.required).toBe(false);
+        });
+    });
+
     describe('autocomplete registration', function() {
         var autocompleteObj;
 
