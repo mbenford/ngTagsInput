@@ -23,23 +23,27 @@
 </head>
 
 <body ng-controller="Ctrl">
-  <tags-input ng-model="tags" add-on-blur="false" ng-focus="focus()" ng-blur="blur()" add-on-paste="true" paste-split-pattern="[,;|]" spellcheck="false" display-property="name">
-      <auto-complete source="loadItems($query)" min-length="1" load-on-down-arrow="true" load-on-focus="true" load-on-empty="true" template="inline-template2"></auto-complete>
+  <tags-input ng-model="tags" add-on-blur="false" ng-focus="focus()" ng-blur="blur()" add-on-paste="true" paste-split-pattern="[,;|]" spellcheck="false" display-property="name" template="tag-template">
+      <auto-complete source="loadItems($query)" min-length="1" load-on-down-arrow="true" load-on-focus="true" load-on-empty="true" template="autocomplete-template"></auto-complete>
   </tags-input>
 
-  <script type="text/ng-template" id="inline-template">
-    <img ng-src="{{data.picture}}" width="20" height="20"/>
-    <span>{{$index + 1}}-{{$getDisplayText()}}</span>
-    <a ng-click="$removeTag()">X</a>
+  <script type="text/ng-template" id="tag-template">
+    <div style="float: left;">
+      <img ng-src="{{data.picture}}" width="20" height="20" style="vertical-align: middle"/>
+    </div>
+    <div style="float: left; padding-left: 2px">
+      <span>{{$getDisplayText()}}</span>
+      <a class="remove-button" ng-click="$removeTag()">&times;</a>
+    </div>
   </script>
 
-  <script type="text/ng-template" id="inline-template2">
+  <script type="text/ng-template" id="autocomplete-template">
     <div>
       <div style="float: left">
         <img ng-src="{{data.picture}}" width="64" height="64"/>
       </div>
       <div style="float:left; margin-left: 5px">
-        <div><span ng-bind-html="util.highlight(data.name)"></span></div>
+        <div><span ng-bind-html="$highlight(data.name)"></span></div>
         <div style="margin-top: 5px">
           <div><span style="font-style: italic; font-size: 14px">{{data.realname}}</span></div>
           <div><span style="font-style: italic; font-size: 14px">{{data.city}}</span></div>
