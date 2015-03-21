@@ -3,7 +3,7 @@
 'use strict';
 
 module.exports = function(grunt) {
-    grunt.registerTask('sauce', function() {
+    grunt.registerTask('sauce', function(browsers) {
         var sauce, config;
 
         if (!process.env.SAUCE_USERNAME) {
@@ -18,7 +18,7 @@ module.exports = function(grunt) {
         }
 
         config = grunt.config.get('karma.remote');
-        config.browsers = Object.keys(config.customLaunchers);
+        config.browsers = browsers ? browsers.split(',') : Object.keys(config.customLaunchers);
         grunt.config.set('karma.remote', config);
         grunt.task.run('karma:remote');
     });
