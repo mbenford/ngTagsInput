@@ -146,6 +146,8 @@ describe('tiUtil factory', function() {
     describe('safeHighlight', function() {
         it('highlights the provided text', function() {
             expect(tiUtil.safeHighlight('abc', 'b')).toBe('a<em>b</em>c');
+            expect(tiUtil.safeHighlight('aBc', 'b')).toBe('a<em>B</em>c');
+            expect(tiUtil.safeHighlight('abc', 'B')).toBe('a<em>b</em>c');
         });
 
         it('highlights HTML entities', function() {

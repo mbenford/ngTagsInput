@@ -65,7 +65,7 @@ tagsInput.factory('tiUtil', function($timeout) {
 
         var expression = new RegExp('&[^;]+;|' + escapeRegexChars(value), 'gi');
         return str.replace(expression, function(match) {
-            return match === value ? '<em>' + value + '</em>' : match;
+            return match.toLowerCase() === value.toLowerCase() ? '<em>' + match + '</em>' : match;
         });
     };
 
