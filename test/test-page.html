@@ -97,7 +97,7 @@
             $scope.placeholder = 'New tag';
             $scope.loadItems = function(query) {
               return superheroes.filter(function(superhero) {
-                return superhero.name.indexOf(query) > -1;
+                return superhero.name.toLowerCase().indexOf(query.toLowerCase()) > -1;
               });
             };
 
