@@ -10,8 +10,8 @@ angular.module("ngTagsInputSite", ['ngTagsInput'])
 
         this.search = function(name, query) {
             return _.chain(files[name])
-                .filter(function(x) { return x.toLowerCase().indexOf(query.toLowerCase()) > -1; })
-                .take(10)
+                .filter(function(x) { return !query || x.name.toLowerCase().indexOf(query.toLowerCase()) > -1; })
+                .sortBy('name')
                 .value();
         }
     })

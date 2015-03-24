@@ -23,8 +23,9 @@ priority: 1.00
           <div class="col-outer">
             <div class="col-inner">
               <p>Try it yourself!</p>
-              <tags-input class="tags-input-home" ng-model="tags" placeholder="Add a superhero" replace-spaces-with-dashes="false">
-                  <auto-complete source="loadItems($query)" min-length="1" debounce-delay="0"></auto-complete>
+              <tags-input class="tags-input-home" ng-model="tags" placeholder="Add a superhero" replace-spaces-with-dashes="false" display-property="name">
+                  <auto-complete source="loadItems($query)" min-length="1" debounce-delay="0" load-on-down-arrow="true"
+                                 max-results-to-show="50" template="home-template"></auto-complete>
               </tags-input>
               <p class="text-right"><small>Check out the <a href="{{ site.baseurl }}/demos">demos page</a> to see more examples.</small></p>
             </div>
@@ -62,4 +63,21 @@ priority: 1.00
       </div>
     </div>
   </section>
+
+  {% raw %}
+  <script type="text/ng-template" id="home-template">
+    <div>
+      <div style="float: left">
+        <img ng-src="images/{{data.picture}}" width="64" height="64"/>
+      </div>
+      <div style="float:left; margin-left: 5px">
+        <div><span ng-bind-html="$highlight(data.name)"></span></div>
+        <div style="margin-top: 5px">
+          <div><span style="font-style: italic; font-size: 14px">{{data.realname}}</span></div>
+          <div><span style="font-style: italic; font-size: 14px">{{data.city}}</span></div>
+        </div>
+      </div>
+    </div>
+  </script>
+  {% endraw %}
 </div>

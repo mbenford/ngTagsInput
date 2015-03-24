@@ -31,31 +31,35 @@ priority: 0.50
         <h2>Usage</h2>
 {% highlight html %}
 <tags-input
-        ng-model="{string}"
-       [display-property="{string}"]
-       [type="{string}"]
-       [tabindex="{number}"]
-       [placeholder="{string}"]
-       [min-length="{number}"]
-       [max-length="{number}"]
-       [min-tags="{number}"]
-       [max-tags="{number}"]
-       [allow-leftover-text="{boolean}"]
-       [remove-tag-symbol="{string}"]
-       [add-on-enter="{boolean}"]
-       [add-on-space="{boolean}"]
-       [add-on-comma="{boolean}"]
-       [add-on-blur="{boolean}"]
-       [add-on-paste="{boolean}"]
-       [paste-split-pattern="{string}"]
-       [replace-spaces-with-dashes="{boolean}"]
-       [allowed-tags-pattern="{string}"]
-       [enable-editing-last-tag="{boolean}"]
-       [add-from-autocomplete-only="{boolean}"]
-       [spellcheck="{boolean}"]
-       [on-tag-added="{expression}"]
-       [on-tag-removed="{expression}"]
-       [on-invalid-tag="{expression}"]>
+   ng-model="{string}"
+   [template="{string}"]
+   [key-property="{string}"]
+   [display-property="{string}"]
+   [type="{string}"]
+   [tabindex="{number}"]
+   [placeholder="{string}"]
+   [min-length="{number}"]
+   [max-length="{number}"]
+   [min-tags="{number}"]
+   [max-tags="{number}"]
+   [allow-leftover-text="{boolean}"]
+   [remove-tag-symbol="{string}"]
+   [add-on-enter="{boolean}"]
+   [add-on-space="{boolean}"]
+   [add-on-comma="{boolean}"]
+   [add-on-blur="{boolean}"]
+   [add-on-paste="{boolean}"]
+   [paste-split-pattern="{string}"]
+   [replace-spaces-with-dashes="{boolean}"]
+   [allowed-tags-pattern="{string}"]
+   [enable-editing-last-tag="{boolean}"]
+   [add-from-autocomplete-only="{boolean}"]
+   [spellcheck="{boolean}"]
+   [on-tag-adding="{expression}"]
+   [on-tag-added="{expression}"]
+   [on-tag-removing="{expression}"]
+   [on-tag-removed="{expression}"]
+   [on-invalid-tag="{expression}"]>
 </tags-input>
 {% endhighlight %}
         </section>
@@ -76,6 +80,18 @@ priority: 0.50
                 <td><span class="label type type-string">string</span></td>
                 <td>Assignable angular expression to data-bind to.</td>
                 <td>&ndash;</td>
+              </tr>
+              <tr>
+                <td>template</td>
+                <td><span class="label type type-string">string</span></td>
+                <td>URL or id of a custom template for rendering each tag.</td>
+                <td>&ndash;</td>
+              </tr>
+              <tr>
+                <td>keyProperty</td>
+                <td><span class="label type type-string">string</span></td>
+                <td>Property to be used as a unique identifier for the tag.</td>
+                <td>text</td>
               </tr>
               <tr>
                 <td>displayProperty</td>
@@ -213,9 +229,27 @@ priority: 0.50
                 <td>true</td>
               </tr>
               <tr>
+                <td>onTagAdding</td>
+                <td><span class="label type type-expression">expression</span></td>
+                <td>
+                  Expression to evaluate that will be invoked before adding a new tag. The new tag is available as <em>$tag</em>.
+                  This method must return either true or false. If false, the tag will not be added.
+                </td>
+                <td>&ndash;</td>
+              </tr>
+              <tr>
                 <td>onTagAdded</td>
                 <td><span class="label type type-expression">expression</span></td>
                 <td>Expression to evaluate upon adding a new tag. The new tag is available as <em>$tag</em>.</td>
+                <td>&ndash;</td>
+              </tr>
+              <tr>
+                <td>onTagRemoving</td>
+                <td><span class="label type type-expression">expression</span></td>
+                <td>
+                  Expression to evaluate that will be invoked before removing a tag. The tag is available as <em>$tag</em>.
+                  This method must return either true or false. If false, the tag will not be removed.
+                </td>
                 <td>&ndash;</td>
               </tr>
               <tr>
@@ -248,6 +282,7 @@ priority: 0.50
 <tags-input>
   <auto-complete
     source="{expression}"
+    [template="{string}"]
     [debounce-delay="{number}"]
     [min-length="{number}"]
     [highlight-matched-text="{boolean}"]
@@ -279,6 +314,18 @@ priority: 0.50
               The result of the expression must be a promise that eventually resolves to an array of objects.
             </td>
             <td>&ndash;</td>
+          </tr>
+          <tr>
+            <td>template</td>
+            <td><span class="label type type-string">string</span></td>
+            <td>URL or id of a custom template for rendering each element of the autocomplete list.</td>
+            <td>&ndash;</td>
+          </tr>
+          <tr>
+            <td>displayText</td>
+            <td><span class="label type type-string">string</span></td>
+            <td>Property to be rendered as the autocomplete label.</td>
+            <td>tagsInput.displayProperty</td>
           </tr>
           <tr>
             <td>debounceDelay</td>
