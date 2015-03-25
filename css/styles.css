@@ -84,7 +84,7 @@ h3 {
     background-color: #5cb85c;
 }
 
-.type-expression {
+.type-expression, .type-object {
     background-color: #999;
 }
 

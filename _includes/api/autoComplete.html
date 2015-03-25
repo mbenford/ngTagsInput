@@ -1,0 +1,108 @@
+<section>
+  <h1 id="autoComplete"><code>autoComplete <small>(directive in module <strong>ngTagsInput</strong>)</small></code></h1>
+  <section>
+    <h2>Description</h2>
+    <p>Provides autocomplete support for the tagsInput directive.</p>
+  </section>
+
+  <section>
+    <h2>Usage</h2>
+{% highlight html %}
+<auto-complete
+  source="{expression}"
+  [template="{string}"]
+  [display-property="{string}"]
+  [debounce-delay="{number}"]
+  [min-length="{number}"]
+  [highlight-matched-text="{boolean}"]
+  [max-results-to-show="{number}"]
+  [load-on-down-arrow="{boolean}"]
+  [load-on-empty="{boolean}"]
+  [load-on-focus="{boolean}"]
+  [select-first-match="{boolean}"]>
+</auto-complete>
+{% endhighlight %}
+  </section>
+
+  <section>
+    <h2>Parameters</h2>
+    <table class="table table-bordered table-striped table-hover">
+      <thead>
+      <tr>
+        <th class="col-sm-2">Name</th>
+        <th class="col-sm-1">Type</th>
+        <th class="col-sm-7">Description</th>
+        <th class="col-sm-2">Defaults to</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>source <em>(required)</em></td>
+          <td><span class="label type type-expression">expression</span></td>
+          <td>Expression to evaluate upon changing the input content. The input value is available as $query. The result of the expression must be a promise that eventually resolves to an array of strings.</td>
+          <td>&ndash;</td>
+        </tr>
+        <tr>
+          <td>template</td>
+          <td><span class="label type type-string">string</span></td>
+          <td>URL or id of a custom template for rendering each element of the autocomplete list.</td>
+          <td>&ndash;</td>
+        </tr>
+        <tr>
+          <td>displayProperty</td>
+          <td><span class="label type type-string">string</span></td>
+          <td>Property to be rendered as the autocomplete label.</td>
+          <td>text</td>
+        </tr>
+        <tr>
+          <td>debounceDelay</td>
+          <td><span class="label type type-number">number</span></td>
+          <td>Amount of time, in milliseconds, to wait before evaluating the expression in the source option after the last keystroke.</td>
+          <td>100</td>
+        </tr>
+        <tr>
+          <td>minLength</td>
+          <td><span class="label type type-number">number</span></td>
+          <td>Minimum number of characters that must be entered before evaluating the expression in the source option.</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>highlightMatchedText</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating that the matched text will be highlighted in the suggestions list.</td>
+          <td>true</td>
+        </tr>
+        <tr>
+          <td>maxResultsToShow</td>
+          <td><span class="label type type-number">number</span></td>
+          <td>Maximum number of results to be displayed at a time.</td>
+          <td>10</td>
+        </tr>
+        <tr>
+          <td>loadOnDownArrow</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating that the source option will be evaluated when the down arrow key is pressed and the suggestion list is closed. The current input value is available as $query.</td>
+          <td>false</td>
+        </tr>
+        <tr>
+          <td>loadOnEmpty</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating that the source option will be evaluated when the input content becomes empty. The $query variable will be passed to the expression as an empty string.</td>
+          <td>false</td>
+        </tr>
+        <tr>
+          <td>loadOnFocus</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating that the source option will be evaluated when the input element gains focus. The current input value is available as $query.</td>
+          <td>false</td>
+        </tr>
+        <tr>
+          <td>selectFirstMatch</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating that the first match will be automatically selected once the suggestion list is shown.</td>
+          <td>true</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</section>

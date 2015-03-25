@@ -1,0 +1,234 @@
+<section>
+  <h1 id="tagsInput"><code>tagsInput <small>(directive in module <strong>ngTagsInput</strong>)</small></code></h1>
+  <section>
+    <h2>Description</h2>
+    <p>Renders an input box with tag editing support.</p>
+  </section>
+
+  <section>
+    <h2>Usage</h2>
+{% highlight html %}
+<tags-input
+  ng-model="{string}"
+  [template="{string}"]
+  [key-property="{string}"]
+  [display-property="{string}"]
+  [type="{string}"]
+  [tabindex="{number}"]
+  [placeholder="{string}"]
+  [min-length="{number}"]
+  [max-length="{number}"]
+  [min-tags="{number}"]
+  [max-tags="{number}"]
+  [allow-leftover-text="{boolean}"]
+  [remove-tag-symbol="{string}"]
+  [add-on-enter="{boolean}"]
+  [add-on-space="{boolean}"]
+  [add-on-comma="{boolean}"]
+  [add-on-blur="{boolean}"]
+  [add-on-paste="{boolean}"]
+  [paste-split-pattern="{string}"]
+  [replace-spaces-with-dashes="{boolean}"]
+  [allowed-tags-pattern="{string}"]
+  [enable-editing-last-tag="{boolean}"]
+  [add-from-autocomplete-only="{boolean}"]
+  [spellcheck="{boolean}"]
+  [on-tag-adding="{expression}"]
+  [on-tag-added="{expression}"]
+  [on-invalid-tag="{expression}"]
+  [on-tag-removing="{expression}"]
+  [on-tag-removed="{expression}"]>
+</tags-input>
+{% endhighlight %}
+  </section>
+
+  <section>
+    <h2>Parameters</h2>
+    <table class="table table-bordered table-striped table-hover">
+      <thead>
+      <tr>
+        <th class="col-sm-2">Name</th>
+        <th class="col-sm-1">Type</th>
+        <th class="col-sm-7">Description</th>
+        <th class="col-sm-2">Defaults to</th>
+      </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ngModel <em>(required)</em></td>
+          <td><span class="label type type-string">string</span></td>
+          <td>Assignable angular expression to data-bind to.</td>
+          <td>&ndash;</td>
+        </tr>
+        <tr>
+          <td>template</td>
+          <td><span class="label type type-string">string</span></td>
+          <td>URL or id of a custom template for rendering each tag.</td>
+          <td>&ndash;</td>
+        </tr>
+        <tr>
+          <td>keyProperty</td>
+          <td><span class="label type type-string">string</span></td>
+          <td>Property to be used as a unique identifier for the tag.</td>
+          <td>text</td>
+        </tr>
+        <tr>
+          <td>displayProperty</td>
+          <td><span class="label type type-string">string</span></td>
+          <td>Property to be rendered as the tag label.</td>
+          <td>text</td>
+        </tr>
+        <tr>
+          <td>type</td>
+          <td><span class="label type type-string">string</span></td>
+          <td>Type of the input element. Only 'text', 'email' and 'url' are supported values.</td>
+          <td>text</td>
+        </tr>
+        <tr>
+          <td>tabindex</td>
+          <td><span class="label type type-number">number</span></td>
+          <td>Tab order of the control.</td>
+          <td>&ndash;</td>
+        </tr>
+        <tr>
+          <td>placeholder</td>
+          <td><span class="label type type-string">string</span></td>
+          <td>Placeholder text for the control.</td>
+          <td>Add a tag</td>
+        </tr>
+        <tr>
+          <td>minLength</td>
+          <td><span class="label type type-number">number</span></td>
+          <td>Minimum length for a new tag.</td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>maxLength</td>
+          <td><span class="label type type-number">number</span></td>
+          <td>Maximum length allowed for a new tag.</td>
+          <td>MAX_SAFE_INTEGER</td>
+        </tr>
+        <tr>
+          <td>minTags</td>
+          <td><span class="label type type-number">number</span></td>
+          <td>Sets minTags validation error key if the number of tags added is less than minTags.</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td>maxTags</td>
+          <td><span class="label type type-number">number</span></td>
+          <td>Sets maxTags validation error key if the number of tags added is greater than maxTags.</td>
+          <td>MAX_SAFE_INTEGER</td>
+        </tr>
+        <tr>
+          <td>allowLeftoverText</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Sets leftoverText validation error key if there is any leftover text in the input element when the directive loses focus.</td>
+          <td>false</td>
+        </tr>
+        <tr>
+          <td>removeTagSymbol</td>
+          <td><span class="label type type-string">string</span></td>
+          <td>Symbol character for the remove tag button.</td>
+          <td>×</td>
+        </tr>
+        <tr>
+          <td>addOnEnter</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating that a new tag will be added on pressing the ENTER key.</td>
+          <td>true</td>
+        </tr>
+        <tr>
+          <td>addOnSpace</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating that a new tag will be added on pressing the SPACE key.</td>
+          <td>false</td>
+        </tr>
+        <tr>
+          <td>addOnComma</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating that a new tag will be added on pressing the COMMA key.</td>
+          <td>true</td>
+        </tr>
+        <tr>
+          <td>addOnBlur</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating that a new tag will be added when the input field loses focus.</td>
+          <td>true</td>
+        </tr>
+        <tr>
+          <td>addOnPaste</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating that the text pasted into the input field will be split into tags.</td>
+          <td>false</td>
+        </tr>
+        <tr>
+          <td>pasteSplitPattern</td>
+          <td><span class="label type type-string">string</span></td>
+          <td>Regular expression used to split the pasted text into tags.</td>
+          <td>,</td>
+        </tr>
+        <tr>
+          <td>replaceSpacesWithDashes</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating that spaces will be replaced with dashes.</td>
+          <td>true</td>
+        </tr>
+        <tr>
+          <td>allowedTagsPattern</td>
+          <td><span class="label type type-string">string</span></td>
+          <td>Regular expression that determines whether a new tag is valid.</td>
+          <td>.+</td>
+        </tr>
+        <tr>
+          <td>enableEditingLastTag</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating that the last tag will be moved back into the new tag input box instead of being removed when the backspace key is pressed and the input box is empty.</td>
+          <td>false</td>
+        </tr>
+        <tr>
+          <td>addFromAutocompleteOnly</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating that only tags coming from the autocomplete list will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace, addOnBlur and allowLeftoverText values are ignored.</td>
+          <td>false</td>
+        </tr>
+        <tr>
+          <td>spellcheck</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating whether the browser's spellcheck is enabled for the input field or not.</td>
+          <td>true</td>
+        </tr>
+        <tr>
+          <td>onTagAdding</td>
+          <td><span class="label type type-expression">expression</span></td>
+          <td>Expression to evaluate that will be invoked before adding a new tag. The new tag is available as $tag. This method must return either true or false. If false, the tag will not be added.</td>
+          <td>&ndash;</td>
+        </tr>
+        <tr>
+          <td>onTagAdded</td>
+          <td><span class="label type type-expression">expression</span></td>
+          <td>Expression to evaluate upon adding a new tag. The new tag is available as $tag.</td>
+          <td>&ndash;</td>
+        </tr>
+        <tr>
+          <td>onInvalidTag</td>
+          <td><span class="label type type-expression">expression</span></td>
+          <td>Expression to evaluate when a tag is invalid. The invalid tag is available as $tag.</td>
+          <td>&ndash;</td>
+        </tr>
+        <tr>
+          <td>onTagRemoving</td>
+          <td><span class="label type type-expression">expression</span></td>
+          <td>Expression to evaluate that will be invoked before removing a tag. The tag is available as $tag. This method must return either true or false. If false, the tag will not be removed.</td>
+          <td>&ndash;</td>
+        </tr>
+        <tr>
+          <td>onTagRemoved</td>
+          <td><span class="label type type-expression">expression</span></td>
+          <td>Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.</td>
+          <td>&ndash;</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</section>

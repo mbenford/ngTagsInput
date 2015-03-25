@@ -1,0 +1,99 @@
+<section>
+  <h1 id="tagsInputConfig"><code>tagsInputConfig <small>(directive in module <strong>ngTagsInput</strong>)</small></code></h1>
+  <section>
+    <h2>Description</h2>
+    <p>Sets global configuration settings for both tagsInput and autoComplete directives. It's also used internally to parse and
+initialize options from HTML attributes.</p>
+  </section>
+
+  <section>
+    <h2>Methods</h2>
+    <ul class="methods">
+      <li>
+        <h3>setDefaults(directive, defaults)</h3>
+        <div>
+          <p>Sets the default configuration option for a directive.</p>
+          <h5>Parameters</h5>
+          <table class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr>
+              <th class="col-sm-2">Name</th>
+              <th class="col-sm-1">Type</th>
+              <th class="col-sm-9">Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>directive</td>
+              <td><span class="label type type-string">string</span></td>
+              <td>Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'.</td>
+            </tr>
+            <tr>
+              <td>defaults</td>
+              <td><span class="label type type-object">object</span></td>
+              <td>Object containing options and their values.</td>
+            </tr>
+            </tbody>
+          </table>
+          <h5>Returns</h5>
+          <p>The service itself for chaining purposes.</p>
+        </div>
+      </li>
+      <li>
+        <h3>setActiveInterpolation(directive, options)</h3>
+        <div>
+          <p>Sets active interpolation for a set of options.</p>
+          <h5>Parameters</h5>
+          <table class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr>
+              <th class="col-sm-2">Name</th>
+              <th class="col-sm-1">Type</th>
+              <th class="col-sm-9">Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>directive</td>
+              <td><span class="label type type-string">string</span></td>
+              <td>Name of the directive to be configured. Must be either 'tagsInput' or 'autoComplete'.</td>
+            </tr>
+            <tr>
+              <td>options</td>
+              <td><span class="label type type-object">object</span></td>
+              <td>Object containing which options should have interpolation turned on at all times.</td>
+            </tr>
+            </tbody>
+          </table>
+          <h5>Returns</h5>
+          <p>The service itself for chaining purposes.</p>
+        </div>
+      </li>
+      <li>
+        <h3>setTextAutosizeThreshold(threshold)</h3>
+        <div>
+          <p>Sets the threshold used by the tagsInput directive to re-size the inner input field element based on its contents.</p>
+          <h5>Parameters</h5>
+          <table class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr>
+              <th class="col-sm-2">Name</th>
+              <th class="col-sm-1">Type</th>
+              <th class="col-sm-9">Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>threshold</td>
+              <td><span class="label type type-number">number</span></td>
+              <td>Threshold value, in pixels.</td>
+            </tr>
+            </tbody>
+          </table>
+          <h5>Returns</h5>
+          <p>The service itself for chaining purposes.</p>
+        </div>
+      </li>
+      </ul>
+    </section>
+</section>
