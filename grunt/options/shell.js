@@ -19,5 +19,15 @@ module.exports = {
             stdout: true,
             execOptions: { cwd: '<%= bowerDirectory %>' }
         }
+    },
+    git_website: {
+        command: [
+            'git add .',
+            'git commit -m "Updated to v<%= pkg.version %>"'
+        ].join('&&'),
+        options: {
+            stdout: true,
+            execOptions: { cwd: '<%= websiteDirectory %>' }
+        }
     }
 };

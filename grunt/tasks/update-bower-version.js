@@ -3,10 +3,10 @@
 module.exports = function(grunt) {
     grunt.registerTask('update-bower-version', function() {
         var pkg = grunt.config('pkg'),
-            bowerFile = grunt.config('bowerFile'),
-            bower = grunt.file.readJSON(bowerFile);
+            filename = grunt.config('bowerFile'),
+            file = grunt.file.readJSON(filename);
 
-        bower.version = pkg.version;
-        grunt.file.write(bowerFile, JSON.stringify(bower, null, '  '));
+        file.version = pkg.version;
+        grunt.file.write(filename, JSON.stringify(file, null, '  '));
     });
 };
