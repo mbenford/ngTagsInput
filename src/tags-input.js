@@ -34,8 +34,7 @@
  * @param {boolean=} [enableEditingLastTag=false] Flag indicating that the last tag will be moved back into the new tag
  *    input box instead of being removed when the backspace key is pressed and the input box is empty.
  * @param {boolean=} [addFromAutocompleteOnly=false] Flag indicating that only tags coming from the autocomplete list
- *    will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace, addOnBlur and allowLeftoverText values
- *    are ignored.
+ *    will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace, and addOnBlur values are ignored.
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
  * @param {expression=} [onTagAdding=NA] Expression to evaluate that will be invoked before adding a new tag. The new
  *    tag is available as $tag. This method must return either true or false. If false, the tag will not be added.
