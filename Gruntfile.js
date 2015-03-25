@@ -93,6 +93,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('test', ['jshint','karma:local']);
     grunt.registerTask('coverage', ['test', 'open:coverage']);
+    grunt.registerTask('docs', ['clean:build', 'dgeni']);
 
     grunt.registerTask('travis', [
         'pack',
