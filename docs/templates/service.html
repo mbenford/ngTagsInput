@@ -1,0 +1,43 @@
+{% include "macros.html" -%}
+<section>
+  <h1 id="{$ doc.name $}"><code>{$ doc.name $} <small>(directive in module <strong>{$ doc.module $}</strong>)</small></code></h1>
+  <section>
+    <h2>Description</h2>
+    <p>{$ doc.description | replace("\n", "") | replace("  ", " ") $}</p>
+  </section>
+
+  <section>
+    <h2>Methods</h2>
+    <ul class="methods">
+      {%- for method in doc.methods %}
+      <li>
+        <h3>{$ functionSignature(method) $}</h3>
+        <div>
+          <p>{$ method.description $}</p>
+          <h5>Parameters</h5>
+          <table class="table table-bordered table-striped table-hover">
+            <thead>
+            <tr>
+              <th class="col-sm-2">Name</th>
+              <th class="col-sm-1">Type</th>
+              <th class="col-sm-9">Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            {%- for param in method.params %}
+            <tr>
+              <td>{$ param.name $}</td>
+              <td><span class="label type type-{$ param.type.name $}">{$ param.type.name $}</span></td>
+              <td>{$ param.description $}</td>
+            </tr>
+            {%- endfor %}
+            </tbody>
+          </table>
+          <h5>Returns</h5>
+          <p>{$ method.returns.description $}</p>
+        </div>
+      </li>
+      {%- endfor %}
+      </ul>
+    </section>
+</section>

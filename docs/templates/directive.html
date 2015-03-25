@@ -1,0 +1,43 @@
+{% include "macros.html" -%}
+<section>
+  <h1 id="{$ doc.name $}"><code>{$ doc.name $} <small>(directive in module <strong>{$ doc.module $}</strong>)</small></code></h1>
+  <section>
+    <h2>Description</h2>
+    <p>{$ doc.description $}</p>
+  </section>
+
+  <section>
+    <h2>Usage</h2>
+{% raw %}{% highlight html %}{% endraw %}
+<{$ doc.name | dashCase $}
+  {%- for param in doc.params %}
+  {$ directiveParam(param.name, param.type, '="{', '}"') $}
+  {%- endfor %}>
+</{$ doc.name | dashCase $}>
+{% raw %}{% endhighlight %}{% endraw %}
+  </section>
+
+  <section>
+    <h2>Parameters</h2>
+    <table class="table table-bordered table-striped table-hover">
+      <thead>
+      <tr>
+        <th class="col-sm-2">Name</th>
+        <th class="col-sm-1">Type</th>
+        <th class="col-sm-7">Description</th>
+        <th class="col-sm-2">Defaults to</th>
+      </tr>
+      </thead>
+      <tbody>
+      {%- for param in doc.params %}
+        <tr>
+          <td>{$ param.name $}{$ " <em>(required)</em>" if not param.type.optional $}</td>
+          <td><span class="label type type-{$ param.type.name $}">{$ param.type.name $}</span></td>
+          <td>{$ param.description | replace("\n", "") | replace("  ", " ") $}</td>
+          <td>{$ param.defaultValue if param.defaultValue and param.defaultValue != "NA" else "&ndash;" $}</td>
+        </tr>
+      {%- endfor %}
+      </tbody>
+    </table>
+  </section>
+</section>
