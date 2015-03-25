@@ -9,17 +9,19 @@
  * Renders an input box with tag editing support.
  *
  * @param {string} ngModel Assignable angular expression to data-bind to.
- * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
+ * @param {string=} [template=NA] URL or id of a custom template for rendering each tag.
  * @param {string=} [keyProperty=text] Property to be used as a unique identifier for the tag.
+ * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
  * @param {string=} [type=text] Type of the input element. Only 'text', 'email' and 'url' are supported values.
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
  * @param {number=} [maxLength=MAX_SAFE_INTEGER] Maximum length allowed for a new tag.
  * @param {number=} [minTags=0] Sets minTags validation error key if the number of tags added is less than minTags.
- * @param {number=} [maxTags=MAX_SAFE_INTEGER] Sets maxTags validation error key if the number of tags added is greater than maxTags.
+ * @param {number=} [maxTags=MAX_SAFE_INTEGER] Sets maxTags validation error key if the number of tags added is greater
+ *    than maxTags.
  * @param {boolean=} [allowLeftoverText=false] Sets leftoverText validation error key if there is any leftover text in
- *                                             the input element when the directive loses focus.
+ *    the input element when the directive loses focus.
  * @param {string=} [removeTagSymbol=×] Symbol character for the remove tag button.
  * @param {boolean=} [addOnEnter=true] Flag indicating that a new tag will be added on pressing the ENTER key.
  * @param {boolean=} [addOnSpace=false] Flag indicating that a new tag will be added on pressing the SPACE key.
@@ -29,18 +31,20 @@
  * @param {string=} [pasteSplitPattern=,] Regular expression used to split the pasted text into tags.
  * @param {boolean=} [replaceSpacesWithDashes=true] Flag indicating that spaces will be replaced with dashes.
  * @param {string=} [allowedTagsPattern=.+] Regular expression that determines whether a new tag is valid.
- * @param {boolean=} [enableEditingLastTag=false] Flag indicating that the last tag will be moved back into
- *                                                the new tag input box instead of being removed when the backspace key
- *                                                is pressed and the input box is empty.
- * @param {boolean=} [addFromAutocompleteOnly=false] Flag indicating that only tags coming from the autocomplete list will be allowed.
- *                                                   When this flag is true, addOnEnter, addOnComma, addOnSpace, addOnBlur and
- *                                                   allowLeftoverText values are ignored.
+ * @param {boolean=} [enableEditingLastTag=false] Flag indicating that the last tag will be moved back into the new tag
+ *    input box instead of being removed when the backspace key is pressed and the input box is empty.
+ * @param {boolean=} [addFromAutocompleteOnly=false] Flag indicating that only tags coming from the autocomplete list
+ *    will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace, addOnBlur and allowLeftoverText values
+ *    are ignored.
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
- * @param {expression} onTagAdding Expression to evaluate that will be invoked before adding a new tag. The new tag is available as $tag. This method must return either true or false. If false, the tag will not be added.
- * @param {expression} onTagAdded Expression to evaluate upon adding a new tag. The new tag is available as $tag.
- * @param {expression} onInvalidTag Expression to evaluate when a tag is invalid. The invalid tag is available as $tag.
- * @param {expression} onTagRemoving Expression to evaluate that will be invoked before removing a tag. The tag is available as $tag. This method must return either true or false. If false, the tag will not be removed.
- * @param {expression} onTagRemoved Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
+ * @param {expression=} [onTagAdding=NA] Expression to evaluate that will be invoked before adding a new tag. The new
+ *    tag is available as $tag. This method must return either true or false. If false, the tag will not be added.
+ * @param {expression=} [onTagAdded=NA] Expression to evaluate upon adding a new tag. The new tag is available as $tag.
+ * @param {expression=} [onInvalidTag=NA] Expression to evaluate when a tag is invalid. The invalid tag is available as $tag.
+ * @param {expression=} [onTagRemoving=NA] Expression to evaluate that will be invoked before removing a tag. The tag
+ *    is available as $tag. This method must return either true or false. If false, the tag will not be removed.
+ * @param {expression=} [onTagRemoved=NA] Expression to evaluate upon removing an existing tag. The removed tag is
+ *    available as $tag.
  */
 tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInputConfig, tiUtil) {
     function TagList(options, events, onTagAdding, onTagRemoving) {

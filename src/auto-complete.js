@@ -9,26 +9,24 @@
  * Provides autocomplete support for the tagsInput directive.
  *
  * @param {expression} source Expression to evaluate upon changing the input content. The input value is available as
- *                            $query. The result of the expression must be a promise that eventually resolves to an
- *                            array of strings.
- * @param {string=} [displayProperty=text] Property to be rendered as the autocomplete label.
+ *    $query. The result of the expression must be a promise that eventually resolves to an array of strings.
+ * @param {string=} [template=NA] URL or id of a custom template for rendering each element of the autocomplete list.
+ * @param {string=} [displayProperty=tagsInput.displayText] Property to be rendered as the autocomplete label.
  * @param {number=} [debounceDelay=100] Amount of time, in milliseconds, to wait before evaluating the expression in
- *                                      the source option after the last keystroke.
+ *    the source option after the last keystroke.
  * @param {number=} [minLength=3] Minimum number of characters that must be entered before evaluating the expression
- *                                 in the source option.
+ *    in the source option.
  * @param {boolean=} [highlightMatchedText=true] Flag indicating that the matched text will be highlighted in the
- *                                               suggestions list.
+ *    suggestions list.
  * @param {number=} [maxResultsToShow=10] Maximum number of results to be displayed at a time.
  * @param {boolean=} [loadOnDownArrow=false] Flag indicating that the source option will be evaluated when the down arrow
- *                                           key is pressed and the suggestion list is closed. The current input value
- *                                           is available as $query.
- * @param {boolean=} {loadOnEmpty=false} Flag indicating that the source option will be evaluated when the input content
- *                                       becomes empty. The $query variable will be passed to the expression as an empty string.
- * @param {boolean=} {loadOnFocus=false} Flag indicating that the source option will be evaluated when the input element
- *                                       gains focus. The current input value is available as $query.
+ *    key is pressed and the suggestion list is closed. The current input value is available as $query.
+ * @param {boolean=} [loadOnEmpty=false] Flag indicating that the source option will be evaluated when the input content
+ *    becomes empty. The $query variable will be passed to the expression as an empty string.
+ * @param {boolean=} [loadOnFocus=false] Flag indicating that the source option will be evaluated when the input element
+ *    gains focus. The current input value is available as $query.
  * @param {boolean=} [selectFirstMatch=true] Flag indicating that the first match will be automatically selected once
- *                                           the suggestion list is shown.
- * @param {string=} [template=] URL or id of a custom template for rendering each element of the autocomplete list.
+ *    the suggestion list is shown.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
     function SuggestionList(loadFn, options, events) {

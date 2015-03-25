@@ -1,7 +1,7 @@
 'use strict';
 
 /***
- * @ngdoc factory
+ * @ngdoc service
  * @name tiUtil
  * @module ngTagsInput
  *
