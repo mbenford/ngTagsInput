@@ -51,11 +51,11 @@ describe('tags-input directive', function() {
     }
 
     function getTagText(index) {
-        return getTag(index).find('ti-tag-item > ng-include > span').html();
+        return getTag(index).find('ti-tag-item > ng-include > form > span').html();
     }
 
     function getRemoveButton(index) {
-        return getTag(index).find('ti-tag-item > ng-include > a').first();
+        return getTag(index).find('ti-tag-item > ng-include > form > button').first();
     }
 
     function getInput() {
