@@ -34,7 +34,7 @@
  * @param {boolean=} [enableEditingLastTag=false] Flag indicating that the last tag will be moved back into the new tag
  *    input box instead of being removed when the backspace key is pressed and the input box is empty.
  * @param {boolean=} [addFromAutocompleteOnly=false] Flag indicating that only tags coming from the autocomplete list
- *    will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace, and addOnBlur values are ignored.
+ *    will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace and addOnBlur values are ignored.
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
  * @param {expression=} [onTagAdding=NA] Expression to evaluate that will be invoked before adding a new tag. The new
  *    tag is available as $tag. This method must return either true or false. If false, the tag will not be added.
@@ -271,6 +271,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
 
             scope.$watch('tags.length', function() {
                 setElementValidity();
+
+                // ngModelController won't trigger validators when the model changes (because it's an array),
+                // so we need to do it ourselves. Unfortunately this won't trigger any registered formatter.
+                ngModelCtrl.$validate();
             });
 
             attrs.$observe('disabled', function(value) {
@@ -331,9 +335,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     scope.newTag.setText('');
                 })
                 .on('tag-added tag-removed', function() {
-                    // Sets the element to its dirty state
-                    // In Angular 1.3 this will be replaced with $setDirty.
-                    ngModelCtrl.$setViewValue(scope.tags);
+                    // Ideally we should be able call $setViewValue here and let it in turn call $setDirty and $validate
+                    // automatically, but since the model is an array, $setViewValue does nothing and it's up to us to do it.
+                    // Unfortunately this won't trigger any registered $parser and there's no safe way to do it.
+                    ngModelCtrl.$setDirty();
                 })
                 .on('invalid-tag', function() {
                     scope.newTag.invalid = true;

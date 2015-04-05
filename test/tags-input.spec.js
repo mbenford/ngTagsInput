@@ -1132,7 +1132,7 @@ describe('tags-input directive', function() {
 
             // Assert
             expect($scope.form.tags.$valid).toBe(true);
-            expect($scope.form.tags.$error.minTags).toBe(false);
+            expect($scope.form.tags.$error.minTags).toBeUndefined();
         });
 
         it('makes the element valid when the max-tags option is undefined', function() {
@@ -1145,7 +1145,7 @@ describe('tags-input directive', function() {
 
             // Assert
             expect($scope.form.tags.$valid).toBe(true);
-            expect($scope.form.tags.$error.minTags).toBe(false);
+            expect($scope.form.tags.$error.minTags).toBeUndefined();
         });
 
         it('re-validates the element when the min-tags option changes', function() {
@@ -1199,7 +1199,7 @@ describe('tags-input directive', function() {
 
             // Assert
             expect($scope.form.tags.$valid).toBe(true);
-            expect($scope.form.tags.$error.maxTags).toBe(false);
+            expect($scope.form.tags.$error.maxTags).toBeUndefined();
         });
 
         it('makes the element valid when the max-tags option is undefined', function() {
@@ -1212,7 +1212,7 @@ describe('tags-input directive', function() {
 
             // Assert
             expect($scope.form.tags.$valid).toBe(true);
-            expect($scope.form.tags.$error.maxTags).toBe(false);
+            expect($scope.form.tags.$error.maxTags).toBeUndefined();
         });
 
         it('re-validates the element when the max-tags option changes', function() {
@@ -1394,7 +1394,7 @@ describe('tags-input directive', function() {
 
             // Assert
             expect($scope.form.tags.$valid).toBe(true);
-            expect($scope.form.tags.$error.leftoverText).toBe(false);
+            expect($scope.form.tags.$error.leftoverText).toBeUndefined();
         });
 
         it('does not make the element invalid when some tag is removed and there is any leftover text', function() {
@@ -1410,7 +1410,7 @@ describe('tags-input directive', function() {
 
             // Assert
             expect($scope.form.tags.$valid).toBe(true);
-            expect($scope.form.tags.$error.leftoverText).toBe(false);
+            expect($scope.form.tags.$error.leftoverText).toBeUndefined();
         });
 
         it('makes the element valid and removes the leftoverText error when it gains focus', function() {
@@ -1425,7 +1425,7 @@ describe('tags-input directive', function() {
 
             // Assert
             expect($scope.form.tags.$valid).toBe(true);
-            expect($scope.form.tags.$error.leftoverText).toBe(false);
+            expect($scope.form.tags.$error.leftoverText).toBeUndefined();
         });
 
         it('re-validates the element when the allow-leftover-text option changes', function() {
@@ -1782,14 +1782,31 @@ describe('tags-input directive', function() {
             expect($scope.form.tags.$error.required).toBe(true);
         });
 
-        it('doesn\'t set the required validation key when there is any tags', function() {
-            // Arrange/Act
+        it('sets the required validation key when the model becomes empty', function() {
+            // Arrange
             $scope.tags = ['Tag'];
             compileWithForm('name="tags"', 'ng-required="true"');
 
+            // Act
+            $scope.tags.splice(0, 1);
+            $scope.$digest();
+
             // Assert
-            expect($scope.form.tags.$invalid).toBe(false);
-            expect($scope.form.tags.$error.required).toBe(false);
+            expect($scope.form.tags.$invalid).toBe(true);
+            expect($scope.form.tags.$error.required).toBe(true);
+        });
+
+        it('doesn\'t set the required validation key when there is any tags', function() {
+            // Arrange
+            $scope.tags = [];
+            compileWithForm('name="tags"', 'ng-required="true"');
+
+            // Act
+            newTag('Tag');
+
+            // Assert
+            expect($scope.form.tags.$valid).toBe(true);
+            expect($scope.form.tags.$error.required).toBeUndefined();
         });
 
         it('doesn\'t set the required validation key when ng-required is false', function() {
@@ -1797,8 +1814,8 @@ describe('tags-input directive', function() {
             compileWithForm('name="tags"', 'ng-required="false"');
 
             // Assert
-            expect($scope.form.tags.$invalid).toBe(false);
-            expect($scope.form.tags.$error.required).toBe(false);
+            expect($scope.form.tags.$valid).toBe(true);
+            expect($scope.form.tags.$error.required).toBeUndefined();
         });
     });
 
