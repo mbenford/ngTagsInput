@@ -1883,6 +1883,26 @@ describe('tags-input directive', function() {
             expect(autocompleteObj.getTags()).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }]);
         });
 
+        it('returns an empty list of tags when the model is undefined', function() {
+            // Arrange
+            $scope.$digest();
+
+            // Act/Assert
+            expect(autocompleteObj.getTags()).toEqual([]);
+        });
+
+        it('returns an empty list of tags when the model becomes undefined', function() {
+            // Arrange
+            $scope.tags = ['Tag1'];
+            $scope.$digest();
+
+            delete $scope.tags;
+            $scope.$digest();
+
+            // Act/Assert
+            expect(autocompleteObj.getTags()).toEqual([]);
+        });
+
         it('returns the current tag text', function() {
             // Arrange
             changeInputValue('ABC');

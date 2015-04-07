@@ -203,7 +203,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                         input[0].focus();
                     },
                     getTags: function() {
-                        return $scope.tags;
+                        return $scope.tagList.items;
                     },
                     getCurrentTagText: function() {
                         return $scope.newTag.text;
@@ -242,9 +242,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 setElementValidity;
 
             setElementValidity = function() {
-                var tagsLength = (scope.tags && scope.tags.length) || 0;
-                ngModelCtrl.$setValidity('maxTags', tagsLength <= options.maxTags);
-                ngModelCtrl.$setValidity('minTags', tagsLength >= options.minTags);
+                ngModelCtrl.$setValidity('maxTags', tagList.items.length <= options.maxTags);
+                ngModelCtrl.$setValidity('minTags', tagList.items.length >= options.minTags);
                 ngModelCtrl.$setValidity('leftoverText', scope.hasFocus || options.allowLeftoverText ? true : !scope.newTag.text);
             };
 
@@ -266,7 +265,13 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             };
 
             scope.$watch('tags', function(value) {
-                tagList.items = tiUtil.makeObjectArray(value, options.displayProperty);
+                if (value) {
+                    tagList.items = tiUtil.makeObjectArray(value, options.displayProperty);
+                    scope.tags = tagList.items;
+                }
+                else {
+                    tagList.items = [];
+                }
             });
 
             scope.$watch('tags.length', function() {

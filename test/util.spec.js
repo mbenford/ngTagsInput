@@ -93,21 +93,27 @@ describe('tiUtil factory', function() {
 
     describe('makeObjectArray', function() {
         it('converts a non-object array into an object array using the provided key', function() {
-            expect(tiUtil.makeObjectArray(['a', 'b', 'c'], 'prop')).toEqual([
+            var array = ['a', 'b', 'c'],
+                result = tiUtil.makeObjectArray(array, 'prop');
+
+            expect(result).not.toBe(array);
+            expect(result).toEqual([
                 { prop: 'a' },
                 { prop: 'b' },
                 { prop: 'c' }
             ]);
         });
 
-        it('returns the provided array if it is empty', function() {
-            var array = [];
-            expect(tiUtil.makeObjectArray(array, 'prop')).toBe(array);
-        });
-
-        it('returns the provided array if its first element is an object', function() {
-            var array = [{}];
-            expect(tiUtil.makeObjectArray(array, 'prop')).toBe(array);
+        [
+            { desc: 'an empty array', value: [] },
+            { desc: 'an array of objects', value: [{}] },
+            { desc: 'null', value: null },
+            { desc: 'a number', value: 1 },
+            { desc: 'a string', value: 'a' }
+        ].forEach(function(item) {
+            it('returns the provided argument itself if it is ' + item.desc, function() {
+                expect(tiUtil.makeObjectArray(item.value, 'prop')).toBe(item.value);
+            });
         });
     });
 

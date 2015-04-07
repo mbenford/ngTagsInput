@@ -21,14 +21,17 @@ tagsInput.factory('tiUtil', function($timeout) {
     };
 
     self.makeObjectArray = function(array, key) {
-        array = array || [];
-        if (array.length > 0 && !angular.isObject(array[0])) {
-            array.forEach(function(item, index) {
-                array[index] = {};
-                array[index][key] = item;
-            });
+        if (!angular.isArray(array) || array.length === 0 || angular.isObject(array[0])) {
+            return array;
         }
-        return array;
+
+        var newArray = [];
+        array.forEach(function(item) {
+            var obj = {};
+            obj[key] = item;
+            newArray.push(obj);
+        });
+        return newArray;
     };
 
     self.findInObjectArray = function(array, obj, key, comparer) {
