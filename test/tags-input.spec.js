@@ -16,8 +16,6 @@ describe('tags-input directive', function() {
             $timeout = _$timeout_;
             $window = _$window_;
         });
-
-        $scope.tags = [];
     });
 
     function compile() {
@@ -104,6 +102,13 @@ describe('tags-input directive', function() {
     }
 
     describe('basic features', function() {
+        it('doesn\'t initialize the model if it is undefined', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect($scope.tags).toBeUndefined();
+        });
 
         it('renders the correct number of tags', function() {
             // Arrange
@@ -156,6 +161,7 @@ describe('tags-input directive', function() {
             newTag(' Tag2');
             newTag(' Tag3 ');
 
+            // Assert
             expect($scope.tags).toEqual([
                 { text: 'Tag1' },
                 { text: 'Tag2' },
@@ -299,7 +305,7 @@ describe('tags-input directive', function() {
             newTag('');
 
             // Assert
-            expect($scope.tags).toEqual([]);
+            expect($scope.tags).toBeUndefined();
             expect(isolateScope.newTag.invalid).toBeFalsy();
         });
 
@@ -472,7 +478,7 @@ describe('tags-input directive', function() {
             newTag('foo', KEYS.enter);
 
             // Assert
-            expect($scope.tags).toEqual([]);
+            expect($scope.tags).toBeUndefined();
         });
 
         it('initializes the option to true', function() {
@@ -504,7 +510,7 @@ describe('tags-input directive', function() {
             newTag('foo', KEYS.space);
 
             // Assert
-            expect($scope.tags).toEqual([]);
+            expect($scope.tags).toBeUndefined();
         });
 
         it('initializes the option to false', function() {
@@ -536,7 +542,7 @@ describe('tags-input directive', function() {
             newTag('foo', KEYS.comma);
 
             // Assert
-            expect($scope.tags).toEqual([]);
+            expect($scope.tags).toBeUndefined();
         });
 
         it('initializes the option to true', function() {
@@ -612,7 +618,7 @@ describe('tags-input directive', function() {
                 $timeout.flush();
 
                 // Assert
-                expect($scope.tags).toEqual([]);
+                expect($scope.tags).toBeUndefined();
             });
         });
 
@@ -626,7 +632,7 @@ describe('tags-input directive', function() {
                 getInput().triggerHandler('blur');
 
                 // Assert
-                expect($scope.tags).toEqual([]);
+                expect($scope.tags).toBeUndefined();
             });
         });
     });
@@ -710,7 +716,7 @@ describe('tags-input directive', function() {
                     getInput().trigger(event);
 
                     // Assert
-                    expect($scope.tags).toEqual([]);
+                    expect($scope.tags).toBeUndefined();
                     expect(eventData.preventDefault).not.toHaveBeenCalled();
                 });
             });
@@ -726,7 +732,7 @@ describe('tags-input directive', function() {
             getInput().trigger(event);
 
             // Assert
-            expect($scope.tags).toEqual([]);
+            expect($scope.tags).toBeUndefined();
             expect(eventData.preventDefault).not.toHaveBeenCalled();
         });
 
@@ -899,7 +905,7 @@ describe('tags-input directive', function() {
             newTag('foobar.com');
 
             // Assert
-            expect($scope.tags).toEqual([]);
+            expect($scope.tags).toBeUndefined();
         });
 
         it('initializes the option to .+', function() {
@@ -941,7 +947,7 @@ describe('tags-input directive', function() {
             newTag('foo');
 
             // Assert
-            expect($scope.tags).toEqual([]);
+            expect($scope.tags).toBeUndefined();
             expect(getInput()).toHaveClass('invalid-tag');
         });
     });
@@ -986,7 +992,7 @@ describe('tags-input directive', function() {
             newTag('foobar');
 
             // Assert
-            expect($scope.tags).toEqual([]);
+            expect($scope.tags).toBeUndefined();
             expect(getInput()).toHaveClass('invalid-tag');
         });
     });
@@ -1459,7 +1465,7 @@ describe('tags-input directive', function() {
                 newTag('foo', KEYS.enter);
 
                 // Assert
-                expect($scope.tags).toEqual([]);
+                expect($scope.tags).toBeUndefined();
             });
 
             it('does not add a tag when the comma key is pressed', function() {
@@ -1467,7 +1473,7 @@ describe('tags-input directive', function() {
                 newTag('foo', KEYS.comma);
 
                 // Assert
-                expect($scope.tags).toEqual([]);
+                expect($scope.tags).toBeUndefined();
             });
 
             it('does not add a tag when the space key is pressed', function() {
@@ -1475,7 +1481,7 @@ describe('tags-input directive', function() {
                 newTag('foo', KEYS.space);
 
                 // Assert
-                expect($scope.tags).toEqual([]);
+                expect($scope.tags).toBeUndefined();
             });
 
             it('does not add a tag when the element loses focus', function() {
@@ -1486,7 +1492,7 @@ describe('tags-input directive', function() {
                 isolateScope.events.trigger('input-blur');
 
                 // Assert
-                expect(isolateScope.tags).toEqual([]);
+                expect($scope.tags).toBeUndefined();
             });
         });
     });
