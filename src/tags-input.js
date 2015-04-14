@@ -389,6 +389,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     shouldSelect = (key === KEYS.backspace || key === KEYS.left || key === KEYS.right) && scope.newTag.text.length === 0 && !options.enableEditingLastTag;
 
                     if (shouldAdd) {
+                        // Skip adding tag if input value is empty and enter key is pressed.
+                        // Allows form submission on-enter to proceed.
+                        if (!scope.newTag.text && key === KEYS.enter) {
+                            return;
+                        }
+
                         tagList.addText(scope.newTag.text);
                     }
                     else if (shouldEditLastTag) {

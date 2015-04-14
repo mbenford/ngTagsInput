@@ -1973,9 +1973,26 @@ describe('tags-input directive', function() {
         });
 
         describe('modifier key is off', function() {
-            it('prevents enter, comma and space keys from being propagated when all modifiers are up', function() {
+            it('prevents enter, comma and space keys from being propagated when all modifiers are up and there is an input value', function() {
                 // Arrange
                 hotkeys = [KEYS.enter, KEYS.comma, KEYS.space];
+                changeInputValue('ABC');
+
+                // Act/Assert
+                angular.forEach(hotkeys, function(key) {
+                    expect(sendKeyDown(key, {
+                        shiftKey: false,
+                        ctrlKey: false,
+                        altKey: false,
+                        metaKey: false
+                    }).isDefaultPrevented()).toBe(true);
+                });
+            });
+
+            it('prevents comma and space keys from being propagated when all modifiers are up and there is no value', function() {
+                // Arrange
+                hotkeys = [KEYS.comma, KEYS.space];
+                changeInputValue('');
 
                 // Act/Assert
                 angular.forEach(hotkeys, function(key) {
