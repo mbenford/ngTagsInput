@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.28/angular.js"></script>
+    <script src="../build/ng-tags-input.js"></script>
+    <link rel="stylesheet" href="../build/ng-tags-input.css"/>
+
+    <script>
+        function MyCtrl ($scope) {
+
+        }
+
+        MyCtrl.$inject = ['$scope'];
+
+        angular
+            .module('tagsExample', ['ngTagsInput'])
+            .controller('MyCtrl', MyCtrl);
+    </script>
+
+</head>
+
+<body ng-app="tagsExample" ng-controller="MyCtrl">
+
+    <div class="tags-input" tags-input ng-model="tags"></div>
+
+</body>
+</html>

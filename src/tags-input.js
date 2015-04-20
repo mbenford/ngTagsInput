@@ -132,7 +132,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
             $scope.events = new SimplePubSub();
 
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
-                type: [String, 'text', validateType],
+                type: [String, 'email', validateType],
                 placeholder: [String, 'Enter email addresses'],
                 tabindex: [Number, null],
                 removeTagSymbol: [String, String.fromCharCode(215)],
@@ -144,12 +144,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 addOnComma: [Boolean, true],
                 addOnBlur: [Boolean, true],
                 addOnPaste: [Boolean, true],
-                pasteSplitPattern: [RegExp, /,/],
+                pasteSplitPattern: [RegExp, /[,;|]/],
                 allowedTagsPattern: [RegExp, /.+/],
-                enableEditingLastTag: [Boolean, false],
+                enableEditingLastTag: [Boolean, true],
                 minTags: [Number, 0],
                 maxTags: [Number, MAX_SAFE_INTEGER],
-                displayProperty: [String, 'text'],
+                displayProperty: [String, 'emailAddress'],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
                 spellcheck: [Boolean, false]
@@ -323,11 +323,16 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 })
                 .on('input-paste', function(event) {
                     if (options.addOnPaste) {
+                        var REGEX_EMAIL = '([a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)';
                         var data = event.clipboardData.getData('text/plain');
                         var tags = data.split(options.pasteSplitPattern);
                         if (tags.length > 1) {
-                            tags.forEach(function(tag) {
-                                tagList.addText(tag);
+                            tags.forEach(function (tag) {
+                                var regex = new RegExp('^([^<]*)\<' + REGEX_EMAIL + '\>$', 'i');
+                                var match = tag.match(regex);
+                                if (match) {
+                                    tagList.addText(match[2]);
+                                }
                             });
                             event.preventDefault();
                         }
