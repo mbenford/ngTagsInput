@@ -149,7 +149,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 enableEditingLastTag: [Boolean, true],
                 minTags: [Number, 0],
                 maxTags: [Number, MAX_SAFE_INTEGER],
-                displayProperty: [String, 'emailAddress'],
+                displayProperty: [String, 'text'],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
                 spellcheck: [Boolean, false]

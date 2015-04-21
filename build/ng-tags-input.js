@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2015 Michael Benford
  * License: MIT
  *
- * Generated at 2015-04-21 10:11:14 +0200
+ * Generated at 2015-04-21 10:15:11 +0200
  */
 (function() {
 'use strict';
@@ -247,7 +247,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                 enableEditingLastTag: [Boolean, true],
                 minTags: [Number, 0],
                 maxTags: [Number, MAX_SAFE_INTEGER],
-                displayProperty: [String, 'emailAddress'],
+                displayProperty: [String, 'text'],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
                 spellcheck: [Boolean, false]
