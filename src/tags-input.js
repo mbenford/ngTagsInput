@@ -324,7 +324,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, tagsInputConfig) 
                 .on('input-paste', function(event) {
                     if (options.addOnPaste) {
                         var REGEX_EMAIL = '([a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)';
-                        var data = event.clipboardData.getData('text/plain');
+                        var data = event.originalEvent.clipboardData.getData('text/plain');
                         var tags = data.split(options.pasteSplitPattern);
                         if (tags.length > 1) {
                             tags.forEach(function (tag) {

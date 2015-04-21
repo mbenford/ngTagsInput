@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2015 Michael Benford
  * License: MIT
  *
- * Generated at 2015-04-20 17:27:29 +0200
+ * Generated at 2015-04-21 09:36:00 +0200
  */
 (function() {
 'use strict';
@@ -422,7 +422,7 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                 .on('input-paste', function(event) {
                     if (options.addOnPaste) {
                         var REGEX_EMAIL = '([a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)';
-                        var data = event.clipboardData.getData('text/plain');
+                        var data = event.originalEvent.clipboardData.getData('text/plain');
                         var tags = data.split(options.pasteSplitPattern);
                         if (tags.length > 1) {
                             tags.forEach(function (tag) {
