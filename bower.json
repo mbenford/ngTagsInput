@@ -15,7 +15,8 @@
     "Gruntfile.js",
     "karma.conf.js",
     "sauce.launchers.json",
-    "CONTRIBUTING.md"
+    "CONTRIBUTING.md",
+    "example"
   ],
   "authors": [
     "Showpad"
