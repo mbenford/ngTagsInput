@@ -5,7 +5,7 @@
  * Copyright (c) 2013-2015 Michael Benford
  * License: MIT
  *
- * Generated at 2015-04-21 11:52:53 +0200
+ * Generated at 2015-04-29 16:50:12 +0200
  */
 (function() {
 'use strict';
@@ -422,17 +422,26 @@ tagsInput.directive('tagsInput', ["$timeout","$document","tagsInputConfig", func
                 .on('input-paste', function(event) {
                     if (options.addOnPaste) {
                         var REGEX_EMAIL = '([a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)';
+                        var regex = new RegExp('^([^<]*)\<' + REGEX_EMAIL + '\>$', 'i');
+
                         var data = (event.originalEvent ? event.originalEvent : event).clipboardData.getData('text/plain');
                         var tags = data.split(options.pasteSplitPattern);
 
                         if (tags.length > 1) {
                             tags.forEach(function (tag) {
-                                var regex = new RegExp('^([^<]*)\<' + REGEX_EMAIL + '\>$', 'i');
-                                var match = tag.match(regex);
-                                if (match) {
-                                    tagList.addText(match[2]);
+
+                                if (options.type === 'email') {
+                                    var match = tag.match(regex);
+
+                                    if (match) {
+                                        tagList.addText(match[2]);
+                                    }
+                                }
+                                else {
+                                    tagList.addText(tag);
                                 }
                             });
+
                             event.preventDefault();
                         }
                     }
