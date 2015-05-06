@@ -228,6 +228,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                             return;
                         }
                         $scope.tagList.remove(index);
+                    },
+                    selectTag: function(index) {
+                        if ($scope.disabled) {
+                            return;
+                        }
+                        $scope.tagList.select(index);
                     }
                 };
             };

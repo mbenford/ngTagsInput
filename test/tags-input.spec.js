@@ -1589,6 +1589,7 @@ describe('tags-input directive', function() {
             var scope = getTagScope(0);
             expect(scope.$getDisplayText).not.toBeUndefined();
             expect(scope.$removeTag).not.toBeUndefined();
+            expect(scope.$selectTag).not.toBeUndefined();
         });
     });
 
