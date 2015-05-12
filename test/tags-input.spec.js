@@ -458,6 +458,24 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('tagsExtraAttrs option', function() {
+        it('sets the tags extra attributes', function() {
+            // Arrange/Act
+            compile('tags-extra-attrs="{customatr: \'yes\'}"');
+
+            // Assert
+            expect(element.find('.tags').attr('customatr')).toBe('yes');
+        });
+
+        it('initializes the option to null', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.tagsExtraAttrs).toBeNull();
+        });
+    });
+
     describe('add-on-enter option', function() {
         it('adds a new tag when the enter key is pressed and the option is true', function() {
             // Arrange
