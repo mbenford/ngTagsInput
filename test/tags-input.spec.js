@@ -458,6 +458,24 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('inputId option', function() {
+        it('sets the input field id', function() {
+            // Arrange/Act
+            compile('input-id="my-id"');
+
+            // Assert
+            expect(getInput().attr('id')).toBe('my-id');
+        });
+
+        it('initializes the option to null', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.inputId).toBeNull();
+        });
+    });
+
     describe('add-on-enter option', function() {
         it('adds a new tag when the enter key is pressed and the option is true', function() {
             // Arrange
