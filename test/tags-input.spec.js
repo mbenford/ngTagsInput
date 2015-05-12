@@ -554,6 +554,38 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('add-on-semicolon option', function() {
+        it('adds a new tag when the semicolon key is pressed and the option is true', function() {
+            // Arrange
+            compile('add-on-semicolon="true"');
+
+            // Act
+            newTag('foo', KEYS.semicolon);
+
+            // Assert
+            expect($scope.tags).toEqual([{ text: 'foo' }]);
+        });
+
+        it('does not add a new tag when the semicolon key is pressed and the option is false', function() {
+            // Arrange
+            compile('add-on-semicolon="false"');
+
+            // Act
+            newTag('foo', KEYS.semicolon);
+
+            // Assert
+            expect($scope.tags).toBeUndefined();
+        });
+
+        it('initializes the option to true', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.addOnSemicolon).toBe(true);
+        });
+    });
+
     describe('add-on-blur option', function() {
         it('initializes the option to true', function() {
             // Arrange/Act
@@ -1457,7 +1489,7 @@ describe('tags-input directive', function() {
         describe('option is true', function() {
             beforeEach(function() {
                 compileWithForm('add-from-autocomplete-only="true"', 'name="tags"', 'allow-leftover-text="false"',
-                    'add-on-blur="true"', 'add-on-enter="true"', 'add-on-comma="true"', 'add-on-space="true"');
+                    'add-on-blur="true"', 'add-on-enter="true"', 'add-on-comma="true"', 'add-on-space="true"', 'add-on-semicolon="true"');
             });
 
             it('does not add a tag when the enter key is pressed', function() {
@@ -1938,7 +1970,7 @@ describe('tags-input directive', function() {
         var hotkeys;
 
         beforeEach(function() {
-            compile('add-on-enter="true"', 'add-on-space="true"', 'add-on-comma="true"');
+            compile('add-on-enter="true"', 'add-on-space="true"', 'add-on-comma="true"', 'add-on-semicolon="true"');
         });
 
         describe('modifier key is on', function() {
