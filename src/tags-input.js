@@ -333,11 +333,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             };
 
             events
-                .on('tag-added', scope.onTagAdded)
                 .on('invalid-tag', scope.onInvalidTag)
                 .on('tag-removed', scope.onTagRemoved)
-                .on('tag-added', function() {
+                .on('tag-added', function(tag) {
                     scope.newTag.setText('');
+                    scope.onTagAdded(tag);
                 })
                 .on('tag-added tag-removed', function() {
                     scope.tags = tagList.items;
