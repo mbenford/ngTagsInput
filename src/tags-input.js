@@ -286,6 +286,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 scope.disabled = value;
             });
 
+            attrs.$observe('placeholder', function(value) {
+                if (value) {
+                    options.placeholder = value;
+                }
+            });
+
             scope.eventHandlers = {
                 input: {
                     change: function(text) {
