@@ -282,6 +282,24 @@ describe('tags-input directive', function() {
             expect(isolateScope.events.trigger).toHaveBeenCalledWith('input-change', '');
         });
 
+        it('doesn\'t show the tag-list element when the tag list is empty', function() {
+            // Arrange
+            compile();
+
+            // Assert
+            expect(element.find('.tag-list').length).toBe(0);
+        });
+
+        it('shows the tag-list element when the tag list is not empty', function() {
+            // Arrange
+            compile();
+            // Act
+            newTag('foo');
+
+            // Assert
+            expect(element.find('.tag-list').length).toBe(1);
+        });
+
         it('converts an array of strings into an array of objects', function() {
             // Arrange
             $scope.tags = ['Item1', 'Item2', 'Item3'];
