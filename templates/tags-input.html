@@ -5,7 +5,7 @@
           ng-repeat="tag in tagList.items track by track(tag)"
           ng-class="{ selected: tag == tagList.selected }"
           ng-click="eventHandlers.tag.click(tag)">
-        <ti-tag-item data="tag"></ti-tag-item>
+        <ti-tag-item data="::tag"></ti-tag-item>
       </li>
     </ul>
     <input class="input"
