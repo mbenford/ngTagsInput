@@ -44,6 +44,7 @@
  *    is available as $tag. This method must return either true or false. If false, the tag will not be removed.
  * @param {expression=} [onTagRemoved=NA] Expression to evaluate upon removing an existing tag. The removed tag is
  *    available as $tag.
+ * @param {expression=} [onTagClicked=NA] Expression to evaluate upon clicking an existing tag. The clicked tag is available as $tag.
  */
 tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInputConfig, tiUtil) {
     function TagList(options, events, onTagAdding, onTagRemoving) {
@@ -154,7 +155,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             onTagAdded: '&',
             onInvalidTag: '&',
             onTagRemoving: '&',
-            onTagRemoved: '&'
+            onTagRemoved: '&',
+            onTagClicked: '&'
         },
         replace: false,
         transclude: true,
@@ -329,6 +331,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                         }
                         input[0].focus();
                     }
+                },
+                tag: {
+                    click: function(tag) {
+                        events.trigger('tag-clicked', { $tag: tag });
+                    }
                 }
             };
 
@@ -336,6 +343,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 .on('tag-added', scope.onTagAdded)
                 .on('invalid-tag', scope.onInvalidTag)
                 .on('tag-removed', scope.onTagRemoved)
+                .on('tag-clicked', scope.onTagClicked)
                 .on('tag-added', function() {
                     scope.newTag.setText('');
                 })
