@@ -11,7 +11,7 @@
     <input class="input"
            autocomplete="off"
            ng-model="newTag.text"
-           ng-change="eventHandlers.input.change(newTag.text)"
+           ng-model-options="{getterSetter: true}"
            ng-keydown="eventHandlers.input.keydown($event)"
            ng-focus="eventHandlers.input.focus($event)"
            ng-blur="eventHandlers.input.blur($event)"

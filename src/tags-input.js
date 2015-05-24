@@ -8,11 +8,13 @@
  * @description
  * Renders an input box with tag editing support.
  *
- * @param {string} ngModel Assignable angular expression to data-bind to.
+ * @param {string} ngModel Assignable Angular expression to data-bind to.
  * @param {string=} [template=NA] URL or id of a custom template for rendering each tag.
+ * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
  * @param {string=} [keyProperty=text] Property to be used as a unique identifier for the tag.
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
  * @param {string=} [type=text] Type of the input element. Only 'text', 'email' and 'url' are supported values.
+ * @param {string} [text=NA] Assignable Angular expression for data-binding to the element's text.
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
@@ -151,6 +153,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
         require: 'ngModel',
         scope: {
             tags: '=ngModel',
+            text: '=?',
             onTagAdding: '&',
             onTagAdded: '&',
             onInvalidTag: '&',
@@ -208,7 +211,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                         return $scope.tagList.items;
                     },
                     getCurrentTagText: function() {
-                        return $scope.newTag.text;
+                        return $scope.newTag.text();
                     },
                     getOptions: function() {
                         return $scope.options;
@@ -246,7 +249,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             setElementValidity = function() {
                 ngModelCtrl.$setValidity('maxTags', tagList.items.length <= options.maxTags);
                 ngModelCtrl.$setValidity('minTags', tagList.items.length >= options.minTags);
-                ngModelCtrl.$setValidity('leftoverText', scope.hasFocus || options.allowLeftoverText ? true : !scope.newTag.text);
+                ngModelCtrl.$setValidity('leftoverText', scope.hasFocus || options.allowLeftoverText ? true : !scope.newTag.text());
             };
 
             ngModelCtrl.$isEmpty = function(value) {
@@ -254,12 +257,16 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             };
 
             scope.newTag = {
-                text: '',
-                invalid: null,
-                setText: function(value) {
-                    this.text = value;
-                    events.trigger('input-change', value);
-                }
+                text: function(value) {
+                    if (angular.isDefined(value)) {
+                        scope.text = value;
+                        events.trigger('input-change', value);
+                    }
+                    else {
+                        return scope.text || '';
+                    }
+                },
+                invalid: null
             };
 
             scope.track = function(tag) {
@@ -290,9 +297,6 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
 
             scope.eventHandlers = {
                 input: {
-                    change: function(text) {
-                        events.trigger('input-change', text);
-                    },
                     keydown: function($event) {
                         events.trigger('input-keydown', $event);
                     },
@@ -345,7 +349,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 .on('tag-removed', scope.onTagRemoved)
                 .on('tag-clicked', scope.onTagClicked)
                 .on('tag-added', function() {
-                    scope.newTag.setText('');
+                    scope.newTag.text('');
                 })
                 .on('tag-added tag-removed', function() {
                     scope.tags = tagList.items;
@@ -372,7 +376,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 })
                 .on('input-blur', function() {
                     if (options.addOnBlur && !options.addFromAutocompleteOnly) {
-                        tagList.addText(scope.newTag.text);
+                        tagList.addText(scope.newTag.text());
                     }
                     element.triggerHandler('blur');
                     setElementValidity();
@@ -393,11 +397,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
 
                     shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
                     shouldRemove = (key === KEYS.backspace || key === KEYS.delete) && tagList.selected;
-                    shouldEditLastTag = key === KEYS.backspace && scope.newTag.text.length === 0 && options.enableEditingLastTag;
-                    shouldSelect = (key === KEYS.backspace || key === KEYS.left || key === KEYS.right) && scope.newTag.text.length === 0 && !options.enableEditingLastTag;
+                    shouldEditLastTag = key === KEYS.backspace && scope.newTag.text().length === 0 && options.enableEditingLastTag;
+                    shouldSelect = (key === KEYS.backspace || key === KEYS.left || key === KEYS.right) && scope.newTag.text().length === 0 && !options.enableEditingLastTag;
 
                     if (shouldAdd) {
-                        tagList.addText(scope.newTag.text);
+                        tagList.addText(scope.newTag.text());
                     }
                     else if (shouldEditLastTag) {
                         var tag;
@@ -406,7 +410,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                         tag = tagList.removeSelected();
 
                         if (tag) {
-                            scope.newTag.setText(tag[options.displayProperty]);
+                            scope.newTag.text(tag[options.displayProperty]);
                         }
                     }
                     else if (shouldRemove) {
