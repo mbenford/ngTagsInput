@@ -440,30 +440,30 @@ describe('tags-input directive', function() {
         });
     });
 
-    describe('new-tag-text option', function() {
+    describe('text option', function() {
         it('updates as text is typed into the input field', function() {
             // Arrange
-            compile('new-tag-text="innerModel"');
+            compile('text="prop"');
 
             // Act
-            sendKeyPress('f'.charCodeAt(0));
-            sendKeyPress('o'.charCodeAt(0));
-            sendKeyPress('o'.charCodeAt(0));
+            sendKeyPress(65);
+            sendKeyPress(66);
+            sendKeyPress(67);
 
             // Assert
-            expect($scope.innerModel).toEqual('foo');
+            expect($scope.prop).toBe('ABC');
         });
 
         it('updates the input field as the scope\'s model changes', function() {
             // Arrange
-            compile('new-tag-text="innerModel"');
+            compile('text="prop"');
 
             // Act
-            $scope.innerModel = 'foo';
+            $scope.prop = 'ABC';
             $scope.$digest();
 
             // Assert
-            expect(getInput().val()).toEqual('foo');
+            expect(getInput().val()).toBe('ABC');
         });
     });
 
@@ -610,7 +610,7 @@ describe('tags-input directive', function() {
 
             it('adds a tag when the input field loses focus to any element on the page but the directive itself', function() {
                 // Arrange
-                isolateScope.newTag.text = 'foo';
+                isolateScope.newTag.text('foo');
                 body.focus();
 
                 // Act
@@ -623,7 +623,7 @@ describe('tags-input directive', function() {
 
             it('adds a tag when the input field loses focus to the browser window', function() {
                 // Arrange
-                isolateScope.newTag.text = 'foo';
+                isolateScope.newTag.text('foo');
                 spyOn($document, 'prop');
                 $document.prop.and.returnValue(getInput()[0]);
 
@@ -637,7 +637,7 @@ describe('tags-input directive', function() {
 
             it('does not add a tag when the input field loses focus to the directive itself', function() {
                 // Arrange
-                isolateScope.newTag.text = 'foo';
+                isolateScope.newTag.text('foo');
                 element.find('div').focus();
 
                 // Act
@@ -653,7 +653,7 @@ describe('tags-input directive', function() {
             it('does not add a new tag when the input field loses focus', function() {
                 // Arrange
                 compile('add-on-blur="false"');
-                isolateScope.newTag.text = 'foo';
+                isolateScope.newTag.text('foo');
 
                 // Act
                 getInput().triggerHandler('blur');
@@ -1513,7 +1513,7 @@ describe('tags-input directive', function() {
 
             it('does not add a tag when the element loses focus', function() {
                 // Arrange
-                isolateScope.newTag.text = 'foo';
+                isolateScope.newTag.text('foo');
 
                 // Act
                 isolateScope.events.trigger('input-blur');
@@ -1688,6 +1688,19 @@ describe('tags-input directive', function() {
 
                 // Assert
                 expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }]);
+            });
+
+            it('clears the selection when the input content changes', function () {
+                // Arrange
+                $scope.tags = generateTags(3);
+                $scope.$digest();
+                sendKeyDown(KEYS.left);
+
+                // Act
+                changeInputValue('foo');
+
+                // Assert
+                expect(isolateScope.tagList.selected).toBe(null);
             });
         });
     });
