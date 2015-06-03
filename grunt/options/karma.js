@@ -1,3 +1,5 @@
+/* global process: false */
+
 'use strict';
 
 module.exports = function(grunt) {
@@ -8,7 +10,10 @@ module.exports = function(grunt) {
         local: {
             singleRun: true,
             browsers: ['PhantomJS'],
-            reporters: ['progress', 'coverage']
+            reporters: ['mocha', 'coverage'],
+            mochaReporter: {
+                output: process.env.TRAVIS ? 'full' : 'minimal'
+            }
         },
         remote: {
             singleRun: true,
@@ -19,7 +24,7 @@ module.exports = function(grunt) {
             recordVideo: false,
             recordScreenshots: false,
             customLaunchers: grunt.file.readJSON('sauce.launchers.json'),
-            reporters: ['progress', 'saucelabs']
+            reporters: ['mocha', 'saucelabs']
         }
     };
 };
