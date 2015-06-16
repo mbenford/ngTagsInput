@@ -47,6 +47,8 @@
  * @param {expression=} [onTagRemoved=NA] Expression to evaluate upon removing an existing tag. The removed tag is
  *    available as $tag.
  * @param {expression=} [onTagClicked=NA] Expression to evaluate upon clicking an existing tag. The clicked tag is available as $tag.
+ * @param {boolean=} [allowTagsPastMax=true] Flag indicating if the directive will allow tags to be created by the user when
+ *    the maxTags number has been reached
  */
 tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInputConfig, tiUtil) {
     function TagList(options, events, onTagAdding, onTagRemoving) {
@@ -66,6 +68,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             return tagText &&
                    tagText.length >= options.minLength &&
                    tagText.length <= options.maxLength &&
+                   (options.allowTagsPastMax || self.items.length < options.maxTags) &&
                    options.allowedTagsPattern.test(tagText) &&
                    !tiUtil.findInObjectArray(self.items, tag, options.keyProperty || options.displayProperty) &&
                    onTagAdding({ $tag: tag });
@@ -190,7 +193,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 keyProperty: [String, ''],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
-                spellcheck: [Boolean, true]
+                spellcheck: [Boolean, true],
+                allowTagsPastMax: [Boolean, true]
             });
 
             $scope.tagList = new TagList($scope.options, $scope.events,

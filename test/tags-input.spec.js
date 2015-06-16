@@ -1260,6 +1260,42 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('allow-tags-past-max', function() {
+        it('initializes the option to true', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.allowTagsPastMax).toBe(true);
+        });
+
+        it('allows the creation of tags even when maxTags is reached and the option is set to true', function() {
+            // Arrange
+            compileWithForm('max-tags="2"', 'allow-tags-past-max="true"');
+
+            // Act
+            newTag('Tag1');
+            newTag('Tag2');
+            newTag('Tag3');
+
+            // Assert
+            expect($scope.tags.length).toBe(3);
+        });
+
+        it('does not allow the creation of tags when maxTags is reached and the option is set to false', function() {
+            // Arrange
+            compileWithForm('max-tags="2"', 'allow-tags-past-max="false"');
+
+            // Act
+            newTag('Tag1');
+            newTag('Tag2');
+            newTag('Tag3');
+
+            // Assert
+            expect($scope.tags.length).toBe(2);
+        });
+    });
+
     describe('display-property option', function() {
         it('initializes the option to "text"', function() {
             // Arrange/Act
