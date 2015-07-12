@@ -272,7 +272,7 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('doesn\'t hide the suggestion box when a tag is removed', function() {
+        it('hides the suggestion box when a tag is removed', function() {
             // Arrange
             suggestionList.show();
             $scope.$digest();
@@ -282,7 +282,7 @@ describe('autoComplete directive', function() {
             $scope.$digest();
 
             // Assert
-            expect(isSuggestionsBoxVisible()).toBe(true);
+            expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
         it('hides the suggestion box after adding the selected suggestion to the input field', function() {
