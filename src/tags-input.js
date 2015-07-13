@@ -15,7 +15,7 @@
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
  * @param {string=} [type=text] Type of the input element. Only 'text', 'email' and 'url' are supported values.
  * @param {string} [text=NA] Assignable Angular expression for data-binding to the element's text.
- * @param {number=} tabindex Tab order of the control.
+ * @param {number=} inputTabindex Tab order of the control.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
  * @param {number=} [maxLength=MAX_SAFE_INTEGER] Maximum length allowed for a new tag.
@@ -171,7 +171,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 template: [String, 'ngTagsInput/tag-item.html'],
                 type: [String, 'text', validateType],
                 placeholder: [String, 'Add a tag'],
-                tabindex: [Number, null],
+                inputTabindex: [Number, null],
                 removeTagSymbol: [String, String.fromCharCode(215)],
                 replaceSpacesWithDashes: [Boolean, true],
                 minLength: [Number, 3],
