@@ -11,9 +11,10 @@
 <tags-input
   ng-model="{string}"
   [template="{string}"]
-  [key-property="{string}"]
   [display-property="{string}"]
+  [key-property="{string}"]
   [type="{string}"]
+  [text="{string}"]
   [tabindex="{number}"]
   [placeholder="{string}"]
   [min-length="{number}"]
@@ -37,7 +38,8 @@
   [on-tag-added="{expression}"]
   [on-invalid-tag="{expression}"]
   [on-tag-removing="{expression}"]
-  [on-tag-removed="{expression}"]>
+  [on-tag-removed="{expression}"]
+  [on-tag-clicked="{expression}"]>
 </tags-input>
 {% endhighlight %}
   </section>
@@ -57,7 +59,7 @@
         <tr>
           <td>ngModel <em>(required)</em></td>
           <td><span class="label type type-string">string</span></td>
-          <td>Assignable angular expression to data-bind to.</td>
+          <td>Assignable Angular expression to data-bind to.</td>
           <td>&ndash;</td>
         </tr>
         <tr>
@@ -67,15 +69,15 @@
           <td>&ndash;</td>
         </tr>
         <tr>
-          <td>keyProperty</td>
-          <td><span class="label type type-string">string</span></td>
-          <td>Property to be used as a unique identifier for the tag.</td>
-          <td>text</td>
-        </tr>
-        <tr>
           <td>displayProperty</td>
           <td><span class="label type type-string">string</span></td>
           <td>Property to be rendered as the tag label.</td>
+          <td>text</td>
+        </tr>
+        <tr>
+          <td>keyProperty</td>
+          <td><span class="label type type-string">string</span></td>
+          <td>Property to be used as a unique identifier for the tag.</td>
           <td>text</td>
         </tr>
         <tr>
@@ -83,6 +85,12 @@
           <td><span class="label type type-string">string</span></td>
           <td>Type of the input element. Only 'text', 'email' and 'url' are supported values.</td>
           <td>text</td>
+        </tr>
+        <tr>
+          <td>text</td>
+          <td><span class="label type type-string">string</span></td>
+          <td>Assignable Angular expression for data-binding to the element's text.</td>
+          <td>&ndash;</td>
         </tr>
         <tr>
           <td>tabindex</td>
@@ -129,7 +137,7 @@
         <tr>
           <td>removeTagSymbol</td>
           <td><span class="label type type-string">string</span></td>
-          <td>Symbol character for the remove tag button.</td>
+          <td>(Obsolete) Symbol character for the remove tag button.</td>
           <td>×</td>
         </tr>
         <tr>
@@ -189,7 +197,7 @@
         <tr>
           <td>addFromAutocompleteOnly</td>
           <td><span class="label type type-boolean">boolean</span></td>
-          <td>Flag indicating that only tags coming from the autocomplete list will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace, and addOnBlur values are ignored.</td>
+          <td>Flag indicating that only tags coming from the autocomplete list will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace and addOnBlur values are ignored.</td>
           <td>false</td>
         </tr>
         <tr>
@@ -226,6 +234,12 @@
           <td>onTagRemoved</td>
           <td><span class="label type type-expression">expression</span></td>
           <td>Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.</td>
+          <td>&ndash;</td>
+        </tr>
+        <tr>
+          <td>onTagClicked</td>
+          <td><span class="label type type-expression">expression</span></td>
+          <td>Expression to evaluate upon clicking an existing tag. The clicked tag is available as $tag.</td>
           <td>&ndash;</td>
         </tr>
       </tbody>
