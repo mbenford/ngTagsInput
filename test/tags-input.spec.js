@@ -2003,41 +2003,30 @@ describe('tags-input directive', function() {
     });
 
     describe('hotkeys propagation handling', function() {
-        var hotkeys;
+        var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace];
 
         beforeEach(function() {
             compile('add-on-enter="true"', 'add-on-space="true"', 'add-on-comma="true"');
         });
 
         describe('modifier key is on', function() {
-            beforeEach(function() {
-                hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace];
-            });
+            hotkeys.forEach(function(hotkey) {
+                it('does not prevent a hotkey from being propagated when the shift key is down (hotkey ' + hotkey + ')', function() {
+                    expect(sendKeyDown(hotkey, { shiftKey: true }).isDefaultPrevented()).toBe(false);
+                });
 
-            it('does not prevent any hotkey from being propagated when the shift key is down', function() {
-                angular.forEach(hotkeys, function(key) {
-                    expect(sendKeyDown(key, { shiftKey: true }).isDefaultPrevented()).toBe(false);
+                it('does not prevent a hotkey from being propagated when the alt key is down (hotkey ' + hotkey + ')', function() {
+                    expect(sendKeyDown(hotkey, { altKey: true }).isDefaultPrevented()).toBe(false);
+                });
+
+                it('does not prevent a hotkey from being propagated when the ctrl key is down (hotkey ' + hotkey + ')', function() {
+                    expect(sendKeyDown(hotkey, { ctrlKey: true }).isDefaultPrevented()).toBe(false);
+                });
+
+                it('does not prevent a hotkey from being propagated when the meta key is down (hotkey ' + hotkey + ')', function() {
+                    expect(sendKeyDown(hotkey, { metaKey: true }).isDefaultPrevented()).toBe(false);
                 });
             });
-
-            it('does not prevent any hotkey from being propagated when the alt key is down', function() {
-                angular.forEach(hotkeys, function(key) {
-                    expect(sendKeyDown(key, { altKey: true }).isDefaultPrevented()).toBe(false);
-                });
-            });
-
-            it('does not prevent any hotkey from being propagated when the ctrl key is down', function() {
-                angular.forEach(hotkeys, function(key) {
-                    expect(sendKeyDown(key, { ctrlKey: true }).isDefaultPrevented()).toBe(false);
-                });
-            });
-
-            it('does not prevent any hotkey from being propagated when the meta key is down', function() {
-                angular.forEach(hotkeys, function(key) {
-                    expect(sendKeyDown(key, { metaKey: true }).isDefaultPrevented()).toBe(false);
-                });
-            });
-
         });
 
         describe('modifier key is off', function() {

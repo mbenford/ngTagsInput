@@ -94,6 +94,10 @@ tagsInput.factory('tiUtil', function($timeout) {
         return self.safeToString(str).replace(/\s/g, '-');
     };
 
+    self.isModifierOn = function(event) {
+        return event.shiftKey || event.ctrlKey || event.altKey || event.metaKey;
+    };
+
     self.simplePubSub = function() {
         var events = {};
         return {

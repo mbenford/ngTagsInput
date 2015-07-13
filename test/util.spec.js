@@ -260,4 +260,29 @@ describe('tiUtil factory', function() {
             expect(tiUtil.replaceSpacesWithDashes()).toBe('');
         });
     });
+
+    describe('isModifierOn', function() {
+        it('returns true if a modifier is on', function() {
+            expect(tiUtil.isModifierOn({ shiftKey: true })).toBe(true);
+            expect(tiUtil.isModifierOn({ ctrlKey: true })).toBe(true);
+            expect(tiUtil.isModifierOn({ altKey: true })).toBe(true);
+            expect(tiUtil.isModifierOn({ metaKey: true })).toBe(true);
+        });
+
+        it('returns false if all modifiers are off', function() {
+            expect(tiUtil.isModifierOn({
+                shiftKey: false,
+                ctrlKey: false,
+                altKey: false,
+                metaKey: false
+            })).toBe(false);
+
+            expect(tiUtil.isModifierOn({
+                shiftKey: false,
+                ctrlKey: false,
+                altKey: true,
+                metaKey: false
+            })).toBe(true);
+        });
+    });
 });

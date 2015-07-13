@@ -383,11 +383,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 })
                 .on('input-keydown', function(event) {
                     var key = event.keyCode,
-                        isModifier = event.shiftKey || event.altKey || event.ctrlKey || event.metaKey,
                         addKeys = {},
                         shouldAdd, shouldRemove, shouldSelect, shouldEditLastTag;
 
-                    if (isModifier || hotkeys.indexOf(key) === -1) {
+                    if (tiUtil.isModifierOn(event) || hotkeys.indexOf(key) === -1) {
                         return;
                     }
 

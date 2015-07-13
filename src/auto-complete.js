@@ -219,10 +219,9 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 })
                 .on('input-keydown', function(event) {
                     var key = event.keyCode,
-                        isModifier = event.shiftKey || event.altKey || event.ctrlKey || event.metaKey,
                         handled = false;
 
-                    if (isModifier || hotkeys.indexOf(key) === -1) {
+                    if (tiUtil.isModifierOn(event) || hotkeys.indexOf(key) === -1) {
                         return;
                     }
 
