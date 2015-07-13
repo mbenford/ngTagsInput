@@ -5,7 +5,6 @@
 * **autocomplete:**
   * Stop preventing keys from being propagated ([b0db7633](https://github.com/mbenford/ngTagsInput/commit/b0db763301d483960cbb72bc0c3338a196eb8ef2), [#384](https://github.com/mbenford/ngTagsInput/issues/384))
   * Hide the suggestion list after a tag is removed ([731ef9eb](https://github.com/mbenford/ngTagsInput/commit/731ef9eb0874ae083cba47c942034cb9109e6cf9))
-  * Revert one-time binding in autocomplete list ([509b0509](https://github.com/mbenford/ngTagsInput/commit/509b05090d3999a07645201aac37e61c622507ca))
 * **tagsInput:**
   * Fix makeObjectArray function ([b5dc57f5](https://github.com/mbenford/ngTagsInput/commit/b5dc57f542c11351ad881e45cc238f75b9adc24a))
   * Remove model auto-initialization ([f9fcb12d](https://github.com/mbenford/ngTagsInput/commit/f9fcb12dc1c71a77e52ba573cd4505e663131625), [#320](https://github.com/mbenford/ngTagsInput/issues/320), [#204](https://github.com/mbenford/ngTagsInput/issues/204))
@@ -19,17 +18,8 @@
 
 #### Breaking Changes
 
-* Code that relies on auto-initialization of the model may
-stop working.
-
-Closes #320
-Closes #204
- ([f9fcb12d](https://github.com/mbenford/ngTagsInput/commit/f9fcb12dc1c71a77e52ba573cd4505e663131625))
-* This uses new API methods of Angular 1.3 and therefore
-the directive will no longer work with previous versions of the framework.
-
-Closes #318, #341, #373
- ([3355f3fa](https://github.com/mbenford/ngTagsInput/commit/3355f3fa7451dc0b4ca183875ba183a89c543be4))
+* Code that relies on auto-initialization of the model may stop working. ([f9fcb12d](https://github.com/mbenford/ngTagsInput/commit/f9fcb12dc1c71a77e52ba573cd4505e663131625))
+* This uses new API methods of Angular 1.3 and therefore the directive will no longer work with previous versions of the framework. ([3355f3fa](https://github.com/mbenford/ngTagsInput/commit/3355f3fa7451dc0b4ca183875ba183a89c543be4))
 
 ## 2.3.0 (2015-03-23)
 
