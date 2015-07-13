@@ -5,6 +5,10 @@ before_install:
   - npm install -g grunt-cli@0.1.13 karma-cli@0.0.4
   - gem install sass
 script: grunt travis
+sudo: false
+cache:
+  directories:
+    - node_modules
 deploy:
   provider: s3
   access_key_id: AKIAI55AELZBPQKVIAXQ
