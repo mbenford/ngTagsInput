@@ -19,7 +19,8 @@
            ng-trim="false"
            ng-class="{'invalid-tag': newTag.invalid}"
            ng-disabled="disabled"
-           ti-bind-attrs="{type: options.type, placeholder: options.placeholder, tabindex: options.tabindex, spellcheck: options.spellcheck}"
+           aria-label="{{options.placeholder}}"
+           ti-bind-attrs="{ id:options.id +'-input', type: options.type,  placeholder: options.placeholder, tabindex: options.tabindex, spellcheck: options.spellcheck}"
            ti-autosize>
   </div>
 </div>
