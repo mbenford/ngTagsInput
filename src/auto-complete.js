@@ -166,7 +166,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
         link: function(scope, element, attrs, tagsInputCtrl) {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
                 suggestionList = scope.suggestionList,
-                tagsInput = tagsInputCtrl.registerAutocomplete(),
+                tagsInput = tagsInputCtrl.registerAutocomplete(scope),
                 options = scope.options,
                 events = scope.events,
                 shouldLoadSuggestions;
@@ -193,6 +193,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                     added = true;
                 }
                 return added;
+            };
+
+            scope.loadSuggestions = function() {
+                suggestionList.load(tagsInput.getCurrentTagText(), tagsInput.getTags());
             };
 
             scope.track = function(item) {
@@ -245,7 +249,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                     }
                     else {
                         if (key === KEYS.down && scope.options.loadOnDownArrow) {
-                            suggestionList.load(tagsInput.getCurrentTagText(), tagsInput.getTags());
+                            scope.loadSuggestions();
                             handled = true;
                         }
                     }

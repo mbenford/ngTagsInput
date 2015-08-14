@@ -1,4 +1,4 @@
-# ngTagsInput 
+# ngTagsInput
 
 [![Travis](https://img.shields.io/travis/mbenford/ngTagsInput.svg?style=flat)](https://travis-ci.org/mbenford/ngTagsInput)
 [![Coveralls](https://img.shields.io/coveralls/mbenford/ngTagsInput.svg?style=flat)](https://coveralls.io/r/mbenford/ngTagsInput?branch=master)
@@ -38,8 +38,9 @@ Now all you have to do is add the scripts to your application. Just make sure th
  2. Add the custom element `<tags-input>` to the HTML file where you want to use an input tag control and bind it to a property of your model. That property, if it exists, must be an array of objects and each object must have a property named `text` containing the tag text;
  3. Set up the options that make sense to your application;
  4. Enable autocomplete, if you want to use it, by adding the directive `<auto-complete>` inside the `<tags-input>` tag, and bind it to a function of your model. That function must return either an array of objects or a promise that eventually resolves to an array of objects (same rule from step 2 applies here);
- 5. Customize the CSS classes, if you want to.
- 6. You're done!
+ 5. Add an autocomplete trigger button, if you want to, by adding the directive `<auto-complete-trigger>` inside the `<tags-input>` tag, right after the `<auto-complete>` one;
+ 6. Customize the CSS classes, if you want to.
+ 7. You're done!
 
 **Note:** There's a more detailed [getting started](http://mbenford.github.io/ngTagsInput/gettingstarted) guide on the ngTagsInput website.
 
@@ -69,6 +70,7 @@ Now all you have to do is add the scripts to your application. Just make sure th
 <body ng-app="myApp" ng-controller="MyCtrl">
     <tags-input ng-model="tags">
         <auto-complete source="loadTags($query)"></auto-complete>
+        <auto-complete-trigger></auto-complete-trigger>
     </tags-input>
 </body>
 </html>
