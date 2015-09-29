@@ -11,6 +11,16 @@ tags-input .autocomplete {
   border: $suggestions-border;
   @include box-shadow($suggestions-border-shadow);
 
+  .suggestion-list-header {
+    color: $suggestion-header-color;
+    background-color: $suggestion-header-bgcolor;
+    font: $suggestion-header-font;
+    .suggestion-list-header-inner {
+      margin: 5px;
+      margin-top: 0;
+    }
+  }
+
   .suggestion-list {
     margin: 0;
     padding: 0;
