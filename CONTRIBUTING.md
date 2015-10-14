@@ -2,18 +2,18 @@
 
 So you want to contribute to ngTagsInput... that's awesome! I really appreciate the help in making this project better. Here you will find everything you need to know in order to solve problems, report bugs, request features and implement your contribution and send it as a pull request.
 
-
 ## Asking a question
 
-If you have any questions on how to use ngTagsInput or how to solve a problem involving the directive, please create a question on [Stackoverflow](http://www.stackoverflow.com) using the `ng-tags-input` tag.
+If you have any questions on how to use ngTagsInput or how to solve a problem involving the directive, please create a question on [Stackoverflow](http://www.stackoverflow.com) using the `ng-tags-input` tag. **DO NOT** post a question as an issue on GitHub. The issue tracker should be used for reporting bugs only.
 
 ## Reporting a bug
 
-If you find a bug in the code or an error in the documentation and want to report it, check whether it's already been submitted by using the [type: bug](https://github.com/mbenford/ngTagsInput/issues?labels=type%3A+bug) label. In case it hasn't yet, create a new issue and describe the problem you've found. You might want to include the versions of both ngTagsInput and Angular you're using.
+If you find a bug in the code or an error in the documentation and want to report it, check whether it's already been reported by searching the issue tracker. In case it hasn't yet, create a new issue and describe the problem you've found. Please be sure to include the following information along with your message:
 
-## Requesting a feature
-
-You can request a new feature by simply submitting an issue. Just like with bugs, you may check first if someone else has already requested the feature you want by using the [type: feature](https://github.com/mbenford/ngTagsInput/issues?labels=type%3A+feature) label.
+- Version of ngTagsInput you are using.
+- Version of Angular you are using.
+- Browser (name and version) on which the bug occurs.
+- Plunker showing the bug. You can use [this template](plnkr.co/edit/tpl:93P2qxOjYmlcYSqDmo39).
 
 ## Setting up your environment
 
