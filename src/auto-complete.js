@@ -49,6 +49,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
         };
 
         self.reset = function() {
+            if(!options.showOnBlur) {
+                lastPromise = null;
+            }
+
             self.items = [];
             self.visible = false;
             self.index = -1;
@@ -153,7 +157,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
                 selectFirstMatch: [Boolean, true],
-                displayProperty: [String, '']
+                displayProperty: [String, ''],
+                showOnBlur: [Boolean, false]
             });
 
             $scope.suggestionList = new SuggestionList($scope.source, $scope.options, $scope.events);
