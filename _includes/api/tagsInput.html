@@ -10,6 +10,7 @@
 {% highlight html %}
 <tags-input
   ng-model="{string}"
+  [ng-disabled="{boolean}"]
   [template="{string}"]
   [display-property="{string}"]
   [key-property="{string}"]
@@ -34,7 +35,6 @@
   [enable-editing-last-tag="{boolean}"]
   [add-from-autocomplete-only="{boolean}"]
   [spellcheck="{boolean}"]
-  [disabled="{boolean}"]
   [on-tag-adding="{expression}"]
   [on-tag-added="{expression}"]
   [on-invalid-tag="{expression}"]
@@ -63,6 +63,12 @@
           <td>Assignable Angular expression to data-bind to.</td>
           <td>&ndash;</td>
         </tr>
+        <tr>
+          <td>ngDisabled</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating whether the control is disabled or not.</td>
+          <td>false</td>
+        </tr>        
         <tr>
           <td>template</td>
           <td><span class="label type type-string">string</span></td>
@@ -206,12 +212,6 @@
           <td><span class="label type type-boolean">boolean</span></td>
           <td>Flag indicating whether the browser's spellcheck is enabled for the input field or not.</td>
           <td>true</td>
-        </tr>
-        <tr>
-          <td>disabled</td>
-          <td><span class="label type type-boolean">boolean</span></td>
-          <td>Flag indicating whether the control is disabled or not.</td>
-          <td>false</td>
         </tr>
         <tr>
           <td>onTagAdding</td>
