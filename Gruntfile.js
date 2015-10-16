@@ -124,10 +124,10 @@ module.exports = function(grunt) {
         'copy:bower',
         'update-bower-version',
         'shell:git_bower',
-        'dgeni',
-        'copy:website',
-        'update-website-version',
-        'shell:git_website'
+//        'dgeni',
+//        'copy:website',
+//        'update-website-version',
+//        'shell:git_website'
     ]);
 
     grunt.registerTask('default', ['pack']);
