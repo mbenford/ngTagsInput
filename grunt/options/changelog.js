@@ -1,5 +1,5 @@
 module.exports = {
     options: {
-        github: 'mbenford/ngTagsInput'
+        repository: 'https://github.com/inprotech-dev/ngTagsInput.git'
     }
 };
