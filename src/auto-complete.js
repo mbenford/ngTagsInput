@@ -49,13 +49,13 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
         };
 
         self.reset = function() {
-            lastPromise = null;
-
             self.items = [];
             self.visible = false;
             self.index = -1;
             self.selected = null;
             self.query = null;
+
+            events.trigger('suggestion-hide');
         };
         self.show = function() {
             if (options.selectFirstMatch) {
@@ -65,6 +65,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 self.selected = null;
             }
             self.visible = true;
+
+            events.trigger('suggestion-show', { items: self.items, reset: self.reset });
         };
         self.load = tiUtil.debounce(function(query, tags) {
             self.query = query;
@@ -132,10 +134,14 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
     return {
         restrict: 'E',
         require: '^tagsInput',
-        scope: { source: '&' },
+        scope: {
+            source: '&',
+            initEvents: '&'
+        },
         templateUrl: 'ngTagsInput/auto-complete.html',
         controller: function($scope, $element, $attrs) {
             $scope.events = tiUtil.simplePubSub();
+            $scope.initEvents({$events: $scope.events});
 
             tagsInputConfig.load('autoComplete', $scope, $attrs, {
                 template: [String, 'ngTagsInput/auto-complete-match.html'],
@@ -205,6 +211,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 })
                 .on('input-change', function(value) {
                     if (shouldLoadSuggestions(value)) {
+                        events.trigger('input-preload');
                         suggestionList.load(value, tagsInput.getTags());
                     }
                     else {
@@ -255,10 +262,22 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                         event.stopImmediatePropagation();
                         return false;
                     }
+                })
+                .on('dropdown-clicked', function() {
+                    if(suggestionList.visible) {
+                        suggestionList.reset();
+                    } else {
+                        suggestionList.load(tagsInput.getCurrentTagText(), tagsInput.getTags());
+                    }
                 });
 
             events.on('suggestion-selected', function(index) {
                 scrollToElement(element, index);
+            });
+
+            events.on('suggestion-add', function(value) {
+                tagsInput.addTag(angular.copy(value));
+                suggestionList.reset();
             });
         }
     };

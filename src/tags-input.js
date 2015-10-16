@@ -158,14 +158,17 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             onInvalidTag: '&',
             onTagRemoving: '&',
             onTagRemoved: '&',
-            onTagClicked: '&'
+            onTagClicked: '&',
+            initEvents: '&'
         },
         replace: false,
         transclude: true,
-        templateUrl: 'ngTagsInput/tags-input.html',
+        templateUrl: function(element, attrs) {
+            return attrs.inputTemplate || 'ngTagsInput/tags-input.html';
+        },
         controller: function($scope, $attrs, $element) {
             $scope.events = tiUtil.simplePubSub();
-
+            $scope.initEvents({$events: $scope.events});
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 template: [String, 'ngTagsInput/tag-item.html'],
                 type: [String, 'text', validateType],
@@ -237,7 +240,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             };
         },
         link: function(scope, element, attrs, ngModelCtrl) {
-            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.delete, KEYS.left, KEYS.right],
+            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.delete, KEYS.left, KEYS.right, KEYS.escape],
                 tagList = scope.tagList,
                 events = scope.events,
                 options = scope.options,
@@ -339,6 +342,15 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     click: function(tag) {
                         events.trigger('tag-clicked', { $tag: tag });
                     }
+                },
+                dropdown: {
+                    click: function() {
+                        if (scope.disabled) {
+                            return;
+                        }
+                        input[0].focus();
+                        events.trigger('dropdown-clicked');
+                    }
                 }
             };
 
@@ -383,7 +395,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 .on('input-keydown', function(event) {
                     var key = event.keyCode,
                         addKeys = {},
-                        shouldAdd, shouldRemove, shouldSelect, shouldEditLastTag;
+                        shouldAdd, shouldRemove, shouldSelect, shouldEditLastTag, shouldClearSelection;
 
                     if (tiUtil.isModifierOn(event) || hotkeys.indexOf(key) === -1) {
                         return;
@@ -397,6 +409,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     shouldRemove = (key === KEYS.backspace || key === KEYS.delete) && tagList.selected;
                     shouldEditLastTag = key === KEYS.backspace && scope.newTag.text().length === 0 && options.enableEditingLastTag;
                     shouldSelect = (key === KEYS.backspace || key === KEYS.left || key === KEYS.right) && scope.newTag.text().length === 0 && !options.enableEditingLastTag;
+                    shouldClearSelection = key === KEYS.escape;
 
                     if (shouldAdd) {
                         tagList.addText(scope.newTag.text());
@@ -422,8 +435,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                             tagList.selectNext();
                         }
                     }
+                    else if(shouldClearSelection) {
+                      tagList.clearSelection();
+                    }
 
-                    if (shouldAdd || shouldSelect || shouldRemove || shouldEditLastTag) {
+                    if (shouldAdd || shouldSelect || shouldRemove || shouldEditLastTag || shouldClearSelection) {
                         event.preventDefault();
                     }
                 })
