@@ -282,6 +282,148 @@ although it's simple to fix it.
 clear that that property is just a value and not the ngClass directive.
  ([298bf119](https://github.com/inprotech-dev/ngTagsInput.git/commit/298bf1197d1451d830d54e2bc54611fe44398a0c))
 
+### 3.0.1 (2015-10-20)
+
+#### Bug Fixes
+
+* **README:**
+  * Fixed required Angular version ([85082dd8](https://github.com/inprotech-dev/ngTagsInput.git/commit/85082dd8986a5dc5a64b90a57f4b650608fbad67))
+  * Fixed bug in code example ([8d243e5a](https://github.com/inprotech-dev/ngTagsInput.git/commit/8d243e5ad00b630378fa804156b625a4d432faef), [#33](https://github.com/inprotech-dev/ngTagsInput.git/issues/33))
+* **autocomplete:**
+  * Stop preventing keys from being propagated ([b0db7633](https://github.com/inprotech-dev/ngTagsInput.git/commit/b0db763301d483960cbb72bc0c3338a196eb8ef2), [#384](https://github.com/inprotech-dev/ngTagsInput.git/issues/384))
+  * Hide the suggestion list after a tag is removed ([731ef9eb](https://github.com/inprotech-dev/ngTagsInput.git/commit/731ef9eb0874ae083cba47c942034cb9109e6cf9))
+  * Revert one-time binding in autocomplete list ([509b0509](https://github.com/inprotech-dev/ngTagsInput.git/commit/509b05090d3999a07645201aac37e61c622507ca))
+  * Make match highlighting case insensitive ([42ca7e46](https://github.com/inprotech-dev/ngTagsInput.git/commit/42ca7e46ea37d5dd213a62bbb0706b2073f592de), [#388](https://github.com/inprotech-dev/ngTagsInput.git/issues/388))
+  * Make a copy of the suggestion before adding ([b12f5074](https://github.com/inprotech-dev/ngTagsInput.git/commit/b12f50744e0b60371c134bbec3a54d2a474bfacd))
+  * Fix existing tags diff algorithm ([913e95a2](https://github.com/inprotech-dev/ngTagsInput.git/commit/913e95a2caf6c21736650798d6d1cb25f6619f2f), [#232](https://github.com/inprotech-dev/ngTagsInput.git/issues/232))
+  * Fix loadOnEmpty behavior ([c63eb05e](https://github.com/inprotech-dev/ngTagsInput.git/commit/c63eb05e2e78698299eed1537995ea149c9a5b6a), [#205](https://github.com/inprotech-dev/ngTagsInput.git/issues/205))
+  * Correctly highlight HTML entities ([315f3a2b](https://github.com/inprotech-dev/ngTagsInput.git/commit/315f3a2b0f9a34a98a203162d452a3c7520bb6f4), [#200](https://github.com/inprotech-dev/ngTagsInput.git/issues/200))
+  * Fix suggestion selection on touch devices ([ef25a555](https://github.com/inprotech-dev/ngTagsInput.git/commit/ef25a5555f358e9986635826788c2475c9f417ee))
+  * Escape regex metachars when highlighting ([e3c695f2](https://github.com/inprotech-dev/ngTagsInput.git/commit/e3c695f26f96ab642a4a1f1129638e763b84b231), [#124](https://github.com/inprotech-dev/ngTagsInput.git/issues/124))
+  * Fix autocomplete navigation when maxResultsToShow is set ([d95d35e8](https://github.com/inprotech-dev/ngTagsInput.git/commit/d95d35e814099d74355ed431e85a957d39ec4745), [#109](https://github.com/inprotech-dev/ngTagsInput.git/issues/109))
+  * Fix memory leak ([ba3a1a56](https://github.com/inprotech-dev/ngTagsInput.git/commit/ba3a1a563d99894f381e4a29f3a1753a540ff453), [#118](https://github.com/inprotech-dev/ngTagsInput.git/issues/118))
+  * Fix require property ([231f275c](https://github.com/inprotech-dev/ngTagsInput.git/commit/231f275c9f254370cb821648f71860a51e67a935))
+  * Close suggestion list when input loses focus ([d73d1567](https://github.com/inprotech-dev/ngTagsInput.git/commit/d73d1567f3e01e45096ae50ca34b01424841214c), [#52](https://github.com/inprotech-dev/ngTagsInput.git/issues/52))
+  * Hide suggestion list when there's nothing to show ([5a58a927](https://github.com/inprotech-dev/ngTagsInput.git/commit/5a58a9274d38d8914a107c0108e6f2e4b1fd62e8), [#39](https://github.com/inprotech-dev/ngTagsInput.git/issues/39))
+  * Prevent pending promises from executing ([710d33a4](https://github.com/inprotech-dev/ngTagsInput.git/commit/710d33a409f1c44c81891108d70beefabd4b54df), [#36](https://github.com/inprotech-dev/ngTagsInput.git/issues/36))
+  * Encode HTML chars in suggestion list ([6e4f7c7d](https://github.com/inprotech-dev/ngTagsInput.git/commit/6e4f7c7d198ef579fdf2a9071855c54ca90b7db7), [#34](https://github.com/inprotech-dev/ngTagsInput.git/issues/34))
+  * Fixed suggestion font size ([14abe1c3](https://github.com/inprotech-dev/ngTagsInput.git/commit/14abe1c3c7dcf66dbba73dce6f1f4e543b24d58f))
+  * Fixed suggestion box visibility ([c2b43c64](https://github.com/inprotech-dev/ngTagsInput.git/commit/c2b43c64d5415ed944b1ae51a18b7cb1fb6c9a4a))
+  * Renamed autocomplete directive ([0ef5a57f](https://github.com/inprotech-dev/ngTagsInput.git/commit/0ef5a57f07ac48407ee4b228bf7f46cbb43d1945), [#20](https://github.com/inprotech-dev/ngTagsInput.git/issues/20))
+* **autosize:** Re-size input when placeholder changes ([0eacc964](https://github.com/inprotech-dev/ngTagsInput.git/commit/0eacc9647ed7b12fac8db23cb711bb6c38a8c31a), [#110](https://github.com/inprotech-dev/ngTagsInput.git/issues/110))
+* **config:** Fix default configuration loading ([141d9490](https://github.com/inprotech-dev/ngTagsInput.git/commit/141d94906e1c2e1fe19141691a68919a0d798c44))
+* **tagsInput:**
+  * Fix makeObjectArray function ([b5dc57f5](https://github.com/inprotech-dev/ngTagsInput.git/commit/b5dc57f542c11351ad881e45cc238f75b9adc24a))
+  * Remove model auto-initialization ([f9fcb12d](https://github.com/inprotech-dev/ngTagsInput.git/commit/f9fcb12dc1c71a77e52ba573cd4505e663131625), [#320](https://github.com/inprotech-dev/ngTagsInput.git/issues/320), [#204](https://github.com/inprotech-dev/ngTagsInput.git/issues/204))
+  * Fix addOnPaste issue with jQuery ([664dfc70](https://github.com/inprotech-dev/ngTagsInput.git/commit/664dfc70942ece06b0b97d85cbc52d1954398696))
+  * Fix add-on-paste issue in IE ([e752682d](https://github.com/inprotech-dev/ngTagsInput.git/commit/e752682d067cf48a2969820fb4f383bcbf807fa9), [#325](https://github.com/inprotech-dev/ngTagsInput.git/issues/325))
+  * Ensure autocomplete attribute is off ([8359e608](https://github.com/inprotech-dev/ngTagsInput.git/commit/8359e608e2cf1c83e61828f456081f5a33f374ab), [#368](https://github.com/inprotech-dev/ngTagsInput.git/issues/368))
+  * Fix element validity on tag removal ([0bfc7ee3](https://github.com/inprotech-dev/ngTagsInput.git/commit/0bfc7ee3f40399fee5e8dfa6562dbbc3574cdbf1), [#381](https://github.com/inprotech-dev/ngTagsInput.git/issues/381))
+  * Add spellcheck option ([166f8358](https://github.com/inprotech-dev/ngTagsInput.git/commit/166f8358ce1f8c42b54390d3b52a71f5803c1e5a))
+  * Ignore addFromAutocompleteOnly on input-blur ([e4767c2d](https://github.com/inprotech-dev/ngTagsInput.git/commit/e4767c2da75ee8d197c804f15620d107495a91a4))
+  * Fix has-success, has-warning and has-error classes ([2a098736](https://github.com/inprotech-dev/ngTagsInput.git/commit/2a0987367db2d28106936fa39393964e35b61de7))
+  * Prevent an empty tag from being added ([c104c2b2](https://github.com/inprotech-dev/ngTagsInput.git/commit/c104c2b2cdd19fe891c76e4a2b1f20d13e27369f), [#172](https://github.com/inprotech-dev/ngTagsInput.git/issues/172))
+  * Set element's validity when options change ([e89f2682](https://github.com/inprotech-dev/ngTagsInput.git/commit/e89f268218d75f23c6c14c426b7b7c7686fd8898), [#154](https://github.com/inprotech-dev/ngTagsInput.git/issues/154))
+  * Replace interpolation with ngBind ([cadf8327](https://github.com/inprotech-dev/ngTagsInput.git/commit/cadf83279c194b0135a5b5960987028c91c04e74))
+  * Remove dependency on interpolation symbols ([6598b556](https://github.com/inprotech-dev/ngTagsInput.git/commit/6598b5562169c506e7645acbdac360e8d20c1054), [#151](https://github.com/inprotech-dev/ngTagsInput.git/issues/151))
+  * Fix display of non-string items ([49734921](https://github.com/inprotech-dev/ngTagsInput.git/commit/497349211ff17505208268fade98ed93e13fa082), [#150](https://github.com/inprotech-dev/ngTagsInput.git/issues/150))
+  * Fix blur handling ([f4fe7b87](https://github.com/inprotech-dev/ngTagsInput.git/commit/f4fe7b87985e123d688595cd14aa22d549143de6), [#91](https://github.com/inprotech-dev/ngTagsInput.git/issues/91))
+  * Fix autosize directive ([e9a723c9](https://github.com/inprotech-dev/ngTagsInput.git/commit/e9a723c911a8d32964ad771c333f09fc78157172), [#84](https://github.com/inprotech-dev/ngTagsInput.git/issues/84))
+  * Fix autosize directive ([12b5beba](https://github.com/inprotech-dev/ngTagsInput.git/commit/12b5beba230304fd22b6fef8eb613f6133860c0a), [#75](https://github.com/inprotech-dev/ngTagsInput.git/issues/75))
+  * Fix input-change event name ([47b40e13](https://github.com/inprotech-dev/ngTagsInput.git/commit/47b40e1394bb3dfe7eabaf932a77d92539fb065e), [#57](https://github.com/inprotech-dev/ngTagsInput.git/issues/57))
+  * Change input width accordingly to its content ([8abdf79b](https://github.com/inprotech-dev/ngTagsInput.git/commit/8abdf79bcd6871cd7c7064838020ea2b6c7b2fa2), [#6](https://github.com/inprotech-dev/ngTagsInput.git/issues/6))
+  * Ignore modifiers key ([820014e4](https://github.com/inprotech-dev/ngTagsInput.git/commit/820014e4cbeb3427e9e99029f428806c1a8a3e7e), [#35](https://github.com/inprotech-dev/ngTagsInput.git/issues/35))
+  * Added focus outline ([7d3c51af](https://github.com/inprotech-dev/ngTagsInput.git/commit/7d3c51afb4da2d32469b0a97156eb17a2a277998), [#32](https://github.com/inprotech-dev/ngTagsInput.git/issues/32))
+  * Added event trigger to tryAdd ([84bb9166](https://github.com/inprotech-dev/ngTagsInput.git/commit/84bb9166726321944d03dbf5b4aefc27e1f2a8ab), [#26](https://github.com/inprotech-dev/ngTagsInput.git/issues/26))
+  * Added support for Angular 1.2.x ([1a0b256c](https://github.com/inprotech-dev/ngTagsInput.git/commit/1a0b256c6d5c5fdf02a98eb05a30c61bc77b2480), [#17](https://github.com/inprotech-dev/ngTagsInput.git/issues/17))
+
+#### Features
+
+* **autoComplete:**
+  * Add custom template support ([b550b119](https://github.com/inprotech-dev/ngTagsInput.git/commit/b550b1190509e399742f32abb6299c179fe7bae1), [#99](https://github.com/inprotech-dev/ngTagsInput.git/issues/99))
+  * Add autoSelectFirstSuggestion option ([0993bbdf](https://github.com/inprotech-dev/ngTagsInput.git/commit/0993bbdf5ac85f0af5e62c5fa76c13a2aecfa0c7), [#136](https://github.com/inprotech-dev/ngTagsInput.git/issues/136))
+* **autocomplete:**
+  * Make $index available to custom templates ([8611877e](https://github.com/inprotech-dev/ngTagsInput.git/commit/8611877ef43581fe493fd3195726f027af2ae3cc))
+  * Add autoscroll support ([13796600](https://github.com/inprotech-dev/ngTagsInput.git/commit/13796600cb81d0ef111c5c55ac76d98bf0832fa9), [#216](https://github.com/inprotech-dev/ngTagsInput.git/issues/216))
+  * Remove requirement for the source option to return a promise ([10932fbb](https://github.com/inprotech-dev/ngTagsInput.git/commit/10932fbb18b0887927ae71bb1f9e1d1d0f0f4e26), [#237](https://github.com/inprotech-dev/ngTagsInput.git/issues/237))
+  * Add loadOnFocus option ([fe711f56](https://github.com/inprotech-dev/ngTagsInput.git/commit/fe711f56eaa3fe4293527955e653b3f6bbd235a0))
+  * Add showOnEmpty option ([28c615fa](https://github.com/inprotech-dev/ngTagsInput.git/commit/28c615fa543cdcfa79107e3d9bddfdb73f85c87a))
+  * Down arrow hotkey option to open suggestion box if not shown ([c44f110a](https://github.com/inprotech-dev/ngTagsInput.git/commit/c44f110a539fe44f2255d51ee7e011b3d84bc38a), [#54](https://github.com/inprotech-dev/ngTagsInput.git/issues/54))
+  * Add support for $http promises ([adaf6580](https://github.com/inprotech-dev/ngTagsInput.git/commit/adaf6580320a47b962cb769407ae19abd8e6317c), [#38](https://github.com/inprotech-dev/ngTagsInput.git/issues/38))
+  * Changed tag addition behavior ([4f868e09](https://github.com/inprotech-dev/ngTagsInput.git/commit/4f868e098078911a82e45fd9a4d1ab9dd550c070), [#30](https://github.com/inprotech-dev/ngTagsInput.git/issues/30))
+  * Added tag filtering support ([a27363da](https://github.com/inprotech-dev/ngTagsInput.git/commit/a27363da25e0eade3c1294a6da84b5ab94d19867), [#25](https://github.com/inprotech-dev/ngTagsInput.git/issues/25))
+  * Added maxResultsToShow option ([b2ae61b7](https://github.com/inprotech-dev/ngTagsInput.git/commit/b2ae61b751fad1f6b5a958692e3cb436ef158512), [#23](https://github.com/inprotech-dev/ngTagsInput.git/issues/23))
+  * Added highlight support ([ce737795](https://github.com/inprotech-dev/ngTagsInput.git/commit/ce737795d937e4baa8cbbe8a01011085c4019c1e), [#22](https://github.com/inprotech-dev/ngTagsInput.git/issues/22))
+  * Implemented min-length option ([c17d7a48](https://github.com/inprotech-dev/ngTagsInput.git/commit/c17d7a48194c3ad8859e088c83ff16589a4540c5), [#21](https://github.com/inprotech-dev/ngTagsInput.git/issues/21))
+  * Implemented debounce delay ([1a6527f7](https://github.com/inprotech-dev/ngTagsInput.git/commit/1a6527f7e57aa476f2ede36ed7f9b6f6eba91088), [#19](https://github.com/inprotech-dev/ngTagsInput.git/issues/19))
+* **bootstrap:** Add bootstrap-compatible stylesheet ([7cd29c49](https://github.com/inprotech-dev/ngTagsInput.git/commit/7cd29c49227a0b8fd82a53e882d0c6988a3e6f3f))
+* **config:** Add support for global configuration ([e48be112](https://github.com/inprotech-dev/ngTagsInput.git/commit/e48be112b65ca5bbf9513fdaa4618bb949ae7640), [#48](https://github.com/inprotech-dev/ngTagsInput.git/issues/48))
+* **configProvider:** Make options optionally data-bound ([390380bf](https://github.com/inprotech-dev/ngTagsInput.git/commit/390380bffd4cac03ca71cb780e20898b2a6b07ad), [#73](https://github.com/inprotech-dev/ngTagsInput.git/issues/73))
+* **configuration:**
+  * Add setTextAutosizeThreshold method ([a1702e63](https://github.com/inprotech-dev/ngTagsInput.git/commit/a1702e636128c8ec7fd14c9f0e7a235157696986), [#181](https://github.com/inprotech-dev/ngTagsInput.git/issues/181))
+  * Add support for validation ([445877a1](https://github.com/inprotech-dev/ngTagsInput.git/commit/445877a1325c31708f9bf7ea6a85e51647ce6a94))
+* **tagsInput:**
+  * Add newTagText option ([215fe923](https://github.com/inprotech-dev/ngTagsInput.git/commit/215fe923b68e0e6034ae34c9b06ea89dff7d1110), [#197](https://github.com/inprotech-dev/ngTagsInput.git/issues/197))
+  * Add onTagClicked callback ([aa8d190b](https://github.com/inprotech-dev/ngTagsInput.git/commit/aa8d190b6edc705f89d407cf65a8ca6266238616))
+  * Add support for Angular 1.3 ([3355f3fa](https://github.com/inprotech-dev/ngTagsInput.git/commit/3355f3fa7451dc0b4ca183875ba183a89c543be4), [#318](https://github.com/inprotech-dev/ngTagsInput.git/issues/318), [#341](https://github.com/inprotech-dev/ngTagsInput.git/issues/341), [#373](https://github.com/inprotech-dev/ngTagsInput.git/issues/373))
+  * Add custom template support ([45e5d998](https://github.com/inprotech-dev/ngTagsInput.git/commit/45e5d99809f66ea52e2206a476eb546867bbe4a8))
+  * Add ng-required support ([8f17b9f1](https://github.com/inprotech-dev/ngTagsInput.git/commit/8f17b9f11bd359fe0066133af8b93914611150ea), [#157](https://github.com/inprotech-dev/ngTagsInput.git/issues/157))
+  * Add support for tag navigation ([18760b24](https://github.com/inprotech-dev/ngTagsInput.git/commit/18760b249978203bd4aaa798aa07b72199c73aed), [#350](https://github.com/inprotech-dev/ngTagsInput.git/issues/350))
+  * Add ng-disabled support ([870caba6](https://github.com/inprotech-dev/ngTagsInput.git/commit/870caba653c4874b952b65893e4de07cf605d2b8), [#102](https://github.com/inprotech-dev/ngTagsInput.git/issues/102))
+  * Add keyProperty and displayProperty options ([2c780f9a](https://github.com/inprotech-dev/ngTagsInput.git/commit/2c780f9a53711317f75a7141c6965f1568b9daae), [#265](https://github.com/inprotech-dev/ngTagsInput.git/issues/265))
+  * Add onTagAdding/onTagRemoving callbacks ([c4ceed54](https://github.com/inprotech-dev/ngTagsInput.git/commit/c4ceed546b30cb6f2052de6b5edcf0f759803ef7), [#100](https://github.com/inprotech-dev/ngTagsInput.git/issues/100))
+  * Add addOnPaste and pasteSplitPattern options ([9ad32fbd](https://github.com/inprotech-dev/ngTagsInput.git/commit/9ad32fbd5c3f1d7237bccd73c44796c0eaa91e0d))
+  * Add onInvalidTag option ([e5c57b8e](https://github.com/inprotech-dev/ngTagsInput.git/commit/e5c57b8ec77b4840e6f383e0bee9a0ce2f6ff0dc))
+  * Enable ngFocus and ngBlur native directives ([210b86f7](https://github.com/inprotech-dev/ngTagsInput.git/commit/210b86f74538564adcabd0ab22522866888acad8))
+  * Add support for some Bootstrap classes ([d6360655](https://github.com/inprotech-dev/ngTagsInput.git/commit/d6360655d7444e4979ccfb6092f79ba0a82edfc6), [#78](https://github.com/inprotech-dev/ngTagsInput.git/issues/78))
+  * Add type option ([3afe564d](https://github.com/inprotech-dev/ngTagsInput.git/commit/3afe564d4be4f5726638132bb6329a259c9422fd), [#140](https://github.com/inprotech-dev/ngTagsInput.git/issues/140))
+  * Add addFromAutocompleteOnly option ([90f075c9](https://github.com/inprotech-dev/ngTagsInput.git/commit/90f075c991866b99bd830529913483ea5e32a63f), [#60](https://github.com/inprotech-dev/ngTagsInput.git/issues/60))
+  * Make maxLength consistent with minLength ([1458ba62](https://github.com/inprotech-dev/ngTagsInput.git/commit/1458ba624a876a25ac0d8776388ecf4a16cc6aa7), [#53](https://github.com/inprotech-dev/ngTagsInput.git/issues/53))
+  * Add visual feedback for invalid tags ([f469c274](https://github.com/inprotech-dev/ngTagsInput.git/commit/f469c274b09397ca88004da78670dc090bf693e0), [#77](https://github.com/inprotech-dev/ngTagsInput.git/issues/77))
+  * Change allowedTagsPattern's default value ([87029090](https://github.com/inprotech-dev/ngTagsInput.git/commit/8702909009f998114765b6673c565dda4b038b43), [#76](https://github.com/inprotech-dev/ngTagsInput.git/issues/76))
+  * Add support for validation CSS classes ([7f9e8bba](https://github.com/inprotech-dev/ngTagsInput.git/commit/7f9e8bba7defca2c0f7c75b933b2e9c336f72b47), [#55](https://github.com/inprotech-dev/ngTagsInput.git/issues/55))
+  * Add support for array of objects ([5c036806](https://github.com/inprotech-dev/ngTagsInput.git/commit/5c036806a41d425e194d0496d9f091fb927b42c3), [#46](https://github.com/inprotech-dev/ngTagsInput.git/issues/46))
+  * Add min-tags option ([49c07608](https://github.com/inprotech-dev/ngTagsInput.git/commit/49c076089b93f41decf751b662437a29fa28c7ea), [#45](https://github.com/inprotech-dev/ngTagsInput.git/issues/45), [#47](https://github.com/inprotech-dev/ngTagsInput.git/issues/47))
+  * Add max-tags option ([2bc02ec9](https://github.com/inprotech-dev/ngTagsInput.git/commit/2bc02ec9f9c04fab5ef715efbc40914f7301fc22), [#24](https://github.com/inprotech-dev/ngTagsInput.git/issues/24))
+  * Added addOnBlur option ([69415a2e](https://github.com/inprotech-dev/ngTagsInput.git/commit/69415a2e3f5f703afd7960f51cc0ad1cf82ab51c), [#29](https://github.com/inprotech-dev/ngTagsInput.git/issues/29))
+
+#### Breaking Changes
+
+* Code that relies on auto-initialization of the model may
+stop working.
+
+Closes #320
+Closes #204
+ ([f9fcb12d](https://github.com/inprotech-dev/ngTagsInput.git/commit/f9fcb12dc1c71a77e52ba573cd4505e663131625))
+* This uses new API methods of Angular 1.3 and therefore
+the directive will no longer work with previous versions of the framework.
+
+Closes #318, #341, #373
+ ([3355f3fa](https://github.com/inprotech-dev/ngTagsInput.git/commit/3355f3fa7451dc0b4ca183875ba183a89c543be4))
+* Stylesheets were changed and .ngTagsInput class selector
+was replaced by tags-input type selector.
+
+Closes #55.
+ ([7f9e8bba](https://github.com/inprotech-dev/ngTagsInput.git/commit/7f9e8bba7defca2c0f7c75b933b2e9c336f72b47))
+* From now on, array of strings are no longer supported. In
+order to keep some backward compatibility a one-time conversion from an
+array of strings into an array of objects is available.
+
+Closes #46.
+ ([5c036806](https://github.com/inprotech-dev/ngTagsInput.git/commit/5c036806a41d425e194d0496d9f091fb927b42c3))
+* Since CSS selectors must be changed, custom stylesheets
+based on the old selectors will conflict with this fix. They'll have to be
+updated to use class selectors.
+
+Closes #6.
+ ([8abdf79b](https://github.com/inprotech-dev/ngTagsInput.git/commit/8abdf79bcd6871cd7c7064838020ea2b6c7b2fa2))
+* This change breaks apps which use the old name,
+although it's simple to fix it.
+ ([1db08aad](https://github.com/inprotech-dev/ngTagsInput.git/commit/1db08aad2c761e26d2391ca82909ed9087639506))
+* The ngClass option was renamed as customClass so it's
+clear that that property is just a value and not the ngClass directive.
+ ([298bf119](https://github.com/inprotech-dev/ngTagsInput.git/commit/298bf1197d1451d830d54e2bc54611fe44398a0c))
+
 ## 3.0.0 (2015-07-13)
 
 #### Bug Fixes
