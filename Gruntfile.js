@@ -118,8 +118,8 @@ module.exports = function(grunt) {
     grunt.registerTask('release', [
         'pack',
         'compress',
-//        'changelog',
-//        'replace:changelog',
+        'changelog',
+        'replace:changelog',
         'shell:git',
         'copy:bower',
         'update-bower-version',
