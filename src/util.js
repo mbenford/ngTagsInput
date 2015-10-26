@@ -13,11 +13,15 @@ tagsInput.factory('tiUtil', function($timeout) {
 
     self.debounce = function(fn, delay) {
         var timeoutId;
-        return function() {
+        var debouncedFn = function() {
             var args = arguments;
             $timeout.cancel(timeoutId);
             timeoutId = $timeout(function() { fn.apply(null, args); }, delay);
         };
+        debouncedFn.cancel = function () {
+            $timeout.cancel(timeoutId);
+        };
+        return debouncedFn;
     };
 
     self.makeObjectArray = function(array, key) {
