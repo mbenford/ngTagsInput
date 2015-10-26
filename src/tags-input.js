@@ -46,9 +46,10 @@
  * @param {expression=} [onTagRemoved=NA] Expression to evaluate upon removing an existing tag. The removed tag is
  *    available as $tag.
  * @param {expression=} [onTagClicked=NA] Expression to evaluate upon clicking an existing tag. The clicked tag is available as $tag.
+ * @param {expression=} [createTagObject=NA] Expression to create a tag object on entering a new tag. The entered text is available as $text.
  */
 tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInputConfig, tiUtil) {
-    function TagList(options, events, onTagAdding, onTagRemoving) {
+    function TagList(options, events, onTagAdding, onTagRemoving, createTagObject) {
         var self = {}, getTagText, setTagText, tagIsValid;
 
         getTagText = function(tag) {
@@ -73,8 +74,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
         self.items = [];
 
         self.addText = function(text) {
-            var tag = {};
-            setTagText(tag, text);
+            var tag = createTagObject({ $text: text });
+            if (angular.isUndefined(tag)) {
+                tag = {};
+                setTagText(tag, text);
+            }
             return self.add(tag);
         };
 
@@ -158,7 +162,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             onInvalidTag: '&',
             onTagRemoving: '&',
             onTagRemoved: '&',
-            onTagClicked: '&'
+            onTagClicked: '&',
+            createTagObject: '&'
         },
         replace: false,
         transclude: true,
@@ -194,7 +199,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
 
             $scope.tagList = new TagList($scope.options, $scope.events,
                 tiUtil.handleUndefinedResult($scope.onTagAdding, true),
-                tiUtil.handleUndefinedResult($scope.onTagRemoving, true));
+                tiUtil.handleUndefinedResult($scope.onTagRemoving, true),
+                $scope.createTagObject);
 
             this.registerAutocomplete = function() {
                 var input = $element.find('input');
