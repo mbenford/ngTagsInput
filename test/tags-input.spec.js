@@ -1472,6 +1472,37 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('clear-leftover-text-on-blur option', function() {
+        it('clears the text in the input field when the input field loses focus if clearLeftoverTextOnBlur is true and addOnBlur is false', function() {
+            // Arrange
+            compile('clear-leftover-text-on-blur="true"', 'add-on-blur="false"', 'text="prop"');
+            $scope.prop = 'some text';
+            $scope.$digest();
+
+            // Act
+            isolateScope.events.trigger('input-blur');
+            $scope.$digest();
+
+            // Assert
+            expect(getInput().val()).toEqual('');
+            expect($scope.prop).toEqual('');
+        });
+
+        it('does not clear the text in the input field when the input field loses focus if clearLeftoverTextOnBlur is false and addOnBlur is false', function() {
+            // Arrange
+            compile('clear-leftover-text-on-blur="false"', 'add-on-blur="false"', 'text="prop"');
+            changeInputValue('some text');
+
+            // Act
+            isolateScope.events.trigger('input-blur');
+            $scope.$digest();
+
+            // Assert
+            expect(getInput().val()).toEqual('some text');
+            expect($scope.prop).toEqual('some text');
+        });
+    });
+
     describe('add-from-autocomplete-only option', function() {
         it('initializes the option to false', function() {
             // Arrange/Act
