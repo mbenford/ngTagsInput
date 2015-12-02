@@ -54,6 +54,7 @@ module.exports = function(grunt) {
             html: {
                 src: [
                     'templates/tags-input.html',
+                    'templates/tags-input-single.html',
                     'templates/tag-item.html',
                     'templates/auto-complete.html',
                     'templates/auto-complete-match.html'

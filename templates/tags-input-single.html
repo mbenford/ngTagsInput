@@ -1,0 +1,17 @@
+<div class="host" tabindex="-1" ng-click="eventHandlers.host.click()" ti-transclude-append>
+  <div class="tags" ng-class="{focused: hasFocus}">
+    <input class="input"
+           autocomplete="off"
+           ng-model="newTag.text"
+           ng-model-options="{getterSetter: true}"
+           ng-keydown="eventHandlers.input.keydown($event)"
+           ng-focus="eventHandlers.input.focus($event)"
+           ng-blur="eventHandlers.input.blur($event)"
+           ng-paste="eventHandlers.input.paste($event)"
+           ng-trim="false"
+           ng-class="{'invalid-tag': newTag.invalid}"
+           ng-disabled="disabled"
+           ti-bind-attrs="{type: options.type, placeholder: options.placeholder, tabindex: options.tabindex, spellcheck: options.spellcheck}"
+           ti-autosize>
+  </div>
+</div>

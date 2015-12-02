@@ -159,14 +159,17 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             onTagRemoving: '&',
             onTagRemoved: '&',
             onTagClicked: '&',
-            initEvents: '&'
+            initEvents: '&',
+            isSingleSelect: '@'
         },
         replace: false,
         transclude: true,
-        templateUrl: function(element, attrs) {
-            return attrs.inputTemplate || 'ngTagsInput/tags-input.html';
+        templateUrl: function(element, attrs) {            
+            return attrs.inputTemplate || (attrs.isSingleSelect ? 'ngTagsInput/tags-input-single.html' : 'ngTagsInput/tags-input.html');
         },
         controller: function($scope, $attrs, $element) {
+            var isSingleSelect = $attrs.isSingleSelect;
+
             $scope.events = tiUtil.simplePubSub();
             $scope.initEvents({$events: $scope.events});
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
@@ -204,12 +207,20 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
 
                 return {
                     addTag: function(tag) {
+                        if(isSingleSelect) {
+                            $scope.newTag.text(tag[$scope.options.displayProperty], true, tag);                            
+                            return tag;
+                        }
                         return $scope.tagList.add(tag);
                     },
                     focusInput: function() {
                         input[0].focus();
                     },
                     getTags: function() {
+                        if(isSingleSelect) {
+                            return [];
+                        }
+
                         return $scope.tagList.items;
                     },
                     getCurrentTagText: function() {
@@ -248,6 +259,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 validationOptions = ['minTags', 'maxTags', 'allowLeftoverText'],
                 setElementValidity;
 
+            var isSingleSelect = attrs.isSingleSelect;
+
             setElementValidity = function() {
                 ngModelCtrl.$setValidity('maxTags', tagList.items.length <= options.maxTags);
                 ngModelCtrl.$setValidity('minTags', tagList.items.length >= options.minTags);
@@ -259,10 +272,15 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             };
 
             scope.newTag = {
-                text: function(value) {
+                text: function(value, fromSelection, tag) {
                     if (angular.isDefined(value)) {
                         scope.text = value;
-                        events.trigger('input-change', value);
+
+                        if(fromSelection) {
+                            events.trigger('item-selected', tag);
+                        } else {
+                            events.trigger('input-change', value);
+                        }
                     }
                     else {
                         return scope.text || '';
@@ -275,23 +293,25 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 return tag[options.keyProperty || options.displayProperty];
             };
 
-            scope.$watch('tags', function(value) {
-                if (value) {
-                    tagList.items = tiUtil.makeObjectArray(value, options.displayProperty);
-                    scope.tags = tagList.items;
-                }
-                else {
-                    tagList.items = [];
-                }
-            });
+            if(!isSingleSelect) {
+                scope.$watch('tags', function(value) {
+                    if (value) {
+                        tagList.items = tiUtil.makeObjectArray(value, options.displayProperty);
+                        scope.tags = tagList.items;
+                    }
+                    else {
+                        tagList.items = [];
+                    }
+                });
 
-            scope.$watch('tags.length', function() {
-                setElementValidity();
+                scope.$watch('tags.length', function() {
+                    setElementValidity();
 
-                // ngModelController won't trigger validators when the model changes (because it's an array),
-                // so we need to do it ourselves. Unfortunately this won't trigger any registered formatter.
-                ngModelCtrl.$validate();
-            });
+                    // ngModelController won't trigger validators when the model changes (because it's an array),
+                    // so we need to do it ourselves. Unfortunately this won't trigger any registered formatter.
+                    ngModelCtrl.$validate();
+                });
+            }
 
             attrs.$observe('disabled', function(value) {
                 scope.disabled = value;
@@ -360,9 +380,16 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 .on('tag-removed', scope.onTagRemoved)
                 .on('tag-clicked', scope.onTagClicked)
                 .on('tag-added', function() {
+                    if(isSingleSelect) {
+                        return;
+                    }
+
                     scope.newTag.text('');
                 })
                 .on('tag-added tag-removed', function() {
+                    if(isSingleSelect) {
+                        return;
+                    }
                     scope.tags = tagList.items;
                     // Ideally we should be able call $setViewValue here and let it in turn call $setDirty and $validate
                     // automatically, but since the model is an array, $setViewValue does nothing and it's up to us to do it.
@@ -370,22 +397,44 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     ngModelCtrl.$setDirty();
                 })
                 .on('invalid-tag', function() {
+                    if(isSingleSelect) {
+                        return;
+                    }
+
                     scope.newTag.invalid = true;
                 })
                 .on('option-change', function(e) {
+                    if(isSingleSelect) {
+                        return;
+                    }
+
                     if (validationOptions.indexOf(e.name) !== -1) {
                         setElementValidity();
                     }
                 })
                 .on('input-change', function() {
+                    if(isSingleSelect) {
+                        return;
+                    }
+
                     tagList.clearSelection();
                     scope.newTag.invalid = null;
                 })
                 .on('input-focus', function() {
                     element.triggerHandler('focus');
+
+                    if(isSingleSelect) {
+                        return;
+                    }
+
                     ngModelCtrl.$setValidity('leftoverText', true);
                 })
                 .on('input-blur', function() {
+                    if(isSingleSelect) {
+                        element.triggerHandler('blur');
+                        return;
+                    }
+
                     if (options.addOnBlur && !options.addFromAutocompleteOnly) {
                         tagList.addText(scope.newTag.text());
                     }
@@ -393,6 +442,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     setElementValidity();
                 })
                 .on('input-keydown', function(event) {
+                    if(isSingleSelect) {
+                        return;
+                    }
+
                     var key = event.keyCode,
                         addKeys = {},
                         shouldAdd, shouldRemove, shouldSelect, shouldEditLastTag, shouldClearSelection;
@@ -444,6 +497,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     }
                 })
                 .on('input-paste', function(event) {
+                    if(isSingleSelect) {
+                        return;
+                    }
+
                     if (options.addOnPaste) {
                         var data = event.getTextData();
                         var tags = data.split(options.pasteSplitPattern);
