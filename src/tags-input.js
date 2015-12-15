@@ -39,7 +39,8 @@
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
  * @param {expression=} [onTagAdding=NA] Expression to evaluate that will be invoked before adding a new tag. The new
  *    tag is available as $tag. This method must return either true or false. If false, the tag will not be added.
- * @param {expression=} [onTagAdded=NA] Expression to evaluate upon adding a new tag. The new tag is available as $tag.
+ * @param {expression=} [onTagAdded=NA] Expression to evaluate upon adding a new tag. The new tag is available as $tag and
+ *    the add tag trigger ("input" or "autocomplete") is available as $trigger.
  * @param {expression=} [onInvalidTag=NA] Expression to evaluate when a tag is invalid. The invalid tag is available as $tag.
  * @param {expression=} [onTagRemoving=NA] Expression to evaluate that will be invoked before removing a tag. The tag
  *    is available as $tag. This method must return either true or false. If false, the tag will not be removed.
@@ -78,18 +79,22 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             return self.add(tag);
         };
 
-        self.add = function(tag) {
+        self.add = function(tag, trigger) {
             var tagText = getTagText(tag);
 
             if (options.replaceSpacesWithDashes) {
                 tagText = tiUtil.replaceSpacesWithDashes(tagText);
             }
 
+            if(angular.isUndefined(trigger)) {
+              trigger = 'input';
+            }
+
             setTagText(tag, tagText);
 
             if (tagIsValid(tag)) {
                 self.items.push(tag);
-                events.trigger('tag-added', { $tag: tag });
+                events.trigger('tag-added', { $tag: tag, $trigger: trigger });
             }
             else if (tagText) {
                 events.trigger('invalid-tag', { $tag: tag });

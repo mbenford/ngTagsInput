@@ -186,7 +186,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 var added = false;
 
                 if (suggestionList.selected) {
-                    tagsInput.addTag(angular.copy(suggestionList.selected));
+                    tagsInput.addTag(angular.copy(suggestionList.selected), 'autocomplete');
                     suggestionList.reset();
                     tagsInput.focusInput();
 

@@ -1709,13 +1709,13 @@ describe('tags-input directive', function() {
         it('calls the provided callback when a new tag is added', function() {
             // Arrange
             $scope.callback = jasmine.createSpy();
-            compile('on-tag-added="callback($tag)"');
+            compile('on-tag-added="callback($tag, $trigger)"');
 
             // Act
             newTag('foo');
 
             // Assert
-            expect($scope.callback).toHaveBeenCalledWith({ text: 'foo' });
+            expect($scope.callback).toHaveBeenCalledWith({ text: 'foo' }, 'input');
         });
     });
 

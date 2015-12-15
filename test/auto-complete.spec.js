@@ -340,7 +340,7 @@ describe('autoComplete directive', function() {
             sendKeyDown(KEYS.enter);
 
             // Assert
-            expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' });
+            expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' }, 'autocomplete');
         });
 
         it('adds the selected suggestion when the tab key is pressed and there is a suggestion selected', function() {
@@ -352,7 +352,7 @@ describe('autoComplete directive', function() {
             sendKeyDown(KEYS.tab);
 
             // Assert
-            expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' });
+            expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' }, 'autocomplete');
         });
 
         it('adds a copy of the selected suggestion', function() {
@@ -599,7 +599,7 @@ describe('autoComplete directive', function() {
                 getSuggestion(0).click();
 
                 // Assert
-                expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' });
+                expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' }, 'autocomplete');
             });
 
             it('focuses the input field when a suggestion is added via a mouse click', function() {
