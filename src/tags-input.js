@@ -205,8 +205,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 var input = $element.find('input');
 
                 return {
-                    addTag: function(tag) {
-                        return $scope.tagList.add(tag);
+                    addTag: function(tag, trigger) {
+                        return $scope.tagList.add(tag, trigger);
                     },
                     focusInput: function() {
                         input[0].focus();
