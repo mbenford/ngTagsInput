@@ -201,7 +201,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             };
 
             scope.showMoreSuggestion = function () {
-              var actualPagination = suggestionList.pagination
+              var actualPagination = suggestionList.pagination;
               suggestionList.reset();
               suggestionList.pagination = actualPagination + 1;
               suggestionList.load(null, tagsInput.getTags());
