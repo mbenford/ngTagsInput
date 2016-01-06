@@ -37,6 +37,7 @@
  * @param {boolean=} [addFromAutocompleteOnly=false] Flag indicating that only tags coming from the autocomplete list
  *    will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace and addOnBlur values are ignored.
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
+ * @param {boolean=} [disabled=false] Flag indicating wether new tags can be added or existing can be removed.
  * @param {expression=} [onTagAdding=NA] Expression to evaluate that will be invoked before adding a new tag. The new
  *    tag is available as $tag. This method must return either true or false. If false, the tag will not be added.
  * @param {expression=} [onTagAdded=NA] Expression to evaluate upon adding a new tag. The new tag is available as $tag.
@@ -189,7 +190,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 keyProperty: [String, ''],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
-                spellcheck: [Boolean, true]
+                spellcheck: [Boolean, true],
+                disabled: [Boolean, false]
             });
 
             $scope.tagList = new TagList($scope.options, $scope.events,
