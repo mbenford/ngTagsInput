@@ -38,18 +38,19 @@
  *    will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace and addOnBlur values are ignored.
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
  * @param {expression=} [onTagAdding=NA] Expression to evaluate that will be invoked before adding a new tag. The new
- *    tag is available as $tag. This method must return either true or false. If false, the tag will not be added.
+ *    tag is available as $tag. This method must return either a boolean value or a promise. If either a false value or a rejected
+ *    promise is returned, the tag will not be added.
  * @param {expression=} [onTagAdded=NA] Expression to evaluate upon adding a new tag. The new tag is available as $tag.
  * @param {expression=} [onInvalidTag=NA] Expression to evaluate when a tag is invalid. The invalid tag is available as $tag.
  * @param {expression=} [onTagRemoving=NA] Expression to evaluate that will be invoked before removing a tag. The tag
- *    is available as $tag. This method must return either true or false. If false, the tag will not be removed.
- * @param {expression=} [onTagRemoved=NA] Expression to evaluate upon removing an existing tag. The removed tag is
- *    available as $tag.
+ *    is available as $tag. This method must return either a boolean value or a promise. If either a false value or a rejected
+ *    promise is returned, the tag will not be removed.
+ * @param {expression=} [onTagRemoved=NA] Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  * @param {expression=} [onTagClicked=NA] Expression to evaluate upon clicking an existing tag. The clicked tag is available as $tag.
  */
-tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInputConfig, tiUtil) {
+tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tagsInputConfig, tiUtil) {
     function TagList(options, events, onTagAdding, onTagRemoving) {
-        var self = {}, getTagText, setTagText, tagIsValid;
+        var self = {}, getTagText, setTagText, canAddTag, canRemoveTag;
 
         getTagText = function(tag) {
             return tiUtil.safeToString(tag[options.displayProperty]);
@@ -59,15 +60,19 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             tag[options.displayProperty] = text;
         };
 
-        tagIsValid = function(tag) {
+        canAddTag = function(tag) {
             var tagText = getTagText(tag);
+            var valid = tagText &&
+                        tagText.length >= options.minLength &&
+                        tagText.length <= options.maxLength &&
+                        options.allowedTagsPattern.test(tagText) &&
+                        !tiUtil.findInObjectArray(self.items, tag, options.keyProperty || options.displayProperty);
 
-            return tagText &&
-                   tagText.length >= options.minLength &&
-                   tagText.length <= options.maxLength &&
-                   options.allowedTagsPattern.test(tagText) &&
-                   !tiUtil.findInObjectArray(self.items, tag, options.keyProperty || options.displayProperty) &&
-                   onTagAdding({ $tag: tag });
+            return $q.when(valid && onTagAdding({ $tag: tag })).then(tiUtil.promisifyValue);
+        };
+
+        canRemoveTag = function(tag) {
+            return $q.when(onTagRemoving({ $tag: tag })).then(tiUtil.promisifyValue);
         };
 
         self.items = [];
@@ -87,26 +92,27 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
 
             setTagText(tag, tagText);
 
-            if (tagIsValid(tag)) {
-                self.items.push(tag);
-                events.trigger('tag-added', { $tag: tag });
-            }
-            else if (tagText) {
-                events.trigger('invalid-tag', { $tag: tag });
-            }
-
-            return tag;
+            return canAddTag(tag)
+                .then(function() {
+                    self.items.push(tag);
+                    events.trigger('tag-added', { $tag: tag });
+                })
+                .catch(function() {
+                    if (tagText) {
+                      events.trigger('invalid-tag', { $tag: tag });
+                    }
+                });
         };
 
         self.remove = function(index) {
             var tag = self.items[index];
 
-            if (onTagRemoving({ $tag: tag }))  {
+            return canRemoveTag(tag).then(function() {
                 self.items.splice(index, 1);
                 self.clearSelection();
                 events.trigger('tag-removed', { $tag: tag });
                 return tag;
-            }
+            });
         };
 
         self.select = function(index) {
@@ -203,9 +209,6 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     addTag: function(tag) {
                         return $scope.tagList.add(tag);
                     },
-                    focusInput: function() {
-                        input[0].focus();
-                    },
                     getTags: function() {
                         return $scope.tagList.items;
                     },
@@ -243,12 +246,17 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 options = scope.options,
                 input = element.find('input'),
                 validationOptions = ['minTags', 'maxTags', 'allowLeftoverText'],
-                setElementValidity;
+                setElementValidity,
+                focusInput;
 
             setElementValidity = function() {
                 ngModelCtrl.$setValidity('maxTags', tagList.items.length <= options.maxTags);
                 ngModelCtrl.$setValidity('minTags', tagList.items.length >= options.minTags);
                 ngModelCtrl.$setValidity('leftoverText', scope.hasFocus || options.allowLeftoverText ? true : !scope.newTag.text());
+            };
+
+            focusInput = function() {
+                $timeout(function() { input[0].focus(); });
             };
 
             ngModelCtrl.$isEmpty = function(value) {
@@ -332,7 +340,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                         if (scope.disabled) {
                             return;
                         }
-                        input[0].focus();
+                        focusInput();
                     }
                 },
                 tag: {
@@ -356,6 +364,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     // automatically, but since the model is an array, $setViewValue does nothing and it's up to us to do it.
                     // Unfortunately this won't trigger any registered $parser and there's no safe way to do it.
                     ngModelCtrl.$setDirty();
+                    focusInput();
                 })
                 .on('invalid-tag', function() {
                     scope.newTag.invalid = true;
@@ -402,14 +411,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                         tagList.addText(scope.newTag.text());
                     }
                     else if (shouldEditLastTag) {
-                        var tag;
-
                         tagList.selectPrior();
-                        tag = tagList.removeSelected();
-
-                        if (tag) {
-                            scope.newTag.text(tag[options.displayProperty]);
-                        }
+                        tagList.removeSelected().then(function(tag) {
+                            if (tag) {
+                                scope.newTag.text(tag[options.displayProperty]);
+                            }
+                        });
                     }
                     else if (shouldRemove) {
                         tagList.removeSelected();

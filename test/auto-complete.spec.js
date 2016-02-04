@@ -28,8 +28,9 @@ describe('autoComplete directive', function() {
 
         tagsInput = {
             changeInputValue: jasmine.createSpy(),
-            addTag: jasmine.createSpy(),
-            focusInput: jasmine.createSpy(),
+            addTag: jasmine.createSpy().and.callFake(function() {
+                return $q.when();
+            }),
             on: jasmine.createSpy().and.callFake(function(names, handler) {
                 names.split(' ').forEach(function(name) { eventHandlers[name] = handler; });
                 return this;
@@ -387,6 +388,7 @@ describe('autoComplete directive', function() {
 
             // Act
             isolateScope.addSuggestion();
+            $scope.$digest();
 
             // Assert
             expect(suggestionList.selected).toBeNull();
@@ -600,17 +602,6 @@ describe('autoComplete directive', function() {
 
                 // Assert
                 expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' });
-            });
-
-            it('focuses the input field when a suggestion is added via a mouse click', function() {
-                // Arrange
-                suggestionList.select(0);
-
-                // Act
-                getSuggestion(1).click();
-
-                // Assert
-                expect(tagsInput.focusInput).toHaveBeenCalled();
             });
         });
     });

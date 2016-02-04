@@ -8,7 +8,7 @@
  * @description
  * Helper methods used internally by the directive. Should not be called directly from user code.
  */
-tagsInput.factory('tiUtil', function($timeout) {
+tagsInput.factory('tiUtil', function($timeout, $q) {
     var self = {};
 
     self.debounce = function(fn, delay) {
@@ -96,6 +96,11 @@ tagsInput.factory('tiUtil', function($timeout) {
 
     self.isModifierOn = function(event) {
         return event.shiftKey || event.ctrlKey || event.altKey || event.metaKey;
+    };
+
+    self.promisifyValue = function(value) {
+        value = angular.isUndefined(value) ? true : value;
+        return $q[value ? 'when' : 'reject']();
     };
 
     self.simplePubSub = function() {
