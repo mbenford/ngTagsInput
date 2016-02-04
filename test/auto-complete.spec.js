@@ -1293,4 +1293,31 @@ describe('autoComplete directive', function() {
             });
         });
     });
+
+    describe('filter-results option', function() {
+        it('initializes the option to false', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.filterResults).toBe(false);
+        });
+
+        it('filters results to show only items matching input', function() {
+            // Arrange
+            compile('filter-results=true');
+
+            // Act
+            loadSuggestions([
+                { text: 'abc' },
+                { text: 'ABC' },
+                { text: 'xyz' }
+            ], 'a');
+
+            // Assert
+            expect(getSuggestions().length).toBe(2);
+            expect(getSuggestionText(0)).toBe('<em>a</em>bc');
+            expect(getSuggestionText(1)).toBe('<em>A</em>BC');
+        });
+    });
 });
