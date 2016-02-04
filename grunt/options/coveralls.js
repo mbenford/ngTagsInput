@@ -1,6 +1,7 @@
 module.exports = {
     options: {
         debug: true,
-        coverage_dir: 'coverage'
+        coverageDir: 'coverage',
+        force: true
     }
 };
