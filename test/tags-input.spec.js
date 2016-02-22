@@ -136,21 +136,19 @@ describe('tags-input directive', function() {
                 { text: true },
                 { text: 1.5 },
                 { text: {} },
-                { text: null },
-                { text: undefined }
+                { text: null }
             ];
 
             // Act
             compile();
 
             // Assert
-            expect(getTags().length).toBe(6);
+            expect(getTags().length).toBe(5);
             expect(getTagText(0)).toBe('1');
             expect(getTagText(1)).toBe('true');
             expect(getTagText(2)).toBe('1.5');
             expect(getTagText(3)).toBe('[object Object]');
             expect(getTagText(4)).toBe('');
-            expect(getTagText(5)).toBe('');
         });
 
         it('updates the model', function() {
@@ -1379,6 +1377,54 @@ describe('tags-input directive', function() {
 
             // Act
             isolateScope.tagList.add({ id: 1, text: 'Other' });
+
+            // Assert
+            expect($scope.tags).toEqual([{ id: 1, text: 'Tag' }]);
+        });
+    });
+
+    describe('track-by-expr option', function () {
+        it('allows using an expression to be evaluated as unique identifier', function () {
+            // Arrange
+            $scope.track = function ($tag, $index) { return $tag.id || $index; };
+            $scope.tags = [
+                { id: 'a', text: 'Tag' },
+                { text: 'Tag' },
+                { text: 'Tag' }
+            ];
+
+            // Act
+            compile('track-by-expr="track($tag, $index)"');
+
+            // Assert
+            expect(getTagText(0)).toBe('Tag');
+            expect(getTagText(1)).toBe('Tag');
+            expect(getTagText(2)).toBe('Tag');
+        });
+
+        it('fails to render tags with duplicate identifiers', function () {
+            // Arrange
+            $scope.track = function () { return 1; };
+            $scope.tags = [
+                { text: 'Tag' },
+                { text: 'Other' }
+            ];
+
+            // Act/Assert
+            expect(function() { compile('track-by-expr="track($tag, $index)"'); }).toThrowError();
+        });
+
+        it('doesn\'t allow tags with duplicate keys', function () {
+            // Arrange
+            $scope.track = function ($tag) { return $tag.id; };
+            $scope.tags = [
+                { id: 1, text: 'Tag' }
+            ];
+            compile('track-by-expr="track($tag, $index)"');
+
+            // Act
+            isolateScope.tagList.add({ id: 1, text: 'Other' });
+            $scope.$digest();
 
             // Assert
             expect($scope.tags).toEqual([{ id: 1, text: 'Tag' }]);

@@ -12,6 +12,7 @@
  * @param {string=} [template=NA] URL or id of a custom template for rendering each tag.
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
  * @param {string=} [keyProperty=text] Property to be used as a unique identifier for the tag.
+ * @param {expression=} [trackByExpr=NA] Expression that should evaluate to a unique identifier for the tag which is available as $tag and its index as $index.
  * @param {string=} [type=text] Type of the input element. Only 'text', 'email' and 'url' are supported values.
  * @param {string=} [text=NA] Assignable Angular expression for data-binding to the element's text.
  * @param {number=} tabindex Tab order of the control.
@@ -62,11 +63,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
 
         canAddTag = function(tag) {
             var tagText = getTagText(tag);
+            var tagIdentifier = self.track(tag, self.items.length);
             var valid = tagText &&
                         tagText.length >= options.minLength &&
                         tagText.length <= options.maxLength &&
                         options.allowedTagsPattern.test(tagText) &&
-                        !tiUtil.findInObjectArray(self.items, tag, options.keyProperty || options.displayProperty);
+                        self.items.every(function (item, index) { return self.track(item, index) !== tagIdentifier; });
 
             return $q.when(valid && onTagAdding({ $tag: tag })).then(tiUtil.promisifyValue);
         };
@@ -164,7 +166,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             onInvalidTag: '&',
             onTagRemoving: '&',
             onTagRemoved: '&',
-            onTagClicked: '&'
+            onTagClicked: '&',
+            trackByExpr: '&'
         },
         replace: false,
         transclude: true,
@@ -276,8 +279,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 invalid: null
             };
 
-            scope.track = function(tag) {
-                return tag[options.keyProperty || options.displayProperty];
+            scope.track = tagList.track = function(tag, index) {
+                if (attrs.trackByExpr == null) {
+                    return tiUtil.normalizeString(tag[options.keyProperty || options.displayProperty]);
+                }
+
+                return scope.trackByExpr({ $tag: tag, $index: index });
             };
 
             scope.$watch('tags', function(value) {
