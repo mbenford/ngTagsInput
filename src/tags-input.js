@@ -362,9 +362,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
 			//This condition will allow to show/hide placeholder based on 'placeholderOnEmpty' flag
 			 if (options.placeholderOnEmpty) {
                             if (scope.tags.length) {
-                                input.attr("placeholder", " ");
+                                input.attr('placeholder', ' ');
                             } else {
-                                input.attr("placeholder", options.placeholder);
+                                input.attr('placeholder', options.placeholder);
                             }
                         }
 
