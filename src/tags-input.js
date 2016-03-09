@@ -350,103 +350,106 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 }
             };
 
-            events
-                .on('tag-added', scope.onTagAdded)
-                .on('invalid-tag', scope.onInvalidTag)
-                .on('tag-removed', scope.onTagRemoved)
-                .on('tag-clicked', scope.onTagClicked)
-                .on('tag-added', function() {
-                    scope.newTag.text('');
-                })
-                .on('tag-added tag-removed', function() {
-                    scope.tags = tagList.items;
-                    // Ideally we should be able call $setViewValue here and let it in turn call $setDirty and $validate
-                    // automatically, but since the model is an array, $setViewValue does nothing and it's up to us to do it.
-                    // Unfortunately this won't trigger any registered $parser and there's no safe way to do it.
-                    ngModelCtrl.$setDirty();
-                    focusInput();
-                })
-                .on('invalid-tag', function() {
-                    scope.newTag.invalid = true;
-                })
-                .on('option-change', function(e) {
-                    if (validationOptions.indexOf(e.name) !== -1) {
-                        setElementValidity();
-                    }
-                })
-                .on('input-change', function() {
-                    tagList.clearSelection();
-                    scope.newTag.invalid = null;
-                })
-                .on('input-focus', function() {
-                    element.triggerHandler('focus');
-                    ngModelCtrl.$setValidity('leftoverText', true);
-                })
-                .on('input-blur', function() {
-                    if (options.addOnBlur && !options.addFromAutocompleteOnly) {
-                        tagList.addText(scope.newTag.text());
-                    }
-                    element.triggerHandler('blur');
-                    setElementValidity();
-                })
-                .on('input-keydown', function(event) {
-                    var key = event.keyCode,
+            $timeout(function() {
+
+                events
+                  .on('tag-added', scope.onTagAdded)
+                  .on('invalid-tag', scope.onInvalidTag)
+                  .on('tag-removed', scope.onTagRemoved)
+                  .on('tag-clicked', scope.onTagClicked)
+                  .on('tag-added', function () {
+                      scope.newTag.text('');
+                  })
+                  .on('tag-added tag-removed', function () {
+                      scope.tags = tagList.items;
+                      // Ideally we should be able call $setViewValue here and let it in turn call $setDirty and $validate
+                      // automatically, but since the model is an array, $setViewValue does nothing and it's up to us to do it.
+                      // Unfortunately this won't trigger any registered $parser and there's no safe way to do it.
+                      ngModelCtrl.$setDirty();
+                      focusInput();
+                  })
+                  .on('invalid-tag', function () {
+                      scope.newTag.invalid = true;
+                  })
+                  .on('option-change', function (e) {
+                      if (validationOptions.indexOf(e.name) !== -1) {
+                          setElementValidity();
+                      }
+                  })
+                  .on('input-change', function () {
+                      tagList.clearSelection();
+                      scope.newTag.invalid = null;
+                  })
+                  .on('input-focus', function () {
+                      element.triggerHandler('focus');
+                      ngModelCtrl.$setValidity('leftoverText', true);
+                  })
+                  .on('input-blur', function () {
+                      if (options.addOnBlur && !options.addFromAutocompleteOnly) {
+                          tagList.addText(scope.newTag.text());
+                      }
+                      element.triggerHandler('blur');
+                      setElementValidity();
+                  })
+                  .on('input-keydown', function (event) {
+                      var key = event.keyCode,
                         addKeys = {},
                         shouldAdd, shouldRemove, shouldSelect, shouldEditLastTag;
 
-                    if (tiUtil.isModifierOn(event) || hotkeys.indexOf(key) === -1) {
-                        return;
-                    }
+                      if (tiUtil.isModifierOn(event) || hotkeys.indexOf(key) === -1) {
+                          return;
+                      }
 
-                    addKeys[KEYS.enter] = options.addOnEnter;
-                    addKeys[KEYS.comma] = options.addOnComma;
-                    addKeys[KEYS.space] = options.addOnSpace;
+                      addKeys[KEYS.enter] = options.addOnEnter;
+                      addKeys[KEYS.comma] = options.addOnComma;
+                      addKeys[KEYS.space] = options.addOnSpace;
 
-                    shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
-                    shouldRemove = (key === KEYS.backspace || key === KEYS.delete) && tagList.selected;
-                    shouldEditLastTag = key === KEYS.backspace && scope.newTag.text().length === 0 && options.enableEditingLastTag;
-                    shouldSelect = (key === KEYS.backspace || key === KEYS.left || key === KEYS.right) && scope.newTag.text().length === 0 && !options.enableEditingLastTag;
+                      shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
+                      shouldRemove = (key === KEYS.backspace || key === KEYS.delete) && tagList.selected;
+                      shouldEditLastTag = key === KEYS.backspace && scope.newTag.text().length === 0 && options.enableEditingLastTag;
+                      shouldSelect = (key === KEYS.backspace || key === KEYS.left || key === KEYS.right) && scope.newTag.text().length === 0 && !options.enableEditingLastTag;
 
-                    if (shouldAdd) {
-                        tagList.addText(scope.newTag.text());
-                    }
-                    else if (shouldEditLastTag) {
-                        tagList.selectPrior();
-                        tagList.removeSelected().then(function(tag) {
-                            if (tag) {
-                                scope.newTag.text(tag[options.displayProperty]);
-                            }
-                        });
-                    }
-                    else if (shouldRemove) {
-                        tagList.removeSelected();
-                    }
-                    else if (shouldSelect) {
-                        if (key === KEYS.left || key === KEYS.backspace) {
-                            tagList.selectPrior();
-                        }
-                        else if (key === KEYS.right) {
-                            tagList.selectNext();
-                        }
-                    }
+                      if (shouldAdd) {
+                          tagList.addText(scope.newTag.text());
+                      }
+                      else if (shouldEditLastTag) {
+                          tagList.selectPrior();
+                          tagList.removeSelected().then(function (tag) {
+                              if (tag) {
+                                  scope.newTag.text(tag[options.displayProperty]);
+                              }
+                          });
+                      }
+                      else if (shouldRemove) {
+                          tagList.removeSelected();
+                      }
+                      else if (shouldSelect) {
+                          if (key === KEYS.left || key === KEYS.backspace) {
+                              tagList.selectPrior();
+                          }
+                          else if (key === KEYS.right) {
+                              tagList.selectNext();
+                          }
+                      }
 
-                    if (shouldAdd || shouldSelect || shouldRemove || shouldEditLastTag) {
-                        event.preventDefault();
-                    }
-                })
-                .on('input-paste', function(event) {
-                    if (options.addOnPaste) {
-                        var data = event.getTextData();
-                        var tags = data.split(options.pasteSplitPattern);
+                      if (shouldAdd || shouldSelect || shouldRemove || shouldEditLastTag) {
+                          event.preventDefault();
+                      }
+                  })
+                  .on('input-paste', function (event) {
+                      if (options.addOnPaste) {
+                          var data = event.getTextData();
+                          var tags = data.split(options.pasteSplitPattern);
 
-                        if (tags.length > 1) {
-                            tags.forEach(function(tag) {
-                                tagList.addText(tag);
-                            });
-                            event.preventDefault();
-                        }
-                    }
-                });
+                          if (tags.length > 1) {
+                              tags.forEach(function (tag) {
+                                  tagList.addText(tag);
+                              });
+                              event.preventDefault();
+                          }
+                      }
+                  });
+            });
         }
     };
 });

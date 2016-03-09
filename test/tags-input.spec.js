@@ -25,6 +25,7 @@ describe('tags-input directive', function() {
 
         element = $compile(template)($scope);
         $scope.$digest();
+        $timeout.flush();
         isolateScope = element.isolateScope();
     }
 
@@ -34,6 +35,7 @@ describe('tags-input directive', function() {
 
         element = $compile(template)($scope);
         $scope.$digest();
+        $timeout.flush();
         isolateScope = element.children().isolateScope();
     }
 
@@ -417,7 +419,6 @@ describe('tags-input directive', function() {
 
             // Act
             getInput().triggerHandler('focus');
-            $timeout.flush();
 
             // Assert
             expect($scope.callback).toHaveBeenCalled();
