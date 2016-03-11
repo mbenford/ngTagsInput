@@ -39,7 +39,7 @@
     "grunt-contrib-copy": "0.8.0",
     "grunt-contrib-cssmin": "0.12.2",
     "grunt-contrib-jshint": "0.11.0",
-    "grunt-contrib-sass": "0.9.2",
+    "grunt-contrib-sass": "https://registry.npmjs.org/grunt-contrib-sass/-/grunt-contrib-sass-0.9.2.tgz",
     "grunt-contrib-uglify": "0.8.0",
     "grunt-contrib-watch": "0.6.1",
     "grunt-conventional-changelog": "1.1.0",
