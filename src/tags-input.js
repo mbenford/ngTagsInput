@@ -161,6 +161,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
         scope: {
             tags: '=ngModel',
             text: '=?',
+            hasFocus: '=',
             onTagAdding: '&',
             onTagAdded: '&',
             onInvalidTag: '&',
