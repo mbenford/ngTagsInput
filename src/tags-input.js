@@ -162,6 +162,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             tags: '=ngModel',
             text: '=?',
             hasFocus: '=',
+            onStartSearch: '&',            
             onTagAdding: '&',
             onTagAdded: '&',
             onInvalidTag: '&',
@@ -419,6 +420,14 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                         shouldAdd, shouldRemove, shouldSelect, shouldEditLastTag;
 
                     if (tiUtil.isModifierOn(event) || hotkeys.indexOf(key) === -1) {
+                        return;
+                    }
+
+                    // Initiate search upon enter when there are 1 or more tags selected and current tag input is empty
+                    if (key  === KEYS.enter &&
+                            scope.newTag.text() === '' && tagList.items.length > 0 && scope.onStartSearch) {
+                        scope.onStartSearch();
+                        event.preventDefault();
                         return;
                     }
 
