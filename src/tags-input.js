@@ -91,6 +91,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             }
 
             setTagText(tag, tagText);
+            if (options.keyProperty && !tag[options.keyProperty]) {
+              tag[options.keyProperty] = tagText;
+            }
 
             return canAddTag(tag)
                 .then(function() {
