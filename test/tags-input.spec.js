@@ -56,7 +56,7 @@ describe('tags-input directive', function() {
     }
 
     function getRemoveButton(index) {
-        return getTag(index).find('ti-tag-item > ng-include > a').first();
+        return getTag(index).find('ti-tag-item > ng-include > button').first();
     }
 
     function getInput() {
