@@ -427,6 +427,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                     if (key  === KEYS.enter &&
                             scope.newTag.text() === '' && tagList.items.length > 0 && scope.onStartSearch) {
                         scope.onStartSearch();
+                        element.find('input').blur();
                         event.preventDefault();
                         return;
                     }
