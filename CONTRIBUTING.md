@@ -13,7 +13,7 @@ If you find a bug in the code or an error in the documentation and want to repor
 - Version of ngTagsInput you are using.
 - Version of Angular you are using.
 - Browser (name and version) on which the bug occurs.
-- Plunker showing the bug. You can use [this template](plnkr.co/edit/tpl:93P2qxOjYmlcYSqDmo39).
+- Plunker showing the bug. You can use [this template](https://plnkr.co/edit/tpl:93P2qxOjYmlcYSqDmo39).
 
 ## Setting up your environment
 
