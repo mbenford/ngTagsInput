@@ -194,6 +194,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 displayProperty: [String, 'text'],
                 keyProperty: [String, ''],
                 allowLeftoverText: [Boolean, false],
+                allowValidationOnAdd: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
                 spellcheck: [Boolean, true]
             });
@@ -247,12 +248,17 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 input = element.find('input'),
                 validationOptions = ['minTags', 'maxTags', 'allowLeftoverText'],
                 setElementValidity,
-                focusInput;
+                focusInput,
+                setElementValidityByLastTag;
 
             setElementValidity = function() {
                 ngModelCtrl.$setValidity('maxTags', tagList.items.length <= options.maxTags);
                 ngModelCtrl.$setValidity('minTags', tagList.items.length >= options.minTags);
                 ngModelCtrl.$setValidity('leftoverText', scope.hasFocus || options.allowLeftoverText ? true : !scope.newTag.text());
+            };
+
+            setElementValidityByLastTag = function(){
+                ngModelCtrl.$setValidity('lastTag',options.allowValidationOnAdd ? !scope.newTag.invalid : true);
             };
 
             focusInput = function() {
@@ -368,6 +374,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 })
                 .on('invalid-tag', function() {
                     scope.newTag.invalid = true;
+                    setElementValidityByLastTag();
                 })
                 .on('option-change', function(e) {
                     if (validationOptions.indexOf(e.name) !== -1) {
@@ -377,6 +384,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 .on('input-change', function() {
                     tagList.clearSelection();
                     scope.newTag.invalid = null;
+                    setElementValidityByLastTag();
                 })
                 .on('input-focus', function() {
                     element.triggerHandler('focus');

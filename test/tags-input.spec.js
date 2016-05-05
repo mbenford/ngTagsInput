@@ -1385,6 +1385,43 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('allow-validation-on-add option', function (){
+        it('initializes the option to false', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.allowValidationOnAdd).toBe(false);
+        });
+
+        it('makes the element invalid when it tag is invalid', function() {
+            // Arrange
+            compileWithForm('name="tags"');
+            newTag('foo');
+
+            // Act
+            newTag('Foo');
+
+            // Assert
+            expect($scope.form.tags.$valid).toBe(true);
+            expect($scope.form.tags.$error.lastTag).toBeUndefined();
+
+        });
+
+        it('makes the element valid when it tag is invalid and the option is disabled', function() {
+            // Arrange
+            compileWithForm('allow-validation-on-add="true"', 'name="tags"');
+            newTag('foo');
+
+            // Act
+            newTag('Foo');
+
+            // Assert
+            expect($scope.form.tags.$invalid).toBe(true);
+            expect($scope.form.tags.$error.lastTag).toBe(true);
+        });
+    });
+
     describe('allow-leftover-text option', function() {
         it('initializes the option to false', function() {
             // Arrange/Act
