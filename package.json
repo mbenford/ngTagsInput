@@ -56,8 +56,9 @@
     "karma-mocha-reporter": "^1.0.2",
     "karma-ng-html2js-preprocessor": "0.1.2",
     "karma-opera-launcher": "0.1.0",
-    "karma-phantomjs-launcher": "0.1.4",
+    "karma-phantomjs-launcher": "^1.0.0",
     "karma-sauce-launcher": "0.2.10",
-    "load-grunt-tasks": "3.1.0"
+    "load-grunt-tasks": "3.1.0",
+    "phantomjs-prebuilt": "^2.1.7"
   }
 }
