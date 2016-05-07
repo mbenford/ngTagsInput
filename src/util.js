@@ -111,7 +111,7 @@ tagsInput.factory('tiUtil', function($timeout, $q) {
                     if (!events[name]) {
                         events[name] = [];
                     }
-                    events[name].push(handler);
+                    events[name].unshift(handler);
                 });
                 return this;
             },
