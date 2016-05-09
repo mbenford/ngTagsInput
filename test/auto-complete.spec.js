@@ -1149,6 +1149,70 @@ describe('autoComplete directive', function() {
         });
     });
 
+    describe('match-class option', function() {
+        it('allows custom CSS classes to be set for each match (object expression)', function() {
+            // Arrange
+            compile('match-class="{foo: $match.text == \'Item1\', bar: $match.text != \'Item1\'}"');
+
+            // Act
+            loadSuggestions(3);
+            suggestionList.select(2);
+            $scope.$digest();
+
+            // Assert
+            expect(getSuggestion(0)).toHaveClass('foo');
+            expect(getSuggestion(1)).toHaveClass('bar');
+            expect(getSuggestion(2)).toHaveClass('bar selected');
+        });
+
+        it('allows custom CSS classes to be set for each match (array expression)', function() {
+            // Arrange
+            compile('match-class="[\'foo\', \'bar\']"');
+
+            // Act
+            loadSuggestions(3);
+            suggestionList.select(2);
+            $scope.$digest();
+
+            // Assert
+            expect(getSuggestion(0)).toHaveClass('foo bar');
+            expect(getSuggestion(1)).toHaveClass('foo bar');
+            expect(getSuggestion(2)).toHaveClass('foo bar selected');
+        });
+
+        it('allows custom CSS classes to be set for each match (string expression)', function() {
+            // Arrange
+            compile('match-class="\'foo bar\'"');
+
+            // Act
+            loadSuggestions(3);
+            suggestionList.select(2);
+            $scope.$digest();
+
+            // Assert
+            expect(getSuggestion(0)).toHaveClass('foo bar');
+            expect(getSuggestion(1)).toHaveClass('foo bar');
+            expect(getSuggestion(2)).toHaveClass('foo bar selected');
+        });
+
+        it('provides the expression with the current match, its index and its state', function() {
+            // Arrange
+            $scope.callback = jasmine.createSpy();
+            compile('match-class="callback($match, $index, $selected)"');
+
+            // Act
+            loadSuggestions(3);
+            suggestionList.select(2);
+            $scope.$digest();
+
+            // Assert
+            var calls = $scope.callback.calls;
+            expect(calls.argsFor(calls.count() - 3)).toEqual([suggestionList.items[0], 0, false]);
+            expect(calls.argsFor(calls.count() - 2)).toEqual([suggestionList.items[1], 1, false]);
+            expect(calls.argsFor(calls.count() - 1)).toEqual([suggestionList.items[2], 2, true]);
+        });
+    });
+
     describe('keys propagation handling', function() {
         describe('hotkeys', function() {
             var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down];
