@@ -37,6 +37,10 @@
  * @param {boolean=} [addFromAutocompleteOnly=false] Flag indicating that only tags coming from the autocomplete list
  *    will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace and addOnBlur values are ignored.
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
+ * @param {expression=} [tagClass=NA] Expression to evaluate for each existing tag in order to get the CSS classes to be used.
+ *    The expression is provided with the current tag as $tag, its index as $index and its state as $selected. The result
+ *    of the evaluation must be one of the values supported by the ngClass directive (either a string, an array or an object).
+ *    See https://docs.angularjs.org/api/ng/directive/ngClass for more information.
  * @param {expression=} [onTagAdding=NA] Expression to evaluate that will be invoked before adding a new tag. The new
  *    tag is available as $tag. This method must return either a boolean value or a promise. If either a false value or a rejected
  *    promise is returned, the tag will not be added.
@@ -159,12 +163,13 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
         scope: {
             tags: '=ngModel',
             text: '=?',
+            tagClass: '&',
             onTagAdding: '&',
             onTagAdded: '&',
             onInvalidTag: '&',
             onTagRemoving: '&',
             onTagRemoved: '&',
-            onTagClicked: '&'
+            onTagClicked: '&',
         },
         replace: false,
         transclude: true,
@@ -278,6 +283,14 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
 
             scope.track = function(tag) {
                 return tag[options.keyProperty || options.displayProperty];
+            };
+
+            scope.getTagClass = function(tag, index) {
+                var selected = tag === tagList.selected;
+                return [
+                    scope.tagClass({$tag: tag, $index: index, $selected: selected}),
+                    { selected: selected }
+                ];
             };
 
             scope.$watch('tags', function(value) {
