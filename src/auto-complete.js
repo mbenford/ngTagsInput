@@ -180,6 +180,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 return value && value.length >= options.minLength || !value && options.loadOnEmpty;
             };
 
+            scope.templateScope = tagsInput.getTemplateScope();
+
             scope.addSuggestionByIndex = function(index) {
                 suggestionList.select(index);
                 scope.addSuggestion();

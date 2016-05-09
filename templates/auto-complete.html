@@ -5,7 +5,7 @@
         ng-class="getSuggestionClass(item, $index)"
         ng-click="addSuggestionByIndex($index)"
         ng-mouseenter="suggestionList.select($index)">
-      <ti-autocomplete-match data="::item"></ti-autocomplete-match>
+      <ti-autocomplete-match scope="templateScope" data="::item"></ti-autocomplete-match>
     </li>
   </ul>
 </div>

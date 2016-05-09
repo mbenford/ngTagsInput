@@ -10,6 +10,8 @@
  *
  * @param {string} ngModel Assignable Angular expression to data-bind to.
  * @param {string=} [template=NA] URL or id of a custom template for rendering each tag.
+ * @param {string=} [templateScope=NA] Scope to be passed to custom templates - of both tagsInput and
+ *    autoComplete directives - as $scope.
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
  * @param {string=} [keyProperty=text] Property to be used as a unique identifier for the tag.
  * @param {string=} [type=text] Type of the input element. Only 'text', 'email' and 'url' are supported values.
@@ -163,6 +165,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
         scope: {
             tags: '=ngModel',
             text: '=?',
+            templateScope: '=?',
             tagClass: '&',
             onTagAdding: '&',
             onTagAdded: '&',
@@ -222,6 +225,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                     },
                     getOptions: function() {
                         return $scope.options;
+                    },
+                    getTemplateScope: function() {
+                        return $scope.templateScope;
                     },
                     on: function(name, handler) {
                         $scope.events.on(name, handler);

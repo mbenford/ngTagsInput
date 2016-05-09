@@ -1615,6 +1615,21 @@ describe('tags-input directive', function() {
             expect(scope.$getDisplayText).not.toBeUndefined();
             expect(scope.$removeTag).not.toBeUndefined();
         });
+
+        it('makes the provided scope available to the template', function() {
+            // Arrange
+            $scope.vm = { prop: 'foobar', method: jasmine.createSpy().and.returnValue(42) };
+            compile('template-scope="vm"');
+
+            // Act
+            $scope.tags = generateTags(1);
+            $scope.$digest();
+
+            // Assert
+            expect(getTagScope(0).$scope).toBeDefined();
+            expect(getTagScope(0).$scope.prop).toBe('foobar');
+            expect(getTagScope(0).$scope.method()).toBe(42);
+        });
     });
 
 
@@ -2041,7 +2056,8 @@ describe('tags-input directive', function() {
                 on: jasmine.any(Function),
                 getTags: jasmine.any(Function),
                 getCurrentTagText: jasmine.any(Function),
-                getOptions: jasmine.any(Function)
+                getOptions: jasmine.any(Function),
+                getTemplateScope: jasmine.any(Function)
             });
         });
 

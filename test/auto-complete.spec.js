@@ -39,7 +39,8 @@ describe('autoComplete directive', function() {
             getCurrentTagText: jasmine.createSpy(),
             getOptions: jasmine.createSpy().and.returnValue({
                 displayProperty: 'text'
-            })
+            }),
+            getTemplateScope: jasmine.createSpy()
         };
 
         compile();
@@ -1146,6 +1147,20 @@ describe('autoComplete directive', function() {
             var scope = getSuggestionScope(0);
             expect(scope.$highlight).not.toBeUndefined();
             expect(scope.$getDisplayText).not.toBeUndefined();
+        });
+
+        it('makes the provided scope available to the template', function() {
+            // Arrange
+            tagsInput.getTemplateScope.and.returnValue({ prop: 'foobar', method: jasmine.createSpy().and.returnValue(42) });
+            compile();
+
+            // Act
+            loadSuggestions(1);
+
+            // Assert
+            expect(getSuggestionScope(0).$scope).toBeDefined();
+            expect(getSuggestionScope(0).$scope.prop).toBe('foobar');
+            expect(getSuggestionScope(0).$scope.method()).toBe(42);
         });
     });
 
