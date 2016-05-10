@@ -27,6 +27,8 @@
  *    gains focus. The current input value is available as $query.
  * @param {boolean=} [selectFirstMatch=true] Flag indicating that the first match will be automatically selected once
  *    the suggestion list is shown.
+ * @param {boolean=} [showMoreSuggestion=false] Flag indicating that the "Show more..." item will be present in
+ *    the suggestion list shown. Use $pagination on source
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
     function SuggestionList(loadFn, options, events) {
@@ -52,11 +54,14 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             lastPromise = null;
 
             self.items = [];
+            self.itemsBuffer = [];
             self.visible = false;
             self.index = -1;
             self.selected = null;
             self.query = null;
+            self.pagination = 1;
         };
+
         self.show = function() {
             if (options.selectFirstMatch) {
                 self.select(0);
@@ -69,7 +74,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
         self.load = tiUtil.debounce(function(query, tags) {
             self.query = query;
 
-            var promise = $q.when(loadFn({ $query: query }));
+            var promise = $q.when(loadFn({ $query: query, $pagination: self.pagination }));
             lastPromise = promise;
 
             promise.then(function(items) {
@@ -79,7 +84,13 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
 
                 items = tiUtil.makeObjectArray(items.data || items, getTagId());
                 items = getDifference(items, tags);
-                self.items = items.slice(0, options.maxResultsToShow);
+
+                if(items.length > 0) {
+                  self.items = items.slice(0, options.maxResultsToShow);
+                  self.itemsBuffer = items.slice(options.maxResultsToShow);
+                }
+
+                self.canShowMore = options.showMoreSuggestion && self.items.length <= items.length;
 
                 if (self.items.length > 0) {
                     self.show();
@@ -89,6 +100,11 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 }
             });
         }, options.debounceDelay);
+
+       self.loadFromBuffer = tiUtil.debounce(function() {
+         self.items = self.itemsBuffer.slice(0, options.maxResultsToShow);
+         self.itemsBuffer = self.itemsBuffer.slice(options.maxResultsToShow);
+       }, options.debounceDelay);
 
         self.selectNext = function() {
             self.select(++self.index);
@@ -150,6 +166,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
                 selectFirstMatch: [Boolean, true],
+                showMoreSuggestion : [Boolean, false],
                 displayProperty: [String, '']
             });
 
@@ -193,9 +210,19 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 if (suggestionList.selected) {
                     tagsInput.addTag(angular.copy(suggestionList.selected));
                     suggestionList.reset();
+
                     added = true;
                 }
                 return added;
+            };
+
+            scope.showMoreSuggestion = function () {
+              if(!!suggestionList.itemsBuffer && suggestionList.itemsBuffer.length > 0) {
+                suggestionList.loadFromBuffer();
+              } else {
+                suggestionList.pagination++;
+                suggestionList.load(suggestionList.query, tagsInput.getTags());
+              }
             };
 
             scope.track = function(item) {
