@@ -1,3 +1,11 @@
+### 3.0.2 (2016-03-23)
+
+### 3.0.1 (2016-03-21)
+
+#### Features
+
+* **tagsInput:** Allow onTagAdding/onTagRemoving to return a promise ([4cc2f5c3](https://github.com/mbenford/ngTagsInput/commit/4cc2f5c3cf25c4276b82273c9d6e45b1d4553ec6), [#463](https://github.com/mbenford/ngTagsInput/issues/463))
+
 ## 3.0.0 (2015-07-13)
 
 #### Bug Fixes
