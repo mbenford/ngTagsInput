@@ -27,8 +27,10 @@
  *    gains focus. The current input value is available as $query.
  * @param {boolean=} [selectFirstMatch=true] Flag indicating that the first match will be automatically selected once
  *    the suggestion list is shown.
+ * @param {boolean=} [sortResults=false] Flag indicating that the suggestion list will be sorted.
+ * @param {boolean=} [sortReverse=false] Flag indicating that the suggestion list will be sorted in reverse order.
  */
-tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
+tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil, $filter) {
     function SuggestionList(loadFn, options, events) {
         var self = {}, getDifference, lastPromise, getTagId;
 
@@ -78,6 +80,11 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 }
 
                 items = tiUtil.makeObjectArray(items.data || items, getTagId());
+
+                if (options.sortResults) {
+                    items = $filter('orderBy')(items, getTagId(), options.sortReverse);
+                }
+
                 items = getDifference(items, tags);
                 self.items = items.slice(0, options.maxResultsToShow);
 
@@ -150,7 +157,9 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
                 selectFirstMatch: [Boolean, true],
-                displayProperty: [String, '']
+                displayProperty: [String, ''],
+                sortResults: [Boolean, false],
+                sortReverse: [Boolean, false]
             });
 
             $scope.suggestionList = new SuggestionList($scope.source, $scope.options, $scope.events);

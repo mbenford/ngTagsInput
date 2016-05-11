@@ -1372,4 +1372,60 @@ describe('autoComplete directive', function() {
             });
         });
     });
+
+    describe('sort-results option', function() {
+        it('initializes the option to false', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.sortResults).toBe(false);
+        });
+
+        it('sorts results in ascending order', function() {
+            // Arrange
+            compile('sort-results=true');
+
+            // Act
+            loadSuggestions([
+                { text: 'Item2' },
+                { text: 'Item3' },
+                { text: 'Item1' }
+            ]);
+
+            // Assert
+            expect(getSuggestions().length).toBe(3);
+            expect(getSuggestionText(0)).toBe('Item1');
+            expect(getSuggestionText(1)).toBe('Item2');
+            expect(getSuggestionText(2)).toBe('Item3');
+        });
+    });
+
+    describe('sort-reverse option', function() {
+        it('initializes the option to false', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.sortReverse).toBe(false);
+        });
+
+        it('sorts results in descending order', function() {
+            // Arrange
+            compile('sort-results=true', 'sort-reverse=true');
+
+            // Act
+            loadSuggestions([
+                { text: 'Item2' },
+                { text: 'Item3' },
+                { text: 'Item1' }
+            ]);
+
+            // Assert
+            expect(getSuggestions().length).toBe(3);
+            expect(getSuggestionText(0)).toBe('Item3');
+            expect(getSuggestionText(1)).toBe('Item2');
+            expect(getSuggestionText(2)).toBe('Item1');
+        });
+    });
 });
