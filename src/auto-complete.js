@@ -27,6 +27,8 @@
  *    gains focus. The current input value is available as $query.
  * @param {boolean=} [selectFirstMatch=true] Flag indicating that the first match will be automatically selected once
  *    the suggestion list is shown.
+ * @param {boolean=} [addOnTab=true] Flag indicating that the selected match will be automatically selected once
+ *    the tab key is pressed.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
     function SuggestionList(loadFn, options, events) {
@@ -150,7 +152,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
                 selectFirstMatch: [Boolean, true],
-                displayProperty: [String, '']
+                displayProperty: [String, ''],
+                addOnTab: [Boolean, true]
             });
 
             $scope.suggestionList = new SuggestionList($scope.source, $scope.options, $scope.events);
@@ -250,7 +253,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                             suggestionList.reset();
                             handled = true;
                         }
-                        else if (key === KEYS.enter || key === KEYS.tab) {
+                        else if (key === KEYS.enter || (scope.options.addOnTab && key === KEYS.tab)) {
                             handled = scope.addSuggestion();
                         }
                     }

@@ -345,6 +345,19 @@ describe('autoComplete directive', function() {
             expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' });
         });
 
+        it('does not add the selected suggestion when the tab key is pressed and the suggestions box is visible and addOnTab is false', function() {
+            // Arrange
+            compile('add-on-tab="false"');
+            loadSuggestions(2);
+            suggestionList.select(0);
+
+            // Act
+            sendKeyDown(KEYS.tab);
+
+            // Assert
+            expect(tagsInput.addTag).not.toHaveBeenCalled();
+        });
+
         it('adds the selected suggestion when the tab key is pressed and there is a suggestion selected', function() {
             // Arrange
             loadSuggestions(2);
