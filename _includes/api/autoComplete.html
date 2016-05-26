@@ -19,7 +19,8 @@
   [load-on-down-arrow="{boolean}"]
   [load-on-empty="{boolean}"]
   [load-on-focus="{boolean}"]
-  [select-first-match="{boolean}"]>
+  [select-first-match="{boolean}"]
+  [match-class="{expression}"]>
 </auto-complete>
 {% endhighlight %}
   </section>
@@ -101,6 +102,12 @@
           <td><span class="label type type-boolean">boolean</span></td>
           <td>Flag indicating that the first match will be automatically selected once the suggestion list is shown.</td>
           <td>true</td>
+        </tr>
+        <tr>
+          <td>matchClass</td>
+          <td><span class="label type type-expression">expression</span></td>
+          <td>Expression to evaluate for each match in order to get the CSS classes to be used. The expression is provided with the current match as $match, its index as $index and its state as $selected. The result of the evaluation must be one of the values supported by the ngClass directive (either a string, an array or an object). See https://docs.angularjs.org/api/ng/directive/ngClass for more information.</td>
+          <td>&ndash;</td>
         </tr>
       </tbody>
     </table>

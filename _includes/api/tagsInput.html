@@ -11,6 +11,7 @@
 <tags-input
   ng-model="{string}"
   [template="{string}"]
+  [template-scope="{string}"]
   [display-property="{string}"]
   [key-property="{string}"]
   [type="{string}"]
@@ -34,6 +35,7 @@
   [enable-editing-last-tag="{boolean}"]
   [add-from-autocomplete-only="{boolean}"]
   [spellcheck="{boolean}"]
+  [tag-class="{expression}"]
   [on-tag-adding="{expression}"]
   [on-tag-added="{expression}"]
   [on-invalid-tag="{expression}"]
@@ -66,6 +68,12 @@
           <td>template</td>
           <td><span class="label type type-string">string</span></td>
           <td>URL or id of a custom template for rendering each tag.</td>
+          <td>&ndash;</td>
+        </tr>
+        <tr>
+          <td>templateScope</td>
+          <td><span class="label type type-string">string</span></td>
+          <td>Scope to be passed to custom templates - of both tagsInput and autoComplete directives - as $scope.</td>
           <td>&ndash;</td>
         </tr>
         <tr>
@@ -207,9 +215,15 @@
           <td>true</td>
         </tr>
         <tr>
+          <td>tagClass</td>
+          <td><span class="label type type-expression">expression</span></td>
+          <td>Expression to evaluate for each existing tag in order to get the CSS classes to be used. The expression is provided with the current tag as $tag, its index as $index and its state as $selected. The result of the evaluation must be one of the values supported by the ngClass directive (either a string, an array or an object). See https://docs.angularjs.org/api/ng/directive/ngClass for more information.</td>
+          <td>&ndash;</td>
+        </tr>
+        <tr>
           <td>onTagAdding</td>
           <td><span class="label type type-expression">expression</span></td>
-          <td>Expression to evaluate that will be invoked before adding a new tag. The new tag is available as $tag. This method must return either true or false. If false, the tag will not be added.</td>
+          <td>Expression to evaluate that will be invoked before adding a new tag. The new tag is available as $tag. This method must return either a boolean value or a promise. If either a false value or a rejected promise is returned, the tag will not be added.</td>
           <td>&ndash;</td>
         </tr>
         <tr>
@@ -227,7 +241,7 @@
         <tr>
           <td>onTagRemoving</td>
           <td><span class="label type type-expression">expression</span></td>
-          <td>Expression to evaluate that will be invoked before removing a tag. The tag is available as $tag. This method must return either true or false. If false, the tag will not be removed.</td>
+          <td>Expression to evaluate that will be invoked before removing a tag. The tag is available as $tag. This method must return either a boolean value or a promise. If either a false value or a rejected promise is returned, the tag will not be removed.</td>
           <td>&ndash;</td>
         </tr>
         <tr>
