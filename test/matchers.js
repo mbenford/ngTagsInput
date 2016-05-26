@@ -6,7 +6,8 @@ var customMatchers = {
             compare: function(actual, expected) {
                 var result = {};
                 result.pass = actual.hasClass(expected);
-                result.message = 'Expected element' + (result.pass ? ' not ' : ' ') + 'to have class \'' + expected + '\'';
+                result.message = 'Expected element' + (result.pass ? ' not ' : ' ') + 'to have class \'' + expected + '\'' +
+                  ' but found \'' + actual.attr('class') + '\'';
                 return result;
             }
         };

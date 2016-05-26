@@ -10,6 +10,8 @@
  *
  * @param {string} ngModel Assignable Angular expression to data-bind to.
  * @param {string=} [template=NA] URL or id of a custom template for rendering each tag.
+ * @param {string=} [templateScope=NA] Scope to be passed to custom templates - of both tagsInput and
+ *    autoComplete directives - as $scope.
  * @param {string=} [displayProperty=text] Property to be rendered as the tag label.
  * @param {string=} [keyProperty=text] Property to be used as a unique identifier for the tag.
  * @param {expression=} [trackByExpr=NA] Expression that should evaluate to a unique identifier for the tag which is available as $tag and its index as $index.
@@ -38,6 +40,10 @@
  * @param {boolean=} [addFromAutocompleteOnly=false] Flag indicating that only tags coming from the autocomplete list
  *    will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace and addOnBlur values are ignored.
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
+ * @param {expression=} [tagClass=NA] Expression to evaluate for each existing tag in order to get the CSS classes to be used.
+ *    The expression is provided with the current tag as $tag, its index as $index and its state as $selected. The result
+ *    of the evaluation must be one of the values supported by the ngClass directive (either a string, an array or an object).
+ *    See https://docs.angularjs.org/api/ng/directive/ngClass for more information.
  * @param {expression=} [onTagAdding=NA] Expression to evaluate that will be invoked before adding a new tag. The new
  *    tag is available as $tag. This method must return either a boolean value or a promise. If either a false value or a rejected
  *    promise is returned, the tag will not be added.
@@ -161,6 +167,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
         scope: {
             tags: '=ngModel',
             text: '=?',
+            templateScope: '=?',
+            tagClass: '&',
             onTagAdding: '&',
             onTagAdded: '&',
             onInvalidTag: '&',
@@ -220,6 +228,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                     },
                     getOptions: function() {
                         return $scope.options;
+                    },
+                    getTemplateScope: function() {
+                        return $scope.templateScope;
                     },
                     on: function(name, handler) {
                         $scope.events.on(name, handler);
@@ -285,6 +296,14 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 }
 
                 return scope.trackByExpr({ $tag: tag, $index: index });
+            };
+
+            scope.getTagClass = function(tag, index) {
+                var selected = tag === tagList.selected;
+                return [
+                    scope.tagClass({$tag: tag, $index: index, $selected: selected}),
+                    { selected: selected }
+                ];
             };
 
             scope.$watch('tags', function(value) {

@@ -61,8 +61,8 @@ describe('tiUtil factory', function() {
 
         it('stops the propagation of an event', function() {
             // Arrange
-            var callback1 = jasmine.createSpy().and.returnValue(false),
-                callback2 = jasmine.createSpy();
+            var callback1 = jasmine.createSpy(),
+                callback2 = jasmine.createSpy().and.returnValue(false);
 
             // Act
             sut.on('foo', callback1);
@@ -70,8 +70,8 @@ describe('tiUtil factory', function() {
             sut.trigger('foo', 'some data');
 
             // Assert
-            expect(callback1).toHaveBeenCalledWith('some data');
-            expect(callback2).not.toHaveBeenCalled();
+            expect(callback2).toHaveBeenCalledWith('some data');
+            expect(callback1).not.toHaveBeenCalled();
         });
 
         it('returns the object instance so calls can be chained', function() {

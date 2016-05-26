@@ -132,7 +132,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
     return {
         restrict: 'E',
         require: '^tagsInput',
-        scope: { source: '&' },
+        scope: {
+            source: '&',
+            matchClass: '&'
+        },
         templateUrl: 'ngTagsInput/auto-complete.html',
         controller: function($scope, $element, $attrs) {
             $scope.events = tiUtil.simplePubSub();
@@ -177,6 +180,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 return value && value.length >= options.minLength || !value && options.loadOnEmpty;
             };
 
+            scope.templateScope = tagsInput.getTemplateScope();
+
             scope.addSuggestionByIndex = function(index) {
                 suggestionList.select(index);
                 scope.addSuggestion();
@@ -195,6 +200,14 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
 
             scope.track = function(item) {
                 return item[options.tagsInput.keyProperty || options.tagsInput.displayProperty];
+            };
+
+            scope.getSuggestionClass = function(item, index) {
+                var selected = item === suggestionList.selected;
+                return [
+                    scope.matchClass({$match: item, $index: index, $selected: selected}),
+                    { selected: selected }
+                ];
             };
 
             tagsInput

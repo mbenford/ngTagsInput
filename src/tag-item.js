@@ -13,7 +13,10 @@ tagsInput.directive('tiTagItem', function(tiUtil) {
         restrict: 'E',
         require: '^tagsInput',
         template: '<ng-include src="$$template"></ng-include>',
-        scope: { data: '=' },
+        scope: {
+            $scope: '=scope',
+            data: '='
+        },
         link: function(scope, element, attrs, tagsInputCtrl) {
             var tagsInput = tagsInputCtrl.registerTagItem(),
                 options = tagsInput.getOptions();

@@ -1661,6 +1661,21 @@ describe('tags-input directive', function() {
             expect(scope.$getDisplayText).not.toBeUndefined();
             expect(scope.$removeTag).not.toBeUndefined();
         });
+
+        it('makes the provided scope available to the template', function() {
+            // Arrange
+            $scope.vm = { prop: 'foobar', method: jasmine.createSpy().and.returnValue(42) };
+            compile('template-scope="vm"');
+
+            // Act
+            $scope.tags = generateTags(1);
+            $scope.$digest();
+
+            // Assert
+            expect(getTagScope(0).$scope).toBeDefined();
+            expect(getTagScope(0).$scope.prop).toBe('foobar');
+            expect(getTagScope(0).$scope.method()).toBe(42);
+        });
     });
 
 
@@ -1912,6 +1927,70 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('tag-class option', function() {
+        it('allows custom CSS classes to be set for each tag (object expression)', function() {
+            // Arrange
+            $scope.tags = generateTags(3);
+
+            // Act
+            compile('tag-class="{foo: $tag.text == \'Tag1\', bar: $tag.text != \'Tag1\'}"');
+            isolateScope.tagList.selectPrior();
+            isolateScope.$digest();
+
+            // Assert
+            expect(getTag(0)).toHaveClass('foo');
+            expect(getTag(1)).toHaveClass('bar');
+            expect(getTag(2)).toHaveClass('bar selected');
+        });
+
+        it('allows custom CSS classes to be set for each tag (array expression)', function() {
+            // Arrange
+            $scope.tags = generateTags(3);
+
+            // Act
+            compile('tag-class="[\'foo\', \'bar\']"');
+            isolateScope.tagList.selectPrior();
+            isolateScope.$digest();
+
+            // Assert
+            expect(getTag(0)).toHaveClass('foo bar');
+            expect(getTag(1)).toHaveClass('foo bar');
+            expect(getTag(2)).toHaveClass('foo bar selected');
+        });
+
+        it('allows custom CSS classes to be set for each tag (string expression)', function() {
+            // Arrange
+            $scope.tags = generateTags(3);
+
+            // Act
+            compile('tag-class="\'foo bar\'"');
+            isolateScope.tagList.selectPrior();
+            isolateScope.$digest();
+
+            // Assert
+            expect(getTag(0)).toHaveClass('foo bar');
+            expect(getTag(1)).toHaveClass('foo bar');
+            expect(getTag(2)).toHaveClass('foo bar selected');
+        });
+
+        it('provides the expression with the current tag, its index and its state', function() {
+            // Arrange
+            $scope.tags = generateTags(3);
+            $scope.callback = jasmine.createSpy();
+
+            // Act
+            compile('tag-class="callback($tag, $index, $selected)"');
+            isolateScope.tagList.selectPrior();
+            isolateScope.$digest();
+
+            // Assert
+            var calls = $scope.callback.calls;
+            expect(calls.argsFor(calls.count() - 3)).toEqual([$scope.tags[0], 0, false]);
+            expect(calls.argsFor(calls.count() - 2)).toEqual([$scope.tags[1], 1, false]);
+            expect(calls.argsFor(calls.count() - 1)).toEqual([$scope.tags[2], 2, true]);
+        });
+    });
+
     describe('ng-disabled support', function () {
         it('disables the inner input element', function () {
             // Arrange/Act
@@ -2023,7 +2102,8 @@ describe('tags-input directive', function() {
                 on: jasmine.any(Function),
                 getTags: jasmine.any(Function),
                 getCurrentTagText: jasmine.any(Function),
-                getOptions: jasmine.any(Function)
+                getOptions: jasmine.any(Function),
+                getTemplateScope: jasmine.any(Function)
             });
         });
 
