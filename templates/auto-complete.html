@@ -7,5 +7,12 @@
         ng-mouseenter="suggestionList.select($index)">
       <ti-autocomplete-match scope="templateScope" data="::item"></ti-autocomplete-match>
     </li>
+    <li class="suggestion-item" 
+        ng-class="{selected: item == suggestionList.selected}" 
+        ng-if="suggestionList.canShowMore" 
+        ng-click="showMoreSuggestion()" 
+        ng-mouseenter="suggestionList.select()">
+      Show more...
+    </li>
   </ul>
 </div>

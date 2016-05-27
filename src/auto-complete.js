@@ -27,6 +27,8 @@
  *    gains focus. The current input value is available as $query.
  * @param {boolean=} [selectFirstMatch=true] Flag indicating that the first match will be automatically selected once
  *    the suggestion list is shown.
+ * @param {boolean=} [showMoreSuggestion=false] Flag indicating that the "Show more..." item will be present in
+ *    the suggestion list shown.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
     function SuggestionList(loadFn, options, events) {
@@ -56,6 +58,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             self.index = -1;
             self.selected = null;
             self.query = null;
+            self.pagination = 1;
         };
         self.show = function() {
             if (options.selectFirstMatch) {
@@ -79,7 +82,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
 
                 items = tiUtil.makeObjectArray(items.data || items, getTagId());
                 items = getDifference(items, tags);
-                self.items = items.slice(0, options.maxResultsToShow);
+                self.items = items.slice(0, options.maxResultsToShow * self.pagination);
+                self.canShowMore = options.showMoreSuggestion && self.items.length < items.length;
 
                 if (self.items.length > 0) {
                     self.show();
@@ -150,6 +154,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
                 selectFirstMatch: [Boolean, true],
+                showMoreSuggestion : [Boolean, false],
                 displayProperty: [String, '']
             });
 
@@ -196,6 +201,13 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                     added = true;
                 }
                 return added;
+            };
+
+            scope.showMoreSuggestion = function () {
+              var actualPagination = suggestionList.pagination;
+              suggestionList.reset();
+              suggestionList.pagination = actualPagination + 1;
+              suggestionList.load(null, tagsInput.getTags());
             };
 
             scope.track = function(item) {
