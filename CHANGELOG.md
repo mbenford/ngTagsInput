@@ -1,3 +1,15 @@
+### 3.1.1 (2016-05-27)
+
+#### Bug Fixes
+
+* **util:** Fix the order that event handlers are registered ([0e3eff44](https://github.com/mbenford/ngTagsInput/commit/0e3eff44bc4b4903c746cce7cf3cf87c0224204f))
+
+### 3.1.1 (2016-05-27)
+
+#### Bug Fixes
+
+* **util:** Fix the order that event handlers are registered so the directive can work again with Angular 1.4-. ([0e3eff44](https://github.com/mbenford/ngTagsInput/commit/0e3eff44bc4b4903c746cce7cf3cf87c0224204f))
+
 ## 3.1.0 (2016-05-26)
 
 #### Bug Fixes
