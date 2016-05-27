@@ -2,27 +2,7 @@
 
 #### Bug Fixes
 
-* **util:** Fix the order that event handlers are registered ([0e3eff44](https://github.com/mbenford/ngTagsInput/commit/0e3eff44bc4b4903c746cce7cf3cf87c0224204f))
-
-### 3.1.1 (2016-05-27)
-
-#### Bug Fixes
-
 * **util:** Fix the order that event handlers are registered so the directive can work again with Angular 1.4-. ([0e3eff44](https://github.com/mbenford/ngTagsInput/commit/0e3eff44bc4b4903c746cce7cf3cf87c0224204f))
-
-## 3.1.0 (2016-05-26)
-
-#### Bug Fixes
-
-* **util:** Reverse the order events are triggered ([7bc37a62](https://github.com/mbenford/ngTagsInput/commit/7bc37a62d61c2903ec5dc091eb6fc315c0bfbc3d), [#638](https://github.com/mbenford/ngTagsInput/issues/638))
-
-#### Features
-
-* **autocomplete:** Add support for custom CSS classes for matches ([8d177469](https://github.com/mbenford/ngTagsInput/commit/8d17746998fc35dfd9d2252ed525dd851837f0d0))
-* **tagsInput:**
-  * Add templateScope option ([8d26e3bb](https://github.com/mbenford/ngTagsInput/commit/8d26e3bbf8d24d6fc02073a888c3e51ed29123c3), [#486](https://github.com/mbenford/ngTagsInput/issues/486))
-  * Add support for custom CSS classes for tags ([5cc0144b](https://github.com/mbenford/ngTagsInput/commit/5cc0144b699552e5b57f2f7b86b04118c74dbfc1), [#273](https://github.com/mbenford/ngTagsInput/issues/273))
-  * Allow onTagAdding/onTagRemoving to return a promise ([4cc2f5c3](https://github.com/mbenford/ngTagsInput/commit/4cc2f5c3cf25c4276b82273c9d6e45b1d4553ec6), [#463](https://github.com/mbenford/ngTagsInput/issues/463))
 
 ## 3.1.0 (2016-05-26)
 
