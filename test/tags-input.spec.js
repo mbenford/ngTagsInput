@@ -2142,7 +2142,7 @@ describe('tags-input directive', function() {
 
             // Assert
             expect(obj).toBe(autocompleteObj);
-            expect(isolateScope.events.on).toHaveBeenCalledWith('dummy event', callback);
+            expect(isolateScope.events.on).toHaveBeenCalledWith('dummy event', callback, true);
         });
     });
 

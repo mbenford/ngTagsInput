@@ -29,6 +29,18 @@ describe('tiUtil factory', function() {
             expect(callback).toHaveBeenCalledWith('some data');
         });
 
+        it('subscribes to an event in reverse order', function() {
+            // Arrange
+            var callback = jasmine.createSpy();
+
+            // Act
+            sut.on('foo', callback, true);
+            sut.trigger('foo', 'some data');
+
+            // Assert
+            expect(callback).toHaveBeenCalledWith('some data');
+        });
+
         it('subscribes to multiple events', function() {
             // Arrange
             var callback = jasmine.createSpy();
@@ -59,10 +71,26 @@ describe('tiUtil factory', function() {
             expect(callback2).toHaveBeenCalledWith('some data');
         });
 
-        it('stops the propagation of an event', function() {
+        it('subscribes multiple times to the same event in reverse order', function() {
             // Arrange
             var callback1 = jasmine.createSpy(),
-                callback2 = jasmine.createSpy().and.returnValue(false);
+                callback2 = jasmine.createSpy();
+
+            // Act
+            sut.on('foo', callback1);
+            sut.on('foo', callback2, true);
+            sut.trigger('foo', 'some data');
+
+            // Assert
+            expect(callback1).toHaveBeenCalledWith('some data');
+            expect(callback2).toHaveBeenCalledWith('some data');
+        });
+
+        it('guarantees the order of invocation is correct (regular order)', function() {
+            // Arrange
+            var calls = [],
+                callback1 = function() { calls.push('callback1'); },
+                callback2 = function() { calls.push('callback2'); };
 
             // Act
             sut.on('foo', callback1);
@@ -70,8 +98,52 @@ describe('tiUtil factory', function() {
             sut.trigger('foo', 'some data');
 
             // Assert
-            expect(callback2).toHaveBeenCalledWith('some data');
+            expect(calls).toEqual(['callback1', 'callback2']);
+        });
+
+        it('guarantees the order of invocation is correct (reverse order)', function() {
+            // Arrange
+            var calls = [],
+                callback1 = function() { calls.push('callback1'); },
+                callback2 = function() { calls.push('callback2'); };
+
+            // Act
+            sut.on('foo', callback1);
+            sut.on('foo', callback2, true);
+            sut.trigger('foo', 'some data');
+
+            // Assert
+            expect(calls).toEqual(['callback2', 'callback1']);
+        });
+
+        it('stops the propagation of an event (regular order)', function() {
+            // Arrange
+            var callback1 = jasmine.createSpy().and.returnValue(false),
+                callback2 = jasmine.createSpy();
+
+            // Act
+            sut.on('foo', callback1);
+            sut.on('foo', callback2);
+            sut.trigger('foo', 'some data');
+
+            // Assert
+            expect(callback1).toHaveBeenCalledWith('some data');
+            expect(callback2).not.toHaveBeenCalled();
+        });
+
+        it('stops the propagation of an event (reverse order)', function() {
+            // Arrange
+            var callback1 = jasmine.createSpy(),
+                callback2 = jasmine.createSpy().and.returnValue(false);
+
+            // Act
+            sut.on('foo', callback1);
+            sut.on('foo', callback2, true);
+            sut.trigger('foo', 'some data');
+
+            // Assert
             expect(callback1).not.toHaveBeenCalled();
+            expect(callback2).toHaveBeenCalledWith('some data');
         });
 
         it('returns the object instance so calls can be chained', function() {

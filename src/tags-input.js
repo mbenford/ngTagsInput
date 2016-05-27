@@ -230,7 +230,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                         return $scope.templateScope;
                     },
                     on: function(name, handler) {
-                        $scope.events.on(name, handler);
+                        $scope.events.on(name, handler, true);
                         return this;
                     }
                 };

@@ -106,12 +106,13 @@ tagsInput.factory('tiUtil', function($timeout, $q) {
     self.simplePubSub = function() {
         var events = {};
         return {
-            on: function(names, handler) {
+            on: function(names, handler, first) {
                 names.split(' ').forEach(function(name) {
                     if (!events[name]) {
                         events[name] = [];
                     }
-                    events[name].unshift(handler);
+                    var method = first ? [].unshift : [].push;
+                    method.call(events[name], handler);
                 });
                 return this;
             },
