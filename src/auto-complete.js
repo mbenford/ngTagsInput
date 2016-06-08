@@ -37,7 +37,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
         var self = {}, getDifference, lastPromise, getTagId;
 
         getTagId = function() {
-            if (options.tagsInput.itemIsObject) {
+            if (options.tagsInput.itemIsObject || !options.tagsInput.itemIsObject) {
                 return options.tagsInput.keyProperty || options.tagsInput.displayProperty;
             } else {
                 return null;
@@ -46,7 +46,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
 
         getDifference = function(array1, array2) {
             return array1.filter(function(item) {
-                if (options.tagsInput.itemIsObject) {
+                if (options.tagsInput.itemIsObject || !options.tagsInput.itemIsObject) {
                     return !tiUtil.findInObjectArray(array2, item, getTagId(), function(a, b) {
                         if (options.tagsInput.replaceSpacesWithDashes) {
                             a = tiUtil.replaceSpacesWithDashes(a);
@@ -95,7 +95,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                     return;
                 }
 
-                if (options.tagsInput.itemIsObject){
+                if (options.tagsInput.itemIsObject || !options.tagsInput.itemIsObject){
                     items = tiUtil.makeObjectArray(items.data || items, getTagId());
                 }
 
@@ -220,7 +220,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             };
 
             scope.track = function(item) {
-                if (options.tagsInput.itemIsObject) {
+                if (options.tagsInput.itemIsObject || !options.tagsInput.itemIsObject) {
                     return item[options.tagsInput.keyProperty || options.tagsInput.displayProperty];
                 } else {
                     return item;
