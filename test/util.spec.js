@@ -226,12 +226,18 @@ describe('tiUtil factory', function() {
             expect(tiUtil.safeHighlight('abc', 'b')).toBe('a<em>b</em>c');
             expect(tiUtil.safeHighlight('aBc', 'b')).toBe('a<em>B</em>c');
             expect(tiUtil.safeHighlight('abc', 'B')).toBe('a<em>b</em>c');
+            expect(tiUtil.safeHighlight('abcB', 'B')).toBe('a<em>b</em>c<em>B</em>');
+            expect(tiUtil.safeHighlight('abc', '')).toBe('abc');
         });
 
         it('highlights HTML entities', function() {
             expect(tiUtil.safeHighlight('a&a', '&')).toBe('a<em>&amp;</em>a');
             expect(tiUtil.safeHighlight('a>a', '>')).toBe('a<em>&gt;</em>a');
             expect(tiUtil.safeHighlight('a<a', '<')).toBe('a<em>&lt;</em>a');
+            expect(tiUtil.safeHighlight('<script>alert("XSS")</script>', '<'))
+                .toBe('<em>&lt;</em>script&gt;alert("XSS")<em>&lt;</em>/script&gt;');
+            expect(tiUtil.safeHighlight('<script>alert("XSS")</script>', ''))
+                .toBe('&lt;script&gt;alert("XSS")&lt;/script&gt;');
         });
     });
 
