@@ -1,3 +1,9 @@
+## 3.1.2 (2016-07-03)
+
+#### Bug Fixes
+
+Fixes bug with comma detection on android/chrome.
+
 ## 3.1.1 (2016-05-27)
 
 #### Bug Fixes
