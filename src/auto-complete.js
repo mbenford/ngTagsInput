@@ -191,7 +191,23 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             options.tagsInput = tagsInput.getOptions();
 
             shouldLoadSuggestions = function(value) {
+              if(value && (tagsInput.getTags().length >= tagsInput.getOptions().maxTags)) {
+                suggestionList.maxTagsErrorState = true;
+                tagsInput.resetTag();
+
+                $timeout(function(){
+                  scope.resetSuggestions();
+                }, 1000);
+
+                return false;
+              } else {
                 return value && value.length >= options.minLength || !value && options.loadOnEmpty;
+              }
+            };
+
+            scope.resetSuggestions = function() {
+              suggestionList.reset();
+              suggestionList.maxTagsErrorState = false;
             };
 
             scope.addSuggestionByIndex = function(index) {

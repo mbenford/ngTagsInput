@@ -218,6 +218,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                     getOptions: function() {
                         return $scope.options;
                     },
+                    resetTag: function() {
+                      $scope.newTag.text('');
+                      return true;
+                    },
                     on: function(name, handler) {
                         $scope.events.on(name, handler);
                         return this;

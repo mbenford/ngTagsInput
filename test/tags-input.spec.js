@@ -1977,7 +1977,8 @@ describe('tags-input directive', function() {
                 on: jasmine.any(Function),
                 getTags: jasmine.any(Function),
                 getCurrentTagText: jasmine.any(Function),
-                getOptions: jasmine.any(Function)
+                getOptions: jasmine.any(Function),
+                resetTag: jasmine.any(Function)
             });
         });
 

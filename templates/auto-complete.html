@@ -1,3 +1,11 @@
+<div class="autocomplete" ng-if="suggestionList.maxTagsErrorState">
+  <ul class="suggestion-list">
+    <li class="suggestion-item-error" ng-click='resetSuggestions()'>
+       No more entries allowed
+    </li>
+   </ul>
+</div>
+
 <div class="autocomplete" ng-if="suggestionList.visible">
   <ul class="suggestion-list">
     <li class="suggestion-item"
