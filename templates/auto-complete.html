@@ -3,7 +3,7 @@
     <li class="suggestion-item"
         ng-repeat="item in suggestionList.items track by track(item)"
         ng-class="getSuggestionClass(item, $index)"
-        ng-click="addSuggestionByIndex($index)"
+        ng-click="addSuggestionByIndex($index, $event)"
         ng-mouseenter="suggestionList.select($index)">
       <ti-autocomplete-match scope="templateScope" data="::item"></ti-autocomplete-match>
     </li>
