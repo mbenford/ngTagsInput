@@ -173,6 +173,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             onTagRemoving: '&',
             onTagRemoved: '&',
             onTagClicked: '&',
+            onKeyup: '&',
         },
         replace: false,
         transclude: true,
