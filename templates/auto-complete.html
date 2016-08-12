@@ -9,7 +9,7 @@
     </li>
   </ul>
 </div>
-<div class="autocomplete notice" ng-if="(suggestionList.items.length === 0) && (suggestionList.queryLength != 0 && suggestionList.queryLength != undefined)">
+<div class="autocomplete notice" ng-if="$parent.hasFocus && (suggestionList.items.length === 0) && (suggestionList.queryLength != 0 && suggestionList.queryLength != undefined)">
   <ul class="suggestion-list">
     <li class="suggestion-item">No Matching Tags Found</li>
   </ul>
