@@ -2198,4 +2198,52 @@ describe('tags-input directive', function() {
             });
         });
     });
+
+    describe('tag sort', function() {
+        it('renders tags in the correct order', function() {
+            // Arrange
+            $scope.tagCompare = function(a, b) {
+                return a.text.localeCompare(b.text);
+            };
+
+            compile('tag-compare="tagCompare(a,b)"');
+
+            $scope.tags = [
+                { text: 'TagC'},
+                { text: 'TagB'},
+                { text: 'TagA'}
+            ];
+
+            // Act
+            compile();
+
+            // Assert
+            expect($scope.tags).toEqual([
+                { text: 'TagA' },
+                { text: 'TagB' },
+                { text: 'TagC' }
+            ]);
+        });
+
+
+        it('sorts tags as added', function() {
+            // Arrange
+            $scope.tagCompare = function(a, b) {
+                return a.text.localeCompare(b.text);
+            };
+
+            compile('tag-compare="tagCompare(a,b)"');
+
+            newTag('TagC');
+            newTag('TagB');
+            newTag('TagA');
+
+            // Assert
+            expect($scope.tags).toEqual([
+                { text: 'TagA' },
+                { text: 'TagB' },
+                { text: 'TagC' }
+            ]);
+        });
+    });
 });

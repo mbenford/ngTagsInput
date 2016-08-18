@@ -53,6 +53,7 @@
  *    promise is returned, the tag will not be removed.
  * @param {expression=} [onTagRemoved=NA] Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  * @param {expression=} [onTagClicked=NA] Expression to evaluate upon clicking an existing tag. The clicked tag is available as $tag.
+ * @param {expression=} [tagCompare=NA] Expression to compare tags for sorting.
  */
 tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tagsInputConfig, tiUtil) {
     function TagList(options, events, onTagAdding, onTagRemoving) {
@@ -173,6 +174,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             onTagRemoving: '&',
             onTagRemoved: '&',
             onTagClicked: '&',
+            tagCompare: '&'
         },
         replace: false,
         transclude: true,
@@ -303,6 +305,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 if (value) {
                     tagList.items = tiUtil.makeObjectArray(value, options.displayProperty);
                     scope.tags = tagList.items;
+
+                    if (scope.tagCompare) {
+                      scope.tags.sort(function (a,b) {
+                        return scope.tagCompare({a: a, b: b});
+                      });
+                    }
                 }
                 else {
                     tagList.items = [];
@@ -379,6 +387,13 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 })
                 .on('tag-added tag-removed', function() {
                     scope.tags = tagList.items;
+
+                    if (scope.tagCompare) {
+                      scope.tags.sort(function (a,b) {
+                        return scope.tagCompare({a: a, b: b});
+                      });
+                    }
+
                     // Ideally we should be able call $setViewValue here and let it in turn call $setDirty and $validate
                     // automatically, but since the model is an array, $setViewValue does nothing and it's up to us to do it.
                     // Unfortunately this won't trigger any registered $parser and there's no safe way to do it.
