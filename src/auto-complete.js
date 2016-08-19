@@ -87,7 +87,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                     self.show();
                 }
                 else {
-                    if (query.length != 0) {
+                    if (query.length !== 0) {
                         self.showNoResultsMessage = true;
                     }
                     self.reset();
