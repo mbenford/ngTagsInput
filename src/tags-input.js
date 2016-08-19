@@ -51,6 +51,8 @@
 tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tagsInputConfig, tiUtil) {
     function TagList(options, events, onTagAdding, onTagRemoving) {
         var self = {}, getTagText, setTagText, canAddTag, canRemoveTag;
+        self.showNoResultsMessage = false;
+
 
         getTagText = function(tag) {
             return tiUtil.safeToString(tag[options.displayProperty]);
