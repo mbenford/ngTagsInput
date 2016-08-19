@@ -68,6 +68,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
         };
         self.load = tiUtil.debounce(function(query, tags) {
             self.query = query;
+            self.showNoResultsMessage = false;
 
             var promise = $q.when(loadFn({ $query: query }));
             lastPromise = promise;
@@ -82,9 +83,13 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 self.items = items.slice(0, options.maxResultsToShow);
 
                 if (self.items.length > 0) {
+                    self.showNoResultsMessage = false;
                     self.show();
                 }
                 else {
+                    if (query.length != 0) {
+                        self.showNoResultsMessage = true;
+                    }
                     self.reset();
                 }
             });
