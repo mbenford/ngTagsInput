@@ -1,6 +1,20 @@
 @import "mixins";
 @import "variables";
 
+tags-input {
+  .upwards-suggestion {
+      .autocomplete {
+          bottom: 100%;
+      }
+      .suggestion-list {
+          @include rotate(180);
+      }
+      .suggestion-item {
+          @include rotate(-180);
+      }
+  }
+}
+
 tags-input .autocomplete {
   margin-top: 5px;
   position: absolute;

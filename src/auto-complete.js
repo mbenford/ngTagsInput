@@ -154,7 +154,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
                 selectFirstMatch: [Boolean, true],
-                displayProperty: [String, '']
+                displayProperty: [String, ''],
+                upwardsSuggestion: [Boolean, false]
             });
 
             $scope.suggestionList = new SuggestionList($scope.source, $scope.options, $scope.events);
@@ -179,6 +180,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 shouldLoadSuggestions;
 
             options.tagsInput = tagsInput.getOptions();
+
+            if (options.upwardsSuggestion) {
+                element.addClass('upwards-suggestion');
+            }
 
             shouldLoadSuggestions = function(value) {
                 return value && value.length >= options.minLength || !value && options.loadOnEmpty;
@@ -243,11 +248,19 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                     if (suggestionList.visible) {
 
                         if (key === KEYS.down) {
-                            suggestionList.selectNext();
+                            if (!options.upwardsSuggestion) {
+                                suggestionList.selectNext();
+                            } else {
+                                suggestionList.selectPrior();
+                            }
                             handled = true;
                         }
                         else if (key === KEYS.up) {
-                            suggestionList.selectPrior();
+                            if (options.upwardsSuggestion) {
+                                suggestionList.selectNext();
+                            } else {
+                                suggestionList.selectPrior();
+                            }
                             handled = true;
                         }
                         else if (key === KEYS.escape) {
