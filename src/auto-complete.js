@@ -207,6 +207,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                     suggestionList.reset();
                 })
                 .on('input-change', function(value) {
+                        suggestionList.showNoResultsMessage = false;
                     if (shouldLoadSuggestions(value)) {
                         suggestionList.load(value, tagsInput.getTags());
                     }
