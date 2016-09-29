@@ -27,6 +27,9 @@ tagsInput.directive('tiAutocompleteMatch', function($sce, tiUtil) {
                 }
                 return $sce.trustAsHtml(text);
             };
+            scope.$getType = function() {
+                return scope.data.type;
+            };                        
             scope.$getDisplayText =  function() {
                 return tiUtil.safeToString(scope.data[options.displayProperty || options.tagsInput.displayProperty]);
             };
