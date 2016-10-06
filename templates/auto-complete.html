@@ -1,7 +1,7 @@
 <div class="autocomplete" ng-if="suggestionList.visible">
   <ul class="suggestion-list">
     <li class="suggestion-item"
-        ng-repeat="item in suggestionList.items track by track(item)"
+        ng-repeat="item in suggestionList.items track by $index"
         ng-class="{selected: item == suggestionList.selected}"
         ng-click="addSuggestionByIndex($index)"
         ng-mouseenter="suggestionList.select($index)">
