@@ -1,3 +1,9 @@
+### 3.1.1 (2016-09-29)
+
+#### Bug Fixes
+
+* **util:** Fix XSS vulnerability in safeHighlight ([bbc1f584](https://github.com/mbenford/ngTagsInput/commit/bbc1f584acc8e154c04969180baddbd8f11f9c8c), [#491](https://github.com/mbenford/ngTagsInput/issues/491))
+
 ## 3.1.1 (2016-05-27)
 
 #### Bug Fixes

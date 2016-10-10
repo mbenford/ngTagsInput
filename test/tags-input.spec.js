@@ -1124,6 +1124,52 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('remove-immediately option', function() {
+      beforeEach(function() {
+          $scope.tags = generateTags(3);
+      });
+
+      it('initializes the option to false', function() {
+          // Arrange/Act
+          compile();
+
+          // Assert
+          expect(isolateScope.options.removeImmediately).toBe(false);
+      });
+
+      describe('option is on', function() {
+          beforeEach(function() {
+              compile('remove-immediately="true"');
+          });
+
+          describe('backspace is pressed once', function() {
+              it('deletes the last tag', function() {
+                  // Arrange
+                  spyOn(isolateScope.events, 'trigger').and.callThrough();
+
+                  // Act
+                  sendBackspace();
+
+                  // Assert
+                  expect(getInput().val()).toBe('');
+                  expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }]);
+                  // expect(isolateScope.tagList.selected).toBe(null);
+                  // expect(isolateScope.tagList.index).toBe(-1);
+              });
+
+              it('deletes trailing plain text in the field as usual', function() {
+                  // Act
+                  sendKeyPress(65);
+                  sendBackspace();
+
+                  // Assert
+                  expect(getInput().val()).toBe('');
+                  expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }, { text: 'Tag3' }]);
+              });
+          });
+      });
+    });
+
     describe('min-tags option', function() {
         it('initializes the option to 0', function() {
             // Arrange/Act
