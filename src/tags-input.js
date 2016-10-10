@@ -36,6 +36,7 @@
  * @param {string=} [allowedTagsPattern=.+] Regular expression that determines whether a new tag is valid.
  * @param {boolean=} [enableEditingLastTag=false] Flag indicating that the last tag will be moved back into the new tag
  *    input box instead of being removed when the backspace key is pressed and the input box is empty.
+ * @param {boolean=} [removeImmediately=false] Flag indicating that the backspace key will remove a tag immediately (without focussing).
  * @param {boolean=} [addFromAutocompleteOnly=false] Flag indicating that only tags coming from the autocomplete list
  *    will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace and addOnBlur values are ignored.
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
@@ -203,7 +204,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 keyProperty: [String, ''],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
-                spellcheck: [Boolean, true]
+                spellcheck: [Boolean, true],
+                removeImmediately: [Boolean, false]
             });
 
             $scope.tagList = new TagList($scope.options, $scope.events,
@@ -411,7 +413,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 .on('input-keydown', function(event) {
                     var key = event.keyCode,
                         addKeys = {},
-                        shouldAdd, shouldRemove, shouldSelect, shouldEditLastTag;
+                        shouldAdd, shouldRemove, shouldRemoveImmediately, shouldSelect, shouldEditLastTag;
 
                     if (tiUtil.isModifierOn(event) || hotkeys.indexOf(key) === -1) {
                         return;
@@ -423,6 +425,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
 
                     shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
                     shouldRemove = (key === KEYS.backspace || key === KEYS.delete) && tagList.selected;
+                    shouldRemoveImmediately = (key === KEYS.backspace || key === KEYS.delete) && options.removeImmediately && tagList.items.length > 0 && ngModelCtrl.$isEmpty() && scope.newTag.text().length === 0;
                     shouldEditLastTag = key === KEYS.backspace && scope.newTag.text().length === 0 && options.enableEditingLastTag;
                     shouldSelect = (key === KEYS.backspace || key === KEYS.left || key === KEYS.right) && scope.newTag.text().length === 0 && !options.enableEditingLastTag;
 
@@ -437,7 +440,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                             }
                         });
                     }
-                    else if (shouldRemove) {
+                    else if (shouldRemove || shouldRemoveImmediately) {
                         tagList.removeSelected();
                     }
                     else if (shouldSelect) {
