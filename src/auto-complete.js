@@ -199,7 +199,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             };
 
             scope.track = function(item) {
-                return item[options.tagsInput.keyProperty || options.tagsInput.displayProperty];
+                return item[options.tagsInput.keyProperty || options.tagsInput.displayProperty] + (item.hasChildren || '');
             };
 
             tagsInput
