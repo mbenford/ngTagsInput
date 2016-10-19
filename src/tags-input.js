@@ -413,7 +413,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                         addKeys = {},
                         shouldAdd, shouldRemove, shouldSelect, shouldEditLastTag,
                         newTagText = scope.newTag.text();
-                    if ((event.keyCode === 229) && (scope.text[newTagText.length -1] === ',')) {
+                    if ((event.keyCode === 229) && (scope.text !== undefined) && (scope.text[newTagText.length -1] === ',')) {
                         key = KEYS.comma;
                         newTagText = newTagText.slice(0, -1);  // Remove comma
                     }
