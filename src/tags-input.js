@@ -96,8 +96,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
 
             return canAddTag(tag)
                 .then(function() {
-                    self.items.push(tag);
-                    events.trigger('tag-added', { $tag: tag });
+                    if (self.items.length > 0 && !self.items[self.items.length - 1].type && !tag.type && tag.text && !tag.id) {
+                        self.items[self.items.length - 1].text = self.items[self.items.length - 1].text + ' ' + tag.text;
+                    } else {
+                        self.items.push(tag);
+                    }
+                    events.trigger('tag-added', {$tag: tag});
                 })
                 .catch(function() {
                     if (tagText) {
@@ -164,7 +168,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             tags: '=ngModel',
             text: '=?',
             hasFocus: '=',
-            onStartSearch: '&',            
+            onStartSearch: '&',
             onTagAdding: '&',
             onTagAdded: '&',
             onInvalidTag: '&',
@@ -207,6 +211,19 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             $scope.tagList = new TagList($scope.options, $scope.events,
                 tiUtil.handleUndefinedResult($scope.onTagAdding, true),
                 tiUtil.handleUndefinedResult($scope.onTagRemoving, true));
+
+            this.fireSearch = function() {
+                if ($scope.newTag.text()) {
+                    $scope.tagList.add({text: $scope.newTag.text()});
+                }
+
+                $timeout(function() {
+                    if ($scope.tagList.items.length > 0 && $scope.onStartSearch) {
+                        $scope.onStartSearch();
+                        $element.find('input').blur();
+                    }
+                });
+            };
 
             this.registerAutocomplete = function() {
                 var input = $element.find('input');
@@ -374,8 +391,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                                 scrollLeft: liElement.offset().left - liElement.parent().parent().offset().left
                             });
                         }
+                        var editable = liElement.find('[contenteditable]');
+                        if (editable.length > 0) {
+                            editable.get(0).focus();
+                        }
                     }, 100);
-                  })                
+                  })
                 .on('tag-added tag-removed', function() {
                     scope.tags = tagList.items;
                     // Ideally we should be able call $setViewValue here and let it in turn call $setDirty and $validate
@@ -391,7 +412,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                                 scrollLeft: input.offset().left - 30 - input.parent().offset().left
                             });
                         }
-                    }, 100);                    
+                    }, 100);
                 })
                 .on('invalid-tag', function() {
                     scope.newTag.invalid = true;

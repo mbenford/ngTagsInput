@@ -164,9 +164,7 @@ describe('tags-input directive', function() {
 
             // Assert
             expect($scope.tags).toEqual([
-                { text: 'Tag1' },
-                { text: 'Tag2' },
-                { text: 'Tag3' }
+                { text: 'Tag1 Tag2 Tag3' }
             ]);
         });
 
@@ -723,9 +721,7 @@ describe('tags-input directive', function() {
 
                     // Assert
                     expect($scope.tags).toEqual([
-                        { text: 'tag1' },
-                        { text: 'tag2' },
-                        { text: 'tag3' }
+                        { text: 'tag1 tag2 tag3' }
                     ]);
                     expect(eventData.preventDefault).toHaveBeenCalled();
                 });
@@ -780,10 +776,7 @@ describe('tags-input directive', function() {
 
                 // Assert
                 expect($scope.tags).toEqual([
-                    { text: 'tag1' },
-                    { text: 'tag2' },
-                    { text: 'tag3' },
-                    { text: 'tag4' }
+                    { text: 'tag1 tag2 tag3 tag4' }
                 ]);
                 expect(eventData.preventDefault).toHaveBeenCalled();
             });
@@ -1718,7 +1711,7 @@ describe('tags-input directive', function() {
             newTag('INVALID');
 
             // Assert
-            expect($scope.tags).toEqual([{ text: 'foo' }, { text: 'bar' }]);
+            expect($scope.tags).toEqual([{ text: 'foo bar' }]);
         });
 
         it('adds a tag if the on-tag-adding callback allows it (promise result)', function() {
@@ -1735,7 +1728,7 @@ describe('tags-input directive', function() {
             newTag('INVALID');
 
             // Assert
-            expect($scope.tags).toEqual([{ text: 'foo' }, { text: 'bar' }]);
+            expect($scope.tags).toEqual([{ text: 'foo bar' }]);
         });
     });
 
@@ -1786,7 +1779,7 @@ describe('tags-input directive', function() {
             getRemoveButton(0).click();
 
             // Assert
-            expect($scope.tags).toEqual([{ text: 'PERMANENT' }]);
+            expect($scope.tags).toEqual([]);
         });
 
         it('removes a tag if the on-tag-removing callback allows it (promise result)', function() {
@@ -1805,7 +1798,7 @@ describe('tags-input directive', function() {
             getRemoveButton(1).click();
 
             // Assert
-            expect($scope.tags).toEqual([{ text: 'foo' }, { text: 'PERMANENT' }, { text: 'bar' }]);
+            expect($scope.tags).toEqual([{ text: 'foo PERMANENT bar' }]);
         });
     });
 

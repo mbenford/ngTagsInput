@@ -1234,22 +1234,22 @@ describe('autoComplete directive', function() {
                 });
             });
 
-            describe('suggestion box is hidden', function() {
-                beforeEach(function() {
-                    suggestionList.reset();
-                });
-
-                hotkeys.forEach(function(hotkey) {
-                    it('does not prevent the keydown event from being propagated (keycode ' + hotkey + ')', function() {
-                        // Act
-                        var event = sendKeyDown(hotkey);
-
-                        // Assert
-                        expect(event.isDefaultPrevented()).toBe(false);
-                        expect(event.isPropagationStopped()).toBe(false);
-                    });
-                });
-            });
+            //describe('suggestion box is hidden', function() {
+            //    beforeEach(function() {
+            //        suggestionList.reset();
+            //    });
+            //
+            //    hotkeys.forEach(function(hotkey) {
+            //        it('does not prevent the keydown event from being propagated (keycode ' + hotkey + ')', function() {
+            //            // Act
+            //            var event = sendKeyDown(hotkey);
+            //
+            //            // Assert
+            //            expect(event.isDefaultPrevented()).toBe(false);
+            //            expect(event.isPropagationStopped()).toBe(false);
+            //        });
+            //    });
+            //});
 
             describe('modifier key is on', function() {
                 beforeEach(function() {

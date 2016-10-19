@@ -229,6 +229,11 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                         return;
                     }
 
+                    if (!suggestionList.visible && key === KEYS.enter) {
+                        tagsInputCtrl.fireSearch();
+                        handled = true;
+                    }
+
                     if (suggestionList.visible) {
 
                         if (key === KEYS.down) {
