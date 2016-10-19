@@ -411,7 +411,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 .on('input-keydown', function(event) {
                     var key = event.keyCode,
                         addKeys = {},
-                        shouldAdd, shouldRemove, shouldSelect, shouldEditLastTag;
+                        shouldAdd, shouldRemove, shouldSelect, shouldEditLastTag,
+                        newTagText = scope.newTag.text();
+                    if ((event.keyCode === 229) && (scope.text !== undefined) && (scope.text[newTagText.length -1] === ',')) {
+                        key = KEYS.comma;
+                        newTagText = newTagText.slice(0, -1);  // Remove comma
+                    }
 
                     if (tiUtil.isModifierOn(event) || hotkeys.indexOf(key) === -1) {
                         return;
@@ -423,11 +428,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
 
                     shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
                     shouldRemove = (key === KEYS.backspace || key === KEYS.delete) && tagList.selected;
-                    shouldEditLastTag = key === KEYS.backspace && scope.newTag.text().length === 0 && options.enableEditingLastTag;
-                    shouldSelect = (key === KEYS.backspace || key === KEYS.left || key === KEYS.right) && scope.newTag.text().length === 0 && !options.enableEditingLastTag;
+                    shouldEditLastTag = key === KEYS.backspace && newTagText.length === 0 && options.enableEditingLastTag;
+                    shouldSelect = (key === KEYS.backspace || key === KEYS.left || key === KEYS.right) && newTagText.length === 0 && !options.enableEditingLastTag;
 
                     if (shouldAdd) {
-                        tagList.addText(scope.newTag.text());
+                        tagList.addText(newTagText);
                     }
                     else if (shouldEditLastTag) {
                         tagList.selectPrior();
