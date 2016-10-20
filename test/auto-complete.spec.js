@@ -56,7 +56,7 @@ describe('autoComplete directive', function() {
         spyOn(parentCtrl, 'registerAutocomplete').and.returnValue(tagsInput);
 
         options = jQuery.makeArray(arguments).join(' ');
-        element = angular.element('<auto-complete source="loadItems($query)" ' + options + '></auto-complete>');
+        element = angular.element('<auto-complete source="loadItems($query,$skip,$limit)" ' + options + '></auto-complete>');
         parent.append(element);
 
         $compile(element)($scope);
@@ -88,7 +88,7 @@ describe('autoComplete directive', function() {
     }
 
     function getSuggestions() {
-        return getSuggestionsBox().find('li');
+        return getSuggestionsBox().find('.suggestion-item');
     }
 
     function getSuggestion(index) {
@@ -117,7 +117,6 @@ describe('autoComplete directive', function() {
         $timeout.flush();
         resolve(items);
     }
-
     describe('basic features', function() {
         it('ensures that the suggestions list is hidden by default', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
@@ -631,7 +630,7 @@ describe('autoComplete directive', function() {
                 $timeout.flush();
 
                 // Assert
-                expect($scope.loadItems).toHaveBeenCalledWith('ABC');
+                expect($scope.loadItems).toHaveBeenCalledWith('ABC', 0, 10);
             });
 
             it('doesn\'t call the load function when the down arrow key is pressed and the option is false', function() {
@@ -680,7 +679,7 @@ describe('autoComplete directive', function() {
             $timeout.flush();
 
             // Assert
-            expect($scope.loadItems).toHaveBeenCalledWith('');
+            expect($scope.loadItems).toHaveBeenCalledWith('', 0, 10);
         });
 
         it('doesn\'t call the load function when the input field becomes empty and the option is false', function(){
@@ -715,7 +714,7 @@ describe('autoComplete directive', function() {
             $timeout.flush();
 
             // Assert
-            expect($scope.loadItems).toHaveBeenCalledWith('ABC');
+            expect($scope.loadItems).toHaveBeenCalledWith('ABC', 0, 10);
         });
 
         it('doesn\' call the load function when the input element gains focus and the option is false', function() {
@@ -766,7 +765,7 @@ describe('autoComplete directive', function() {
             $timeout.flush(100);
 
             // Assert
-            expect($scope.loadItems).toHaveBeenCalledWith('ABC');
+            expect($scope.loadItems).toHaveBeenCalledWith('ABC', 0, 10);
         });
 
         it('doesn\'t call the load function when the reset method is called', function() {
@@ -805,7 +804,7 @@ describe('autoComplete directive', function() {
 
             // Assert
             expect($scope.loadItems.calls.count()).toBe(1);
-            expect($scope.loadItems.calls.argsFor(0)).toEqual(['ABC']);
+            expect($scope.loadItems.calls.argsFor(0)).toEqual(['ABC', 0, 10]);
         });
 
         it('doesn\'t call the load function when the minimum amount of characters isn\'t entered', function() {
@@ -1370,6 +1369,46 @@ describe('autoComplete directive', function() {
                 expect(events[2].isDefaultPrevented()).toBe(false);
                 expect(events[2].isPropagationStopped()).toBe(false);
             });
+        });
+    });
+    describe('load-more', function() {
+        it('initializes the option to false', function() {
+            // Arrange
+            compile();
+
+            // Assert
+            expect(isolateScope.options.loadMore).toBe(false);
+        });
+        it('calls the load function with skip and limit params when user approaches the bottom',function() {
+            // Arrange
+            compile('load-more="true"');
+            loadSuggestions(12);
+            $scope.$digest();
+            $timeout.flush();
+            $scope.loadItems = jasmine.createSpy().and.returnValue($q.when([]));
+
+            // Act
+            suggestionList.queueOnScroll();
+            $timeout.flush();
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).toHaveBeenCalledWith('foobar',10,10);
+        });
+        it('avoids calling the load function when there are no more results',function() {
+            // Arrange
+            compile('load-more="true"');
+            loadSuggestions(9);
+            $scope.$digest();
+            $timeout.flush();
+            $scope.loadItems = jasmine.createSpy().and.returnValue($q.when([]));
+
+            // Act
+            suggestionList.queueOnScroll();
+            $timeout.verifyNoPendingTasks();
+
+            // Assert
+            expect($scope.loadItems).not.toHaveBeenCalled();
         });
     });
 });
