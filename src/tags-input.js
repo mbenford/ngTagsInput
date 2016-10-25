@@ -286,6 +286,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 return !value || !value.length;
             };
 
+            scope.placeholder = scope.options.placeholder;            
+
             scope.newTag = {
                 text: function(value) {
                     if (angular.isDefined(value)) {
@@ -314,6 +316,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             });
 
             scope.$watch('tags.length', function() {
+                if (tagList.items.length === 0) {
+                    scope.placeholder = scope.options.placeholder;
+                } else {
+                    scope.placeholder = '';
+                }
+
                 setElementValidity();
 
                 // ngModelController won't trigger validators when the model changes (because it's an array),
