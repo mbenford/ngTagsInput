@@ -858,6 +858,24 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('aria-label option', function() {
+        it('sets the field aria-label', function() {
+            // Arrange/Act
+            compile('aria-label="my label"');
+
+            // Assert
+            expect(getInput().attr('aria-label')).toBe('my label');
+        });
+
+        it('initializes the option to empty', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.ariaLabel).toBe('');
+        });
+    });
+
     describe('placeholder option', function() {
         it('sets the input\'s placeholder text', function() {
             // Arrange/Act
