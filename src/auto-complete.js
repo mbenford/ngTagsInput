@@ -27,6 +27,10 @@
  *    gains focus. The current input value is available as $query.
  * @param {boolean=} [selectFirstMatch=true] Flag indicating that the first match will be automatically selected once
  *    the suggestion list is shown.
+ * @param {expression=} [matchClass=NA] Expression to evaluate for each match in order to get the CSS classes to be used.
+ *    The expression is provided with the current match as $match, its index as $index and its state as $selected. The result
+ *    of the evaluation must be one of the values supported by the ngClass directive (either a string, an array or an object).
+ *    See https://docs.angularjs.org/api/ng/directive/ngClass for more information.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
     function SuggestionList(loadFn, options, events) {
@@ -132,7 +136,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
     return {
         restrict: 'E',
         require: '^tagsInput',
-        scope: { source: '&' },
+        scope: {
+            source: '&',
+            matchClass: '&'
+        },
         templateUrl: 'ngTagsInput/auto-complete.html',
         controller: function($scope, $element, $attrs) {
             $scope.events = tiUtil.simplePubSub();
@@ -177,6 +184,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 return value && value.length >= options.minLength || !value && options.loadOnEmpty;
             };
 
+            scope.templateScope = tagsInput.getTemplateScope();
+
             scope.addSuggestionByIndex = function(index) {
                 suggestionList.select(index);
                 scope.addSuggestion();
@@ -188,8 +197,6 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 if (suggestionList.selected) {
                     tagsInput.addTag(angular.copy(suggestionList.selected));
                     suggestionList.reset();
-                    tagsInput.focusInput();
-
                     added = true;
                 }
                 return added;
@@ -197,6 +204,14 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
 
             scope.track = function(item) {
                 return item[options.tagsInput.keyProperty || options.tagsInput.displayProperty];
+            };
+
+            scope.getSuggestionClass = function(item, index) {
+                var selected = item === suggestionList.selected;
+                return [
+                    scope.matchClass({$match: item, $index: index, $selected: selected}),
+                    { selected: selected }
+                ];
             };
 
             tagsInput

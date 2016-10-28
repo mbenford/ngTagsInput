@@ -8,7 +8,7 @@
  * @description
  * Helper methods used internally by the directive. Should not be called directly from user code.
  */
-tagsInput.factory('tiUtil', function($timeout) {
+tagsInput.factory('tiUtil', function($timeout, $q) {
     var self = {};
 
     self.debounce = function(fn, delay) {
@@ -55,6 +55,9 @@ tagsInput.factory('tiUtil', function($timeout) {
     };
 
     self.safeHighlight = function(str, value) {
+        str = self.encodeHTML(str);
+        value = self.encodeHTML(value);
+
         if (!value) {
             return str;
         }
@@ -62,9 +65,6 @@ tagsInput.factory('tiUtil', function($timeout) {
         function escapeRegexChars(str) {
             return str.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
         }
-
-        str = self.encodeHTML(str);
-        value = self.encodeHTML(value);
 
         var expression = new RegExp('&[^;]+;|' + escapeRegexChars(value), 'gi');
         return str.replace(expression, function(match) {
@@ -98,15 +98,21 @@ tagsInput.factory('tiUtil', function($timeout) {
         return event.shiftKey || event.ctrlKey || event.altKey || event.metaKey;
     };
 
+    self.promisifyValue = function(value) {
+        value = angular.isUndefined(value) ? true : value;
+        return $q[value ? 'when' : 'reject']();
+    };
+
     self.simplePubSub = function() {
         var events = {};
         return {
-            on: function(names, handler) {
+            on: function(names, handler, first) {
                 names.split(' ').forEach(function(name) {
                     if (!events[name]) {
                         events[name] = [];
                     }
-                    events[name].push(handler);
+                    var method = first ? [].unshift : [].push;
+                    method.call(events[name], handler);
                 });
                 return this;
             },
