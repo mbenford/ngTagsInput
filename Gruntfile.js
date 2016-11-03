@@ -101,6 +101,11 @@ module.exports = function(grunt) {
         'copy:travis',
         'coveralls'
     ]);
+    
+    grunt.registerTask('bu-build', [
+        'pack',
+        'compress'
+    ]);
 
     grunt.registerTask('javascript-only', [
         'test',
