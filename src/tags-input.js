@@ -105,7 +105,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                             // Remove suffix of the previous tag if it matches prefix of the current tag (WA-1693)
                             var tags1 = self.items[self.items.length - 1].text.split(' ');
                             var tags2 = tag.text.split(' ');
-                            if (tags1[tags1.length - 1] === tags2[0]) {
+                            if (tags1[tags1.length - 1].toLowerCase() === tags2[0].toLowerCase()) {
                                 tags1.splice(-1);
                             }
                             if (tags1.length > 0) {
