@@ -18,9 +18,9 @@
  * @param {string=} [text=NA] Assignable Angular expression for data-binding to the element's text.
  * @param {number=} tabindex Tab order of the control.
  * @param {string=} [isDynamicPlaceholder=false] Determines if the placeholder provided 
- * dynamic. Dynamic implies that the placeholder will disappear as soon as the user
+ * is dynamic. Dynamic implies that the placeholder will disappear as soon as the user
  * types in the first key. Static is a placeholder that will stay regardless of the
- * content in the text box.
+ * content in the input box.
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
  * @param {number=} [maxLength=MAX_SAFE_INTEGER] Maximum length allowed for a new tag.

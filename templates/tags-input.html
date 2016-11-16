@@ -1,8 +1,8 @@
 <div class="host" tabindex="-1" ng-click="eventHandlers.host.click()" ti-transclude-append>
   <div class="tags" ng-class="{focused: hasFocus}">
     <!-- If this is a static placeholder 
-        (one that will always be disaplyed),
-        then show it separately ove here -->
+        (one that will always be displayed),
+        then show it separately over here -->
     <div class="bu-input__placeholder"
          ng-show="!options.isDynamicPlaceholder">
           {{ options.placeholder }}
@@ -16,7 +16,7 @@
       </ti-tag-item>
     </div>
     <!-- The dynamic placeholder (one that will disappear) should 
-         only be dispalyed if the are no input tags already present -->
+         only be displayed if the are no input tags already present -->
     <input class="input"
            placeholder="{{ ((tagList.items && tagList.items.length) || !options.isDynamicPlaceholder) ? '' : options.placeholder}}"
            autocomplete="off"
