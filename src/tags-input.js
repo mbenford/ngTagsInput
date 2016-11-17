@@ -267,7 +267,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             };
 
             focusInput = function() {
-                $timeout(function() { input[0].focus(); });
+                input[0].focus();
             };
 
             ngModelCtrl.$isEmpty = function(value) {
