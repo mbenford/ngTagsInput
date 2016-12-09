@@ -17,7 +17,7 @@
  * @param {string=} [type=text] Type of the input element. Only 'text', 'email' and 'url' are supported values.
  * @param {string=} [text=NA] Assignable Angular expression for data-binding to the element's text.
  * @param {number=} tabindex Tab order of the control.
- * @param {string=} [isDynamicPlaceholder=false] Determines if the placeholder provided 
+ * @param {string=} [isDynamicPlaceholder=false] Determines if the placeholder provided
  * is dynamic. Dynamic implies that the placeholder will disappear as soon as the user
  * types in the first key. Static is a placeholder that will stay regardless of the
  * content in the input box.
@@ -388,7 +388,6 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                     // automatically, but since the model is an array, $setViewValue does nothing and it's up to us to do it.
                     // Unfortunately this won't trigger any registered $parser and there's no safe way to do it.
                     ngModelCtrl.$setDirty();
-                    focusInput();
                 })
                 .on('invalid-tag', function() {
                     scope.newTag.invalid = true;
