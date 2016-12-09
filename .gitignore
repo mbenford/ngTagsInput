@@ -4,5 +4,14 @@
 node_modules/
 coverage/
 *.log
-build/
 sauce.json
+build/ng-tags-input.bootstrap.css
+build/ng-tags-input.bootstrap.css.map
+build/ng-tags-input.bootstrap.min.css
+build/ng-tags-input.css
+build/ng-tags-input.css.map
+build/ng-tags-input.js
+build/ng-tags-input.min.css
+build/ng-tags-input.min.zip
+build/ng-tags-input.tgz
+build/ng-tags-input.zip
