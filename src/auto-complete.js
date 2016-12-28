@@ -156,6 +156,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             });
 
             $scope.suggestionList = new SuggestionList($scope.source, $scope.options, $scope.events);
+            $scope.showHelp = false;
 
             this.registerAutocompleteMatch = function() {
                 return {
@@ -205,6 +206,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             tagsInput
                 .on('tag-added tag-removed invalid-tag input-blur', function() {
                     suggestionList.reset();
+                    scope.showHelp = tagsInput.getTags().length > 0;
                 })
                 .on('input-change', function(value) {
                         suggestionList.showNoResultsMessage = false;
