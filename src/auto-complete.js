@@ -209,7 +209,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                     scope.showHelp = tagsInput.getTags().length > 0;
                 })
                 .on('input-change', function(value) {
-                        suggestionList.showNoResultsMessage = false;
+                    suggestionList.showNoResultsMessage = false;
                     if (shouldLoadSuggestions(value)) {
                         suggestionList.load(value, tagsInput.getTags());
                     }
