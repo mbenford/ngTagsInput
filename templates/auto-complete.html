@@ -9,12 +9,7 @@
     </li>
   </ul>
 </div>
-<div class="autocomplete notice" ng-if="($parent.hasFocus && suggestionList.showNoResultsMessage)">
-  <ul class="suggestion-list">
-    <li class="suggestion-item">No matching tags or members found ...</li>
-  </ul>
-</div>
-<div class="autocomplete notice" ng-if="($parent.hasFocus && showHelp && !suggestionList.visible && !suggestionList.showNoResultsMessage)">
+<div class="autocomplete notice" ng-if="($parent.hasFocus && (showHelp || suggestionList.showNoResultsMessage) && !suggestionList.visible)">
   <ul class="suggestion-list">
     <li class="suggestion-item">Press the Enter or Return key to search.</li>
   </ul>
