@@ -184,6 +184,26 @@ describe('tags-input directive', function() {
             expect(isolateScope.tagList.index).toBe(-1);
         });
 
+        it('soft removes a tag when the remove button is clicked and softRemove option is true', function() {
+            // Arrange
+            $scope.tags = generateTags(3);
+            compile('soft-remove="true"');
+
+            var itemIndex = 1;
+            // Act
+            getRemoveButton(itemIndex).click();
+
+            
+            var tagsElement = angular.element(element.find('li')[itemIndex]);
+    
+            // Assert
+            expect(tagsElement.hasClass('ng-hide')).toBe(true);
+            expect(element.find('li.ng-hide').length).toBe(1);
+            expect($scope.tags[itemIndex].removed).toEqual(true);
+            expect(isolateScope.tagList.selected).toBe(null);
+            expect(isolateScope.tagList.index).toBe(-1);
+        });
+
         it('sets focus on the input field after a tag is added', function() {
             // Arrange
             compile();
