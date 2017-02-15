@@ -1372,4 +1372,62 @@ describe('autoComplete directive', function() {
             });
         });
     });
+
+    describe('open-pattern option', function() {
+        it('initialize the option to /\S/', function(){
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.openPattern).toEqual(/\S/);
+        });
+
+        it('calls the load function when the input field is some pattern', function(){
+            // Arrange
+            compile('open-pattern="@$"');
+
+            // Act
+            changeInputValue('ABC@');
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).toHaveBeenCalledWith('ABC@');
+        });
+
+        it('doesn\'t call the load function when the input field not contains some pattern', function(){
+            // Arrange
+            compile('open-pattern="@$"');
+
+            // Act
+            changeInputValue('ABCDEF');
+            $timeout.flush();
+
+            // Assert
+            expect($scope.loadItems).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('close-pattern option', function() {
+        it('initialize the option to /^$/', function(){
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.closePattern).toEqual(/^$/);
+        });
+
+        it('calls the load function when the input field is some pattern', function(){
+            // Arrange
+            compile('close-pattern="\\s$"');
+            changeInputValue('foobar');
+            suggestionList.show();
+            $scope.$digest();
+
+            // Act
+            changeInputValue('ABC ');
+
+            // Assert
+            expect(isSuggestionsBoxVisible()).toBe(false);
+        });
+    });
 });

@@ -31,6 +31,8 @@
  *    The expression is provided with the current match as $match, its index as $index and its state as $selected. The result
  *    of the evaluation must be one of the values supported by the ngClass directive (either a string, an array or an object).
  *    See https://docs.angularjs.org/api/ng/directive/ngClass for more information.
+ * @param {string=} [openPattern=\S] Pattern for open suggestion list.
+ * @param {string=} [closePattern=^$] Pattern for close suggestion list.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
     function SuggestionList(loadFn, options, events) {
@@ -154,7 +156,9 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
                 selectFirstMatch: [Boolean, true],
-                displayProperty: [String, '']
+                displayProperty: [String, ''],
+                openPattern: [RegExp, /\S/],
+                closePattern: [RegExp, /^$/]
             });
 
             $scope.suggestionList = new SuggestionList($scope.source, $scope.options, $scope.events);
@@ -181,7 +185,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             options.tagsInput = tagsInput.getOptions();
 
             shouldLoadSuggestions = function(value) {
-                return value && value.length >= options.minLength || !value && options.loadOnEmpty;
+                return value && value.length >= options.minLength && options.openPattern.test(value) && !options.closePattern.test(value) || !value && options.loadOnEmpty;
             };
 
             scope.templateScope = tagsInput.getTemplateScope();
