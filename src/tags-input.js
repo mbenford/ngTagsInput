@@ -67,8 +67,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             var valid = tagText &&
                         tagText.length >= options.minLength &&
                         tagText.length <= options.maxLength &&
-                        options.allowedTagsPattern.test(tagText) &&
-                        !tiUtil.findInObjectArray(self.items, tag, options.keyProperty || options.displayProperty);
+                        options.allowedTagsPattern.test(tagText);
+            if (valid) {
+                var foundTag =  tiUtil.findInObjectArray(self.items, tag, options.keyProperty || options.displayProperty);
+                valid = !foundTag || foundTag.type !== tag.type;
+            }
 
             return $q.when(valid && onTagAdding({ $tag: tag })).then(tiUtil.promisifyValue);
         };
@@ -317,7 +320,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             };
 
             scope.track = function(tag) {
-                return tag[options.keyProperty || options.displayProperty];
+                return tag[options.keyProperty || options.displayProperty] + (tag.type || 'unknown');
             };
 
             scope.$watch('tags', function(value) {
