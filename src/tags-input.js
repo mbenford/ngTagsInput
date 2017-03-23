@@ -18,6 +18,7 @@
  * @param {string=} [type=text] Type of the input element. Only 'text', 'email' and 'url' are supported values.
  * @param {string=} [text=NA] Assignable Angular expression for data-binding to the element's text.
  * @param {number=} tabindex Tab order of the control.
+ * @param {boolean} [validateUntouched=true] Flag indicating that the validation is required on startup.  
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
  * @param {number=} [maxLength=MAX_SAFE_INTEGER] Maximum length allowed for a new tag.
@@ -178,6 +179,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             onTagRemoving: '&',
             onTagRemoved: '&',
             onTagClicked: '&',
+            validateUntouched: '@'
         },
         replace: false,
         transclude: true,
@@ -209,7 +211,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
                 spellcheck: [Boolean, true],
-                useStrings: [Boolean, false]
+                useStrings: [Boolean, false],
+                validateUntouched: [Boolean, true]
             });
 
             $scope.tagList = new TagList($scope.options, $scope.events,
@@ -267,6 +270,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 focusInput;
 
             setElementValidity = function() {
+            	// Prevents $error setting on startup
+                if (!scope.options.validateUntouched && ngModelCtrl.$untouched) {
+            	    return;
+                }
                 ngModelCtrl.$setValidity('maxTags', tagList.items.length <= options.maxTags);
                 ngModelCtrl.$setValidity('minTags', tagList.items.length >= options.minTags);
                 ngModelCtrl.$setValidity('leftoverText', scope.hasFocus || options.allowLeftoverText ? true : !scope.newTag.text());
