@@ -1146,6 +1146,17 @@ describe('tags-input directive', function() {
             expect($scope.form.tags.$error.minTags).toBe(true);
         });
 
+        it('does not make the untouched element invalid when the number of tags is less than the min-tags option', function() {
+            // Arrange
+            compileWithForm('min-tags="3"', 'name="tags"', 'validate-untouched="false"');
+
+            // Act
+            $scope.$digest();
+
+            // Assert
+            expect($scope.form.tags.$valid).toBe(true);
+        });
+
         it('makes the element valid when the number of tags is not less than the min-tags option', function() {
             // Arrange
             compileWithForm('min-tags="2"', 'name="tags"');
@@ -1211,6 +1222,17 @@ describe('tags-input directive', function() {
             // Assert
             expect($scope.form.tags.$invalid).toBe(true);
             expect($scope.form.tags.$error.maxTags).toBe(true);
+        });
+
+        it('does not make the untouched element invalid when the number of tags is greater than the max-tags option', function() {
+            // Arrange
+            compileWithForm('max-tags="2"', 'name="tags"', 'validate-untouched="false"');
+
+            // Act
+            $scope.$digest();
+
+            // Assert
+            expect($scope.form.tags.$valid).toBe(true);
         });
 
         it('makes the element valid when the number of tags is not greater than the max-tags option', function() {
