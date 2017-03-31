@@ -59,11 +59,20 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
         var self = {}, getTagText, setTagText, canAddTag, canRemoveTag;
 
         getTagText = function(tag) {
-            return tiUtil.safeToString(tag[options.displayProperty]);
+            if (options.itemIsObject){
+                return tiUtil.safeToString(tag[options.displayProperty]);
+            } else {
+                return tiUtil.safeToString(tag);
+            }
         };
 
         setTagText = function(tag, text) {
-            tag[options.displayProperty] = text;
+            if (options.itemIsObject) {
+                tag[options.displayProperty] = text;
+            } else {
+                tag = text;
+            }
+            return tag;
         };
 
         canAddTag = function(tag) {
@@ -71,8 +80,15 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             var valid = tagText &&
                         tagText.length >= options.minLength &&
                         tagText.length <= options.maxLength &&
-                        options.allowedTagsPattern.test(tagText) &&
-                        !tiUtil.findInObjectArray(self.items, tag, options.keyProperty || options.displayProperty);
+                        options.allowedTagsPattern.test(tagText);
+
+            if (valid) {
+                if (options.itemIsObject) {
+                    valid = !tiUtil.findInObjectArray(self.items, tag, options.keyProperty || options.displayProperty);
+                } else {
+                    valid = !tiUtil.findInStringArray(self.items, tag);
+                }
+            }
 
             return $q.when(valid && onTagAdding({ $tag: tag })).then(tiUtil.promisifyValue);
         };
@@ -84,8 +100,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
         self.items = [];
 
         self.addText = function(text) {
-            var tag = {};
-            setTagText(tag, text);
+            var tag;
+            if (options.itemIsObject){
+                tag = {};
+            }
+            tag = setTagText(tag, text);
             return self.add(tag);
         };
 
@@ -96,7 +115,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 tagText = tiUtil.replaceSpacesWithDashes(tagText);
             }
 
-            setTagText(tag, tagText);
+            tag = setTagText(tag, tagText);
 
             return canAddTag(tag)
                 .then(function() {
@@ -203,7 +222,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 keyProperty: [String, ''],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
-                spellcheck: [Boolean, true]
+                spellcheck: [Boolean, true],
+                itemIsObject: [Boolean, true]
             });
 
             $scope.tagList = new TagList($scope.options, $scope.events,
@@ -288,7 +308,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             };
 
             scope.track = function(tag) {
-                return tag[options.keyProperty || options.displayProperty];
+                if (options.itemIsObject) {
+                    return tag[options.keyProperty || options.displayProperty];
+                } else {
+                    return tag;
+                }
             };
 
             scope.getTagClass = function(tag, index) {
@@ -301,7 +325,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
 
             scope.$watch('tags', function(value) {
                 if (value) {
-                    tagList.items = tiUtil.makeObjectArray(value, options.displayProperty);
+                    if (options.itemIsObject) {
+                        tagList.items = tiUtil.makeObjectArray(value, options.displayProperty);
+                    } else {
+                        tagList.items = value;
+                    }
                     scope.tags = tagList.items;
                 }
                 else {
@@ -433,7 +461,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                         tagList.selectPrior();
                         tagList.removeSelected().then(function(tag) {
                             if (tag) {
-                                scope.newTag.text(tag[options.displayProperty]);
+                                if (options.itemIsObject) {
+                                    scope.newTag.text(tag[options.displayProperty]);
+                                } else {
+                                    scope.newTag.text(tag);
+                                }
                             }
                         });
                     }

@@ -37,18 +37,32 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
         var self = {}, getDifference, lastPromise, getTagId;
 
         getTagId = function() {
-            return options.tagsInput.keyProperty || options.tagsInput.displayProperty;
+            if (options.tagsInput.itemIsObject || !angular.isDefined(options.tagsInput.itemIsObject)) {
+                return options.tagsInput.keyProperty || options.tagsInput.displayProperty;
+            } else {
+                return null;
+            }
         };
 
         getDifference = function(array1, array2) {
             return array1.filter(function(item) {
-                return !tiUtil.findInObjectArray(array2, item, getTagId(), function(a, b) {
-                    if (options.tagsInput.replaceSpacesWithDashes) {
-                        a = tiUtil.replaceSpacesWithDashes(a);
-                        b = tiUtil.replaceSpacesWithDashes(b);
-                    }
-                    return tiUtil.defaultComparer(a, b);
-                });
+                if (options.tagsInput.itemIsObject || !angular.isDefined(options.tagsInput.itemIsObject)) {
+                    return !tiUtil.findInObjectArray(array2, item, getTagId(), function(a, b) {
+                        if (options.tagsInput.replaceSpacesWithDashes) {
+                            a = tiUtil.replaceSpacesWithDashes(a);
+                            b = tiUtil.replaceSpacesWithDashes(b);
+                        }
+                        return tiUtil.defaultComparer(a, b);
+                    });
+                } else {
+                    return !tiUtil.findInStringArray(array2, item, function(a, b) {
+                        if (options.tagsInput.replaceSpacesWithDashes) {
+                            a = tiUtil.replaceSpacesWithDashes(a);
+                            b = tiUtil.replaceSpacesWithDashes(b);
+                        }
+                        return tiUtil.defaultComparer(a, b);
+                    });
+                }
             });
         };
 
@@ -81,7 +95,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                     return;
                 }
 
-                items = tiUtil.makeObjectArray(items.data || items, getTagId());
+                if (options.tagsInput.itemIsObject || !angular.isDefined(options.tagsInput.itemIsObject)){
+                    items = tiUtil.makeObjectArray(items.data || items, getTagId());
+                }
+
                 items = getDifference(items, tags);
                 self.items = items.slice(0, options.maxResultsToShow);
 
@@ -203,7 +220,11 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             };
 
             scope.track = function(item) {
-                return item[options.tagsInput.keyProperty || options.tagsInput.displayProperty];
+                if (options.tagsInput.itemIsObject || !angular.isDefined(options.tagsInput.itemIsObject)) {
+                    return item[options.tagsInput.keyProperty || options.tagsInput.displayProperty];
+                } else {
+                    return item;
+                }
             };
 
             scope.getSuggestionClass = function(item, index) {
