@@ -10,6 +10,7 @@
 {% highlight html %}
 <tags-input
   ng-model="{string}"
+  [ng-disabled="{boolean}"]
   [template="{string}"]
   [template-scope="{string}"]
   [display-property="{string}"]
@@ -64,6 +65,12 @@
           <td>Assignable Angular expression to data-bind to.</td>
           <td>&ndash;</td>
         </tr>
+        <tr>
+          <td>ngDisabled</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating whether the control is disabled or not.</td>
+          <td>false</td>
+        </tr>        
         <tr>
           <td>template</td>
           <td><span class="label type type-string">string</span></td>
