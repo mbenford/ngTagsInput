@@ -69,8 +69,13 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                         tagText.length <= options.maxLength &&
                         options.allowedTagsPattern.test(tagText);
             if (valid) {
-                var foundTag =  tiUtil.findInObjectArray(self.items, tag, options.keyProperty || options.displayProperty);
-                valid = !foundTag || foundTag.type !== tag.type;
+                var key = options.keyProperty || options.displayProperty;
+                valid = !self.items.some(function(element) {
+                    if (tiUtil.defaultComparer(tag[key], element[key]) && tag.type === element.type) {
+                        return true;
+                    }
+                    return false;
+                });
             }
 
             return $q.when(valid && onTagAdding({ $tag: tag })).then(tiUtil.promisifyValue);
@@ -103,6 +108,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                         self.items[self.items.length - 1].text = self.items[self.items.length - 1].text + ' ' + tag.text;
                     } else {
                         if (self.items.length > 0 && !self.items[self.items.length - 1].type && !self.items[self.items.length - 1].id &&
+                          self.items[self.items.length - 1].type === tag.type &&
                           self.items[self.items.length - 1].text) {
 
                             // Remove suffix of the previous tag if it matches prefix of the current tag (WA-1693)
