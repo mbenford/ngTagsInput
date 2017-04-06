@@ -831,24 +831,6 @@ describe('tags-input directive', function() {
         });
     });
 
-    describe('placeholder option', function() {
-        it('sets the input\'s placeholder text', function() {
-            // Arrange/Act
-            compile('placeholder="New tag"');
-
-            // Assert
-            expect(getInput().attr('placeholder')).toBe('New tag');
-        });
-
-        it('initializes the option to "Add a tag"', function() {
-            // Arrange/Act
-            compile();
-
-            // Assert
-            expect(isolateScope.options.placeholder).toBe('Add a tag');
-        });
-    });
-
     describe('remove-tag-symbol option', function() {
         it('sets the remove button text', function() {
             // Arrange/Act

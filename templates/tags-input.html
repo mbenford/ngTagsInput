@@ -20,7 +20,8 @@
              ng-trim="false"
              ng-class="{'invalid-tag': newTag.invalid}"
              ng-disabled="disabled"
-             ti-bind-attrs="{type: options.type, placeholder: placeholder, tabindex: options.tabindex, spellcheck: options.spellcheck}"
+             ng-attr-placeholder="{{placeholderCopy}}"
+             ti-bind-attrs="{type: options.type, tabindex: options.tabindex, spellcheck: options.spellcheck}"
              ti-autosize>
     </div>
   </div>
