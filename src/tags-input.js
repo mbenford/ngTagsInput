@@ -192,6 +192,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             tags: '=ngModel',
             text: '=?',
             hasFocus: '=',
+            placeholder: '=',
             onStartSearch: '&',
             onTagAdding: '&',
             onTagAdded: '&',
@@ -209,7 +210,6 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
                 template: [String, 'ngTagsInput/tag-item.html'],
                 type: [String, 'text', validateType],
-                placeholder: [String, 'Add a tag'],
                 tabindex: [Number, null],
                 removeTagSymbol: [String, String.fromCharCode(215)],
                 replaceSpacesWithDashes: [Boolean, true],
@@ -310,7 +310,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 return !value || !value.length;
             };
 
-            scope.placeholder = scope.options.placeholder;
+            scope.placeholderCopy = scope.placeholder;
+
+            scope.$watch('placeholder', function(value) {
+                scope.placeholderCopy = scope.placeholder;
+            });
 
             scope.newTag = {
                 text: function(value) {
@@ -341,9 +345,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
 
             scope.$watch('tags.length', function() {
                 if (tagList.items.length === 0) {
-                    scope.placeholder = scope.options.placeholder;
+                    scope.placeholderCopy = scope.placeholder;
                 } else {
-                    scope.placeholder = '';
+                    scope.placeholderCopy = '';
                 }
 
                 setElementValidity();
