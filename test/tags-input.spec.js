@@ -1945,6 +1945,43 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('use-strings option', function() {
+        it('initializes the option to false', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.useStrings).toBe(false);
+        });
+
+        it('updates the model', function() {
+            // Arrange
+            compile('use-strings="true"');
+
+            // Act
+            newTag('Tag1');
+            newTag('Tag2');
+            newTag('Tag3');
+
+            // Assert
+            expect($scope.tags).toEqual(['Tag1', 'Tag2', 'Tag3']);
+        });
+
+        it('renders the correct number of tags', function() {
+            // Arrange
+            $scope.tags = ['Tag1', 'Tag2', 'Tag3'];
+
+            // Act
+            compile('use-strings="true"');
+
+            // Assert
+            expect(getTags().length).toBe(3);
+            expect(getTagText(0)).toBe('Tag1');
+            expect(getTagText(1)).toBe('Tag2');
+            expect(getTagText(2)).toBe('Tag3');
+        });
+    });
+
     describe('ng-disabled support', function () {
         it('disables the inner input element', function () {
             // Arrange/Act

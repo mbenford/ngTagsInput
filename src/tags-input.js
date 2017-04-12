@@ -9,6 +9,7 @@
  * Renders an input box with tag editing support.
  *
  * @param {string} ngModel Assignable Angular expression to data-bind to.
+ * @param {boolean=} [useStrings=false] Flag indicating that the model is an array of strings (EXPERIMENTAL).
  * @param {string=} [template=NA] URL or id of a custom template for rendering each tag.
  * @param {string=} [templateScope=NA] Scope to be passed to custom templates - of both tagsInput and
  *    autoComplete directives - as $scope.
@@ -150,6 +151,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             self.index = -1;
         };
 
+        self.getItems = function() {
+            return options.useStrings ? self.items.map(getTagText): self.items;
+        };
+
         self.clearSelection();
 
         return self;
@@ -203,7 +208,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 keyProperty: [String, ''],
                 allowLeftoverText: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
-                spellcheck: [Boolean, true]
+                spellcheck: [Boolean, true],
+                useStrings: [Boolean, false]
             });
 
             $scope.tagList = new TagList($scope.options, $scope.events,
@@ -302,6 +308,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             scope.$watch('tags', function(value) {
                 if (value) {
                     tagList.items = tiUtil.makeObjectArray(value, options.displayProperty);
+                    if (options.useStrings) {
+                        return;
+                    }
+
                     scope.tags = tagList.items;
                 }
                 else {
@@ -378,7 +388,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                     scope.newTag.text('');
                 })
                 .on('tag-added tag-removed', function() {
-                    scope.tags = tagList.items;
+                    scope.tags = tagList.getItems();
                     // Ideally we should be able call $setViewValue here and let it in turn call $setDirty and $validate
                     // automatically, but since the model is an array, $setViewValue does nothing and it's up to us to do it.
                     // Unfortunately this won't trigger any registered $parser and there's no safe way to do it.
