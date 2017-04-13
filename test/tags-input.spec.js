@@ -336,6 +336,18 @@ describe('tags-input directive', function() {
             // Assert
             expect(getInput().attr('autocomplete')).toBe('off');
         });
+
+        it('will not show the input and delete elements when edit mode is disabled', function() {
+            // Arrange/Act
+            compile('edit-mode="false"');
+
+            // Act
+            newTag('foo');
+
+            // Assert
+            expect(getInput().hasClass('ng-hide')).toBe(true);
+            expect(getRemoveButton(0).hasClass('ng-hide')).toBe(true);
+        });
     });
 
     describe('focus outline', function() {

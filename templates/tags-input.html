@@ -10,6 +10,7 @@
     </ul>
     <input class="input"
            autocomplete="off"
+           ng-show="options.editMode"
            ng-model="newTag.text"
            ng-model-options="{getterSetter: true}"
            ng-keydown="eventHandlers.input.keydown($event)"

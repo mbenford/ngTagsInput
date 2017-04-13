@@ -21,6 +21,7 @@ tagsInput.directive('tiTagItem', function(tiUtil) {
             var tagsInput = tagsInputCtrl.registerTagItem(),
                 options = tagsInput.getOptions();
 
+            scope.editMode = options.editMode;
             scope.$$template = options.template;
             scope.$$removeTagSymbol = options.removeTagSymbol;
 

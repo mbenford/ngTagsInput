@@ -24,6 +24,7 @@
         "afterEach": true,
         "describe": true,
         "it": true,
+        "fit": true,
         "expect": true,
         "jasmine": true,
         "spyOn": true,
