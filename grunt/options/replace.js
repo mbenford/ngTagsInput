@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
     changelog: {
         src: ['CHANGELOG.md'],
