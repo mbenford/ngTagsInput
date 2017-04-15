@@ -10,6 +10,7 @@
 {% highlight html %}
 <tags-input
   ng-model="{string}"
+  [use-strings="{boolean}"]
   [template="{string}"]
   [template-scope="{string}"]
   [display-property="{string}"]
@@ -63,6 +64,12 @@
           <td><span class="label type type-string">string</span></td>
           <td>Assignable Angular expression to data-bind to.</td>
           <td>&ndash;</td>
+        </tr>
+        <tr>
+          <td>useStrings</td>
+          <td><span class="label type type-boolean">boolean</span></td>
+          <td>Flag indicating that the model is an array of strings (EXPERIMENTAL).</td>
+          <td>false</td>
         </tr>
         <tr>
           <td>template</td>

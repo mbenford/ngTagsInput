@@ -2,7 +2,7 @@ name: ngTagsInput Site
 markdown: redcarpet
 highlighter: rouge 
 exclude: ['node_modules','*.log']
-stable_version: 3.1.2
+stable_version: 3.2.0
 baseurl: /ngTagsInput
 github_pages_url: http://mbenford.github.io
 
