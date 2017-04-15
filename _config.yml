@@ -1,5 +1,5 @@
 name: ngTagsInput Site
-markdown: redcarpet
+markdown: kramdown
 highlighter: rouge 
 exclude: ['node_modules','*.log']
 stable_version: 3.2.0
