@@ -1,4 +1,10 @@
-### 3.1.2 (2017-03-31)
+## 3.2.0 (2017-04-15)
+
+#### Features
+
+* **tagsInput:** Add experimental support for array of strings ([8104ddc3](https://github.com/mbenford/ngTagsInput/commit/8104ddc3e4e3c439d19e0b4a271610b0f0a0a884))
+
+## 3.1.2 (2017-03-31)
 
 #### Bug Fixes
 
