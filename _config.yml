@@ -4,6 +4,7 @@ highlighter: rouge
 exclude: ['node_modules','*.log']
 stable_version: 3.1.2
 baseurl: /ngTagsInput
+github_pages_url: http://mbenford.github.io
 
 collections:
   pages:
