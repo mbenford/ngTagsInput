@@ -15,25 +15,19 @@ angular.module("ngTagsInputSite", ['ngTagsInput'])
                 .value();
         }
     })
-    .controller('HomeCtrl', function($scope, data) {
+    .controller('HomeCtrl', function(data) {
         data.load('superheroes', 'superheroes.json');
 
-        $scope.tags = ['Batman', 'Superman', 'Flash'];
-        $scope.loadItems = function($query) {
+        this.tags = ['Batman', 'Superman', 'Flash'];
+        this.loadItems = function($query) {
             return data.search('superheroes', $query);
         }
     })
-    .controller('GettingStartedCtrl', function($scope, $q) {
-        $scope.tags = ['Tag1', 'Tag2', 'Tag3'];
-
-        $scope.loadItems = function($query) {
+    .controller('GettingStartedCtrl', function() {
+        this.tags = ['Tag1', 'Tag2', 'Tag3'];
+        this.loadItems = function($query) {
             return ['Tag1', 'Tag2', 'Tag3', 'Tag4', 'Tag5'];
         };
-    })
-    .controller('NavCtrl', function($scope) {
-        $scope.isActive = function(currentPage, page) {
-            return currentPage === page;
-        }
     })
     .directive('stickyOnScroll', function() {
         return function(scope, element) {

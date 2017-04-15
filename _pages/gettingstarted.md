@@ -46,7 +46,7 @@ property and initialize it as an empty array.
 Assuming that the <em>tags</em> property contains 3 items - say, *{ text: 'Tag1' }*, *{ text: 'Tag2' }* and 
 *{ text: 'Tag3' }* - the above code will produce the following:
 
-<tags-input ng-model="tags"></tags-input>
+<tags-input ng-model="vm.tags"></tags-input>
 
 There are lots of options that you can use to change the default behavior of the directive. You'll find everything you 
 need to know on the [API documentation]({{ site.baseurl }}/documentation/api) page.
@@ -71,7 +71,7 @@ Given the above code and assuming that the *loadItems* function will return an a
 *{ text: 'Tag1' }*, *{ text: 'Tag2' }*, *{ text: 'Tag3' }*, *{ text: 'Tag4' }* and *{ text: 'Tag5' }* - the result will
 be the following (you need to type at least 3 characters before the autocomplete kicks in):
 
-<tags-input ng-model="tags">
+<tags-input ng-model="vm.tags">
   <auto-complete source="loadItems($query)"></auto-complete>
 </tags-input>
 
