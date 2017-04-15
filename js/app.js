@@ -54,7 +54,7 @@ angular.module("ngTagsInputSite", ['ngTagsInput'])
             element.find('a').each(function() {
                 var link = $(this);
                 if (location.pathname.indexOf(link.attr('href')) > -1) {
-                    link.parents().not('ul').toggleClass('active');
+                    link.parents().filter('li').toggleClass('active');
                 }
             });
         };
