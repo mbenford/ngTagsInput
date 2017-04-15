@@ -195,3 +195,16 @@ h3 {
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
 }
+.command-line::before {
+    content: "$ ";
+}
+
+.post-timestamp {
+    margin-top: -15px;
+    margin-bottom: 20px;
+    color: #808080;
+}
+
+.post-content {
+    
+}
