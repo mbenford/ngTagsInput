@@ -27,13 +27,15 @@
       <auto-complete source="loadItems($query)" min-length="1" load-on-down-arrow="true" load-on-focus="true" load-on-empty="true" template="autocomplete-template"></auto-complete>
   </tags-input>
 
-  <script type="text/ng-template" id="tag-template">
-    <div style="float: left;">
-      <img ng-src="{{data.picture}}" width="20" height="20" style="vertical-align: middle"/>
-    </div>
-    <div style="float: left; padding-left: 2px">
-      <span>{{$getDisplayText()}}</span>
-      <a class="remove-button" ng-click="$removeTag()">&times;</a>
+  <script type="text/ng-template" id="tag-template" >
+    <div ng-click="$selectTag()">
+      <div style="float: left;">
+        <img ng-src="{{data.picture}}"  width="20" height="20" style="vertical-align: middle"/>
+      </div>
+      <div style="float: left; padding-left: 2px">
+        <span>{{$getDisplayText()}}</span>
+        <a class="remove-button" ng-click="$removeTag()">&times;</a>
+      </div>
     </div>
   </script>
 

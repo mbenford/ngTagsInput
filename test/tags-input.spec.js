@@ -1614,6 +1614,44 @@ describe('tags-input directive', function() {
             var scope = getTagScope(0);
             expect(scope.$getDisplayText).not.toBeUndefined();
             expect(scope.$removeTag).not.toBeUndefined();
+            expect(scope.$selectTag).not.toBeUndefined();
+        });
+    });
+
+    describe('helper selectTag function', function () {
+        var $templateCache;
+        beforeEach(function() {
+            inject(function(_$templateCache_) {
+                $templateCache = _$templateCache_;
+            });
+        });
+        it('select tags', function () {
+            // Arrange
+            $templateCache.put('customTemplate', '<span>{{data.id}}</span><span>{{data.text}}</span><span class="select" ng-click="$selectTag()">select</span>');
+            compile('template="customTemplate"');
+            $scope.tags = generateTags(1);
+            $scope.$digest();
+
+            // Act
+            getTags().find('ti-tag-item > ng-include > span.select').click();
+
+            // Assert
+            // expect($scope.tags).toEqual([{ text: 'Tag1' }]);
+            expect(isolateScope.tagList.selected).toEqual({ text: 'Tag1' });
+        });
+        it('doesn\'t select tags when ng-disabled', function () {
+            // Arrange
+            $templateCache.put('customTemplate', '<span>{{data.id}}</span><span>{{data.text}}</span><span class="select" ng-click="$selectTag()">select</span>');
+            compile('ng-disabled="true" template="customTemplate"');
+            $scope.tags = generateTags(1);
+            $scope.$digest();
+
+            // Act
+            getTags().find('ti-tag-item > ng-include > span.select').click();
+
+            // Assert
+            // expect($scope.tags).toEqual([{ text: 'Tag1' }]);
+            expect(isolateScope.tagList.selected).toBe(null);
         });
 
         it('makes the provided scope available to the template', function() {
