@@ -9,7 +9,8 @@
  * Provides autocomplete support for the tagsInput directive.
  *
  * @param {expression} source Expression to evaluate upon changing the input content. The input value is available as
- *    $query. The result of the expression must be a promise that eventually resolves to an array of strings.
+ *    $query and for pagination there is $skip and $limit.
+ *    The result of the expression must be a promise that eventually resolves to an array of strings.
  * @param {string=} [template=NA] URL or id of a custom template for rendering each element of the autocomplete list.
  * @param {string=} [displayProperty=tagsInput.displayText] Property to be rendered as the autocomplete label.
  * @param {number=} [debounceDelay=100] Amount of time, in milliseconds, to wait before evaluating the expression in
@@ -31,10 +32,12 @@
  *    The expression is provided with the current match as $match, its index as $index and its state as $selected. The result
  *    of the evaluation must be one of the values supported by the ngClass directive (either a string, an array or an object).
  *    See https://docs.angularjs.org/api/ng/directive/ngClass for more information.
+ * @param {boolean=} [loadMore=false] calls the source function with $query, $skip and $limit when the user reached the
+ *    bottom of the suggestion list.
  */
-tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
-    function SuggestionList(loadFn, options, events) {
-        var self = {}, getDifference, lastPromise, getTagId;
+tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil, $window) {
+    function SuggestionList(loadFn, options, events, element) {
+        var self = {}, getDifference, lastPromise, getTagId, lastTags, resetLoadMore;
 
         getTagId = function() {
             return options.tagsInput.keyProperty || options.tagsInput.displayProperty;
@@ -52,6 +55,35 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             });
         };
 
+        function setupLoadMore() {
+            var bottom = element[0].querySelector('.suggestion-bottom');
+            var list = bottom.parentNode, queued = false;
+            function onScroll() {
+                var listRect = list.getBoundingClientRect();
+                var bottomRect = bottom.getBoundingClientRect();
+                var distance = bottomRect.bottom - listRect.bottom;
+                if (distance < 150)
+                {
+                    self.load(self.query, lastTags, self.loadedPages + 1);
+                }
+                queued = false;
+            }
+            self.queueOnScroll = function() {
+                if (queued || self.eof || lastPromise !== undefined) {
+                    return;
+                }
+                queued = true;
+                if ($window.requestAnimationFrame && arguments.length > 0) {
+                    $window.requestAnimationFrame(onScroll);
+                }
+                else {
+                    $timeout(onScroll, 16);
+                }
+            };
+
+            list.addEventListener('scroll',self.queueOnScroll);
+            resetLoadMore = function() { list.removeEventListener('scroll',self.queueOnScroll); };
+        }
         self.reset = function() {
             lastPromise = null;
 
@@ -60,30 +92,49 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             self.index = -1;
             self.selected = null;
             self.query = null;
+            self.loadedPages = 0;
+            self.eof = false;
+
+            if (resetLoadMore) {
+                resetLoadMore();
+            }
         };
         self.show = function() {
-            if (options.selectFirstMatch) {
+            if (options.selectFirstMatch && self.loadedPages === 1) {
                 self.select(0);
             }
             else {
                 self.selected = null;
             }
             self.visible = true;
+            if (options.loadMore) {
+                $timeout(setupLoadMore);
+            }
         };
-        self.load = tiUtil.debounce(function(query, tags) {
+        self.load = tiUtil.debounce(function(query, tags, page) {
+            page = page || 1;
+            lastTags = tags;
             self.query = query;
 
-            var promise = $q.when(loadFn({ $query: query }));
+            var promise = $q.when(loadFn({ $query: query, $skip: (page-1)*options.maxResultsToShow, $limit: options.maxResultsToShow }));
             lastPromise = promise;
 
             promise.then(function(items) {
                 if (promise !== lastPromise) {
                     return;
                 }
+                lastPromise = undefined;
+                self.loadedPages = page;
+                self.eof = items.length < options.maxResultsToShow;
 
                 items = tiUtil.makeObjectArray(items.data || items, getTagId());
                 items = getDifference(items, tags);
-                self.items = items.slice(0, options.maxResultsToShow);
+                if (page !== 1) {
+                    self.items = self.items.concat(items);
+                }
+                else {
+                    self.items = items.slice(0, options.maxResultsToShow);
+                }
 
                 if (self.items.length > 0) {
                     self.show();
@@ -154,10 +205,11 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
                 selectFirstMatch: [Boolean, true],
-                displayProperty: [String, '']
+                displayProperty: [String, ''],
+                loadMore: [Boolean, false]
             });
 
-            $scope.suggestionList = new SuggestionList($scope.source, $scope.options, $scope.events);
+            $scope.suggestionList = new SuggestionList($scope.source, $scope.options, $scope.events, $element);
 
             this.registerAutocompleteMatch = function() {
                 return {
