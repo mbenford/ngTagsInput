@@ -2169,6 +2169,14 @@ describe('tags-input directive', function() {
             expect(autocompleteObj.getOptions()).toEqual({ option1: 1, option2: 2, option3: true });
         });
 
+        it('return current scope', function() {
+            // Arrange
+            isolateScope.templateScope = $scope;
+
+            // Act/Assert
+            expect(autocompleteObj.getTemplateScope()).toEqual($scope);
+        });
+
         it('subscribe for an event', function() {
             // Arrange
             var callback = angular.noop;
