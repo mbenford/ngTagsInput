@@ -331,6 +331,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 scope.disabled = value;
             });
 
+            attrs.$observe('placeholder', function(value) {
+                if (value) {
+                    options.placeholder = value;
+                }
+            });
+
             scope.eventHandlers = {
                 input: {
                     keydown: function($event) {
