@@ -192,7 +192,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 tabindex: [Number, null],
                 removeTagSymbol: [String, String.fromCharCode(215)],
                 replaceSpacesWithDashes: [Boolean, true],
-                minLength: [Number, 3],
+                minLength: [Number, 2],
                 maxLength: [Number, MAX_SAFE_INTEGER],
                 addOnEnter: [Boolean, true],
                 addOnSpace: [Boolean, false],

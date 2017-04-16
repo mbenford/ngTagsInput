@@ -18,5 +18,5 @@ deploy:
   local-dir: build/travis
   skip_cleanup: true
   on:
-    repo: mbenford/ngTagsInput
+    repo: myohei/ngTagsInput
     branch: master
