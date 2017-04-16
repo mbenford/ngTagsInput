@@ -856,6 +856,16 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('autocomplete option', function() {
+        it('sets the input\'s autocomplete option', function() {
+            // Arrange/Act
+            compile('autocomplete="off"');
+
+            // Assert
+            expect(getInput().attr('autocomplete')).toBe('off');
+        });
+    });
+
     describe('remove-tag-symbol option', function() {
         it('sets the remove button text', function() {
             // Arrange/Act
