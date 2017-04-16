@@ -25,6 +25,8 @@
  *    becomes empty. The $query variable will be passed to the expression as an empty string.
  * @param {boolean=} [loadOnFocus=false] Flag indicating that the source option will be evaluated when the input element
  *    gains focus. The current input value is available as $query.
+ * @param {string=} [orderBy=NA] The property to order the suggestions by. Prefix the property with '-' to change direction.
+ *    E.g.: 'label' for ascending order or '-label' for descending order.
  * @param {boolean=} [selectFirstMatch=true] Flag indicating that the first match will be automatically selected once
  *    the suggestion list is shown.
  * @param {expression=} [matchClass=NA] Expression to evaluate for each match in order to get the CSS classes to be used.
@@ -32,7 +34,7 @@
  *    of the evaluation must be one of the values supported by the ngClass directive (either a string, an array or an object).
  *    See https://docs.angularjs.org/api/ng/directive/ngClass for more information.
  */
-tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
+tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, $filter,tagsInputConfig, tiUtil) {
     function SuggestionList(loadFn, options, events) {
         var self = {}, getDifference, lastPromise, getTagId;
 
@@ -83,6 +85,11 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
 
                 items = tiUtil.makeObjectArray(items.data || items, getTagId());
                 items = getDifference(items, tags);
+
+                if (options.orderBy) {
+                    items = $filter('orderBy')(items, options.orderBy);
+                }
+
                 self.items = items.slice(0, options.maxResultsToShow);
 
                 if (self.items.length > 0) {
@@ -154,7 +161,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
                 selectFirstMatch: [Boolean, true],
-                displayProperty: [String, '']
+                displayProperty: [String, ''],
+                orderBy: [String, null]
             });
 
             $scope.suggestionList = new SuggestionList($scope.source, $scope.options, $scope.events);

@@ -732,6 +732,42 @@ describe('autoComplete directive', function() {
         });
     });
 
+    describe('order-by option', function() {
+        it('initializes the option to null', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.orderBy).toBeNull();
+        });
+
+        it('sorts the suggestions by text in ascending order', function() {
+            // Arrange
+            compile('order-by="text"');
+
+            // Act
+            loadSuggestions(3);
+
+            // Assert
+            expect(getSuggestions().length).toBe(3);
+            expect(getSuggestionText(0)).toBe('Item1');
+            expect(getSuggestionText(2)).toBe('Item3');
+        });
+
+        it('sorts the suggestions by text in descending order', function() {
+            // Arrange
+            compile('order-by="-text"');
+
+            // Act
+            loadSuggestions(3);
+
+            // Assert
+            expect(getSuggestions().length).toBe(3);
+            expect(getSuggestionText(0)).toBe('Item3');
+            expect(getSuggestionText(2)).toBe('Item1');
+        });
+    });
+
     describe('debounce-delay option', function() {
         it('initializes the option to 100 milliseconds', function() {
             // Arrange/Act
