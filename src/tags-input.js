@@ -37,6 +37,7 @@
  * @param {string=} [allowedTagsPattern=.+] Regular expression that determines whether a new tag is valid.
  * @param {boolean=} [enableEditingLastTag=false] Flag indicating that the last tag will be moved back into the new tag
  *    input box instead of being removed when the backspace key is pressed and the input box is empty.
+ * @param {boolean=} [softRemove=false] Flag indicating that tags are hidden rather than removed, add `removed:true` property on element.
  * @param {boolean=} [addFromAutocompleteOnly=false] Flag indicating that only tags coming from the autocomplete list
  *    will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace and addOnBlur values are ignored.
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
@@ -122,6 +123,16 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             });
         };
 
+        self.softRemove = function(index) {
+            var tag = self.items[index];
+
+            return canRemoveTag(tag).then(function() {
+                self.items[index].removed = true;
+                events.trigger('tag-removed', { $tag: tag });
+            });
+
+        };
+
         self.select = function(index) {
             if (index < 0) {
                 index = self.items.length - 1;
@@ -201,6 +212,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 addOnPaste: [Boolean, false],
                 pasteSplitPattern: [RegExp, /,/],
                 allowedTagsPattern: [RegExp, /.+/],
+                softRemove: [Boolean, false],
                 enableEditingLastTag: [Boolean, false],
                 minTags: [Number, 0],
                 maxTags: [Number, MAX_SAFE_INTEGER],
@@ -249,6 +261,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                     },
                     removeTag: function(index) {
                         if ($scope.disabled) {
+                            return;
+                        }
+                        if($scope.options.softRemove){
+                            $scope.tagList.softRemove(index);
                             return;
                         }
                         $scope.tagList.remove(index);
