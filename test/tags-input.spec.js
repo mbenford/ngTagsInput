@@ -482,6 +482,24 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('autofocus option', function() {
+        it('sets the input field autofocus', function() {
+            // Arrange/Act
+            compile('autofocus="true"');
+
+            // Assert
+            expect(getInput().attr('autofocus')).toBe('autofocus');
+        });
+
+        it('initializes the option to null', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.autofocus).toBe(false);
+        });
+    });
+
     describe('add-on-enter option', function() {
         it('adds a new tag when the enter key is pressed and the option is true', function() {
             // Arrange
