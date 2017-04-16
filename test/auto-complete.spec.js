@@ -607,6 +607,61 @@ describe('autoComplete directive', function() {
         });
     });
 
+    describe('navigation through upwards suggestions', function() {
+        beforeEach(function() {
+            compile('upwards-suggestion="true"');
+            loadSuggestions(3);
+        });
+
+        describe('downward', function() {
+            it('selects the next suggestion when the down arrow key is pressed and there\'s something selected', function() {
+                // Arrange
+                suggestionList.select(0);
+
+                // Act
+                sendKeyDown(KEYS.down);
+
+                // Assert
+                expect(suggestionList.selected).toEqual({ text: 'Item3' });
+            });
+
+            it('selects the first suggestion when the down arrow key is pressed and the last item is selected', function() {
+                // Arrange
+                suggestionList.select(2);
+
+                // Act
+                sendKeyDown(KEYS.down);
+
+                // Assert
+                expect(suggestionList.selected).toEqual({ text: 'Item2' });
+            });
+        });
+
+        describe('upward', function() {
+            it('selects the prior suggestion when the down up key is pressed and there\'s something selected', function() {
+                // Arrange
+                suggestionList.select(1);
+
+                // Act
+                sendKeyDown(KEYS.up);
+
+                // Assert
+                expect(suggestionList.selected).toEqual({ text: 'Item3' });
+            });
+
+            it('selects the last suggestion when the up arrow key is pressed and the first item is selected', function() {
+                // Arrange
+                suggestionList.select(0);
+
+                // Act
+                sendKeyDown(KEYS.up);
+
+                // Assert
+                expect(suggestionList.selected).toEqual({ text: 'Item2' });
+            });
+        });
+    });
+
     describe('load-on-down-arrow option', function() {
         it('initializes the option to false', function() {
            // Arrange
