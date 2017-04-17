@@ -1124,6 +1124,139 @@ describe('tags-input directive', function() {
         });
     });
 
+    describe('disable-remove-confirmation option', function() {
+        beforeEach(function() {
+            $scope.tags = generateTags(3);
+        });
+
+        it('initializes the option to false', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.disableRemoveConfirmation).toBe(false);
+        });
+
+        describe('option is on', function() {
+            beforeEach(function() {
+                compile('disable-remove-confirmation="true"');
+            });
+
+            describe('backspace is pressed once', function() {
+                it('removes the last tag when the input field is empty', function() {
+                    // Arrange
+                    spyOn(isolateScope.events, 'trigger').and.callThrough();
+                    // Act
+                    sendBackspace();
+
+                    // Assert
+                    expect(getInput().val()).toBe('');
+                    expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }]);
+                    expect(isolateScope.tagList.selected).toBe(null);
+                    expect(isolateScope.tagList.index).toBe(-1);
+                });
+
+                it('does nothing when the input field is not empty', function() {
+                    // Act
+                    sendKeyPress(65);
+                    sendBackspace();
+
+                    // Assert
+                    expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }, { text: 'Tag3' }]);
+                });
+            });
+        });
+
+        describe('option is on, but enable-editing-last-tag option is also on', function() {
+            beforeEach(function() {
+                compile('disable-remove-confirmation="true"', 'enable-editing-last-tag="true"');
+            });
+
+            describe('backspace is pressed once', function() {
+                it('moves the last tag back into the input field when the input field is empty', function() {
+                    // Arrange
+                    spyOn(isolateScope.events, 'trigger').and.callThrough();
+                    // Act
+                    sendBackspace();
+
+                    // Assert
+                    expect(getInput().val()).toBe('Tag3');
+                    expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }]);
+                    expect(isolateScope.events.trigger).toHaveBeenCalledWith('input-change', 'Tag3');
+                });
+
+                it('does nothing when the input field is not empty', function() {
+                    // Act
+                    sendKeyPress(65);
+                    sendBackspace();
+
+                    // Assert
+                    expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }, { text: 'Tag3' }]);
+                });
+            });
+        });
+
+        describe('option is off', function() {
+            beforeEach(function() {
+                compile('disable-remove-confirmation="false"');
+            });
+
+            describe('backspace is pressed once', function() {
+                it('highlights the tag about to be removed when the input box is empty', function() {
+                    // Act
+                    sendBackspace();
+
+                    // Assert
+                    expect(getTag(2)).toHaveClass('selected');
+                });
+
+                it('does nothing when the input field is not empty', function() {
+                    // Act
+                    sendKeyPress(65);
+                    sendBackspace();
+
+                    // Assert
+                    expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }, { text: 'Tag3' }]);
+                });
+
+                it('stops highlighting the last tag when the input box becomes non-empty', function() {
+                    // Act
+                    sendBackspace();
+                    sendKeyPress(65);
+
+                    // Assert
+                    expect(getTag(2)).not.toHaveClass('selected');
+                    expect(isolateScope.tagList.selected).toBe(null);
+                    expect(isolateScope.tagList.index).toBe(-1);
+                });
+            });
+
+            describe('backspace is pressed twice', function() {
+                it('removes the last tag when the input field is empty', function() {
+                    // Act
+                    sendBackspace();
+                    sendBackspace();
+
+                    // Assert
+                    expect(getInput().val()).toBe('');
+                    expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }]);
+                    expect(isolateScope.tagList.selected).toBe(null);
+                    expect(isolateScope.tagList.index).toBe(-1);
+                });
+
+                it('does nothing when the input field is not empty', function() {
+                    // Act
+                    sendKeyPress(65);
+                    sendBackspace();
+                    sendBackspace();
+
+                    // Assert
+                    expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }, { text: 'Tag3' }]);
+                });
+            });
+        });
+    });
+
     describe('min-tags option', function() {
         it('initializes the option to 0', function() {
             // Arrange/Act
