@@ -77,7 +77,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             lastPromise = promise;
 
             promise.then(function(items) {
-                if (promise !== lastPromise) {
+                if (promise !== lastPromise || !items) {
                     return;
                 }
 
