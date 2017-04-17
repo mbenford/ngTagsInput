@@ -91,6 +91,10 @@ describe('autoComplete directive', function() {
         return getSuggestionsBox().find('li');
     }
 
+    function getSuggestionHeaderText() {
+        return getSuggestionsBox().find('.suggestion-list-header-inner').html();
+    }
+
     function getSuggestion(index) {
         return getSuggestions().eq(index);
     }
@@ -132,6 +136,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestions().length).toBe(2);
             expect(getSuggestionText(0)).toBe('Item1');
             expect(getSuggestionText(1)).toBe('Item2');
+            expect(getSuggestionHeaderText()).toBe('Showing 2 of 2 items');
         });
 
         it('renders all elements returned by the load function that aren\'t already added (replaceSpaceWithDashes on)', function() {
@@ -161,6 +166,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestions().length).toBe(2);
             expect(getSuggestionText(0)).toBe('Item1');
             expect(getSuggestionText(1)).toBe('Item2');
+            expect(getSuggestionHeaderText()).toBe('Showing 2 of 2 items');
         });
 
         it('renders all elements returned by the load function that aren\'t already added (non-string items)', function() {
@@ -184,6 +190,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(2)).toBe('[object Object]');
             expect(getSuggestionText(3)).toBe('');
             expect(getSuggestionText(4)).toBe('');
+            expect(getSuggestionHeaderText()).toBe('Showing 5 of 5 items');
         });
 
         it('renders all elements returned by the load function that aren\'t already added (non-promise)', function() {
@@ -226,6 +233,7 @@ describe('autoComplete directive', function() {
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(true);
+            expect(getSuggestionHeaderText()).toBe('Showing 1 of 1 item');
         });
 
         it('hides the suggestions list when there is no items to show', function() {
@@ -237,6 +245,7 @@ describe('autoComplete directive', function() {
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(false);
+            expect(getSuggestionHeaderText()).toBeUndefined();
         });
 
         it('hides the suggestions list when there is no items left to show', function() {
@@ -976,6 +985,7 @@ describe('autoComplete directive', function() {
 
             // Assert
             expect(isolateScope.options.maxResultsToShow).toBe(10);
+            expect(getSuggestionHeaderText()).toBeUndefined();
         });
 
         it('limits the number of results to be displayed at a time', function() {
@@ -990,6 +1000,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(0)).toBe('Item1');
             expect(getSuggestionText(1)).toBe('Item2');
             expect(getSuggestionText(2)).toBe('Item3');
+            expect(getSuggestionHeaderText()).toBe('Showing 3 of 5 items');
         });
     });
 

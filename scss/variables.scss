@@ -38,6 +38,10 @@ $suggestion-bgcolor:                    #fff;
 $suggestion-color-selected:             #fff;
 $suggestion-bgcolor-selected:           #0097cf;
 
+$suggestion-header-color: #585656;
+$suggestion-header-bgcolor: $suggestion-bgcolor;
+$suggestion-header-font: italic normal 14px monospace;
+
 $suggestion-highlight-font:             normal bold $suggestion-font;
 $suggestion-highlight-color:            $suggestion-color;
 $suggestion-highlight-bgcolor:          $suggestion-bgcolor;
