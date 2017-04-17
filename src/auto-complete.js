@@ -60,6 +60,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             self.index = -1;
             self.selected = null;
             self.query = null;
+            self.load.cancel();
         };
         self.show = function() {
             if (options.selectFirstMatch) {
