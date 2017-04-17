@@ -1,5 +1,5 @@
 <div class="host" tabindex="-1" ng-click="eventHandlers.host.click()" ti-transclude-append>
-  <div class="tags" ng-class="{focused: hasFocus}">
+  <div class="tags" ng-class="{focused: hasFocus, 'has-autocomplete-trigger': hasAutocompleteTrigger}">
     <ul class="tag-list">
       <li class="tag-item"
           ng-repeat="tag in tagList.items track by track(tag)"

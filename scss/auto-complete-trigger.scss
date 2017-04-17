@@ -1,0 +1,33 @@
+@import "mixins";
+@import "variables";
+
+tags-input auto-complete-trigger {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: $auto-complete-trigger-width;
+  height: 100%;
+
+  a.autocomplete-trigger {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+
+    .autocomplete-trigger-icon {
+      position: absolute;
+      right: (($auto-complete-trigger-width - (2 * $auto-complete-trigger-caret-size)) / 2);
+      top: 50%;
+      margin-top: -($auto-complete-trigger-caret-size / 2);
+      border-top: $auto-complete-trigger-caret-size solid;
+      border-right: $auto-complete-trigger-caret-size solid transparent;
+      border-left: $auto-complete-trigger-caret-size solid transparent;
+    }
+  }
+}
+
+tags-input .host .tags.has-autocomplete-trigger {
+  padding-right: $auto-complete-trigger-width;
+}
