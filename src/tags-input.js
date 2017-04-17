@@ -207,6 +207,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 displayProperty: [String, 'text'],
                 keyProperty: [String, ''],
                 allowLeftoverText: [Boolean, false],
+                clearLeftoverTextOnBlur: [Boolean, false],
                 addFromAutocompleteOnly: [Boolean, false],
                 spellcheck: [Boolean, true],
                 useStrings: [Boolean, false]
@@ -414,6 +415,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 .on('input-blur', function() {
                     if (options.addOnBlur && !options.addFromAutocompleteOnly) {
                         tagList.addText(scope.newTag.text());
+                    }
+                    else if (options.clearLeftoverTextOnBlur) {
+                        scope.newTag.text('');
                     }
                     element.triggerHandler('blur');
                     setElementValidity();
