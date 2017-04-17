@@ -30,6 +30,7 @@
  * @param {boolean=} [addOnEnter=true] Flag indicating that a new tag will be added on pressing the ENTER key.
  * @param {boolean=} [addOnSpace=false] Flag indicating that a new tag will be added on pressing the SPACE key.
  * @param {boolean=} [addOnComma=true] Flag indicating that a new tag will be added on pressing the COMMA key.
+ * @param {boolean=} [addOnSemicolon=false] Flag indicating that a new tag will be added on pressing the SEMICOLON key.
  * @param {boolean=} [addOnBlur=true] Flag indicating that a new tag will be added when the input field loses focus.
  * @param {boolean=} [addOnPaste=false] Flag indicating that the text pasted into the input field will be split into tags.
  * @param {string=} [pasteSplitPattern=,] Regular expression used to split the pasted text into tags.
@@ -197,6 +198,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 addOnEnter: [Boolean, true],
                 addOnSpace: [Boolean, false],
                 addOnComma: [Boolean, true],
+                addOnSemicolon: [Boolean, false],
                 addOnBlur: [Boolean, true],
                 addOnPaste: [Boolean, false],
                 pasteSplitPattern: [RegExp, /,/],
@@ -257,7 +259,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             };
         },
         link: function(scope, element, attrs, ngModelCtrl) {
-            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.delete, KEYS.left, KEYS.right],
+            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.semicolon, KEYS.backspace, KEYS.delete, KEYS.left, KEYS.right],
                 tagList = scope.tagList,
                 events = scope.events,
                 options = scope.options,
@@ -430,6 +432,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                     addKeys[KEYS.enter] = options.addOnEnter;
                     addKeys[KEYS.comma] = options.addOnComma;
                     addKeys[KEYS.space] = options.addOnSpace;
+                    addKeys[KEYS.semicolon] = options.addOnSemicolon;
 
                     shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
                     shouldRemove = (key === KEYS.backspace || key === KEYS.delete) && tagList.selected;

@@ -11,7 +11,8 @@ var KEYS = {
     left: 37,
     right: 39,
     delete: 46,
-    comma: 188
+    comma: 188,
+    semicolon: 186
 };
 
 var MAX_SAFE_INTEGER = 9007199254740991;
