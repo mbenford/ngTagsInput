@@ -82,7 +82,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 }
 
                 items = tiUtil.makeObjectArray(items.data || items, getTagId());
-                items = getDifference(items, tags);
+              //  items = getDifference(items, tags);
                 self.items = items.slice(0, options.maxResultsToShow);
 
                 if (self.items.length > 0) {
