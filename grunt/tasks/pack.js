@@ -1,8 +1,8 @@
 'use strict';
 
-module.exports = function(grunt) {
-    grunt.registerTask('pack', function(output) {
-        var tasks = ['clean'];
+module.exports = grunt => {
+    grunt.registerTask('pack', output => {
+        let tasks = ['clean'];
 
         if (!output || output === 'js') {
             tasks.push('javascript-only');

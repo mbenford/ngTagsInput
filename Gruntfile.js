@@ -1,20 +1,20 @@
 'use strict';
 
-module.exports = function(grunt) {
+module.exports = grunt => {
     function loadConfig(path) {
-        var glob = require('glob'),
-            object = {};
+        let glob = require('glob');
+        let object = {};
 
-        glob.sync('*', { cwd: path }).forEach(function(option) {
-            var key = option.replace(/\.js$/,''),
-                data = require(path + option);
+        glob.sync('*', { cwd: path }).forEach(option => {
+            let key = option.replace(/\.js$/, '');
+            let data = require(path + option);
             object[key] = typeof data === 'function' ? data(grunt) : data;
         });
 
         return object;
     }
 
-    var config = {
+    const config = {
         pkg: grunt.file.readJSON('package.json'),
         bowerDirectory: '../ngTagsInput-bower',
         bowerFile: '<%= bowerDirectory %>/bower.json',
@@ -72,15 +72,16 @@ module.exports = function(grunt) {
             }
         },
         banners: {
-            unminified: '/*!\n' +
-                ' * <%= pkg.prettyName %> v<%= pkg.version %>\n' +
-                ' * <%= pkg.homepage %>\n' +
-                ' *\n' +
-                ' * Copyright (c) 2013-<%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n' +
-                ' * License: <%= pkg.license %>\n' +
-                ' *\n' +
-                ' * Generated at <%= grunt.template.today("yyyy-mm-dd HH:MM:ss o") %>\n' +
-                ' */',
+            unminified:
+`/*!
+* <%= pkg.prettyName %> v<%= pkg.version %>
+* <%= pkg.homepage %>
+*
+* Copyright (c) 2013-<%= grunt.template.today("yyyy") %> <%= pkg.author.name %>
+* License: <%= pkg.license %>
+*
+* Generated at <%= grunt.template.today("yyyy-mm-dd HH:MM:ss o") %>
+*/`,
             minified: '/*! <%= pkg.prettyName %> v<%= pkg.version %> License: <%= pkg.license %> */'
         }
     };

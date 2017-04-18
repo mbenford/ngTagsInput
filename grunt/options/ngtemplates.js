@@ -6,12 +6,11 @@ module.exports = {
             '<%= files.html.out %>': ['<%= files.html.src %>']
         },
         options: {
-            url: function(url) {
-                return 'ngTagsInput/' + url.replace('templates/', '');
+            url(url) {
+                return `ngTagsInput/${url.replace('templates/', '')}`;
             },
-            bootstrap: function(module, script) {
-                return '/* HTML templates */\n' +
-                    'tagsInput.run(function($templateCache) {\n' + script + '});\n';
+            bootstrap(module, script) {
+                return `/* HTML templates */\ntagsInput.run(function($templateCache) {\n${script}});\n`;
             },
             htmlmin: {
                 collapseWhitespace: true,

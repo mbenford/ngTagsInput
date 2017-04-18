@@ -2,9 +2,9 @@
 
 'use strict';
 
-module.exports = function(grunt) {
-    grunt.registerTask('sauce', function(browsers) {
-        var sauce, config;
+module.exports = grunt => {
+    grunt.registerTask('sauce', browsers => {
+        let sauce, config;
 
         if (!process.env.SAUCE_USERNAME) {
             if (!grunt.file.exists('sauce.json')) {

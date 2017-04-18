@@ -8,11 +8,11 @@ module.exports = {
                 '(function() {\n\'use strict\';\n\n',
             footer: '\n}());',
             separator: '\n\n',
-            process: function(src) {
+            process(src) {
                 // Remove all 'use strict'; from the code and
                 // replaces all double blank lines with one
                 return src.replace(/'use strict';\n+/g, '')
-                    .replace(/\n\n\s*\n/g, '\n\n');
+                          .replace(/\n\n\s*\n/g, '\n\n');
             }
         },
         files: {
