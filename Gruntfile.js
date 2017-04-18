@@ -106,6 +106,7 @@ module.exports = function(grunt) {
         'test',
         'ngtemplates',
         'concat',
+        'babel',
         'ngAnnotate',
         'uglify'
     ]);

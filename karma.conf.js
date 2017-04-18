@@ -24,7 +24,8 @@ module.exports = function(config) {
 
         preprocessors: {
             'templates/*.html': ['ng-html2js'],
-            'src/*.js': ['coverage']
+            'src/*.js': ['babel', 'coverage'],
+            'test/*.js': ['babel']
         },
 
         ngHtml2JsPreprocessor: {
@@ -36,6 +37,13 @@ module.exports = function(config) {
         coverageReporter: {
             type: 'lcov',
             dir: 'coverage/'
+        },
+
+        babelPreprocessor: {
+            options: {
+                presets: ['es2015'],
+                sourceMap: 'inline'
+            }
         },
 
         // list of files to exclude
@@ -52,7 +60,7 @@ module.exports = function(config) {
 
         // level of logging
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_INFO,
+        logLevel: config.LOG_WARN,
 
         // enable / disable watching file and executing tests whenever any file changes
         autoWatch: true,

@@ -3,6 +3,7 @@
 module.exports = {
     js: {
         options: {
+            stripBanners: true,
             banner: '<%= banners.unminified %>\n' +
                 '(function() {\n\'use strict\';\n\n',
             footer: '\n}());',
