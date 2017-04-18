@@ -1,17 +1,15 @@
-'use strict';
-
 module.exports = function(grunt) {
     return {
-        files: [
+        options: {
+            configFile: '.eslintrc.js',
+            format: 'codeframe'
+        },
+        target: [
             grunt.file.expand('./grunt/*'),
             'Gruntfile.js',
             'karma.conf.js',
             ['<%= files.js.src %>'],
             ['<%= files.spec.src %>']
-        ],
-        options: {
-            jshintrc: '.jshintrc',
-            reporterOutput: ''
-        }
+        ]
     };
 };

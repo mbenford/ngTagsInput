@@ -106,7 +106,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 })
                 .catch(function() {
                     if (tagText) {
-                      events.trigger('invalid-tag', { $tag: tag });
+                        events.trigger('invalid-tag', { $tag: tag });
                     }
                 });
         };
@@ -182,7 +182,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
         replace: false,
         transclude: true,
         templateUrl: 'ngTagsInput/tags-input.html',
-        controller: function($scope, $attrs, $element) {
+        controller: function($scope, $attrs) {
             $scope.events = tiUtil.simplePubSub();
 
             tagsInputConfig.load('tagsInput', $scope, $attrs, {
@@ -217,8 +217,6 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 tiUtil.handleUndefinedResult($scope.onTagRemoving, true));
 
             this.registerAutocomplete = function() {
-                var input = $element.find('input');
-
                 return {
                     addTag: function(tag) {
                         return $scope.tagList.add(tag);

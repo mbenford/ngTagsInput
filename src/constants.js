@@ -1,3 +1,4 @@
+/* eslint no-unused-vars: "off" */
 'use strict';
 
 var KEYS = {
