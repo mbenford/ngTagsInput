@@ -19,6 +19,7 @@
  * @param {string=} [text=NA] Assignable Angular expression for data-binding to the element's text.
  * @param {boolean} [validateUntouched=true] Flag indicating that the validation is required on startup.  
  * @param {number=} tabindex Tab order of the control.
+ * @param {boolean} [validateUntouched=true] Flag indicating that the validation is required on startup.  
  * @param {string=} [placeholder=Add a tag] Placeholder text for the control.
  * @param {number=} [minLength=3] Minimum length for a new tag.
  * @param {number=} [maxLength=MAX_SAFE_INTEGER] Maximum length allowed for a new tag.
