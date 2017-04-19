@@ -186,7 +186,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
 
             scope.templateScope = tagsInput.getTemplateScope();
 
-            scope.addSuggestionByIndex = function(index) {
+            scope.addSuggestionByIndex = function(index, $event) {
+                $event.stopPropagation();
                 suggestionList.select(index);
                 scope.addSuggestion();
             };
