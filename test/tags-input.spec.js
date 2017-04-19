@@ -59,8 +59,11 @@ describe('tags-input directive', function() {
         return getTag(index).find('ti-tag-item > ng-include > a').first();
     }
 
-    function getInput() {
-        return element.find('input');
+    function getInput(what) {
+    	if (!what) {
+        	what = 'input';
+    	}
+        return element.find(what);
     }
 
     function newTag(tag, key) {
@@ -479,6 +482,34 @@ describe('tags-input directive', function() {
 
             // Assert
             expect(isolateScope.options.tabindex).toBeNull();
+        });
+    });
+
+    describe('input-field-tabindex option', function() {
+        it('sets the custom input field tab index', function() {
+            // Arrange/Act
+            compile('input-field-tabindex="99"');
+
+            // Assert: expect input tabidex to be 99
+            expect(getInput().attr('tabindex')).toBe('99');
+        });
+
+        it('initializes the option to null', function() {
+            // Arrange/Act
+            compile();
+
+            // Assert
+            expect(isolateScope.options.tabindex).toBeNull();
+        });
+    });
+
+    describe('input-field-id option', function() {
+        it('sets the custom input field id', function() {
+            // Arrange/Act
+            compile('input-field-id="custominput"');
+
+            // Assert: find input by id
+            expect(getInput('custominput')).toBeDefined();
         });
     });
 
