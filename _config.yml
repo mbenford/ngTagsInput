@@ -4,7 +4,6 @@ highlighter: rouge
 exclude: ['node_modules','*.log']
 stable_version: 3.2.0
 baseurl: /ngTagsInput
-github_pages_url: http://mbenford.github.io
 
 collections:
   pages:
@@ -14,3 +13,11 @@ collections:
   posts:
     output: true
     permalink: /blog/:year/:month/:day/:title
+
+feed:
+  path: blog/feed.xml
+
+author: Michael Benford
+
+gems:
+  - jekyll-feed
