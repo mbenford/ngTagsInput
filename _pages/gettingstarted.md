@@ -9,7 +9,7 @@ priority: 0.80
 
 ## Installing
 
-After [downloading]({{ site.baseurl }}/download) all files, installing ngTagsInput is a 3-step process:
+After [downloading]({{ site.github.url }}/download) all files, installing ngTagsInput is a 3-step process:
 
 1. Add the ngTagsInput script file to your page &ndash; make sure it's added after the Angular script:
 
@@ -49,7 +49,7 @@ Assuming that the <em>tags</em> property contains 3 items - say, *{ text: 'Tag1'
 <tags-input ng-model="vm.tags"></tags-input>
 
 There are lots of options that you can use to change the default behavior of the directive. You'll find everything you 
-need to know on the [API documentation]({{ site.baseurl }}/documentation/api) page.
+need to know on the [API documentation]({{ site.github.url }}/documentation/api) page.
 
 ## Autocomplete
 
@@ -76,7 +76,7 @@ be the following (you need to type at least 3 characters before the autocomplete
 </tags-input>
 
 Just like the *tags-input* directive, several options are available for you to customize how the autocomplete will work.
-Check them out on the [API documentation]({{ site.baseurl }}/documentation/api) page.
+Check them out on the [API documentation]({{ site.github.url }}/documentation/api) page.
 
 **IMPORTANT**: The *autocomplete* directive **does not** perform any filtering whatsoever. It provides your code with the
 text typed by the user so you can return a matching list of suggestions by using an appropriate solution for your application.
@@ -84,7 +84,7 @@ text typed by the user so you can return a matching list of suggestions by using
 ## Appearance
 
 By default, ngTagsInput uses a stylesheet that tries to mimic the look-and-feel of an ordinary input element. In 
-addition the default style, the directive also ships with a [Bootstrap-compatible stylesheet]({{ site.baseurl }}/documentation/guides/bootstrap)
+addition the default style, the directive also ships with a [Bootstrap-compatible stylesheet]({{ site.github.url }}/documentation/guides/bootstrap)
 for applications using Bootstrap. But if neither the default look-and-feel nor Bootstrap fit your application design, you can customize it with
 little effort by doing the following:
 

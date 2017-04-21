@@ -3,7 +3,6 @@ markdown: kramdown
 highlighter: rouge 
 exclude: ['node_modules','*.log']
 stable_version: 3.2.0
-baseurl: /ngTagsInput
 
 collections:
   pages:
@@ -13,11 +12,3 @@ collections:
   posts:
     output: true
     permalink: /blog/:year/:month/:day/:title
-
-feed:
-  path: blog/feed.xml
-
-author: Michael Benford
-
-gems:
-  - jekyll-feed

@@ -8,11 +8,11 @@ priority: 0.80
 <div class="row">
     <div class="col-md-12">
         <h1>
-            <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+            <a href="{{ post.url | prepend:site.github.url }}">{{ post.title }}</a>
         </h1>
         <p class="post-timestamp">{{ post.date | date_to_long_string }}</p>
         <article class="post-content">{{ post.excerpt }}</article>
-        <p><a href="{{ site.baseurl }}{{ post.url }}" class="btn btn-default">Read more</a></p>
+        <p><a href="{{ post.url | prepend:site.github.url }}" class="btn btn-default">Read more</a></p>
     </div>
 </div>
 {% endfor %}
