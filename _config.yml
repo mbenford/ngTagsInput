@@ -12,3 +12,11 @@ collections:
   posts:
     output: true
     permalink: /blog/:year/:month/:day/:title
+
+feed:
+  path: blog/feed.xml
+
+author: Michael Benford
+
+gems:
+  - jekyll-feed

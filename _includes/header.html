@@ -17,5 +17,9 @@
   <link rel="stylesheet" href="{{ site.github.url }}/css/styles.css">
   <link rel="stylesheet" href="{{ site.github.url }}/css/syntax.css">
 
+  {% if page.feed %}
+  {% feed_meta %}
+  {% endif %}
+
   {% include tracking.html %}
 </head>
