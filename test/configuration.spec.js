@@ -1,22 +1,20 @@
 'use strict';
 
 describe('configuration service', function() {
-    var $scope,
-        attrs, provider, service;
+    var element, attrs, events, provider, service;
 
     beforeEach(function() {
         module('ngTagsInput', function(tagsInputConfigProvider) {
             provider = tagsInputConfigProvider;
         });
 
-        inject(function($rootScope, tagsInputConfig) {
-            $scope = $rootScope.$new();
+        inject(function($rootScope, $compile, tagsInputConfig) {
+            element = $compile('<span></span>')($rootScope.$new());
             service = tagsInputConfig;
         });
 
         attrs = {};
-        $scope.options = {};
-        $scope.events = { trigger: angular.noop };
+        events = { trigger: angular.noop };
     });
 
     it('loads literal values from attributes', function() {
@@ -27,7 +25,7 @@ describe('configuration service', function() {
         attrs.prop4 = '.*';
 
         // Act
-        service.load('foo', $scope, attrs, {
+        var options = service.load('foo', element, attrs, events, {
             prop1: [String],
             prop2: [Number],
             prop3: [Boolean],
@@ -35,7 +33,7 @@ describe('configuration service', function() {
         });
 
         // Assert
-        expect($scope.options).toEqual({
+        expect(options).toEqual({
             prop1: 'foobar',
             prop2: 42,
             prop3: true,
@@ -45,10 +43,11 @@ describe('configuration service', function() {
 
     it('loads interpolated values from attributes', function() {
         // Arrange
-        $scope.$parent.prop1 = 'barfoo';
-        $scope.$parent.prop2 = 24;
-        $scope.$parent.prop3 = false;
-        $scope.$parent.prop4 = '.+';
+        var scope = element.scope();
+        scope.prop1 = 'barfoo';
+        scope.prop2 = 24;
+        scope.prop3 = false;
+        scope.prop4 = '.+';
 
         attrs.prop1 = '{{ prop1 }}';
         attrs.prop2 = '{{ prop2 }}';
@@ -56,7 +55,7 @@ describe('configuration service', function() {
         attrs.prop4 = '{{ prop4 }}';
 
         // Act
-        service.load('foo', $scope, attrs, {
+        var options = service.load('foo', element, attrs, events, {
             prop1: [String],
             prop2: [Number],
             prop3: [Boolean],
@@ -64,7 +63,7 @@ describe('configuration service', function() {
         });
 
         // Assert
-        expect($scope.options).toEqual({
+        expect(options).toEqual({
             prop1: 'barfoo',
             prop2: 24,
             prop3: false,
@@ -74,10 +73,9 @@ describe('configuration service', function() {
 
     it('loads interpolated values from attributes as they change', function() {
         // Arrange
-        provider.setActiveInterpolation('foo', { prop2: true, prop4: true });
-
-        $scope.$parent.prop1 = 'barfoo';
-        $scope.$parent.prop3 = false;
+        var scope = element.scope();
+        scope.$parent.prop1 = 'barfoo';
+        scope.$parent.prop3 = false;
 
         attrs.prop1 = '{{ prop1 }}';
         attrs.prop3 = '{{ prop3 }}';
@@ -87,8 +85,10 @@ describe('configuration service', function() {
             callbacks.push(cb);
         });
 
+        provider.setActiveInterpolation('foo', { prop2: true, prop4: true });
+
         // Act
-        service.load('foo', $scope, attrs, {
+        var options = service.load('foo', element, attrs, events, {
             prop1: [String],
             prop2: [Number],
             prop3: [Boolean],
@@ -99,7 +99,7 @@ describe('configuration service', function() {
         callbacks[1](null);
 
         // Assert
-        expect($scope.options).toEqual({
+        expect(options).toEqual({
             prop1: 'barfoo',
             prop2: 42,
             prop3: false,
@@ -109,31 +109,33 @@ describe('configuration service', function() {
 
     it('triggers an event when an interpolated value change', function() {
         // Arrange
-        provider.setActiveInterpolation('foo', { prop1: true });
-        $scope.$parent.prop1 = 'foobar';
+        var scope = element.scope();
+        scope.prop1 = 'foobar';
         attrs.prop1 = '{{ prop1 }}';
 
-        $scope.events = jasmine.createSpyObj('events', ['trigger']);
+        events = jasmine.createSpyObj('events', ['trigger']);
 
         var callback;
         attrs.$observe = jasmine.createSpy().and.callFake(function(name, cb) {
             callback = cb;
         });
 
+        provider.setActiveInterpolation('foo', { prop1: true });
+
         // Act
-        service.load('foo', $scope, attrs, {
+        service.load('foo', scope, attrs, events, {
             prop1: [String]
         });
 
         callback('barfoo');
 
         // Assert
-        expect($scope.events.trigger).toHaveBeenCalledWith('option-change', { name: 'prop1', newValue: 'barfoo' });
+        expect(events.trigger).toHaveBeenCalledWith('option-change', { name: 'prop1', newValue: 'barfoo' });
     });
 
     it('loads default values when attributes are missing', function() {
         // Act
-        service.load('foo', $scope, attrs, {
+        var options = service.load('foo', element, attrs, events, {
             prop1: [String, 'foobaz'],
             prop2: [Number, 84],
             prop3: [Boolean, true],
@@ -141,7 +143,7 @@ describe('configuration service', function() {
         });
 
         // Assert
-        expect($scope.options).toEqual({
+        expect(options).toEqual({
             prop1: 'foobaz',
             prop2: 84,
             prop3: true,
@@ -157,7 +159,7 @@ describe('configuration service', function() {
         });
 
         // Act
-        service.load('foo', $scope, attrs, {
+        var options = service.load('foo', element, attrs, events, {
             prop1: [String, 'foobaz'],
             prop2: [Number, 84],
             prop3: [Boolean, true],
@@ -165,7 +167,7 @@ describe('configuration service', function() {
         });
 
         // Assert
-        expect($scope.options).toEqual({
+        expect(options).toEqual({
             prop1: 'foobar',
             prop2: 84,
             prop3: false,
@@ -188,7 +190,7 @@ describe('configuration service', function() {
         attrs.prop4 = '.?';
 
         // Act
-        service.load('foo', $scope, attrs, {
+        var options = service.load('foo', element, attrs, events, {
             prop1: [String],
             prop2: [Number],
             prop3: [Boolean],
@@ -196,7 +198,7 @@ describe('configuration service', function() {
         });
 
         // Assert
-        expect($scope.options).toEqual({
+        expect(options).toEqual({
             prop1: 'foobaz',
             prop2: 84,
             prop3: false,
@@ -216,7 +218,7 @@ describe('configuration service', function() {
         attrs.prop4 = 'foo-bar';
 
         // Act
-        service.load('foo', $scope, attrs, {
+        var options = service.load('foo', element, attrs, events, {
             prop1: [String, 'barfoo', function(value) { return !value; }],
             prop2: [String, 'foobar', function(value) { return !value; }],
             prop3: [String, 'foobaz', function(value) { return value; }],
@@ -224,7 +226,7 @@ describe('configuration service', function() {
         });
 
         // Assert
-        expect($scope.options).toEqual({
+        expect(options).toEqual({
             prop1: 'foobar',
             prop2: 'foobar',
             prop3: 'foo-bar',

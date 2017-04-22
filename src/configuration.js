@@ -66,12 +66,11 @@ tagsInput.provider('tagsInputConfig', function() {
         converters[RegExp] = function(value) { return new RegExp(value); };
 
         return {
-            load: function(directive, scope, attrs, options) {
+            load: function(directive, element, attrs, events, optionDefinitions) {
                 var defaultValidator = function() { return true; };
+                var options = {};
 
-                scope.options = {};
-
-                angular.forEach(options, function(value, key) {
+                angular.forEach(optionDefinitions, function(value, key) {
                     var type, localDefault, validator, converter, getDefault, updateValue;
 
                     type = value[0];
@@ -85,19 +84,21 @@ tagsInput.provider('tagsInputConfig', function() {
                     };
 
                     updateValue = function(value) {
-                        scope.options[key] = value && validator(value) ? converter(value) : getDefault();
+                        options[key] = value && validator(value) ? converter(value) : getDefault();
                     };
 
                     if (interpolationStatus[directive] && interpolationStatus[directive][key]) {
                         attrs.$observe(key, function(value) {
                             updateValue(value);
-                            scope.events.trigger('option-change', { name: key, newValue: value });
+                            events.trigger('option-change', { name: key, newValue: value });
                         });
                     }
                     else {
-                        updateValue(attrs[key] && $interpolate(attrs[key])(scope.$parent));
+                        updateValue(attrs[key] && $interpolate(attrs[key])(element.scope()));
                     }
                 });
+
+                return options;
             },
             getTextAutosizeThreshold: function() {
                 return autosizeThreshold;

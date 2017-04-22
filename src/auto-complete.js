@@ -144,7 +144,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
         controller: function($scope, $element, $attrs) {
             $scope.events = tiUtil.simplePubSub();
 
-            tagsInputConfig.load('autoComplete', $scope, $attrs, {
+            $scope.options = tagsInputConfig.load('autoComplete', $element, $attrs, $scope.events, {
                 template: [String, 'ngTagsInput/auto-complete-match.html'],
                 debounceDelay: [Number, 100],
                 minLength: [Number, 3],

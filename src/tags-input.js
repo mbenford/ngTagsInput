@@ -182,10 +182,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
         replace: false,
         transclude: true,
         templateUrl: 'ngTagsInput/tags-input.html',
-        controller: function($scope, $attrs) {
+        controller: function($scope, $element, $attrs) {
             $scope.events = tiUtil.simplePubSub();
 
-            tagsInputConfig.load('tagsInput', $scope, $attrs, {
+            $scope.options = tagsInputConfig.load('tagsInput', $element, $attrs, $scope.events, {
                 template: [String, 'ngTagsInput/tag-item.html'],
                 type: [String, 'text', validateType],
                 placeholder: [String, 'Add a tag'],
