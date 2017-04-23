@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * @ngdoc service
  * @name tagsInputConfig

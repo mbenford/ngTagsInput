@@ -1,7 +1,5 @@
 /* global process: false */
 
-'use strict';
-
 module.exports = grunt => {
     grunt.registerTask('sauce', browsers => {
         let sauce, config;

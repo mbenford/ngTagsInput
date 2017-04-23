@@ -1,5 +1,3 @@
-'use strict';
-
 describe('autoComplete directive', () => {
     let $compile, $scope, $q, $timeout,
         parentCtrl, element, isolateScope, suggestionList, deferred, tagsInput, eventHandlers;

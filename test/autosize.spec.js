@@ -1,5 +1,3 @@
-'use strict';
-
 describe('autosize directive', () => {
     let $scope, $compile, tagsInputConfigMock,
         element, style, container;

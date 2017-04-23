@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = grunt => {
     grunt.registerTask('update-bower-version', () => {
         let pkg = grunt.config('pkg');

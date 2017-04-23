@@ -1,6 +1,4 @@
 /* eslint no-unused-vars: "off" */
-'use strict';
-
 const KEYS = {
     backspace: 8,
     tab: 9,

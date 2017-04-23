@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = grunt => {
     grunt.registerTask('pack', output => {
         let tasks = ['clean'];

@@ -1,5 +1,3 @@
-'use strict';
-
 describe('configuration service', () => {
     let element, attrs, events, provider, service;
 

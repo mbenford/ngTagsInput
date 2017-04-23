@@ -1,5 +1,3 @@
-'use strict';
-
 describe('transclude-append-directive', () => {
     let $scope, $compile, directive, element;
 

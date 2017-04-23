@@ -1,7 +1,5 @@
 /* global require, process */
 
-'use strict';
-
 const Dgeni = require('dgeni');
 
 module.exports = grunt => {

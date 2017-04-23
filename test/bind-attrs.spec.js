@@ -1,5 +1,3 @@
-'use strict';
-
 describe('bind-attrs directive', () => {
     let $scope, $compile,
         element;

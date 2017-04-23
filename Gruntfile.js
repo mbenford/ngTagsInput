@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = grunt => {
     function loadConfig(path) {
         let glob = require('glob');

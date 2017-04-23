@@ -1,5 +1,3 @@
-'use strict';
-
 describe('tiUtil factory', () => {
     let tiUtil;
 

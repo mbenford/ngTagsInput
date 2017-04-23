@@ -1,7 +1,5 @@
 /* global process: false */
 
-'use strict';
-
 module.exports = grunt => ({
     options: {
         configFile: 'karma.conf.js'

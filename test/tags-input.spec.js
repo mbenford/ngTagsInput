@@ -1,5 +1,3 @@
-'use strict';
-
 describe('tags-input directive', () => {
     let $compile, $scope, $timeout, $document, $window,
         isolateScope, element, tiUtil;
