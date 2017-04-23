@@ -2,11 +2,15 @@ module.exports = {
     env: {
         browser: true,
         node: true,
-        es6: true
+        es6: true,
+        mocha: true,
+        jasmine: true,
+        jquery: true,
     },
     extends: 'eslint:recommended',
     parserOptions: {
-        sourceType: 'module'
+        sourceType: 'script',
+        impliedStrict: true
     },
     rules: {
         'indent': ['error', 4],
@@ -26,17 +30,6 @@ module.exports = {
         angular: true,
         module: true,
         inject: true,
-        jQuery: true,
-        document: true,
-        $: true,
-        beforeEach: true,
-        afterEach: true,
-        describe: true,
-        it: true,
-        expect: true,
-        jasmine: true,
-        spyOn: true,
-        require: true,
         tagsInput: true,
         range: true,
         changeElementValue: true,
