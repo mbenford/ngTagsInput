@@ -9,8 +9,8 @@
  * Re-creates the old behavior of ng-transclude. Used internally by tagsInput directive.
  */
 tagsInput.directive('tiTranscludeAppend', function() {
-    return function(scope, element, attrs, ctrl, transcludeFn) {
-        transcludeFn(function(clone) {
+    return (scope, element, attrs, ctrl, transcludeFn) => {
+        transcludeFn(clone => {
             element.append(clone);
         });
     };

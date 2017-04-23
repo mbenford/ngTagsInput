@@ -17,22 +17,21 @@ tagsInput.directive('tiAutocompleteMatch', function($sce, tiUtil) {
             $scope: '=scope',
             data: '='
         },
-        link: function(scope, element, attrs, autoCompleteCtrl) {
-            var autoComplete = autoCompleteCtrl.registerAutocompleteMatch(),
-                options = autoComplete.getOptions();
+        link(scope, element, attrs, autoCompleteCtrl) {
+            let autoComplete = autoCompleteCtrl.registerAutocompleteMatch();
+            let options = autoComplete.getOptions();
 
             scope.$$template = options.template;
             scope.$index = scope.$parent.$index;
 
-            scope.$highlight = function(text) {
+            scope.$highlight = text => {
                 if (options.highlightMatchedText) {
                     text = tiUtil.safeHighlight(text, autoComplete.getQuery());
                 }
                 return $sce.trustAsHtml(text);
             };
-            scope.$getDisplayText =  function() {
-                return tiUtil.safeToString(scope.data[options.displayProperty || options.tagsInput.displayProperty]);
-            };
+
+            scope.$getDisplayText = () => tiUtil.safeToString(scope.data[options.displayProperty || options.tagsInput.displayProperty]);
         }
     };
 });

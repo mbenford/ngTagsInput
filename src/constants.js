@@ -1,7 +1,7 @@
 /* eslint no-unused-vars: "off" */
 'use strict';
 
-var KEYS = {
+const KEYS = {
     backspace: 8,
     tab: 9,
     enter: 13,
@@ -15,5 +15,5 @@ var KEYS = {
     comma: 188
 };
 
-var MAX_SAFE_INTEGER = 9007199254740991;
-var SUPPORTED_INPUT_TYPES = ['text', 'email', 'url'];
+const MAX_SAFE_INTEGER = 9007199254740991;
+const SUPPORTED_INPUT_TYPES = ['text', 'email', 'url'];

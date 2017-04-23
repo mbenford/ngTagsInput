@@ -34,25 +34,22 @@
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
     function SuggestionList(loadFn, options, events) {
-        var self = {}, getDifference, lastPromise, getTagId;
+        let self = {};
+        let lastPromise = null;
 
-        getTagId = function() {
-            return options.tagsInput.keyProperty || options.tagsInput.displayProperty;
+        let getTagId = () => options.tagsInput.keyProperty || options.tagsInput.displayProperty;
+
+        let getDifference = function(array1, array2) {
+            return array1.filter(item => !tiUtil.findInObjectArray(array2, item, getTagId(), (a, b) =>{
+                if (options.tagsInput.replaceSpacesWithDashes) {
+                    a = tiUtil.replaceSpacesWithDashes(a);
+                    b = tiUtil.replaceSpacesWithDashes(b);
+                }
+                return tiUtil.defaultComparer(a, b);
+            }));
         };
 
-        getDifference = function(array1, array2) {
-            return array1.filter(function(item) {
-                return !tiUtil.findInObjectArray(array2, item, getTagId(), function(a, b) {
-                    if (options.tagsInput.replaceSpacesWithDashes) {
-                        a = tiUtil.replaceSpacesWithDashes(a);
-                        b = tiUtil.replaceSpacesWithDashes(b);
-                    }
-                    return tiUtil.defaultComparer(a, b);
-                });
-            });
-        };
-
-        self.reset = function() {
+        self.reset = () => {
             lastPromise = null;
 
             self.items = [];
@@ -61,7 +58,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             self.selected = null;
             self.query = null;
         };
-        self.show = function() {
+
+        self.show = () => {
             if (options.selectFirstMatch) {
                 self.select(0);
             }
@@ -70,13 +68,14 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             }
             self.visible = true;
         };
-        self.load = tiUtil.debounce(function(query, tags) {
+
+        self.load = tiUtil.debounce((query, tags) => {
             self.query = query;
 
-            var promise = $q.when(loadFn({ $query: query }));
+            let promise = $q.when(loadFn({ $query: query }));
             lastPromise = promise;
 
-            promise.then(function(items) {
+            promise.then(items => {
                 if (promise !== lastPromise) {
                     return;
                 }
@@ -94,13 +93,15 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             });
         }, options.debounceDelay);
 
-        self.selectNext = function() {
+        self.selectNext = () => {
             self.select(++self.index);
         };
-        self.selectPrior = function() {
+
+        self.selectPrior = () => {
             self.select(--self.index);
         };
-        self.select = function(index) {
+
+        self.select = index => {
             if (index < 0) {
                 index = self.items.length - 1;
             }
@@ -118,12 +119,12 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
     }
 
     function scrollToElement(root, index) {
-        var element = root.find('li').eq(index),
-            parent = element.parent(),
-            elementTop = element.prop('offsetTop'),
-            elementHeight = element.prop('offsetHeight'),
-            parentHeight = parent.prop('clientHeight'),
-            parentScrollTop = parent.prop('scrollTop');
+        let element = root.find('li').eq(index);
+        let parent = element.parent();
+        let elementTop = element.prop('offsetTop');
+        let elementHeight = element.prop('offsetHeight');
+        let parentHeight = parent.prop('clientHeight');
+        let parentScrollTop = parent.prop('scrollTop');
 
         if (elementTop < parentScrollTop) {
             parent.prop('scrollTop', elementTop);
@@ -141,7 +142,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             matchClass: '&'
         },
         templateUrl: 'ngTagsInput/auto-complete.html',
-        controller: function($scope, $element, $attrs) {
+        controller($scope, $element, $attrs) {
             $scope.events = tiUtil.simplePubSub();
 
             $scope.options = tagsInputConfig.load('autoComplete', $element, $attrs, $scope.events, {
@@ -159,40 +160,35 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
 
             $scope.suggestionList = new SuggestionList($scope.source, $scope.options, $scope.events);
 
-            this.registerAutocompleteMatch = function() {
-                return {
-                    getOptions: function() {
-                        return $scope.options;
-                    },
-                    getQuery: function() {
-                        return $scope.suggestionList.query;
-                    }
-                };
-            };
+            this.registerAutocompleteMatch = () => ({
+                getOptions: function () {
+                    return $scope.options;
+                },
+                getQuery: function () {
+                    return $scope.suggestionList.query;
+                }
+            });
         },
-        link: function(scope, element, attrs, tagsInputCtrl) {
-            var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down],
-                suggestionList = scope.suggestionList,
-                tagsInput = tagsInputCtrl.registerAutocomplete(),
-                options = scope.options,
-                events = scope.events,
-                shouldLoadSuggestions;
+        link(scope, element, attrs, tagsInputCtrl) {
+            let hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down];
+            let suggestionList = scope.suggestionList;
+            let tagsInput = tagsInputCtrl.registerAutocomplete();
+            let options = scope.options;
+            let events = scope.events;
 
             options.tagsInput = tagsInput.getOptions();
 
-            shouldLoadSuggestions = function(value) {
-                return value && value.length >= options.minLength || !value && options.loadOnEmpty;
-            };
+            let shouldLoadSuggestions = value => value && value.length >= options.minLength || !value && options.loadOnEmpty;
 
             scope.templateScope = tagsInput.getTemplateScope();
 
-            scope.addSuggestionByIndex = function(index) {
+            scope.addSuggestionByIndex = index => {
                 suggestionList.select(index);
                 scope.addSuggestion();
             };
 
-            scope.addSuggestion = function() {
-                var added = false;
+            scope.addSuggestion = () => {
+                let added = false;
 
                 if (suggestionList.selected) {
                     tagsInput.addTag(angular.copy(suggestionList.selected));
@@ -202,12 +198,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 return added;
             };
 
-            scope.track = function(item) {
-                return item[options.tagsInput.keyProperty || options.tagsInput.displayProperty];
-            };
+            scope.track = item => item[options.tagsInput.keyProperty || options.tagsInput.displayProperty];
 
-            scope.getSuggestionClass = function(item, index) {
-                var selected = item === suggestionList.selected;
+            scope.getSuggestionClass = (item, index) => {
+                let selected = item === suggestionList.selected;
                 return [
                     scope.matchClass({$match: item, $index: index, $selected: selected}),
                     { selected: selected }
@@ -215,10 +209,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             };
 
             tagsInput
-                .on('tag-added tag-removed invalid-tag input-blur', function() {
+                .on('tag-added tag-removed invalid-tag input-blur', () => {
                     suggestionList.reset();
                 })
-                .on('input-change', function(value) {
+                .on('input-change', value => {
                     if (shouldLoadSuggestions(value)) {
                         suggestionList.load(value, tagsInput.getTags());
                     }
@@ -226,15 +220,15 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                         suggestionList.reset();
                     }
                 })
-                .on('input-focus', function() {
-                    var value = tagsInput.getCurrentTagText();
+                .on('input-focus', () => {
+                    let value = tagsInput.getCurrentTagText();
                     if (options.loadOnFocus && shouldLoadSuggestions(value)) {
                         suggestionList.load(value, tagsInput.getTags());
                     }
                 })
-                .on('input-keydown', function(event) {
-                    var key = event.keyCode,
-                        handled = false;
+                .on('input-keydown', event => {
+                    let key = event.keyCode;
+                    let handled = false;
 
                     if (tiUtil.isModifierOn(event) || hotkeys.indexOf(key) === -1) {
                         return;
@@ -272,7 +266,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                     }
                 });
 
-            events.on('suggestion-selected', function(index) {
+            events.on('suggestion-selected', index => {
                 scrollToElement(element, index);
             });
         }

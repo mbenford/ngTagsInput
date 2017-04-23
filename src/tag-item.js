@@ -17,21 +17,19 @@ tagsInput.directive('tiTagItem', function(tiUtil) {
             $scope: '=scope',
             data: '='
         },
-        link: function(scope, element, attrs, tagsInputCtrl) {
-            var tagsInput = tagsInputCtrl.registerTagItem(),
-                options = tagsInput.getOptions();
+        link(scope, element, attrs, tagsInputCtrl) {
+            let tagsInput = tagsInputCtrl.registerTagItem();
+            let options = tagsInput.getOptions();
 
             scope.$$template = options.template;
             scope.$$removeTagSymbol = options.removeTagSymbol;
 
-            scope.$getDisplayText = function() {
-                return tiUtil.safeToString(scope.data[options.displayProperty]);
-            };
-            scope.$removeTag = function() {
+            scope.$getDisplayText = () => tiUtil.safeToString(scope.data[options.displayProperty]);
+            scope.$removeTag = () => {
                 tagsInput.removeTag(scope.$index);
             };
 
-            scope.$watch('$parent.$index', function(value) {
+            scope.$watch('$parent.$index', value => {
                 scope.$index = value;
             });
         }

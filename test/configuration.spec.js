@@ -1,14 +1,14 @@
 'use strict';
 
-describe('configuration service', function() {
-    var element, attrs, events, provider, service;
+describe('configuration service', () => {
+    let element, attrs, events, provider, service;
 
-    beforeEach(function() {
-        module('ngTagsInput', function(tagsInputConfigProvider) {
+    beforeEach(() => {
+        module('ngTagsInput', tagsInputConfigProvider => {
             provider = tagsInputConfigProvider;
         });
 
-        inject(function($rootScope, $compile, tagsInputConfig) {
+        inject(($rootScope, $compile, tagsInputConfig) => {
             element = $compile('<span></span>')($rootScope.$new());
             service = tagsInputConfig;
         });
@@ -17,7 +17,7 @@ describe('configuration service', function() {
         events = { trigger: angular.noop };
     });
 
-    it('loads literal values from attributes', function() {
+    it('loads literal values from attributes', () => {
         // Arrange
         attrs.prop1 = 'foobar';
         attrs.prop2 = '42';
@@ -25,7 +25,7 @@ describe('configuration service', function() {
         attrs.prop4 = '.*';
 
         // Act
-        var options = service.load('foo', element, attrs, events, {
+        let options = service.load('foo', element, attrs, events, {
             prop1: [String],
             prop2: [Number],
             prop3: [Boolean],
@@ -41,9 +41,9 @@ describe('configuration service', function() {
         });
     });
 
-    it('loads interpolated values from attributes', function() {
+    it('loads interpolated values from attributes', () => {
         // Arrange
-        var scope = element.scope();
+        let scope = element.scope();
         scope.prop1 = 'barfoo';
         scope.prop2 = 24;
         scope.prop3 = false;
@@ -55,7 +55,7 @@ describe('configuration service', function() {
         attrs.prop4 = '{{ prop4 }}';
 
         // Act
-        var options = service.load('foo', element, attrs, events, {
+        let options = service.load('foo', element, attrs, events, {
             prop1: [String],
             prop2: [Number],
             prop3: [Boolean],
@@ -71,16 +71,16 @@ describe('configuration service', function() {
         });
     });
 
-    it('loads interpolated values from attributes as they change', function() {
+    it('loads interpolated values from attributes as they change', () => {
         // Arrange
-        var scope = element.scope();
+        let scope = element.scope();
         scope.$parent.prop1 = 'barfoo';
         scope.$parent.prop3 = false;
 
         attrs.prop1 = '{{ prop1 }}';
         attrs.prop3 = '{{ prop3 }}';
 
-        var callbacks = [];
+        let callbacks = [];
         attrs.$observe = jasmine.createSpy().and.callFake(function(name, cb) {
             callbacks.push(cb);
         });
@@ -88,7 +88,7 @@ describe('configuration service', function() {
         provider.setActiveInterpolation('foo', { prop2: true, prop4: true });
 
         // Act
-        var options = service.load('foo', element, attrs, events, {
+        let options = service.load('foo', element, attrs, events, {
             prop1: [String],
             prop2: [Number],
             prop3: [Boolean],

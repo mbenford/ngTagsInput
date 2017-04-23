@@ -1,15 +1,15 @@
 'use strict';
 
-describe('autoComplete directive', function() {
-    var $compile, $scope, $q, $timeout,
+describe('autoComplete directive', () => {
+    let $compile, $scope, $q, $timeout,
         parentCtrl, element, isolateScope, suggestionList, deferred, tagsInput, eventHandlers;
 
-    beforeEach(function() {
+    beforeEach(() => {
         jasmine.addMatchers(customMatchers);
 
         module('ngTagsInput');
 
-        inject(function($rootScope, _$compile_, _$q_, _$timeout_) {
+        inject(($rootScope, _$compile_, _$q_, _$timeout_) => {
             $scope = $rootScope;
             $compile = _$compile_;
             $q = _$q_;
@@ -18,7 +18,7 @@ describe('autoComplete directive', function() {
 
         deferred = $q.defer();
         eventHandlers = {
-            call: function(name, args) {
+            call(name, args) {
                 if (this[name]) {
                     this[name].call(null, args);
                 }
@@ -28,11 +28,9 @@ describe('autoComplete directive', function() {
 
         tagsInput = {
             changeInputValue: jasmine.createSpy(),
-            addTag: jasmine.createSpy().and.callFake(function() {
-                return $q.when();
-            }),
+            addTag: jasmine.createSpy().and.callFake(() => $q.when()),
             on: jasmine.createSpy().and.callFake(function(names, handler) {
-                names.split(' ').forEach(function(name) { eventHandlers[name] = handler; });
+                names.split(' ').forEach(name =>{ eventHandlers[name] = handler; });
                 return this;
             }),
             getTags: jasmine.createSpy().and.returnValue([]),
@@ -46,16 +44,14 @@ describe('autoComplete directive', function() {
         compile();
     });
 
-    function compile() {
-        var parent, options;
-
-        parent = $compile('<tags-input ng-model="whatever"></tags-input>')($scope);
+    function compile(...args) {
+        let parent = $compile('<tags-input ng-model="whatever"></tags-input>')($scope);
         $scope.$digest();
 
         parentCtrl = parent.controller('tagsInput');
         spyOn(parentCtrl, 'registerAutocomplete').and.returnValue(tagsInput);
 
-        options = jQuery.makeArray(arguments).join(' ');
+        let options = args.join(' ');
         element = angular.element('<auto-complete source="loadItems($query)" ' + options + '></auto-complete>');
         parent.append(element);
 
@@ -72,7 +68,7 @@ describe('autoComplete directive', function() {
     }
 
     function sendKeyDown(keyCode, properties) {
-        var event = jQuery.Event('keydown', angular.extend({ keyCode: keyCode }, properties || {}));
+        let event = jQuery.Event('keydown', angular.extend({keyCode: keyCode}, properties || {}));
         eventHandlers.call('input-keydown', event);
 
         return event;
@@ -104,13 +100,11 @@ describe('autoComplete directive', function() {
     }
 
     function generateSuggestions(count) {
-        return range(count, function(index) {
-            return { text: 'Item' + (index + 1) };
-        });
+        return range(count, index => ({text: 'Item' + (index + 1)}));
     }
 
     function loadSuggestions(countOrItems, text) {
-        var items = angular.isNumber(countOrItems) ? generateSuggestions(countOrItems) : countOrItems;
+        let items = angular.isNumber(countOrItems) ? generateSuggestions(countOrItems) : countOrItems;
         text = angular.isUndefined(text) ? 'foobar' : text;
 
         suggestionList.load(text, tagsInput.getTags());
@@ -118,12 +112,12 @@ describe('autoComplete directive', function() {
         resolve(items);
     }
 
-    describe('basic features', function() {
-        it('ensures that the suggestions list is hidden by default', function() {
+    describe('basic features', () => {
+        it('ensures that the suggestions list is hidden by default', () => {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('renders all elements returned by the load function that aren\'t already added', function() {
+        it('renders all elements returned by the load function that aren\'t already added', () => {
             // Act
             tagsInput.getTags.and.returnValue([{ text: 'Item3' }]);
             loadSuggestions(3);
@@ -134,7 +128,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(1)).toBe('Item2');
         });
 
-        it('renders all elements returned by the load function that aren\'t already added (replaceSpaceWithDashes on)', function() {
+        it('renders all elements returned by the load function that aren\'t already added (replaceSpaceWithDashes on)', () => {
             // Act
             tagsInput.getOptions.and.returnValue({ displayProperty: 'text', replaceSpacesWithDashes: true });
             compile();
@@ -152,7 +146,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(1)).toBe('Item 2');
         });
 
-        it('renders all elements returned by the load function that aren\'t already added ($http promise)', function() {
+        it('renders all elements returned by the load function that aren\'t already added ($http promise)', () => {
             // Act
             tagsInput.getTags.and.returnValue([{ text: 'Item3' }]);
             loadSuggestions({ data: generateSuggestions(3)});
@@ -163,7 +157,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(1)).toBe('Item2');
         });
 
-        it('renders all elements returned by the load function that aren\'t already added (non-string items)', function() {
+        it('renders all elements returned by the load function that aren\'t already added (non-string items)', () => {
             // Act
             tagsInput.getTags.and.returnValue([{ text: '1' }]);
             loadSuggestions({
@@ -186,7 +180,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(4)).toBe('');
         });
 
-        it('renders all elements returned by the load function that aren\'t already added (non-promise)', function() {
+        it('renders all elements returned by the load function that aren\'t already added (non-promise)', () => {
             // Arrange
             tagsInput.getTags.and.returnValue([{ text: 'Item3' }]);
             $scope.loadItems = jasmine.createSpy().and.returnValue(generateSuggestions(3));
@@ -201,7 +195,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(1)).toBe('Item2');
         });
 
-        it('renders all elements returned by the load function using the provided display-property option', function() {
+        it('renders all elements returned by the load function using the provided display-property option', () => {
             // Arrange
             tagsInput.getOptions.and.returnValue({ displayProperty: 'label' });
             compile();
@@ -220,7 +214,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(2)).toBe('Item3');
         });
 
-        it('shows the suggestions list when there are items to show', function() {
+        it('shows the suggestions list when there are items to show', () => {
             // Act
             loadSuggestions(1);
 
@@ -228,7 +222,7 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(true);
         });
 
-        it('hides the suggestions list when there is no items to show', function() {
+        it('hides the suggestions list when there is no items to show', () => {
             // Arrange
             suggestionList.visible = true;
 
@@ -239,7 +233,7 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('hides the suggestions list when there is no items left to show', function() {
+        it('hides the suggestions list when there is no items left to show', () => {
             // Act
             tagsInput.getTags.and.returnValue([{ text: 'Item1' }, { text: 'Item2' }]);
             loadSuggestions(2);
@@ -248,7 +242,7 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('hides the suggestion box when the input field becomes empty', function() {
+        it('hides the suggestion box when the input field becomes empty', () => {
             // Arrange
             changeInputValue('foobar');
             suggestionList.show();
@@ -261,7 +255,7 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('hides the suggestion box when the escape key is pressed', function() {
+        it('hides the suggestion box when the escape key is pressed', () => {
             // Arrange
             suggestionList.show();
             $scope.$digest();
@@ -274,7 +268,7 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('hides the suggestion box when a tag is removed', function() {
+        it('hides the suggestion box when a tag is removed', () => {
             // Arrange
             suggestionList.show();
             $scope.$digest();
@@ -287,7 +281,7 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('hides the suggestion box after adding the selected suggestion to the input field', function() {
+        it('hides the suggestion box after adding the selected suggestion to the input field', () => {
             // Arrange
             loadSuggestions(2);
             suggestionList.select(0);
@@ -300,7 +294,7 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('hides the suggestion box when the input field loses focus', function() {
+        it('hides the suggestion box when the input field loses focus', () => {
             // Arrange
             suggestionList.visible = true;
 
@@ -311,7 +305,7 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('hides the suggestion box when a tag is added', function() {
+        it('hides the suggestion box when a tag is added', () => {
             // Arrange
             suggestionList.visible = true;
 
@@ -322,7 +316,7 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('hides the suggestion box when an invalid tag is tried to be added', function() {
+        it('hides the suggestion box when an invalid tag is tried to be added', () => {
             // Arrange
             suggestionList.visible = true;
 
@@ -333,7 +327,7 @@ describe('autoComplete directive', function() {
             expect(isSuggestionsBoxVisible()).toBe(false);
         });
 
-        it('adds the selected suggestion when the enter key is pressed and the suggestions box is visible', function() {
+        it('adds the selected suggestion when the enter key is pressed and the suggestions box is visible', () => {
             // Arrange
             loadSuggestions(2);
             suggestionList.select(0);
@@ -345,7 +339,7 @@ describe('autoComplete directive', function() {
             expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' });
         });
 
-        it('adds the selected suggestion when the tab key is pressed and there is a suggestion selected', function() {
+        it('adds the selected suggestion when the tab key is pressed and there is a suggestion selected', () => {
             // Arrange
             loadSuggestions(2);
             suggestionList.select(0);
@@ -357,11 +351,11 @@ describe('autoComplete directive', function() {
             expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' });
         });
 
-        it('adds a copy of the selected suggestion', function() {
+        it('adds a copy of the selected suggestion', () => {
             // Arrange
             loadSuggestions(2);
             suggestionList.select(0);
-            var item = suggestionList.items[0];
+            let item = suggestionList.items[0];
 
             // Act
             isolateScope.addSuggestion();
@@ -370,7 +364,7 @@ describe('autoComplete directive', function() {
             expect(tagsInput.addTag.calls.argsFor(0)[0]).not.toBe(item);
         });
 
-        it('does not change the input value when the enter key is pressed and there is nothing selected', function() {
+        it('does not change the input value when the enter key is pressed and there is nothing selected', () => {
             // Arrange
             loadSuggestions(2);
             suggestionList.selected = null;
@@ -382,7 +376,7 @@ describe('autoComplete directive', function() {
             expect(tagsInput.addTag).not.toHaveBeenCalled();
         });
 
-        it('sets the selected suggestion to null after adding it to the input field', function() {
+        it('sets the selected suggestion to null after adding it to the input field', () => {
             // Arrange
             loadSuggestions(2);
             suggestionList.select(0);
@@ -395,7 +389,7 @@ describe('autoComplete directive', function() {
             expect(suggestionList.selected).toBeNull();
         });
 
-        it('does not call the load function after adding the selected suggestion to the input field', function() {
+        it('does not call the load function after adding the selected suggestion to the input field', () => {
             // Arrange
             loadSuggestions(2);
             suggestionList.select(0);
@@ -407,7 +401,7 @@ describe('autoComplete directive', function() {
             expect($scope.loadItems.calls.count()).toBe(1);
         });
 
-        it('highlights the selected suggestion only', function() {
+        it('highlights the selected suggestion only', () => {
             // Arrange
             loadSuggestions(3);
 
@@ -421,12 +415,12 @@ describe('autoComplete directive', function() {
             expect(getSuggestion(2).hasClass('selected')).toBe(false);
         });
 
-        it('discards all load calls but the last one', function() {
+        it('discards all load calls but the last one', () => {
             // Arrange
-            var deferred1 = $q.defer(), deferred2 = $q.defer(), deferred3 = $q.defer();
-            var promises = [deferred1.promise, deferred2.promise, deferred3.promise];
+            let deferred1 = $q.defer(), deferred2 = $q.defer(), deferred3 = $q.defer();
+            let promises = [deferred1.promise, deferred2.promise, deferred3.promise];
 
-            $scope.loadItems = jasmine.createSpy().and.callFake(function() {
+            $scope.loadItems = jasmine.createSpy().and.callFake(() => {
                 return promises.shift();
             });
             spyOn(suggestionList, 'show');
@@ -453,7 +447,7 @@ describe('autoComplete directive', function() {
             expect(suggestionList.show.calls.count()).toBe(1);
         });
 
-        it('discards all load calls after the suggestion list is reset', function() {
+        it('discards all load calls after the suggestion list is reset', () => {
             // Arrange
             spyOn(suggestionList, 'show');
             suggestionList.load('foobar', tagsInput.getTags());
@@ -468,7 +462,7 @@ describe('autoComplete directive', function() {
             expect(suggestionList.show).not.toHaveBeenCalled();
         });
 
-        it('converts an array of strings into an array of objects', function() {
+        it('converts an array of strings into an array of objects', () => {
             // Arrange/Act
             loadSuggestions(['Item1', 'Item2', 'Item3']);
 
@@ -480,31 +474,31 @@ describe('autoComplete directive', function() {
             ]);
         });
 
-        describe('auto scrolling', function() {
-            var style;
+        describe('auto scrolling', () => {
+            let style;
 
-            beforeEach(function() {
+            beforeEach(() => {
                 style = angular.element('<style> .suggestion-list { position: relative; overflow-y: auto; max-height: 100px }</style>').appendTo('head');
                 element.appendTo('body');
             });
 
-            afterEach(function() {
+            afterEach(() => {
                 style.remove();
                 element.remove();
             });
 
             function isVisible(index) {
-                var suggestion = getSuggestion(index),
-                    container = suggestion.parent();
+                let suggestion = getSuggestion(index);
+                let container = suggestion.parent();
 
                 return suggestion.prop('offsetTop') + suggestion.prop('offsetHeight') <= container.prop('clientHeight') + container.scrollTop() &&
                     suggestion.prop('offsetTop') >= container.scrollTop();
             }
 
-            range(5).forEach(function(index) {
+            range(5).forEach(index => {
                 index += 5;
 
-                it('scrolls the container down so the selected suggestion is visible #' + index, function() {
+                it('scrolls the container down so the selected suggestion is visible #' + index, () => {
                     // Arrange
                     loadSuggestions(10);
 
@@ -516,8 +510,8 @@ describe('autoComplete directive', function() {
                 });
             });
 
-            range(5).forEach(function(index) {
-                it('scrolls the container up so the selected suggestion is visible #' + index, function() {
+            range(5).forEach(index => {
+                it('scrolls the container up so the selected suggestion is visible #' + index, () => {
                     // Arrange
                     loadSuggestions(10);
                     getSuggestionsBox().find('ul').scrollTop(100);
@@ -532,13 +526,13 @@ describe('autoComplete directive', function() {
         });
     });
 
-    describe('navigation through suggestions', function() {
-        beforeEach(function() {
+    describe('navigation through suggestions', () => {
+        beforeEach(() => {
             loadSuggestions(3);
         });
 
-        describe('downward', function() {
-            it('selects the next suggestion when the down arrow key is pressed and there\'s something selected', function() {
+        describe('downward', () => {
+            it('selects the next suggestion when the down arrow key is pressed and there\'s something selected', () => {
                 // Arrange
                 suggestionList.select(0);
 
@@ -549,7 +543,7 @@ describe('autoComplete directive', function() {
                 expect(suggestionList.selected).toEqual({ text: 'Item2' });
             });
 
-            it('selects the first suggestion when the down arrow key is pressed and the last item is selected', function() {
+            it('selects the first suggestion when the down arrow key is pressed and the last item is selected', () => {
                 // Arrange
                 suggestionList.select(2);
 
@@ -561,8 +555,8 @@ describe('autoComplete directive', function() {
             });
         });
 
-        describe('upward', function() {
-            it('selects the prior suggestion when the down up key is pressed and there\'s something selected', function() {
+        describe('upward', () => {
+            it('selects the prior suggestion when the down up key is pressed and there\'s something selected', () => {
                 // Arrange
                 suggestionList.select(1);
 
@@ -573,7 +567,7 @@ describe('autoComplete directive', function() {
                 expect(suggestionList.selected).toEqual({ text: 'Item1' });
             });
 
-            it('selects the last suggestion when the up arrow key is pressed and the first item is selected', function() {
+            it('selects the last suggestion when the up arrow key is pressed and the first item is selected', () => {
                 // Arrange
                 suggestionList.select(0);
 
@@ -585,8 +579,8 @@ describe('autoComplete directive', function() {
             });
         });
 
-        describe('mouse', function() {
-            it('selects the suggestion under the mouse pointer', function() {
+        describe('mouse', () => {
+            it('selects the suggestion under the mouse pointer', () => {
                 // Act
                 getSuggestion(1).mouseenter();
 
@@ -594,7 +588,7 @@ describe('autoComplete directive', function() {
                 expect(suggestionList.selected).toEqual({ text: 'Item2' });
             });
 
-            it('adds the selected suggestion when a mouse click is triggered', function() {
+            it('adds the selected suggestion when a mouse click is triggered', () => {
                 // Arrange
                 suggestionList.selected = null;
 
@@ -607,8 +601,8 @@ describe('autoComplete directive', function() {
         });
     });
 
-    describe('load-on-down-arrow option', function() {
-        it('initializes the option to false', function() {
+    describe('load-on-down-arrow option', () => {
+        it('initializes the option to false', () => {
            // Arrange
             compile();
 
@@ -616,12 +610,12 @@ describe('autoComplete directive', function() {
             expect(isolateScope.options.loadOnDownArrow).toBe(false);
         });
 
-        describe('suggestion box is hidden', function() {
-            beforeEach(function() {
+        describe('suggestion box is hidden', () => {
+            beforeEach(() => {
                 suggestionList.visible = false;
             });
 
-            it('calls the load function passing the current tag text when the down arrow key is pressed and the option is true', function() {
+            it('calls the load function passing the current tag text when the down arrow key is pressed and the option is true', () => {
                 // Arrange
                 compile('load-on-down-arrow="true"');
                 tagsInput.getCurrentTagText.and.returnValue('ABC');
@@ -634,7 +628,7 @@ describe('autoComplete directive', function() {
                 expect($scope.loadItems).toHaveBeenCalledWith('ABC');
             });
 
-            it('doesn\'t call the load function when the down arrow key is pressed and the option is false', function() {
+            it('doesn\'t call the load function when the down arrow key is pressed and the option is false', () => {
                 compile('load-on-down-arrow="false"');
 
                 // Act
@@ -646,8 +640,8 @@ describe('autoComplete directive', function() {
             });
         });
 
-        describe('suggestion box is visible', function() {
-            it('doesn\'t call the load function when the down arrow key is pressed', function() {
+        describe('suggestion box is visible', () => {
+            it('doesn\'t call the load function when the down arrow key is pressed', () => {
                 // Arrange
                 compile('load-on-down-arrow="true"');
                 suggestionList.visible = true;
@@ -662,8 +656,8 @@ describe('autoComplete directive', function() {
         });
     });
 
-    describe('load-on-empty option', function(){
-        it('initialize the option to false', function(){
+    describe('load-on-empty option', () => {
+        it('initialize the option to false', () => {
             // Arrange/Act
             compile();
 
@@ -671,7 +665,7 @@ describe('autoComplete directive', function() {
             expect(isolateScope.options.loadOnEmpty).toBe(false);
         });
 
-        it('calls the load function when the input field becomes empty and the option is true', function(){
+        it('calls the load function when the input field becomes empty and the option is true', () => {
             // Arrange
             compile('load-on-empty="true"');
 
@@ -683,7 +677,7 @@ describe('autoComplete directive', function() {
             expect($scope.loadItems).toHaveBeenCalledWith('');
         });
 
-        it('doesn\'t call the load function when the input field becomes empty and the option is false', function(){
+        it('doesn\'t call the load function when the input field becomes empty and the option is false', () => {
             // Arrange
             compile('load-on-empty="false"');
 
@@ -696,8 +690,8 @@ describe('autoComplete directive', function() {
         });
     });
 
-    describe('load-on-focus option', function() {
-        it('initializes the option to false', function() {
+    describe('load-on-focus option', () => {
+        it('initializes the option to false', () => {
             // Arrange/Act
             compile();
 
@@ -705,7 +699,7 @@ describe('autoComplete directive', function() {
             expect(isolateScope.options.loadOnFocus).toBe(false);
         });
 
-        it('calls the load function when the input element gains focus and the option is true', function() {
+        it('calls the load function when the input element gains focus and the option is true', () => {
             // Arrange
             compile('load-on-focus="true"');
             tagsInput.getCurrentTagText.and.returnValue('ABC');
@@ -718,7 +712,7 @@ describe('autoComplete directive', function() {
             expect($scope.loadItems).toHaveBeenCalledWith('ABC');
         });
 
-        it('doesn\' call the load function when the input element gains focus and the option is false', function() {
+        it('doesn\' call the load function when the input element gains focus and the option is false', () => {
             // Arrange
             compile('load-on-focus="false"');
             tagsInput.getCurrentTagText.and.returnValue('ABC');
@@ -732,8 +726,8 @@ describe('autoComplete directive', function() {
         });
     });
 
-    describe('debounce-delay option', function() {
-        it('initializes the option to 100 milliseconds', function() {
+    describe('debounce-delay option', () => {
+        it('initializes the option to 100 milliseconds', () => {
             // Arrange/Act
             compile();
 
@@ -741,7 +735,7 @@ describe('autoComplete directive', function() {
             expect(isolateScope.options.debounceDelay).toBe(100);
         });
 
-        it('doesn\'t call the load function immediately', function() {
+        it('doesn\'t call the load function immediately', () => {
             // Arrange
             compile('debounce-delay="100"');
 
@@ -754,7 +748,7 @@ describe('autoComplete directive', function() {
             expect($scope.loadItems).not.toHaveBeenCalled();
         });
 
-        it('calls the load function only after a delay has passed', function() {
+        it('calls the load function only after a delay has passed', () => {
             // Arrange
             compile('debounce-delay="100"');
 
@@ -769,7 +763,7 @@ describe('autoComplete directive', function() {
             expect($scope.loadItems).toHaveBeenCalledWith('ABC');
         });
 
-        it('doesn\'t call the load function when the reset method is called', function() {
+        it('doesn\'t call the load function when the reset method is called', () => {
             // Arrange
             compile();
             changeInputValue('A');
@@ -783,8 +777,8 @@ describe('autoComplete directive', function() {
         });
     });
 
-    describe('min-length option', function() {
-        it('initializes the option to 3', function() {
+    describe('min-length option', () => {
+        it('initializes the option to 3', () => {
             // Arrange/Act
             compile();
 
@@ -792,7 +786,7 @@ describe('autoComplete directive', function() {
             expect(isolateScope.options.minLength).toBe(3);
         });
 
-        it('calls the load function only after the minimum amount of characters has been entered', function() {
+        it('calls the load function only after the minimum amount of characters has been entered', () => {
             // Arrange
             compile('min-length="3"');
 
@@ -808,7 +802,7 @@ describe('autoComplete directive', function() {
             expect($scope.loadItems.calls.argsFor(0)).toEqual(['ABC']);
         });
 
-        it('doesn\'t call the load function when the minimum amount of characters isn\'t entered', function() {
+        it('doesn\'t call the load function when the minimum amount of characters isn\'t entered', () => {
             // Arrange
             compile('min-length="3"');
 
@@ -822,7 +816,7 @@ describe('autoComplete directive', function() {
             expect($scope.loadItems).not.toHaveBeenCalled();
         });
 
-        it('hides the suggestion box when the number of entered characters is less than the option value', function() {
+        it('hides the suggestion box when the number of entered characters is less than the option value', () => {
             // Arrange
             compile('min-length="5"');
             suggestionList.show();
@@ -835,8 +829,8 @@ describe('autoComplete directive', function() {
         });
     });
 
-    describe('highlight-matched-text option', function() {
-        it('initializes the option to true', function() {
+    describe('highlight-matched-text option', () => {
+        it('initializes the option to true', () => {
             // Arrange/Act
             compile();
 
@@ -844,7 +838,7 @@ describe('autoComplete directive', function() {
             expect(isolateScope.options.highlightMatchedText).toBe(true);
         });
 
-        it('highlights the matched text in the suggestions list', function() {
+        it('highlights the matched text in the suggestions list', () => {
             // Arrange
             compile('highlight-matched-text="true"', 'min-length="1"');
 
@@ -865,7 +859,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(4)).toBe('b<em>a</em>b');
         });
 
-        it('highlights the matched text in the suggestions list when it contains special chars', function() {
+        it('highlights the matched text in the suggestions list when it contains special chars', () => {
             // Arrange
             compile('highlight-matched-text="true"', 'min-length="1"');
 
@@ -878,7 +872,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(0)).toBe('<em>a**b++c..</em>');
         });
 
-        it('doesn\'t highlight anything when the matching text is empty', function() {
+        it('doesn\'t highlight anything when the matching text is empty', () => {
             // Arrange
             compile('highlight-matched-text="true"', 'min-length="0"');
 
@@ -899,7 +893,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(4)).toBe('bab');
         });
 
-        it('doesn\'t highlight the matched text in the suggestions list when the option is false', function() {
+        it('doesn\'t highlight the matched text in the suggestions list when the option is false', () => {
             // Arrange
             compile('highlight-matched-text="false"', 'min-length="1"');
 
@@ -920,7 +914,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(4)).toBe('bab');
         });
 
-        it('encodes HTML characters in suggestions list', function() {
+        it('encodes HTML characters in suggestions list', () => {
             // Act
             loadSuggestions([
                 { text: '<Item 1>' },
@@ -934,7 +928,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(2)).toBe('Item &amp;3');
         });
 
-        it('highlights encoded HTML characters in suggestions list', function() {
+        it('highlights encoded HTML characters in suggestions list', () => {
             // Arrange
             compile('highlight-matched-text="true"', 'min-length="1"');
 
@@ -951,7 +945,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(2)).toBe('Item &amp;3');
         });
 
-        it('doesn\'t highlight HTML entities in suggestions list', function() {
+        it('doesn\'t highlight HTML entities in suggestions list', () => {
             // Arrange
             compile('highlight-matched-text="true"', 'min-length="1"');
 
@@ -969,8 +963,8 @@ describe('autoComplete directive', function() {
         });
     });
 
-    describe('max-results-to-show option', function() {
-        it('initializes the option to 10', function() {
+    describe('max-results-to-show option', () => {
+        it('initializes the option to 10', () => {
             // Arrange/Act
             compile();
 
@@ -978,7 +972,7 @@ describe('autoComplete directive', function() {
             expect(isolateScope.options.maxResultsToShow).toBe(10);
         });
 
-        it('limits the number of results to be displayed at a time', function() {
+        it('limits the number of results to be displayed at a time', () => {
             // Arrange
             compile('max-results-to-show="3"');
 
@@ -993,8 +987,8 @@ describe('autoComplete directive', function() {
         });
     });
 
-    describe('select-first-match option', function() {
-        it('initializes the option to true', function() {
+    describe('select-first-match option', () => {
+        it('initializes the option to true', () => {
             // Arrange/Act
             compile();
 
@@ -1002,7 +996,7 @@ describe('autoComplete directive', function() {
             expect(isolateScope.options.selectFirstMatch).toBe(true);
         });
 
-        it('selects the first suggestion after the suggestion box is shown if the option is true', function() {
+        it('selects the first suggestion after the suggestion box is shown if the option is true', () => {
             // Arrange
             compile('select-first-match="true"');
 
@@ -1016,7 +1010,7 @@ describe('autoComplete directive', function() {
 
         });
 
-        it('doesn\'t select any suggestion after the suggestion box is shown if the option is false', function() {
+        it('doesn\'t select any suggestion after the suggestion box is shown if the option is false', () => {
             // Arrange
             compile('select-first-match="false"');
 
@@ -1031,8 +1025,8 @@ describe('autoComplete directive', function() {
         });
     });
 
-    describe('display-property option', function() {
-        it('initializes the option to an empty string', function() {
+    describe('display-property option', () => {
+        it('initializes the option to an empty string', () => {
             // Arrange/Act
             compile();
 
@@ -1040,7 +1034,7 @@ describe('autoComplete directive', function() {
             expect(isolateScope.options.displayProperty).toBe('');
         });
 
-        it('renders the correct display text', function() {
+        it('renders the correct display text', () => {
             // Arrange
             compile('display-property="label"');
 
@@ -1059,8 +1053,8 @@ describe('autoComplete directive', function() {
         });
     });
 
-    describe('template option', function() {
-        var $templateCache;
+    describe('template option', () => {
+        let $templateCache;
 
         function getSuggestionContent(index) {
             return getSuggestion(index)
@@ -1078,17 +1072,17 @@ describe('autoComplete directive', function() {
                 .scope();
         }
 
-        beforeEach(function() {
-            inject(function(_$templateCache_) {
+        beforeEach(() => {
+            inject(_$templateCache_ => {
                 $templateCache = _$templateCache_;
             });
         });
 
-        it('initializes the option to the default template file', function() {
+        it('initializes the option to the default template file', () => {
             expect(isolateScope.options.template).toBe('ngTagsInput/auto-complete-match.html');
         });
 
-        it('loads and uses the provided template', function() {
+        it('loads and uses the provided template', () => {
             // Arrange
             $templateCache.put('customTemplate', '<span>{{data.id}}</span><span>{{data.text}}</span>');
             compile('template="customTemplate"');
@@ -1106,7 +1100,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionContent(2)).toBe('<span>3</span><span>Item3</span>');
         });
 
-        it('makes the match data available to the template', function() {
+        it('makes the match data available to the template', () => {
             // Arrange
             compile();
 
@@ -1123,7 +1117,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionScope(2).data).toEqual({ id: 3, text: 'Item3', image: 'item3.jpg' });
         });
 
-        it('makes suggestions\' indexes available to the template', function() {
+        it('makes suggestions\' indexes available to the template', () => {
             // Arrange
             compile();
 
@@ -1136,7 +1130,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionScope(2).$index).toBe(2);
         });
 
-        it('makes helper functions available to the template', function() {
+        it('makes helper functions available to the template', () => {
             // Arrange
             compile();
 
@@ -1149,7 +1143,7 @@ describe('autoComplete directive', function() {
             expect(scope.$getDisplayText).not.toBeUndefined();
         });
 
-        it('makes the provided scope available to the template', function() {
+        it('makes the provided scope available to the template', () => {
             // Arrange
             tagsInput.getTemplateScope.and.returnValue({ prop: 'foobar', method: jasmine.createSpy().and.returnValue(42) });
             compile();
@@ -1164,8 +1158,8 @@ describe('autoComplete directive', function() {
         });
     });
 
-    describe('match-class option', function() {
-        it('allows custom CSS classes to be set for each match (object expression)', function() {
+    describe('match-class option', () => {
+        it('allows custom CSS classes to be set for each match (object expression)', () => {
             // Arrange
             compile('match-class="{foo: $match.text == \'Item1\', bar: $match.text != \'Item1\'}"');
 
@@ -1180,7 +1174,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestion(2)).toHaveClass('bar selected');
         });
 
-        it('allows custom CSS classes to be set for each match (array expression)', function() {
+        it('allows custom CSS classes to be set for each match (array expression)', () => {
             // Arrange
             compile('match-class="[\'foo\', \'bar\']"');
 
@@ -1195,7 +1189,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestion(2)).toHaveClass('foo bar selected');
         });
 
-        it('allows custom CSS classes to be set for each match (string expression)', function() {
+        it('allows custom CSS classes to be set for each match (string expression)', () => {
             // Arrange
             compile('match-class="\'foo bar\'"');
 
@@ -1210,7 +1204,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestion(2)).toHaveClass('foo bar selected');
         });
 
-        it('provides the expression with the current match, its index and its state', function() {
+        it('provides the expression with the current match, its index and its state', () => {
             // Arrange
             $scope.callback = jasmine.createSpy();
             compile('match-class="callback($match, $index, $selected)"');
@@ -1228,84 +1222,84 @@ describe('autoComplete directive', function() {
         });
     });
 
-    describe('keys propagation handling', function() {
-        describe('hotkeys', function() {
-            var hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down];
+    describe('keys propagation handling', () => {
+        describe('hotkeys', () => {
+            let hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down];
 
-            describe('suggestion box is visible', function() {
-                beforeEach(function() {
+            describe('suggestion box is visible', () => {
+                beforeEach(() => {
                     suggestionList.show();
                 });
 
-                it('prevents the down arrow keydown event from being propagated', function() {
+                it('prevents the down arrow keydown event from being propagated', () => {
                     // Act
-                    var event = sendKeyDown(KEYS.down);
+                    let event = sendKeyDown(KEYS.down);
 
                     // Assert
                     expect(event.isDefaultPrevented()).toBe(true);
                     expect(event.isPropagationStopped()).toBe(true);
                 });
 
-                it('prevents the up arrow keydown event from being propagated', function() {
+                it('prevents the up arrow keydown event from being propagated', () => {
                     // Act
-                    var event = sendKeyDown(KEYS.up);
+                    let event = sendKeyDown(KEYS.up);
 
                     // Assert
                     expect(event.isDefaultPrevented()).toBe(true);
                     expect(event.isPropagationStopped()).toBe(true);
                 });
 
-                it('prevents the enter keydown event from being propagated if there is a suggestion selected', function() {
+                it('prevents the enter keydown event from being propagated if there is a suggestion selected', () => {
                     // Arrange
                     suggestionList.selected = 'suggestion';
 
                     // Act
-                    var event = sendKeyDown(KEYS.enter);
+                    let event = sendKeyDown(KEYS.enter);
 
                     // Assert
                     expect(event.isDefaultPrevented()).toBe(true);
                     expect(event.isPropagationStopped()).toBe(true);
                 });
 
-                it('does not prevent the enter keydown event from begin propagated if there is no suggestion selected', function() {
+                it('does not prevent the enter keydown event from begin propagated if there is no suggestion selected', () => {
                     // Arrange
                     suggestionList.selected = null;
 
                     // Act
-                    var event = sendKeyDown(KEYS.enter);
+                    let event = sendKeyDown(KEYS.enter);
 
                     // Assert
                     expect(event.isDefaultPrevented()).toBe(false);
                     expect(event.isPropagationStopped()).toBe(false);
                 });
 
-                it('prevents the tab keydown event from being propagated if there is a suggestion selected', function() {
+                it('prevents the tab keydown event from being propagated if there is a suggestion selected', () => {
                     // Arrange
                     suggestionList.selected = 'suggestion';
 
                     // Act
-                    var event = sendKeyDown(KEYS.tab);
+                    let event = sendKeyDown(KEYS.tab);
 
                     // Assert
                     expect(event.isDefaultPrevented()).toBe(true);
                     expect(event.isPropagationStopped()).toBe(true);
                 });
 
-                it('does not prevent the tab keydown event from being propagated if there is no suggestion selected', function() {
+                it('does not prevent the tab keydown event from being propagated if there is no suggestion selected', () => {
                     // Arrange
                     suggestionList.selected = null;
 
                     // Act
-                    var event = sendKeyDown(KEYS.tab);
+                    let event = sendKeyDown(KEYS.tab);
 
                     // Assert
                     expect(event.isDefaultPrevented()).toBe(false);
                     expect(event.isPropagationStopped()).toBe(false);
                 });
 
-                it('prevents the escape keydown event from being propagated', function() {
+                it('prevents the escape keydown event from being propagated', () => {
                     // Act
-                    var event = sendKeyDown(KEYS.escape);
+                    let event = sendKeyDown(KEYS.escape);
 
                     // Assert
                     expect(event.isDefaultPrevented()).toBe(true);
@@ -1313,15 +1307,15 @@ describe('autoComplete directive', function() {
                 });
             });
 
-            describe('suggestion box is hidden', function() {
-                beforeEach(function() {
+            describe('suggestion box is hidden', () => {
+                beforeEach(() => {
                     suggestionList.reset();
                 });
 
-                hotkeys.forEach(function(hotkey) {
-                    it('does not prevent the keydown event from being propagated (keycode ' + hotkey + ')', function() {
+                hotkeys.forEach(hotkey => {
+                    it('does not prevent the keydown event from being propagated (keycode ' + hotkey + ')', () => {
                         // Act
-                        var event = sendKeyDown(hotkey);
+                        let event = sendKeyDown(hotkey);
 
                         // Assert
                         expect(event.isDefaultPrevented()).toBe(false);
@@ -1330,35 +1324,35 @@ describe('autoComplete directive', function() {
                 });
             });
 
-            describe('modifier key is on', function() {
-                beforeEach(function() {
+            describe('modifier key is on', () => {
+                beforeEach(() => {
                     suggestionList.show();
                 });
 
-                hotkeys.forEach(function(hotkey) {
-                    it('does not prevent a hotkey from being propagated when the shift key is down (hotkey ' + hotkey + ')', function() {
+                hotkeys.forEach(hotkey => {
+                    it('does not prevent a hotkey from being propagated when the shift key is down (hotkey ' + hotkey + ')', () => {
                         expect(sendKeyDown(hotkey, { shiftKey: true }).isDefaultPrevented()).toBe(false);
                     });
 
-                    it('does not prevent a hotkey from being propagated when the alt key is down (hotkey ' + hotkey + ')', function() {
+                    it('does not prevent a hotkey from being propagated when the alt key is down (hotkey ' + hotkey + ')', () => {
                         expect(sendKeyDown(hotkey, { altKey: true }).isDefaultPrevented()).toBe(false);
                     });
 
-                    it('does not prevent a hotkey from being propagated when the ctrl key is down (hotkey ' + hotkey + ')', function() {
+                    it('does not prevent a hotkey from being propagated when the ctrl key is down (hotkey ' + hotkey + ')', () => {
                         expect(sendKeyDown(hotkey, { ctrlKey: true }).isDefaultPrevented()).toBe(false);
                     });
 
-                    it('does not prevent a hotkey from being propagated when the meta key is down (hotkey ' + hotkey + ')', function() {
+                    it('does not prevent a hotkey from being propagated when the meta key is down (hotkey ' + hotkey + ')', () => {
                         expect(sendKeyDown(hotkey, { metaKey: true }).isDefaultPrevented()).toBe(false);
                     });
                 });
             });
         });
 
-        describe('non-hotkeys', function() {
-            it('does not prevent non-hotkeys keystrokes from being propagated', function() {
+        describe('non-hotkeys', () => {
+            it('does not prevent non-hotkeys keystrokes from being propagated', () => {
                 // Act
-                var events = [sendKeyDown(65), sendKeyDown(66), sendKeyDown(67)];
+                let events = [sendKeyDown(65), sendKeyDown(66), sendKeyDown(67)];
 
                 // Assert
                 expect(events[0].isDefaultPrevented()).toBe(false);

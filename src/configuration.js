@@ -10,9 +10,9 @@
  *  initialize options from HTML attributes.
  */
 tagsInput.provider('tagsInputConfig', function() {
-    var globalDefaults = {},
-        interpolationStatus = {},
-        autosizeThreshold = 3;
+    let globalDefaults = {};
+    let interpolationStatus = {};
+    let autosizeThreshold = 3;
 
     /**
      * @ngdoc method
@@ -24,7 +24,7 @@ tagsInput.provider('tagsInputConfig', function() {
      *
      * @returns {object} The service itself for chaining purposes.
      */
-    this.setDefaults = function(directive, defaults) {
+    this.setDefaults = (directive, defaults) => {
         globalDefaults[directive] = defaults;
         return this;
     };
@@ -39,7 +39,7 @@ tagsInput.provider('tagsInputConfig', function() {
      *
      * @returns {object} The service itself for chaining purposes.
      */
-    this.setActiveInterpolation = function(directive, options) {
+    this.setActiveInterpolation = (directive, options) => {
         interpolationStatus[directive] = options;
         return this;
     };
@@ -53,42 +53,41 @@ tagsInput.provider('tagsInputConfig', function() {
      *
      * @returns {object} The service itself for chaining purposes.
      */
-    this.setTextAutosizeThreshold = function(threshold) {
+    this.setTextAutosizeThreshold = threshold => {
         autosizeThreshold = threshold;
         return this;
     };
 
-    this.$get = function($interpolate) {
-        var converters = {};
-        converters[String] = function(value) { return value; };
-        converters[Number] = function(value) { return parseInt(value, 10); };
-        converters[Boolean] = function(value) { return value.toLowerCase() === 'true'; };
-        converters[RegExp] = function(value) { return new RegExp(value); };
+    this.$get = $interpolate => {
+        let converters = {
+            [String]: value => value.toString(),
+            [Number]: value => parseInt(value, 10),
+            [Boolean]: value => value.toLowerCase() === 'true',
+            [RegExp]: value => new RegExp(value)
+        };
 
         return {
-            load: function(directive, element, attrs, events, optionDefinitions) {
-                var defaultValidator = function() { return true; };
-                var options = {};
+            load(directive, element, attrs, events, optionDefinitions) {
+                let defaultValidator = () => true;
+                let options = {};
 
-                angular.forEach(optionDefinitions, function(value, key) {
-                    var type, localDefault, validator, converter, getDefault, updateValue;
+                angular.forEach(optionDefinitions, (value, key) => {
+                    let type = value[0];
+                    let localDefault = value[1];
+                    let validator = value[2] || defaultValidator;
+                    let converter = converters[type];
 
-                    type = value[0];
-                    localDefault = value[1];
-                    validator = value[2] || defaultValidator;
-                    converter = converters[type];
-
-                    getDefault = function() {
-                        var globalValue = globalDefaults[directive] && globalDefaults[directive][key];
+                    let getDefault = () => {
+                        let globalValue = globalDefaults[directive] && globalDefaults[directive][key];
                         return angular.isDefined(globalValue) ? globalValue : localDefault;
                     };
 
-                    updateValue = function(value) {
+                    let updateValue = value => {
                         options[key] = value && validator(value) ? converter(value) : getDefault();
                     };
 
                     if (interpolationStatus[directive] && interpolationStatus[directive][key]) {
-                        attrs.$observe(key, function(value) {
+                        attrs.$observe(key, value => {
                             updateValue(value);
                             events.trigger('option-change', { name: key, newValue: value });
                         });
@@ -100,7 +99,7 @@ tagsInput.provider('tagsInputConfig', function() {
 
                 return options;
             },
-            getTextAutosizeThreshold: function() {
+            getTextAutosizeThreshold() {
                 return autosizeThreshold;
             }
         };

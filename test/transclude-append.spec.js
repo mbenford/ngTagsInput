@@ -1,18 +1,16 @@
 'use strict';
 
-describe('transclude-append-directive', function () {
-    var $scope,
-        $compile,
-        directive,
-        element;
+describe('transclude-append-directive', () => {
+    let $scope, $compile, directive, element;
 
-    beforeEach(function () {
+    beforeEach(() => {
         module('ngTagsInput');
-        module(function($compileProvider) {
+
+        module($compileProvider => {
             directive = $compileProvider.directive;
         });
 
-        inject(function($rootScope, _$compile_) {
+        inject(($rootScope, _$compile_) => {
             $scope = $rootScope;
             $compile = _$compile_;
         });
@@ -23,16 +21,14 @@ describe('transclude-append-directive', function () {
     }
 
     function createDirective(template) {
-        directive('foobar', function() {
-            return {
-                restrict: 'E',
-                transclude: true,
-                template: template
-            };
-        });
+        directive('foobar', () => ({
+            restrict: 'E',
+            transclude: true,
+            template: template
+        }));
     }
 
-    it('appends the transcluded content to the end of an empty target element', function() {
+    it('appends the transcluded content to the end of an empty target element', () => {
         // Arrange
         createDirective('<div ti-transclude-append></div>');
 
@@ -43,7 +39,7 @@ describe('transclude-append-directive', function () {
         expect(element.find('p').html()).toBe('transcluded content');
     });
 
-    it('appends the transcluded content to the end of a non-empty target element', function() {
+    it('appends the transcluded content to the end of a non-empty target element', () => {
         // Arrange
         createDirective('<div ti-transclude-append><p>existing content</p></div>');
 
@@ -51,7 +47,7 @@ describe('transclude-append-directive', function () {
         compile('<foobar><p>transcluded content</p></foobar>');
 
         // Assert
-        var content = $.map(element.find('p'), function(e) { return $(e).html(); });
+        let content = $.map(element.find('p'), e => $(e).html());
         expect(content).toEqual(['existing content', 'transcluded content']);
     });
 });

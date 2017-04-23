@@ -1,8 +1,8 @@
 'use strict';
 
 function range(count, callback) {
-    var array = [];
-    for (var i = 0; i < count; i++) {
+    let array = [];
+    for (let i = 0; i < count; i++) {
         array.push(callback ? callback(i) : i);
     }
     return array;

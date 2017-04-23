@@ -9,36 +9,29 @@
  * Helper methods used internally by the directive. Should not be called directly from user code.
  */
 tagsInput.factory('tiUtil', function($timeout, $q) {
-    var self = {};
+    let self = {};
 
-    self.debounce = function(fn, delay) {
-        var timeoutId;
-        return function() {
-            var args = arguments;
+    self.debounce = (fn, delay) => {
+        let timeoutId;
+        return function(...args) {
             $timeout.cancel(timeoutId);
             timeoutId = $timeout(function() { fn.apply(null, args); }, delay);
         };
     };
 
-    self.makeObjectArray = function(array, key) {
+    self.makeObjectArray = (array, key) => {
         if (!angular.isArray(array) || array.length === 0 || angular.isObject(array[0])) {
             return array;
         }
 
-        var newArray = [];
-        array.forEach(function(item) {
-            var obj = {};
-            obj[key] = item;
-            newArray.push(obj);
-        });
-        return newArray;
+        return array.map(item => ({ [key]: item }));
     };
 
-    self.findInObjectArray = function(array, obj, key, comparer) {
-        var item = null;
+    self.findInObjectArray = (array, obj, key, comparer) => {
+        let item = null;
         comparer = comparer || self.defaultComparer;
 
-        array.some(function(element) {
+        array.some(element => {
             if (comparer(element[key], obj[key])) {
                 item = element;
                 return true;
@@ -48,13 +41,13 @@ tagsInput.factory('tiUtil', function($timeout, $q) {
         return item;
     };
 
-    self.defaultComparer = function(a, b) {
+    self.defaultComparer = (a, b) => {
         // I'm aware of the internationalization issues regarding toLowerCase()
         // but I couldn't come up with a better solution right now
         return self.safeToString(a).toLowerCase() === self.safeToString(b).toLowerCase();
     };
 
-    self.safeHighlight = function(str, value) {
+    self.safeHighlight = (str, value) => {
         str = self.encodeHTML(str);
         value = self.encodeHTML(value);
 
@@ -62,65 +55,48 @@ tagsInput.factory('tiUtil', function($timeout, $q) {
             return str;
         }
 
-        function escapeRegexChars(str) {
-            return str.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
-        }
+        let escapeRegexChars = str => str.replace(/([.?*+^$[\]\\(){}|-])/g, '\\$1');
+        let expression = new RegExp('&[^;]+;|' + escapeRegexChars(value), 'gi');
 
-        var expression = new RegExp('&[^;]+;|' + escapeRegexChars(value), 'gi');
-        return str.replace(expression, function(match) {
-            return match.toLowerCase() === value.toLowerCase() ? '<em>' + match + '</em>' : match;
-        });
+        return str.replace(expression, match => match.toLowerCase() === value.toLowerCase() ? '<em>' + match + '</em>' : match);
     };
 
-    self.safeToString = function(value) {
-        return angular.isUndefined(value) || value === null ? '' : value.toString().trim();
-    };
+    self.safeToString = value => angular.isUndefined(value) || value === null ? '' : value.toString().trim();
 
-    self.encodeHTML = function(value) {
-        return self.safeToString(value)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
-    };
+    self.encodeHTML = value => self.safeToString(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-    self.handleUndefinedResult = function(fn, valueIfUndefined) {
-        return function() {
-            var result = fn.apply(null, arguments);
+    self.handleUndefinedResult = (fn, valueIfUndefined) => {
+        return function () {
+            let result = fn.apply(null, arguments);
             return angular.isUndefined(result) ? valueIfUndefined : result;
         };
     };
 
-    self.replaceSpacesWithDashes = function(str) {
-        return self.safeToString(str).replace(/\s/g, '-');
-    };
+    self.replaceSpacesWithDashes = str => self.safeToString(str).replace(/\s/g, '-');
 
-    self.isModifierOn = function(event) {
-        return event.shiftKey || event.ctrlKey || event.altKey || event.metaKey;
-    };
+    self.isModifierOn = event => event.shiftKey || event.ctrlKey || event.altKey || event.metaKey;
 
-    self.promisifyValue = function(value) {
+    self.promisifyValue = value => {
         value = angular.isUndefined(value) ? true : value;
         return $q[value ? 'when' : 'reject']();
     };
 
     self.simplePubSub = function() {
-        var events = {};
+        let events = {};
         return {
-            on: function(names, handler, first) {
-                names.split(' ').forEach(function(name) {
+            on(names, handler, first) {
+                names.split(' ').forEach(name => {
                     if (!events[name]) {
                         events[name] = [];
                     }
-                    var method = first ? [].unshift : [].push;
+                    let method = first ? [].unshift : [].push;
                     method.call(events[name], handler);
                 });
                 return this;
             },
-            trigger: function(name, args) {
-                var handlers = events[name] || [];
-                handlers.every(function(handler) {
-                    return self.handleUndefinedResult(handler, true)(args);
-                });
+            trigger(name, args) {
+                let handlers = events[name] || [];
+                handlers.every(handler => self.handleUndefinedResult(handler, true)(args));
                 return this;
             }
         };

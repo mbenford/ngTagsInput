@@ -1,13 +1,13 @@
 'use strict';
 
-describe('bind-attrs directive', function() {
-    var $scope, $compile,
+describe('bind-attrs directive', () => {
+    let $scope, $compile,
         element;
 
-    beforeEach(function() {
+    beforeEach(() => {
         module('ngTagsInput');
 
-        inject(function($rootScope, _$compile_) {
+        inject(($rootScope, _$compile_) => {
             $scope = $rootScope;
             $compile = _$compile_;
         });
@@ -18,7 +18,7 @@ describe('bind-attrs directive', function() {
         $scope.$digest();
     }
 
-    it('sets the element attributes according to the provided parameters', function() {
+    it('sets the element attributes according to the provided parameters', () => {
         // Arrange
         $scope.prop1 = 'Foobar';
         $scope.prop2 = 42;
@@ -31,7 +31,7 @@ describe('bind-attrs directive', function() {
         expect(element.attr('attr2')).toBe('42');
     });
 
-    it('updates the element attributes when provided parameters change', function() {
+    it('updates the element attributes when provided parameters change', () => {
         // Arrange
         $scope.prop1 = 'Foobar';
         $scope.prop2 = 42;

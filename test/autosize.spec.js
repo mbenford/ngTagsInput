@@ -1,20 +1,20 @@
 'use strict';
 
-describe('autosize directive', function() {
-    var $scope, $compile, tagsInputConfigMock,
+describe('autosize directive', () => {
+    let $scope, $compile, tagsInputConfigMock,
         element, style, container;
 
-    beforeEach(function() {
+    beforeEach(() => {
         module('ngTagsInput');
 
         tagsInputConfigMock = jasmine.createSpyObj('tagsInputConfig', ['getTextAutosizeThreshold']);
         tagsInputConfigMock.getTextAutosizeThreshold.and.returnValue(3);
 
-        module(function($provide) {
+        module($provide => {
             $provide.value('tagsInputConfig', tagsInputConfigMock);
         });
 
-        inject(function($rootScope, _$compile_) {
+        inject(($rootScope, _$compile_) => {
             $scope = $rootScope;
             $compile = _$compile_;
         });
@@ -23,14 +23,13 @@ describe('autosize directive', function() {
         container = angular.element('<div></div>').appendTo('body');
     });
 
-    afterEach(function() {
+    afterEach(() => {
         style.remove();
         container.remove();
     });
 
-    function compile() {
-        var attributes = $.makeArray(arguments).join(' ');
-
+    function compile(...args) {
+        let attributes = args.join(' ');
         element = angular.element('<input class="input" ng-model="model" ng-trim="false" ti-autosize ' + attributes + '>');
         container.append(element);
 
@@ -39,7 +38,7 @@ describe('autosize directive', function() {
     }
 
     function getTextWidth(text, threshold) {
-        var width, span = angular.element('<span class="input"></span>');
+        let width, span = angular.element('<span class="input"></span>');
         threshold = threshold || 3;
 
         span.css('white-space', 'pre');
@@ -52,9 +51,9 @@ describe('autosize directive', function() {
         return width + 'px';
     }
 
-    it('re-sizes the input width when its view content changes', function() {
+    it('re-sizes the input width when its view content changes', () => {
         // Arrange
-        var text = 'AAAAAAAAAA';
+        let text = 'AAAAAAAAAA';
         compile();
 
         // Act
@@ -64,9 +63,9 @@ describe('autosize directive', function() {
         expect(element.css('width')).toBe(getTextWidth(text));
     });
 
-    it('re-sizes the input width when its model value changes', function() {
+    it('re-sizes the input width when its model value changes', () => {
         // Arrange
-        var text = 'AAAAAAAAAAAAAAAAAAAA';
+        let text = 'AAAAAAAAAAAAAAAAAAAA';
         compile();
 
         // Act
@@ -77,7 +76,7 @@ describe('autosize directive', function() {
         expect(element.css('width')).toBe(getTextWidth(text));
     });
 
-    it('sets the input width as the placeholder width when the input is empty', function() {
+    it('sets the input width as the placeholder width when the input is empty', () => {
         // Arrange
         $scope.placeholder = 'Some placeholder';
         compile('placeholder="{{placeholder}}"');
@@ -90,7 +89,7 @@ describe('autosize directive', function() {
         expect(element.css('width')).toBe(getTextWidth('Some placeholder'));
     });
 
-    it('sets the input width as the placeholder width when the input is empty and the placeholder changes', function() {
+    it('sets the input width as the placeholder width when the input is empty and the placeholder changes', () => {
         // Arrange
         $scope.placeholder = 'Some placeholder';
         compile('placeholder="{{placeholder}}"');
@@ -105,7 +104,7 @@ describe('autosize directive', function() {
         expect(element.css('width')).toBe(getTextWidth('Some very lengthy placeholder'));
     });
 
-    it('clears the input width when it cannot be calculated', function() {
+    it('clears the input width when it cannot be calculated', () => {
         // Arrange
         container.hide();
         compile();
@@ -117,9 +116,9 @@ describe('autosize directive', function() {
         expect(element.prop('style').width).toBe('');
     });
 
-    it('overrides the threshold', function() {
+    it('overrides the threshold', () => {
         // Arrange
-        var text = 'AAAAAAAAAAAAAA';
+        let text = 'AAAAAAAAAAAAAA';
         tagsInputConfigMock.getTextAutosizeThreshold.and.returnValue(20);
         compile();
 

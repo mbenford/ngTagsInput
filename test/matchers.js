@@ -1,13 +1,11 @@
-'use strict';
-
-var customMatchers = {
-    toHaveClass: function () {
+const customMatchers = {
+    toHaveClass() {
         return {
-            compare: function(actual, expected) {
-                var result = {};
+            compare(actual, expected) {
+                let result = {};
                 result.pass = actual.hasClass(expected);
-                result.message = 'Expected element' + (result.pass ? ' not ' : ' ') + 'to have class \'' + expected + '\'' +
-                  ' but found \'' + actual.attr('class') + '\'';
+                result.message =
+                    `Expected element ${result.pass ? ' not ' : ' '} to have class '${expected}' but found '${actual.attr('class')}'`;
                 return result;
             }
         };

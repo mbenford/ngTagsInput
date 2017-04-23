@@ -1,25 +1,26 @@
 'use strict';
 
-describe('tiUtil factory', function() {
-    var tiUtil;
+describe('tiUtil factory', () => {
+    let tiUtil;
 
-    beforeEach(function() {
+    beforeEach(() => {
         module('ngTagsInput');
-        inject(function(_tiUtil_) {
+
+        inject(_tiUtil_ => {
             tiUtil = _tiUtil_;
         });
     });
 
-    describe('simplePubSub', function() {
-        var sut;
+    describe('simplePubSub', () => {
+        let sut;
 
-        beforeEach(function() {
+        beforeEach(() => {
             sut = tiUtil.simplePubSub();
         });
 
-        it('subscribes to an event', function() {
+        it('subscribes to an event', () => {
             // Arrange
-            var callback = jasmine.createSpy();
+            let callback = jasmine.createSpy();
 
             // Act
             sut.on('foo', callback);
@@ -29,9 +30,9 @@ describe('tiUtil factory', function() {
             expect(callback).toHaveBeenCalledWith('some data');
         });
 
-        it('subscribes to an event in reverse order', function() {
+        it('subscribes to an event in reverse order', () => {
             // Arrange
-            var callback = jasmine.createSpy();
+            let callback = jasmine.createSpy();
 
             // Act
             sut.on('foo', callback, true);
@@ -41,9 +42,9 @@ describe('tiUtil factory', function() {
             expect(callback).toHaveBeenCalledWith('some data');
         });
 
-        it('subscribes to multiple events', function() {
+        it('subscribes to multiple events', () => {
             // Arrange
-            var callback = jasmine.createSpy();
+            let callback = jasmine.createSpy();
 
             // Act
             sut.on('foo bar', callback);
@@ -56,9 +57,9 @@ describe('tiUtil factory', function() {
             expect(callback.calls.argsFor(1)).toEqual(['some other data']);
         });
 
-        it('subscribes multiple times to the same event', function() {
+        it('subscribes multiple times to the same event', () => {
             // Arrange
-            var callback1 = jasmine.createSpy(),
+            let callback1 = jasmine.createSpy(),
                 callback2 = jasmine.createSpy();
 
             // Act
@@ -71,9 +72,9 @@ describe('tiUtil factory', function() {
             expect(callback2).toHaveBeenCalledWith('some data');
         });
 
-        it('subscribes multiple times to the same event in reverse order', function() {
+        it('subscribes multiple times to the same event in reverse order', () => {
             // Arrange
-            var callback1 = jasmine.createSpy(),
+            let callback1 = jasmine.createSpy(),
                 callback2 = jasmine.createSpy();
 
             // Act
@@ -86,11 +87,11 @@ describe('tiUtil factory', function() {
             expect(callback2).toHaveBeenCalledWith('some data');
         });
 
-        it('guarantees the order of invocation is correct (regular order)', function() {
+        it('guarantees the order of invocation is correct (regular order)', () => {
             // Arrange
-            var calls = [],
-                callback1 = function() { calls.push('callback1'); },
-                callback2 = function() { calls.push('callback2'); };
+            let calls = [],
+                callback1 = () => { calls.push('callback1'); },
+                callback2 = () => { calls.push('callback2'); };
 
             // Act
             sut.on('foo', callback1);
@@ -101,11 +102,11 @@ describe('tiUtil factory', function() {
             expect(calls).toEqual(['callback1', 'callback2']);
         });
 
-        it('guarantees the order of invocation is correct (reverse order)', function() {
+        it('guarantees the order of invocation is correct (reverse order)', () => {
             // Arrange
-            var calls = [],
-                callback1 = function() { calls.push('callback1'); },
-                callback2 = function() { calls.push('callback2'); };
+            let calls = [],
+                callback1 = () => { calls.push('callback1'); },
+                callback2 = () => { calls.push('callback2'); };
 
             // Act
             sut.on('foo', callback1);
@@ -116,9 +117,9 @@ describe('tiUtil factory', function() {
             expect(calls).toEqual(['callback2', 'callback1']);
         });
 
-        it('stops the propagation of an event (regular order)', function() {
+        it('stops the propagation of an event (regular order)', () => {
             // Arrange
-            var callback1 = jasmine.createSpy().and.returnValue(false),
+            let callback1 = jasmine.createSpy().and.returnValue(false),
                 callback2 = jasmine.createSpy();
 
             // Act
@@ -131,9 +132,9 @@ describe('tiUtil factory', function() {
             expect(callback2).not.toHaveBeenCalled();
         });
 
-        it('stops the propagation of an event (reverse order)', function() {
+        it('stops the propagation of an event (reverse order)', () => {
             // Arrange
-            var callback1 = jasmine.createSpy(),
+            let callback1 = jasmine.createSpy(),
                 callback2 = jasmine.createSpy().and.returnValue(false);
 
             // Act
@@ -146,9 +147,9 @@ describe('tiUtil factory', function() {
             expect(callback2).toHaveBeenCalledWith('some data');
         });
 
-        it('returns the object instance so calls can be chained', function() {
+        it('returns the object instance so calls can be chained', () => {
             // Arrange
-            var callback1 = jasmine.createSpy(),
+            let callback1 = jasmine.createSpy(),
                 callback2 = jasmine.createSpy();
 
             // Act
@@ -163,9 +164,9 @@ describe('tiUtil factory', function() {
         });
     });
 
-    describe('makeObjectArray', function() {
-        it('converts a non-object array into an object array using the provided key', function() {
-            var array = ['a', 'b', 'c'],
+    describe('makeObjectArray', () => {
+        it('converts a non-object array into an object array using the provided key', () => {
+            let array = ['a', 'b', 'c'],
                 result = tiUtil.makeObjectArray(array, 'prop');
 
             expect(result).not.toBe(array);
@@ -182,47 +183,47 @@ describe('tiUtil factory', function() {
             { desc: 'null', value: null },
             { desc: 'a number', value: 1 },
             { desc: 'a string', value: 'a' }
-        ].forEach(function(item) {
-            it('returns the provided argument itself if it is ' + item.desc, function() {
+        ].forEach(item => {
+            it('returns the provided argument itself if it is ' + item.desc, () => {
                 expect(tiUtil.makeObjectArray(item.value, 'prop')).toBe(item.value);
             });
         });
     });
 
-    describe('findInObjectArray', function() {
-        var array = [
+    describe('findInObjectArray', () => {
+        let array = [
             { prop: 'foo' },
             { prop: 'bar' },
             { prop: 'baz' }
         ];
 
-        it('finds an object within an array by using the provided key', function() {
+        it('finds an object within an array by using the provided key', () => {
             expect(tiUtil.findInObjectArray(array, { prop: 'bar' }, 'prop')).toBe(array[1]);
         });
 
-        it('finds an object within an array by using the provided key regardless of the text case', function() {
+        it('finds an object within an array by using the provided key regardless of the text case', () => {
             expect(tiUtil.findInObjectArray(array, { prop: 'BAR' }, 'prop')).toBe(array[1]);
         });
 
-        it('returns null when the provided object is not found', function() {
+        it('returns null when the provided object is not found', () => {
             expect(tiUtil.findInObjectArray(array, { prop: 'foobar' }, 'prop')).toBe(null);
         });
 
-        it('returns null when the provided array is empty', function() {
+        it('returns null when the provided array is empty', () => {
             expect(tiUtil.findInObjectArray([], { prop: 'foo' }, 'prop')).toBe(null);
         });
 
-        it('uses a custom comparer to find an item within an array', function() {
+        it('uses a custom comparer to find an item within an array', () => {
             // Arrange
-            var caseSensitiveComparer = function(a, b) { return a === b; };
+            let caseSensitiveComparer = (a, b) => a === b;
 
             // Act/Assert
             expect(tiUtil.findInObjectArray(array, { prop: 'BAR' }, 'prop', caseSensitiveComparer)).toBe(null);
         });
     });
 
-    describe('safeHighlight', function() {
-        it('highlights the provided text', function() {
+    describe('safeHighlight', () => {
+        it('highlights the provided text', () => {
             expect(tiUtil.safeHighlight('abc', 'b')).toBe('a<em>b</em>c');
             expect(tiUtil.safeHighlight('aBc', 'b')).toBe('a<em>B</em>c');
             expect(tiUtil.safeHighlight('abc', 'B')).toBe('a<em>b</em>c');
@@ -230,7 +231,7 @@ describe('tiUtil factory', function() {
             expect(tiUtil.safeHighlight('abc', '')).toBe('abc');
         });
 
-        it('highlights HTML entities', function() {
+        it('highlights HTML entities', () => {
             expect(tiUtil.safeHighlight('a&a', '&')).toBe('a<em>&amp;</em>a');
             expect(tiUtil.safeHighlight('a>a', '>')).toBe('a<em>&gt;</em>a');
             expect(tiUtil.safeHighlight('a<a', '<')).toBe('a<em>&lt;</em>a');
@@ -241,13 +242,13 @@ describe('tiUtil factory', function() {
         });
     });
 
-    describe('safeToString', function() {
-        it('returns an empty string when the provide value is either null or undefined', function() {
+    describe('safeToString', () => {
+        it('returns an empty string when the provide value is either null or undefined', () => {
             expect(tiUtil.safeToString(null)).toBe('');
             expect(tiUtil.safeToString()).toBe('');
         });
 
-        it('returns the trimmed string representation of the provided value', function() {
+        it('returns the trimmed string representation of the provided value', () => {
             expect(tiUtil.safeToString(1)).toBe('1');
             expect(tiUtil.safeToString(1.5)).toBe('1.5');
             expect(tiUtil.safeToString(true)).toBe('true');
@@ -256,27 +257,27 @@ describe('tiUtil factory', function() {
         });
     });
 
-    describe('encodeHTML', function() {
-        it('encodes <, > and & as HTML entities', function() {
+    describe('encodeHTML', () => {
+        it('encodes <, > and & as HTML entities', () => {
             expect(tiUtil.encodeHTML('<foo>&</foo>')).toBe('&lt;foo&gt;&amp;&lt;/foo&gt;');
         });
     });
 
-    describe('debounce', function() {
-        var $timeout;
+    describe('debounce', () => {
+        let $timeout;
 
-        beforeEach(function() {
-            inject(function(_$timeout_) {
+        beforeEach(() => {
+            inject(_$timeout_ => {
                 $timeout = _$timeout_;
             });
         });
 
-        it('returns a debounced function', function() {
+        it('returns a debounced function', () => {
             // Arrange
-            var callback = jasmine.createSpy();
+            let callback = jasmine.createSpy();
 
             // Act
-            var debounced = tiUtil.debounce(callback, 100);
+            let debounced = tiUtil.debounce(callback, 100);
 
             // Assert
             debounced('foo', 'bar');
@@ -291,43 +292,43 @@ describe('tiUtil factory', function() {
         });
     });
 
-    describe('handleUndefinedResult', function() {
-        it('wraps the provided function and change its return value if it\'s undefined', function() {
+    describe('handleUndefinedResult', () => {
+        it('wraps the provided function and change its return value if it\'s undefined', () => {
             // Arrange
-            var fn = function() { return; };
+            let fn = () => {};
 
             // Act
-            var result = tiUtil.handleUndefinedResult(fn, 'foobar')();
+            let result = tiUtil.handleUndefinedResult(fn, 'foobar')();
 
             // Act/Assert
             expect(result).toBe('foobar');
         });
 
-        it('wraps the provided function and does not change its return value if it\'s defined', function() {
+        it('wraps the provided function and does not change its return value if it\'s defined', () => {
             // Arrange
-            var fn = function() { return 1; };
+            let fn = () => 1;
 
             // Act
-            var result = tiUtil.handleUndefinedResult(fn, 'foobar')();
+            let result = tiUtil.handleUndefinedResult(fn, 'foobar')();
 
             // Act/Assert
             expect(result).toBe(1);
         });
 
-        it('re-passes the provided arguments to the wrapped function', function() {
+        it('re-passes the provided arguments to the wrapped function', () => {
             // Arrange
-            var fn = function(a, b) { return a + b; };
+            let fn = (a, b) => a + b;
 
             // Act
-            var result = tiUtil.handleUndefinedResult(fn)(1, 2);
+            let result = tiUtil.handleUndefinedResult(fn)(1, 2);
 
             // Assert
             expect(result).toBe(3);
         });
     });
 
-    describe('replaceSpacesWithDashes', function() {
-        it('replaces spaces with dashes within the provided string', function() {
+    describe('replaceSpacesWithDashes', () => {
+        it('replaces spaces with dashes within the provided string', () => {
             expect(tiUtil.replaceSpacesWithDashes('a b c')).toBe('a-b-c');
             expect(tiUtil.replaceSpacesWithDashes('a     b     c')).toBe('a-----b-----c');
             expect(tiUtil.replaceSpacesWithDashes('a b c ')).toBe('a-b-c');
@@ -339,15 +340,15 @@ describe('tiUtil factory', function() {
         });
     });
 
-    describe('isModifierOn', function() {
-        it('returns true if a modifier is on', function() {
+    describe('isModifierOn', () => {
+        it('returns true if a modifier is on', () => {
             expect(tiUtil.isModifierOn({ shiftKey: true })).toBe(true);
             expect(tiUtil.isModifierOn({ ctrlKey: true })).toBe(true);
             expect(tiUtil.isModifierOn({ altKey: true })).toBe(true);
             expect(tiUtil.isModifierOn({ metaKey: true })).toBe(true);
         });
 
-        it('returns false if all modifiers are off', function() {
+        it('returns false if all modifiers are off', () => {
             expect(tiUtil.isModifierOn({
                 shiftKey: false,
                 ctrlKey: false,
