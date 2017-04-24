@@ -53,7 +53,7 @@
  * @param {expression=} [onTagRemoved=NA] Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  * @param {expression=} [onTagClicked=NA] Expression to evaluate upon clicking an existing tag. The clicked tag is available as $tag.
  */
-tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tagsInputConfig, tiUtil) {
+tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tagsInputConfig, tiUtil, tiConstants) {
     function TagList(options, events, onTagAdding, onTagRemoving) {
         let self = {};
 
@@ -149,7 +149,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
     }
 
     function validateType(type) {
-        return SUPPORTED_INPUT_TYPES.indexOf(type) !== -1;
+        return tiConstants.SUPPORTED_INPUT_TYPES.indexOf(type) !== -1;
     }
 
     return {
@@ -181,7 +181,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 removeTagSymbol: [String, String.fromCharCode(215)],
                 replaceSpacesWithDashes: [Boolean, true],
                 minLength: [Number, 3],
-                maxLength: [Number, MAX_SAFE_INTEGER],
+                maxLength: [Number, tiConstants.MAX_SAFE_INTEGER],
                 addOnEnter: [Boolean, true],
                 addOnSpace: [Boolean, false],
                 addOnComma: [Boolean, true],
@@ -191,7 +191,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 allowedTagsPattern: [RegExp, /.+/],
                 enableEditingLastTag: [Boolean, false],
                 minTags: [Number, 0],
-                maxTags: [Number, MAX_SAFE_INTEGER],
+                maxTags: [Number, tiConstants.MAX_SAFE_INTEGER],
                 displayProperty: [String, 'text'],
                 keyProperty: [String, ''],
                 allowLeftoverText: [Boolean, false],
@@ -239,7 +239,8 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             });
         },
         link(scope, element, attrs, ngModelCtrl) {
-            let hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.delete, KEYS.left, KEYS.right];
+            let hotkeys = [tiConstants.KEYS.enter, tiConstants.KEYS.comma, tiConstants.KEYS.space, tiConstants.KEYS.backspace,
+                tiConstants.KEYS.delete, tiConstants.KEYS.left, tiConstants.KEYS.right];
             let tagList = scope.tagList;
             let events = scope.events;
             let options = scope.options;
@@ -402,15 +403,15 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                     }
 
                     let addKeys = {
-                        [KEYS.enter]: options.addOnEnter,
-                        [KEYS.comma]: options.addOnComma,
-                        [KEYS.space]: options.addOnSpace
+                        [tiConstants.KEYS.enter]: options.addOnEnter,
+                        [tiConstants.KEYS.comma]: options.addOnComma,
+                        [tiConstants.KEYS.space]: options.addOnSpace
                     };
 
                     let shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
-                    let shouldRemove = (key === KEYS.backspace || key === KEYS.delete) && tagList.selected;
-                    let shouldEditLastTag = key === KEYS.backspace && scope.newTag.text().length === 0 && options.enableEditingLastTag;
-                    let shouldSelect = (key === KEYS.backspace || key === KEYS.left || key === KEYS.right) &&
+                    let shouldRemove = (key === tiConstants.KEYS.backspace || key === tiConstants.KEYS.delete) && tagList.selected;
+                    let shouldEditLastTag = key === tiConstants.KEYS.backspace && scope.newTag.text().length === 0 && options.enableEditingLastTag;
+                    let shouldSelect = (key === tiConstants.KEYS.backspace || key === tiConstants.KEYS.left || key === tiConstants.KEYS.right) &&
                         scope.newTag.text().length === 0 && !options.enableEditingLastTag;
 
                     if (shouldAdd) {
@@ -428,10 +429,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                         tagList.removeSelected();
                     }
                     else if (shouldSelect) {
-                        if (key === KEYS.left || key === KEYS.backspace) {
+                        if (key === tiConstants.KEYS.left || key === tiConstants.KEYS.backspace) {
                             tagList.selectPrior();
                         }
-                        else if (key === KEYS.right) {
+                        else if (key === tiConstants.KEYS.right) {
                             tagList.selectNext();
                         }
                     }

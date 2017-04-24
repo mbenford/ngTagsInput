@@ -22,8 +22,8 @@ module.exports = grunt => {
         files: {
             js: {
                 src: [
-                    'src/constants.js',
                     'src/init.js',
+                    'src/constants.js',
                     'src/tags-input.js',
                     'src/tag-item.js',
                     'src/auto-complete.js',

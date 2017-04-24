@@ -1,5 +1,5 @@
 describe('tags-input directive', () => {
-    let $compile, $scope, $timeout, $document, $window,
+    let $compile, $scope, $timeout, $document, $window, constants,
         isolateScope, element, tiUtil;
 
     beforeEach(() => {
@@ -7,13 +7,14 @@ describe('tags-input directive', () => {
 
         module('ngTagsInput');
 
-        inject((_$compile_, _$rootScope_, _$document_, _$timeout_, _$window_, _tiUtil_) => {
+        inject((_$compile_, _$rootScope_, _$document_, _$timeout_, _$window_, _tiUtil_, tiConstants) => {
             $compile = _$compile_;
             $scope = _$rootScope_;
             $document = _$document_;
             $timeout = _$timeout_;
             $window = _$window_;
             tiUtil = _tiUtil_;
+            constants = tiConstants;
         });
     });
 
@@ -60,7 +61,7 @@ describe('tags-input directive', () => {
     }
 
     function newTag(tag, key) {
-        key = key || KEYS.enter;
+        key = key || constants.KEYS.enter;
 
         tag.split('').forEach((char, index) => {
             sendKeyPress(tag.charCodeAt(index));
@@ -87,7 +88,7 @@ describe('tags-input directive', () => {
     }
 
     function sendBackspace() {
-        let event = sendKeyDown(KEYS.backspace);
+        let event = sendKeyDown(constants.KEYS.backspace);
 
         if (!event.isDefaultPrevented()) {
             let input = getInput();
@@ -486,7 +487,7 @@ describe('tags-input directive', () => {
             compile('add-on-enter="true"');
 
             // Act
-            newTag('foo', KEYS.enter);
+            newTag('foo', constants.KEYS.enter);
 
             // Assert
             expect($scope.tags).toEqual([{ text: 'foo' }]);
@@ -497,7 +498,7 @@ describe('tags-input directive', () => {
             compile('add-on-enter="false"');
 
             // Act
-            newTag('foo', KEYS.enter);
+            newTag('foo', constants.KEYS.enter);
 
             // Assert
             expect($scope.tags).toBeUndefined();
@@ -518,7 +519,7 @@ describe('tags-input directive', () => {
             compile('add-on-space="true"');
 
             // Act
-            newTag('foo', KEYS.space);
+            newTag('foo', constants.KEYS.space);
 
             // Assert
             expect($scope.tags).toEqual([{ text: 'foo' }]);
@@ -529,7 +530,7 @@ describe('tags-input directive', () => {
             compile('add-on-space="false"');
 
             // Act
-            newTag('foo', KEYS.space);
+            newTag('foo', constants.KEYS.space);
 
             // Assert
             expect($scope.tags).toBeUndefined();
@@ -550,7 +551,7 @@ describe('tags-input directive', () => {
             compile('add-on-comma="true"');
 
             // Act
-            newTag('foo', KEYS.comma);
+            newTag('foo', constants.KEYS.comma);
 
             // Assert
             expect($scope.tags).toEqual([{ text: 'foo' }]);
@@ -561,7 +562,7 @@ describe('tags-input directive', () => {
             compile('add-on-comma="false"');
 
             // Act
-            newTag('foo', KEYS.comma);
+            newTag('foo', constants.KEYS.comma);
 
             // Assert
             expect($scope.tags).toBeUndefined();
@@ -784,7 +785,7 @@ describe('tags-input directive', () => {
 
     describe('type option', () => {
         it('sets the input\'s type property', () => {
-            SUPPORTED_INPUT_TYPES.forEach(type => {
+            constants.SUPPORTED_INPUT_TYPES.forEach(type => {
                 // Arrange/Act
                 compile('type="' + type + '"');
 
@@ -974,7 +975,7 @@ describe('tags-input directive', () => {
             compile();
 
             // Assert
-            expect(isolateScope.options.maxLength).toBe(MAX_SAFE_INTEGER);
+            expect(isolateScope.options.maxLength).toBe(constants.MAX_SAFE_INTEGER);
         });
 
         it('adds a new tag if the input length is less than the max-length option', () => {
@@ -1189,7 +1190,7 @@ describe('tags-input directive', () => {
             compile();
 
             // Assert
-            expect(isolateScope.options.maxTags).toBe(MAX_SAFE_INTEGER);
+            expect(isolateScope.options.maxTags).toBe(constants.MAX_SAFE_INTEGER);
         });
 
         it('makes the element invalid when the number of tags is greater than the max-tags option', () => {
@@ -1479,7 +1480,7 @@ describe('tags-input directive', () => {
 
             it('does not add a tag when the enter key is pressed', () => {
                 // Act
-                newTag('foo', KEYS.enter);
+                newTag('foo', constants.KEYS.enter);
 
                 // Assert
                 expect($scope.tags).toBeUndefined();
@@ -1487,7 +1488,7 @@ describe('tags-input directive', () => {
 
             it('does not add a tag when the comma key is pressed', () => {
                 // Act
-                newTag('foo', KEYS.comma);
+                newTag('foo', constants.KEYS.comma);
 
                 // Assert
                 expect($scope.tags).toBeUndefined();
@@ -1495,7 +1496,7 @@ describe('tags-input directive', () => {
 
             it('does not add a tag when the space key is pressed', () => {
                 // Act
-                newTag('foo', KEYS.space);
+                newTag('foo', constants.KEYS.space);
 
                 // Assert
                 expect($scope.tags).toBeUndefined();
@@ -1637,16 +1638,16 @@ describe('tags-input directive', () => {
                 $scope.$digest();
 
                 // Act/Assert
-                sendKeyDown(KEYS.left);
+                sendKeyDown(constants.KEYS.left);
                 expect(isolateScope.tagList.selected).toBe($scope.tags[2]);
 
-                sendKeyDown(KEYS.left);
+                sendKeyDown(constants.KEYS.left);
                 expect(isolateScope.tagList.selected).toBe($scope.tags[1]);
 
-                sendKeyDown(KEYS.left);
+                sendKeyDown(constants.KEYS.left);
                 expect(isolateScope.tagList.selected).toBe($scope.tags[0]);
 
-                sendKeyDown(KEYS.left);
+                sendKeyDown(constants.KEYS.left);
                 expect(isolateScope.tagList.selected).toBe($scope.tags[2]);
             });
 
@@ -1656,16 +1657,16 @@ describe('tags-input directive', () => {
                 $scope.$digest();
 
                 // Act/Assert
-                sendKeyDown(KEYS.right);
+                sendKeyDown(constants.KEYS.right);
                 expect(isolateScope.tagList.selected).toBe($scope.tags[0]);
 
-                sendKeyDown(KEYS.right);
+                sendKeyDown(constants.KEYS.right);
                 expect(isolateScope.tagList.selected).toBe($scope.tags[1]);
 
-                sendKeyDown(KEYS.right);
+                sendKeyDown(constants.KEYS.right);
                 expect(isolateScope.tagList.selected).toBe($scope.tags[2]);
 
-                sendKeyDown(KEYS.right);
+                sendKeyDown(constants.KEYS.right);
                 expect(isolateScope.tagList.selected).toBe($scope.tags[0]);
             });
 
@@ -1673,10 +1674,10 @@ describe('tags-input directive', () => {
                 // Arrange
                 $scope.tags = generateTags(3);
                 $scope.$digest();
-                sendKeyDown(KEYS.left);
+                sendKeyDown(constants.KEYS.left);
 
                 // Act
-                sendKeyDown(KEYS.backspace);
+                sendKeyDown(constants.KEYS.backspace);
 
                 // Assert
                 expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }]);
@@ -1686,10 +1687,10 @@ describe('tags-input directive', () => {
                 // Arrange
                 $scope.tags = generateTags(3);
                 $scope.$digest();
-                sendKeyDown(KEYS.left);
+                sendKeyDown(constants.KEYS.left);
 
                 // Act
-                sendKeyDown(KEYS.delete);
+                sendKeyDown(constants.KEYS.delete);
 
                 // Assert
                 expect($scope.tags).toEqual([{ text: 'Tag1' }, { text: 'Tag2' }]);
@@ -1699,7 +1700,7 @@ describe('tags-input directive', () => {
                 // Arrange
                 $scope.tags = generateTags(3);
                 $scope.$digest();
-                sendKeyDown(KEYS.left);
+                sendKeyDown(constants.KEYS.left);
 
                 // Act
                 changeInputValue('foo');
@@ -2168,28 +2169,18 @@ describe('tags-input directive', () => {
     });
 
     describe('hotkeys propagation handling', () => {
-        let hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace];
-
-        beforeEach(() => {
-            compile('add-on-enter="true"', 'add-on-space="true"', 'add-on-comma="true"');
-        });
-
         describe('modifier key is on', () => {
-            hotkeys.forEach(hotkey => {
-                it('does not prevent a hotkey from being propagated when the shift key is down (hotkey ' + hotkey + ')', () => {
-                    expect(sendKeyDown(hotkey, { shiftKey: true }).isDefaultPrevented()).toBe(false);
-                });
+            it('does not prevent a hotkey from being propagated when a modifier key is down', () => {
+                // Arrange
+                let hotkeys = [constants.KEYS.enter, constants.KEYS.comma, constants.KEYS.space, constants.KEYS.backspace];
+                compile('add-on-enter="true"', 'add-on-space="true"', 'add-on-comma="true"');
 
-                it('does not prevent a hotkey from being propagated when the alt key is down (hotkey ' + hotkey + ')', () => {
-                    expect(sendKeyDown(hotkey, { altKey: true }).isDefaultPrevented()).toBe(false);
-                });
-
-                it('does not prevent a hotkey from being propagated when the ctrl key is down (hotkey ' + hotkey + ')', () => {
-                    expect(sendKeyDown(hotkey, { ctrlKey: true }).isDefaultPrevented()).toBe(false);
-                });
-
-                it('does not prevent a hotkey from being propagated when the meta key is down (hotkey ' + hotkey + ')', () => {
-                    expect(sendKeyDown(hotkey, { metaKey: true }).isDefaultPrevented()).toBe(false);
+                // Act/Assert
+                hotkeys.forEach(hotkey => {
+                    expect(sendKeyDown(hotkey, {shiftKey: true}).isDefaultPrevented()).toBe(false);
+                    expect(sendKeyDown(hotkey, {altKey: true}).isDefaultPrevented()).toBe(false);
+                    expect(sendKeyDown(hotkey, {ctrlKey: true}).isDefaultPrevented()).toBe(false);
+                    expect(sendKeyDown(hotkey, {metaKey: true}).isDefaultPrevented()).toBe(false);
                 });
             });
         });
@@ -2197,7 +2188,7 @@ describe('tags-input directive', () => {
         describe('modifier key is off', () => {
             it('prevents enter, comma and space keys from being propagated when all modifiers are up', () => {
                 // Arrange
-                hotkeys = [KEYS.enter, KEYS.comma, KEYS.space];
+                let hotkeys = [constants.KEYS.enter, constants.KEYS.comma, constants.KEYS.space];
 
                 // Act/Assert
                 angular.forEach(hotkeys, key => {
@@ -2215,7 +2206,7 @@ describe('tags-input directive', () => {
                 isolateScope.tryRemoveLast = () => { return true; };
 
                 // Act/Assert
-                expect(sendKeyDown(KEYS.backspace).isDefaultPrevented()).toBe(true);
+                expect(sendKeyDown(constants.KEYS.backspace).isDefaultPrevented()).toBe(true);
             });
         });
     });

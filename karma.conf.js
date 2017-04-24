@@ -13,9 +13,9 @@ module.exports = config => {
             'test/lib/angular-mocks.js',
             'test/helpers.js',
             'test/matchers.js',
-            'src/constants.js',
             'test/*.spec.js',
             'src/init.js',
+            'src/constants.js',
             'src/*.js',
             'templates/*.html'
         ],

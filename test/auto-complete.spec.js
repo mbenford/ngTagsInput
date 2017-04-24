@@ -1,5 +1,5 @@
 describe('autoComplete directive', () => {
-    let $compile, $scope, $q, $timeout,
+    let $compile, $scope, $q, $timeout, constants,
         parentCtrl, element, isolateScope, suggestionList, deferred, tagsInput, eventHandlers;
 
     beforeEach(() => {
@@ -7,11 +7,12 @@ describe('autoComplete directive', () => {
 
         module('ngTagsInput');
 
-        inject(($rootScope, _$compile_, _$q_, _$timeout_) => {
+        inject(($rootScope, _$compile_, _$q_, _$timeout_, tiConstants) => {
             $scope = $rootScope;
             $compile = _$compile_;
             $q = _$q_;
             $timeout = _$timeout_;
+            constants = tiConstants;
         });
 
         deferred = $q.defer();
@@ -259,7 +260,7 @@ describe('autoComplete directive', () => {
             $scope.$digest();
 
             // Act
-            sendKeyDown(KEYS.escape);
+            sendKeyDown(constants.KEYS.escape);
             $scope.$digest();
 
             // Assert
@@ -285,7 +286,7 @@ describe('autoComplete directive', () => {
             suggestionList.select(0);
 
             // Act
-            sendKeyDown(KEYS.enter);
+            sendKeyDown(constants.KEYS.enter);
             $scope.$digest();
 
             // Assert
@@ -331,7 +332,7 @@ describe('autoComplete directive', () => {
             suggestionList.select(0);
 
             // Act
-            sendKeyDown(KEYS.enter);
+            sendKeyDown(constants.KEYS.enter);
 
             // Assert
             expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' });
@@ -343,7 +344,7 @@ describe('autoComplete directive', () => {
             suggestionList.select(0);
 
             // Act
-            sendKeyDown(KEYS.tab);
+            sendKeyDown(constants.KEYS.tab);
 
             // Assert
             expect(tagsInput.addTag).toHaveBeenCalledWith({ text: 'Item1' });
@@ -368,7 +369,7 @@ describe('autoComplete directive', () => {
             suggestionList.selected = null;
 
             // Act
-            sendKeyDown(KEYS.enter);
+            sendKeyDown(constants.KEYS.enter);
 
             // Assert
             expect(tagsInput.addTag).not.toHaveBeenCalled();
@@ -393,7 +394,7 @@ describe('autoComplete directive', () => {
             suggestionList.select(0);
 
             // Act
-            sendKeyDown(KEYS.enter);
+            sendKeyDown(constants.KEYS.enter);
 
             // Assert
             expect($scope.loadItems.calls.count()).toBe(1);
@@ -535,7 +536,7 @@ describe('autoComplete directive', () => {
                 suggestionList.select(0);
 
                 // Act
-                sendKeyDown(KEYS.down);
+                sendKeyDown(constants.KEYS.down);
 
                 // Assert
                 expect(suggestionList.selected).toEqual({ text: 'Item2' });
@@ -546,7 +547,7 @@ describe('autoComplete directive', () => {
                 suggestionList.select(2);
 
                 // Act
-                sendKeyDown(KEYS.down);
+                sendKeyDown(constants.KEYS.down);
 
                 // Assert
                 expect(suggestionList.selected).toEqual({ text: 'Item1' });
@@ -559,7 +560,7 @@ describe('autoComplete directive', () => {
                 suggestionList.select(1);
 
                 // Act
-                sendKeyDown(KEYS.up);
+                sendKeyDown(constants.KEYS.up);
 
                 // Assert
                 expect(suggestionList.selected).toEqual({ text: 'Item1' });
@@ -570,7 +571,7 @@ describe('autoComplete directive', () => {
                 suggestionList.select(0);
 
                 // Act
-                sendKeyDown(KEYS.up);
+                sendKeyDown(constants.KEYS.up);
 
                 // Assert
                 expect(suggestionList.selected).toEqual({ text: 'Item3' });
@@ -619,7 +620,7 @@ describe('autoComplete directive', () => {
                 tagsInput.getCurrentTagText.and.returnValue('ABC');
 
                 // Act
-                sendKeyDown(KEYS.down);
+                sendKeyDown(constants.KEYS.down);
                 $timeout.flush();
 
                 // Assert
@@ -630,7 +631,7 @@ describe('autoComplete directive', () => {
                 compile('load-on-down-arrow="false"');
 
                 // Act
-                sendKeyDown(KEYS.down);
+                sendKeyDown(constants.KEYS.down);
                 $timeout.flush();
 
                 // Assert
@@ -645,7 +646,7 @@ describe('autoComplete directive', () => {
                 suggestionList.visible = true;
 
                 // Act
-                sendKeyDown(KEYS.down);
+                sendKeyDown(constants.KEYS.down);
                 $timeout.flush();
 
                 // Assert
@@ -1222,8 +1223,6 @@ describe('autoComplete directive', () => {
 
     describe('keys propagation handling', () => {
         describe('hotkeys', () => {
-            let hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down];
-
             describe('suggestion box is visible', () => {
                 beforeEach(() => {
                     suggestionList.show();
@@ -1231,7 +1230,7 @@ describe('autoComplete directive', () => {
 
                 it('prevents the down arrow keydown event from being propagated', () => {
                     // Act
-                    let event = sendKeyDown(KEYS.down);
+                    let event = sendKeyDown(constants.KEYS.down);
 
                     // Assert
                     expect(event.isDefaultPrevented()).toBe(true);
@@ -1240,7 +1239,7 @@ describe('autoComplete directive', () => {
 
                 it('prevents the up arrow keydown event from being propagated', () => {
                     // Act
-                    let event = sendKeyDown(KEYS.up);
+                    let event = sendKeyDown(constants.KEYS.up);
 
                     // Assert
                     expect(event.isDefaultPrevented()).toBe(true);
@@ -1252,7 +1251,7 @@ describe('autoComplete directive', () => {
                     suggestionList.selected = 'suggestion';
 
                     // Act
-                    let event = sendKeyDown(KEYS.enter);
+                    let event = sendKeyDown(constants.KEYS.enter);
 
                     // Assert
                     expect(event.isDefaultPrevented()).toBe(true);
@@ -1264,7 +1263,7 @@ describe('autoComplete directive', () => {
                     suggestionList.selected = null;
 
                     // Act
-                    let event = sendKeyDown(KEYS.enter);
+                    let event = sendKeyDown(constants.KEYS.enter);
 
                     // Assert
                     expect(event.isDefaultPrevented()).toBe(false);
@@ -1276,7 +1275,7 @@ describe('autoComplete directive', () => {
                     suggestionList.selected = 'suggestion';
 
                     // Act
-                    let event = sendKeyDown(KEYS.tab);
+                    let event = sendKeyDown(constants.KEYS.tab);
 
                     // Assert
                     expect(event.isDefaultPrevented()).toBe(true);
@@ -1288,7 +1287,7 @@ describe('autoComplete directive', () => {
                     suggestionList.selected = null;
 
                     // Act
-                    let event = sendKeyDown(KEYS.tab);
+                    let event = sendKeyDown(constants.KEYS.tab);
 
                     // Assert
                     expect(event.isDefaultPrevented()).toBe(false);
@@ -1297,7 +1296,7 @@ describe('autoComplete directive', () => {
 
                 it('prevents the escape keydown event from being propagated', () => {
                     // Act
-                    let event = sendKeyDown(KEYS.escape);
+                    let event = sendKeyDown(constants.KEYS.escape);
 
                     // Assert
                     expect(event.isDefaultPrevented()).toBe(true);
@@ -1306,16 +1305,14 @@ describe('autoComplete directive', () => {
             });
 
             describe('suggestion box is hidden', () => {
-                beforeEach(() => {
+                it('does not prevent the keydown event from being propagated when a hotkey is pressed', () => {
+                    // Act
+                    let hotkeys = [constants.KEYS.enter, constants.KEYS.tab, constants.KEYS.escape, constants.KEYS.up, constants.KEYS.down];
                     suggestionList.reset();
-                });
 
-                hotkeys.forEach(hotkey => {
-                    it('does not prevent the keydown event from being propagated (keycode ' + hotkey + ')', () => {
-                        // Act
+                    // Act/Assert
+                    hotkeys.forEach(hotkey => {
                         let event = sendKeyDown(hotkey);
-
-                        // Assert
                         expect(event.isDefaultPrevented()).toBe(false);
                         expect(event.isPropagationStopped()).toBe(false);
                     });
@@ -1323,24 +1320,16 @@ describe('autoComplete directive', () => {
             });
 
             describe('modifier key is on', () => {
-                beforeEach(() => {
+                it('does not prevent a hotkey from being propagated when a modifier is down', () => {
+                    // Arrange
+                    let hotkeys = [constants.KEYS.enter, constants.KEYS.tab, constants.KEYS.escape, constants.KEYS.up, constants.KEYS.down];
                     suggestionList.show();
-                });
 
-                hotkeys.forEach(hotkey => {
-                    it('does not prevent a hotkey from being propagated when the shift key is down (hotkey ' + hotkey + ')', () => {
+                    // Act/Assert
+                    hotkeys.forEach(hotkey => {
                         expect(sendKeyDown(hotkey, { shiftKey: true }).isDefaultPrevented()).toBe(false);
-                    });
-
-                    it('does not prevent a hotkey from being propagated when the alt key is down (hotkey ' + hotkey + ')', () => {
                         expect(sendKeyDown(hotkey, { altKey: true }).isDefaultPrevented()).toBe(false);
-                    });
-
-                    it('does not prevent a hotkey from being propagated when the ctrl key is down (hotkey ' + hotkey + ')', () => {
                         expect(sendKeyDown(hotkey, { ctrlKey: true }).isDefaultPrevented()).toBe(false);
-                    });
-
-                    it('does not prevent a hotkey from being propagated when the meta key is down (hotkey ' + hotkey + ')', () => {
                         expect(sendKeyDown(hotkey, { metaKey: true }).isDefaultPrevented()).toBe(false);
                     });
                 });

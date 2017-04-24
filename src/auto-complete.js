@@ -30,7 +30,7 @@
  *    of the evaluation must be one of the values supported by the ngClass directive (either a string, an array or an object).
  *    See https://docs.angularjs.org/api/ng/directive/ngClass for more information.
  */
-tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
+tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil, tiConstants) {
     function SuggestionList(loadFn, options, events) {
         let self = {};
         let lastPromise = null;
@@ -168,7 +168,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             });
         },
         link(scope, element, attrs, tagsInputCtrl) {
-            let hotkeys = [KEYS.enter, KEYS.tab, KEYS.escape, KEYS.up, KEYS.down];
+            let hotkeys = [tiConstants.KEYS.enter, tiConstants.KEYS.tab, tiConstants.KEYS.escape, tiConstants.KEYS.up, tiConstants.KEYS.down];
             let suggestionList = scope.suggestionList;
             let tagsInput = tagsInputCtrl.registerAutocomplete();
             let options = scope.options;
@@ -234,24 +234,24 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
 
                     if (suggestionList.visible) {
 
-                        if (key === KEYS.down) {
+                        if (key === tiConstants.KEYS.down) {
                             suggestionList.selectNext();
                             handled = true;
                         }
-                        else if (key === KEYS.up) {
+                        else if (key === tiConstants.KEYS.up) {
                             suggestionList.selectPrior();
                             handled = true;
                         }
-                        else if (key === KEYS.escape) {
+                        else if (key === tiConstants.KEYS.escape) {
                             suggestionList.reset();
                             handled = true;
                         }
-                        else if (key === KEYS.enter || key === KEYS.tab) {
+                        else if (key === tiConstants.KEYS.enter || key === tiConstants.KEYS.tab) {
                             handled = scope.addSuggestion();
                         }
                     }
                     else {
-                        if (key === KEYS.down && scope.options.loadOnDownArrow) {
+                        if (key === tiConstants.KEYS.down && scope.options.loadOnDownArrow) {
                             suggestionList.load(tagsInput.getCurrentTagText(), tagsInput.getTags());
                             handled = true;
                         }
