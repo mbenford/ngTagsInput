@@ -6,7 +6,7 @@
  * @description
  * Represents a tag item. Used internally by the tagsInput directive.
  */
-tagsInput.directive('tiTagItem', function(tiUtil) {
+export default function TagItemDirective(tiUtil) {
     return {
         restrict: 'E',
         require: '^tagsInput',
@@ -32,4 +32,4 @@ tagsInput.directive('tiTagItem', function(tiUtil) {
             });
         }
     };
-});
+}

@@ -1,4 +1,4 @@
-tagsInput.constant('tiConstants', {
+export default {
     KEYS: {
         backspace: 8,
         tab: 9,
@@ -14,4 +14,5 @@ tagsInput.constant('tiConstants', {
     },
     MAX_SAFE_INTEGER: 9007199254740991,
     SUPPORTED_INPUT_TYPES: ['text', 'email', 'url']
-});
+};
+

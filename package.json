@@ -27,6 +27,8 @@
   "main": "build/ng-tags-input.min.js",
   "dependencies": {},
   "devDependencies": {
+    "babel-plugin-angularjs-annotate": "0.7.0",
+    "babel-plugin-external-helpers": "6.22.0",
     "babel-preset-es2015": "6.24.1",
     "dgeni": "0.4.7",
     "dgeni-packages": "0.17.1",
@@ -49,9 +51,10 @@
     "grunt-karma-coveralls": "2.5.4",
     "grunt-ng-annotate": "3.0.0",
     "grunt-open": "0.2.3",
+    "grunt-rollup": "1.0.1",
     "grunt-shell": "2.1.0",
     "grunt-text-replace": "0.4.0",
-    "jasmine-core": "^2.5.2",
+    "jasmine-core": "2.5.2",
     "karma": "1.6.0",
     "karma-babel-preprocessor": "6.0.1",
     "karma-chrome-launcher": "2.0.0",
@@ -64,6 +67,8 @@
     "karma-phantomjs-launcher": "1.0.0",
     "karma-sauce-launcher": "1.1.0",
     "load-grunt-tasks": "3.5.2",
-    "phantomjs-prebuilt": "2.1.7"
+    "phantomjs-prebuilt": "2.1.7",
+    "rollup-plugin-babel": "2.7.1",
+    "rollup-plugin-includepaths": "0.2.2"
   }
 }

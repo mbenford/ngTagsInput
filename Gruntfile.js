@@ -21,19 +21,7 @@ module.exports = grunt => {
 
         files: {
             js: {
-                src: [
-                    'src/init.js',
-                    'src/constants.js',
-                    'src/tags-input.js',
-                    'src/tag-item.js',
-                    'src/auto-complete.js',
-                    'src/auto-complete-match.js',
-                    'src/transclude-append.js',
-                    'src/autosize.js',
-                    'src/bind-attrs.js',
-                    'src/configuration.js',
-                    'src/util.js'
-                ],
+                src: 'src/init.js',
                 out: 'build/<%= pkg.name %>.js',
                 outMin: 'build/<%= pkg.name %>.min.js'
             },
@@ -50,13 +38,8 @@ module.exports = grunt => {
                 }
             },
             html: {
-                src: [
-                    'templates/tags-input.html',
-                    'templates/tag-item.html',
-                    'templates/auto-complete.html',
-                    'templates/auto-complete-match.html'
-                ],
-                out: 'tmp/templates.js'
+                src: 'templates/*.html',
+                out: 'build/tmp/compiled-templates.js'
             },
             zip: {
                 unminified: 'build/<%= pkg.name %>.zip',
@@ -90,31 +73,13 @@ module.exports = grunt => {
     require('load-grunt-tasks')(grunt);
     grunt.loadTasks('grunt/tasks');
 
-    grunt.registerTask('test', ['eslint','karma:local']);
+    grunt.registerTask('lint', ['eslint']);
+    grunt.registerTask('test', ['lint', 'clean', 'ngtemplates', 'rollup', 'karma:local']);
     grunt.registerTask('coverage', ['test', 'open:coverage']);
     grunt.registerTask('docs', ['clean:build', 'dgeni']);
-
-    grunt.registerTask('travis', [
-        'pack',
-        'compress',
-        'copy:travis',
-        'coveralls'
-    ]);
-
-    grunt.registerTask('javascript-only', [
-        'test',
-        'ngtemplates',
-        'concat',
-        'babel',
-        'ngAnnotate',
-        'uglify'
-    ]);
-
-    grunt.registerTask('css-only', [
-        'sass',
-        'cssmin'
-    ]);
-
+    grunt.registerTask('travis', ['pack', 'compress', 'copy:travis', 'coveralls']);
+    grunt.registerTask('javascript-only', ['test', 'uglify']);
+    grunt.registerTask('css-only', ['sass', 'cssmin']);
     grunt.registerTask('release', [
         'pack',
         'compress',
@@ -129,6 +94,5 @@ module.exports = grunt => {
         'update-website-version',
         'shell:git_website'
     ]);
-
     grunt.registerTask('default', ['pack']);
 };

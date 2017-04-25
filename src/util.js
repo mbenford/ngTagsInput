@@ -6,7 +6,7 @@
  * @description
  * Helper methods used internally by the directive. Should not be called directly from user code.
  */
-tagsInput.factory('tiUtil', function($timeout, $q) {
+export default function UtilService($timeout, $q) {
     let self = {};
 
     self.debounce = (fn, delay) => {
@@ -101,4 +101,4 @@ tagsInput.factory('tiUtil', function($timeout, $q) {
     };
 
     return self;
-});
+}

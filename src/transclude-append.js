@@ -6,10 +6,10 @@
  * @description
  * Re-creates the old behavior of ng-transclude. Used internally by tagsInput directive.
  */
-tagsInput.directive('tiTranscludeAppend', function() {
+export default function TranscludeAppendDirective() {
     return (scope, element, attrs, ctrl, transcludeFn) => {
         transcludeFn(clone => {
             element.append(clone);
         });
     };
-});
+}

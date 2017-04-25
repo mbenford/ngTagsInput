@@ -14,22 +14,12 @@ module.exports = config => {
             'test/helpers.js',
             'test/matchers.js',
             'test/*.spec.js',
-            'src/init.js',
-            'src/constants.js',
-            'src/*.js',
-            'templates/*.html'
+            'build/ng-tags-input.js'
         ],
 
         preprocessors: {
-            'templates/*.html': ['ng-html2js'],
-            'src/*.js': ['babel', 'coverage'],
+            'build/ng-tags-input.js': ['coverage'],
             'test/*.js': ['babel']
-        },
-
-        ngHtml2JsPreprocessor: {
-            stripPrefix: 'templates/',
-            prependPrefix: 'ngTagsInput/',
-            moduleName: 'ngTagsInput'
         },
 
         coverageReporter: {

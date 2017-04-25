@@ -3,7 +3,7 @@ module.exports = grunt => ({
         configFile: '.eslintrc.js',
         format: 'codeframe'
     },
-    target: [
+    build: [
         grunt.file.expand('./grunt/*'),
         'Gruntfile.js',
         'karma.conf.js',

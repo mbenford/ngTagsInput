@@ -9,7 +9,7 @@ module.exports = {
     },
     extends: 'eslint:recommended',
     parserOptions: {
-        sourceType: 'script',
+        sourceType: 'module',
         impliedStrict: true
     },
     rules: {

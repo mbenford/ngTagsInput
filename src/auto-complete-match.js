@@ -6,7 +6,7 @@
  * @description
  * Represents an autocomplete match. Used internally by the autoComplete directive.
  */
-tagsInput.directive('tiAutocompleteMatch', function($sce, tiUtil) {
+export default function AutocompleteMatchDirective($sce, tiUtil) {
     return {
         restrict: 'E',
         require: '^autoComplete',
@@ -32,4 +32,4 @@ tagsInput.directive('tiAutocompleteMatch', function($sce, tiUtil) {
             scope.$getDisplayText = () => tiUtil.safeToString(scope.data[options.displayProperty || options.tagsInput.displayProperty]);
         }
     };
-});
+}

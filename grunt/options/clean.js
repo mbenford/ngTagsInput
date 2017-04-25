@@ -1,5 +1,5 @@
 module.exports = {
     build: ['build/'],
-    tmp: ['tmp/'],
+    tmp: ['build/tmp/'],
     coverage: ['coverage/']
 };

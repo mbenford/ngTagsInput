@@ -1,6 +1,6 @@
 module.exports = grunt => {
     grunt.registerTask('pack', output => {
-        let tasks = ['clean'];
+        let tasks = [];
 
         if (!output || output === 'js') {
             tasks.push('javascript-only');

@@ -30,7 +30,8 @@
  *    of the evaluation must be one of the values supported by the ngClass directive (either a string, an array or an object).
  *    See https://docs.angularjs.org/api/ng/directive/ngClass for more information.
  */
-tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil, tiConstants) {
+/* @ngInject */
+export default function AutocompleteDirective($document, $timeout, $sce, $q, tagsInputConfig, tiUtil, tiConstants) {
     function SuggestionList(loadFn, options, events) {
         let self = {};
         let lastPromise = null;
@@ -269,4 +270,4 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             });
         }
     };
-});
+}

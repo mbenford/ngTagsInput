@@ -6,7 +6,7 @@
  * @description
  * Binds attributes to expressions. Used internally by tagsInput directive.
  */
-tagsInput.directive('tiBindAttrs', function() {
+export default function BindAttributesDirective() {
     return (scope, element, attrs) => {
         scope.$watch(attrs.tiBindAttrs, value => {
             angular.forEach(value, (value, key) => {
@@ -14,4 +14,4 @@ tagsInput.directive('tiBindAttrs', function() {
             });
         }, true);
     };
-});
+}
