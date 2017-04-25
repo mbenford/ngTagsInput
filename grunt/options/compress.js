@@ -11,6 +11,7 @@ module.exports = {
         expand: true,
         src : [
           '<%= files.js.outMin %>',
+          '<%= files.js.outMin %>.map',
           '<%= files.css.main.outMin %>',
           '<%= files.css.bootstrap.outMin %>'
         ],
@@ -27,6 +28,7 @@ module.exports = {
         expand: true,
         src : [
           '<%= files.js.out %>',
+          '<%= files.js.out %>.map',
           '<%= files.css.main.out %>',
           '<%= files.css.bootstrap.out %>'
         ],
@@ -44,9 +46,10 @@ module.exports = {
         expand: true,
         src : [
           '<%= files.js.out %>',
+          '<%= files.js.out %>.map',
           '<%= files.css.main.out %>',
           '<%= files.css.bootstrap.out %>',
-          '<%= files.js.outMin %>',
+          '<%= files.js.outMin %>.map',
           '<%= files.css.main.outMin %>',
           '<%= files.css.bootstrap.outMin %>',
         ],

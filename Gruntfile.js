@@ -55,14 +55,14 @@ module.exports = grunt => {
     banners: {
       unminified:
 `/*!
-* <%= pkg.prettyName %> v<%= pkg.version %>
-* <%= pkg.homepage %>
-*
-* Copyright (c) 2013-<%= grunt.template.today("yyyy") %> <%= pkg.author.name %>
-* License: <%= pkg.license %>
-*
-* Generated at <%= grunt.template.today("yyyy-mm-dd HH:MM:ss o") %>
-*/`,
+ * <%= pkg.prettyName %> v<%= pkg.version %>
+ * <%= pkg.homepage %>
+ *
+ * Copyright (c) 2013-<%= grunt.template.today("yyyy") %> <%= pkg.author.name %>
+ * License: <%= pkg.license %>
+ *
+ * Generated at <%= grunt.template.today("yyyy-mm-dd HH:MM:ss o") %>
+ */`,
       minified: '/*! <%= pkg.prettyName %> v<%= pkg.version %> License: <%= pkg.license %> */'
     }
   };
