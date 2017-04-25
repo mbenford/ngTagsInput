@@ -22,7 +22,8 @@
     "tags-input"
   ],
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "travis": "grunt travis"
   },
   "main": "build/ng-tags-input.min.js",
   "dependencies": {},
