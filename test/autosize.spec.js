@@ -1,129 +1,129 @@
 describe('autosize directive', () => {
-    let $scope, $compile, tagsInputConfigMock,
-        element, style, container;
+  let $scope, $compile, tagsInputConfigMock,
+    element, style, container;
 
-    beforeEach(() => {
-        module('ngTagsInput');
+  beforeEach(() => {
+    module('ngTagsInput');
 
-        tagsInputConfigMock = jasmine.createSpyObj('tagsInputConfig', ['getTextAutosizeThreshold']);
-        tagsInputConfigMock.getTextAutosizeThreshold.and.returnValue(3);
+    tagsInputConfigMock = jasmine.createSpyObj('tagsInputConfig', ['getTextAutosizeThreshold']);
+    tagsInputConfigMock.getTextAutosizeThreshold.and.returnValue(3);
 
-        module($provide => {
-            $provide.value('tagsInputConfig', tagsInputConfigMock);
-        });
-
-        inject(($rootScope, _$compile_) => {
-            $scope = $rootScope;
-            $compile = _$compile_;
-        });
-
-        style = angular.element('<style> .input { box-sizing: border-box; border: 1px; padding: 2px; font: Arial 18px; }</style>').appendTo('head');
-        container = angular.element('<div></div>').appendTo('body');
+    module($provide => {
+      $provide.value('tagsInputConfig', tagsInputConfigMock);
     });
 
-    afterEach(() => {
-        style.remove();
-        container.remove();
+    inject(($rootScope, _$compile_) => {
+      $scope = $rootScope;
+      $compile = _$compile_;
     });
 
-    function compile(...args) {
-        let attributes = args.join(' ');
-        element = angular.element('<input class="input" ng-model="model" ng-trim="false" ti-autosize ' + attributes + '>');
-        container.append(element);
+    style = angular.element('<style> .input { box-sizing: border-box; border: 1px; padding: 2px; font: Arial 18px; }</style>').appendTo('head');
+    container = angular.element('<div></div>').appendTo('body');
+  });
 
-        $compile(element)($scope);
-        $scope.$digest();
-    }
+  afterEach(() => {
+    style.remove();
+    container.remove();
+  });
 
-    function getTextWidth(text, threshold) {
-        let width, span = angular.element('<span class="input"></span>');
-        threshold = threshold || 3;
+  function compile(...args) {
+    let attributes = args.join(' ');
+    element = angular.element('<input class="input" ng-model="model" ng-trim="false" ti-autosize ' + attributes + '>');
+    container.append(element);
 
-        span.css('white-space', 'pre');
-        span.text(text);
-        container.append(span);
-        width = parseInt(span.prop('offsetWidth'), 10) + threshold;
+    $compile(element)($scope);
+    $scope.$digest();
+  }
 
-        span.remove();
+  function getTextWidth(text, threshold) {
+    let width, span = angular.element('<span class="input"></span>');
+    threshold = threshold || 3;
 
-        return width + 'px';
-    }
+    span.css('white-space', 'pre');
+    span.text(text);
+    container.append(span);
+    width = parseInt(span.prop('offsetWidth'), 10) + threshold;
 
-    it('re-sizes the input width when its view content changes', () => {
-        // Arrange
-        let text = 'AAAAAAAAAA';
-        compile();
+    span.remove();
 
-        // Act
-        changeElementValue(element, text);
+    return width + 'px';
+  }
 
-        // Arrange
-        expect(element.css('width')).toBe(getTextWidth(text));
-    });
+  it('re-sizes the input width when its view content changes', () => {
+    // Arrange
+    let text = 'AAAAAAAAAA';
+    compile();
 
-    it('re-sizes the input width when its model value changes', () => {
-        // Arrange
-        let text = 'AAAAAAAAAAAAAAAAAAAA';
-        compile();
+    // Act
+    changeElementValue(element, text);
 
-        // Act
-        $scope.model = text;
-        $scope.$digest();
+    // Arrange
+    expect(element.css('width')).toBe(getTextWidth(text));
+  });
 
-        // Arrange
-        expect(element.css('width')).toBe(getTextWidth(text));
-    });
+  it('re-sizes the input width when its model value changes', () => {
+    // Arrange
+    let text = 'AAAAAAAAAAAAAAAAAAAA';
+    compile();
 
-    it('sets the input width as the placeholder width when the input is empty', () => {
-        // Arrange
-        $scope.placeholder = 'Some placeholder';
-        compile('placeholder="{{placeholder}}"');
+    // Act
+    $scope.model = text;
+    $scope.$digest();
 
-        // Act
-        $scope.model = '';
-        $scope.$digest();
+    // Arrange
+    expect(element.css('width')).toBe(getTextWidth(text));
+  });
 
-        // Assert
-        expect(element.css('width')).toBe(getTextWidth('Some placeholder'));
-    });
+  it('sets the input width as the placeholder width when the input is empty', () => {
+    // Arrange
+    $scope.placeholder = 'Some placeholder';
+    compile('placeholder="{{placeholder}}"');
 
-    it('sets the input width as the placeholder width when the input is empty and the placeholder changes', () => {
-        // Arrange
-        $scope.placeholder = 'Some placeholder';
-        compile('placeholder="{{placeholder}}"');
-        $scope.model = '';
-        $scope.$digest();
+    // Act
+    $scope.model = '';
+    $scope.$digest();
 
-        // Act
-        $scope.placeholder = 'Some very lengthy placeholder';
-        $scope.$digest();
+    // Assert
+    expect(element.css('width')).toBe(getTextWidth('Some placeholder'));
+  });
 
-        // Assert
-        expect(element.css('width')).toBe(getTextWidth('Some very lengthy placeholder'));
-    });
+  it('sets the input width as the placeholder width when the input is empty and the placeholder changes', () => {
+    // Arrange
+    $scope.placeholder = 'Some placeholder';
+    compile('placeholder="{{placeholder}}"');
+    $scope.model = '';
+    $scope.$digest();
 
-    it('clears the input width when it cannot be calculated', () => {
-        // Arrange
-        container.hide();
-        compile();
+    // Act
+    $scope.placeholder = 'Some very lengthy placeholder';
+    $scope.$digest();
 
-        // Act
-        changeElementValue(element, 'AAAAAAAAAAAAAA');
+    // Assert
+    expect(element.css('width')).toBe(getTextWidth('Some very lengthy placeholder'));
+  });
 
-        // Assert
-        expect(element.prop('style').width).toBe('');
-    });
+  it('clears the input width when it cannot be calculated', () => {
+    // Arrange
+    container.hide();
+    compile();
 
-    it('overrides the threshold', () => {
-        // Arrange
-        let text = 'AAAAAAAAAAAAAA';
-        tagsInputConfigMock.getTextAutosizeThreshold.and.returnValue(20);
-        compile();
+    // Act
+    changeElementValue(element, 'AAAAAAAAAAAAAA');
 
-        // Act
-        changeElementValue(element, text);
+    // Assert
+    expect(element.prop('style').width).toBe('');
+  });
 
-        // Assert
-        expect(element.css('width')).toBe(getTextWidth(text, 20));
-    });
+  it('overrides the threshold', () => {
+    // Arrange
+    let text = 'AAAAAAAAAAAAAA';
+    tagsInputConfigMock.getTextAutosizeThreshold.and.returnValue(20);
+    compile();
+
+    // Act
+    changeElementValue(element, text);
+
+    // Assert
+    expect(element.css('width')).toBe(getTextWidth(text, 20));
+  });
 });

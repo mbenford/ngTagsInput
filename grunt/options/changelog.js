@@ -1,5 +1,5 @@
 module.exports = {
-    options: {
-        github: 'mbenford/ngTagsInput'
-    }
+  options: {
+    github: 'mbenford/ngTagsInput'
+  }
 };

@@ -1,7 +1,7 @@
 module.exports = {
-    options: {
-        debug: true,
-        coverageDir: 'coverage/lcov',
-        force: true
-    }
+  options: {
+    debug: true,
+    coverageDir: 'coverage/lcov',
+    force: true
+  }
 };

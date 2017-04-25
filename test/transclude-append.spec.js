@@ -1,51 +1,51 @@
 describe('transclude-append-directive', () => {
-    let $scope, $compile, directive, element;
+  let $scope, $compile, directive, element;
 
-    beforeEach(() => {
-        module('ngTagsInput');
+  beforeEach(() => {
+    module('ngTagsInput');
 
-        module($compileProvider => {
-            directive = $compileProvider.directive;
-        });
-
-        inject(($rootScope, _$compile_) => {
-            $scope = $rootScope;
-            $compile = _$compile_;
-        });
+    module($compileProvider => {
+      directive = $compileProvider.directive;
     });
 
-    function compile(template) {
-        element = $compile(template)($scope);
-    }
-
-    function createDirective(template) {
-        directive('foobar', () => ({
-            restrict: 'E',
-            transclude: true,
-            template: template
-        }));
-    }
-
-    it('appends the transcluded content to the end of an empty target element', () => {
-        // Arrange
-        createDirective('<div ti-transclude-append></div>');
-
-        // Act
-        compile('<foobar><p>transcluded content</p></foobar>');
-
-        // Assert
-        expect(element.find('p').html()).toBe('transcluded content');
+    inject(($rootScope, _$compile_) => {
+      $scope = $rootScope;
+      $compile = _$compile_;
     });
+  });
 
-    it('appends the transcluded content to the end of a non-empty target element', () => {
-        // Arrange
-        createDirective('<div ti-transclude-append><p>existing content</p></div>');
+  function compile(template) {
+    element = $compile(template)($scope);
+  }
 
-        // Act
-        compile('<foobar><p>transcluded content</p></foobar>');
+  function createDirective(template) {
+    directive('foobar', () => ({
+      restrict: 'E',
+      transclude: true,
+      template: template
+    }));
+  }
 
-        // Assert
-        let content = $.map(element.find('p'), e => $(e).html());
-        expect(content).toEqual(['existing content', 'transcluded content']);
-    });
+  it('appends the transcluded content to the end of an empty target element', () => {
+    // Arrange
+    createDirective('<div ti-transclude-append></div>');
+
+    // Act
+    compile('<foobar><p>transcluded content</p></foobar>');
+
+    // Assert
+    expect(element.find('p').html()).toBe('transcluded content');
+  });
+
+  it('appends the transcluded content to the end of a non-empty target element', () => {
+    // Arrange
+    createDirective('<div ti-transclude-append><p>existing content</p></div>');
+
+    // Act
+    compile('<foobar><p>transcluded content</p></foobar>');
+
+    // Assert
+    let content = $.map(element.find('p'), e => $(e).html());
+    expect(content).toEqual(['existing content', 'transcluded content']);
+  });
 });
