@@ -23,8 +23,11 @@ module.exports = config => {
         },
 
         coverageReporter: {
-            type: 'lcov',
-            dir: 'coverage/'
+            dir: 'coverage/',
+            reporters: [
+                { type: 'json', subdir: 'json', file: 'coverage-final.json' },
+                { type: 'lcov', subdir: 'lcov' }
+            ]
         },
 
         babelPreprocessor: {

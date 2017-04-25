@@ -72,10 +72,11 @@ module.exports = grunt => {
 
     require('load-grunt-tasks')(grunt);
     grunt.loadTasks('grunt/tasks');
+    grunt.loadNpmTasks('remap-istanbul');
 
     grunt.registerTask('lint', ['eslint']);
     grunt.registerTask('test', ['lint', 'clean', 'ngtemplates', 'rollup', 'karma:local']);
-    grunt.registerTask('coverage', ['test', 'open:coverage']);
+    grunt.registerTask('coverage', ['test', 'remapIstanbul', 'open:coverage']);
     grunt.registerTask('docs', ['clean:build', 'dgeni']);
     grunt.registerTask('travis', ['pack', 'compress', 'copy:travis', 'coveralls']);
     grunt.registerTask('javascript-only', ['test', 'uglify']);

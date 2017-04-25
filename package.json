@@ -68,6 +68,7 @@
     "karma-sauce-launcher": "1.1.0",
     "load-grunt-tasks": "3.5.2",
     "phantomjs-prebuilt": "2.1.7",
+    "remap-istanbul": "^0.9.5",
     "rollup-plugin-babel": "2.7.1",
     "rollup-plugin-includepaths": "0.2.2"
   }

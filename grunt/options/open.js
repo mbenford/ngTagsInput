@@ -1,5 +1,5 @@
 module.exports = grunt => ({
     coverage: {
-        path: grunt.file.expand('coverage/**/lcov-report/index.html')[0]
+        path: grunt.file.expand('coverage/**/html-report/index.html')[0]
     }
 });
