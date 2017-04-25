@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - '6.0.2'
+  - '6'
 before_install:
   - gem install sass
 script: npm run travis
