@@ -7,6 +7,8 @@
  * Helper methods used internally by the directive. Should not be called directly from user code.
  */
 export default function UtilService($timeout, $q) {
+  'ngInject';
+
   let self = {};
 
   self.debounce = (fn, delay) => {

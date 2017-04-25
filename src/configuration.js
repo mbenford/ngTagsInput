@@ -8,6 +8,8 @@
  *  initialize options from HTML attributes.
  */
 export default function TagsInputConfigurationProvider() {
+  'ngInject';
+
   let globalDefaults = {};
   let interpolationStatus = {};
   let autosizeThreshold = 3;
@@ -57,6 +59,8 @@ export default function TagsInputConfigurationProvider() {
   };
 
   this.$get = $interpolate => {
+    'ngInject';
+
     let converters = {
       [String]: value => value.toString(),
       [Number]: value => parseInt(value, 10),

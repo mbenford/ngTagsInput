@@ -7,6 +7,8 @@
  * Represents a tag item. Used internally by the tagsInput directive.
  */
 export default function TagItemDirective(tiUtil) {
+  'ngInject';
+
   return {
     restrict: 'E',
     require: '^tagsInput',

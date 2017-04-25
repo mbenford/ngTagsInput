@@ -7,6 +7,8 @@
  * Represents an autocomplete match. Used internally by the autoComplete directive.
  */
 export default function AutocompleteMatchDirective($sce, tiUtil) {
+  'ngInject';
+
   return {
     restrict: 'E',
     require: '^autoComplete',

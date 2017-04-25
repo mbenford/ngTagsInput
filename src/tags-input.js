@@ -53,8 +53,9 @@
  * @param {expression=} [onTagRemoved=NA] Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  * @param {expression=} [onTagClicked=NA] Expression to evaluate upon clicking an existing tag. The clicked tag is available as $tag.
  */
-/*@ngInject*/
 export default function TagsInputDirective($timeout, $document, $window, $q, tagsInputConfig, tiUtil, tiConstants) {
+  'ngInject';
+
   function TagList(options, events, onTagAdding, onTagRemoving) {
     let self = {};
 
@@ -172,6 +173,8 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
     transclude: true,
     templateUrl: 'ngTagsInput/tags-input.html',
     controller($scope, $element, $attrs) {
+      'ngInject';
+
       $scope.events = tiUtil.simplePubSub();
 
       $scope.options = tagsInputConfig.load('tagsInput', $element, $attrs, $scope.events, {

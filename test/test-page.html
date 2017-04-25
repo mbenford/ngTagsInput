@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html ng-app="app">
+<html ng-app="app" ng-strict-di>
 <head>
   <title>ngTagsInput Test Page</title>
   <script type="text/javascript" src="lib/angular.js"></script>
   <script type="text/javascript" src="lib/ng-stats.min.js"></script>
-  <script type="text/javascript" src="../build/ng-tags-input.js"></script>
-  <link rel="stylesheet" href="../build/ng-tags-input.css"/>
+  <script type="text/javascript" src="../build/ng-tags-input.min.js"></script>
+  <link rel="stylesheet" href="../build/ng-tags-input.min.css"/>
 
   <style>
     .stats {
@@ -59,7 +59,7 @@
 
   <script type="text/javascript">
     angular.module('app', ['ngTagsInput', 'angularStats'])
-        .controller('Ctrl', function($scope) {
+        .controller('Ctrl', ['$scope', function($scope) {
             var superheroes = [
               {
                 name: 'Batman',
@@ -108,7 +108,7 @@
             $scope.blur = function() {
               console.log('blur');
             };
-        })
+        }])
         .directive('limitTags', function() {
           return {
             require: 'ngModel',
@@ -123,7 +123,7 @@
             }
           };
         })
-        .config(function(tagsInputConfigProvider) {
+        .config(['tagsInputConfigProvider', function(tagsInputConfigProvider) {
             tagsInputConfigProvider
               .setDefaults('tagsInput', {
                 placeholder: 'New tag'
@@ -131,7 +131,7 @@
               .setDefaults('autoComplete', {
                 highlightMatchedText: true
               });
-        });
+        }]);
   </script>
 </body>
 </html>

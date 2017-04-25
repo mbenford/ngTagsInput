@@ -13,6 +13,7 @@ module.exports = config => {
       'test/lib/angular-mocks.js',
       'test/helpers.js',
       'test/matchers.js',
+      'test/init.js',
       'test/*.spec.js',
       'build/ng-tags-input.js'
     ],

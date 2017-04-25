@@ -7,6 +7,8 @@
  * Automatically sets the input's width so its content is always visible. Used internally by tagsInput directive.
  */
 export default function AutosizeDirective(tagsInputConfig) {
+  'ngInject';
+
   return {
     restrict: 'A',
     require: 'ngModel',
