@@ -2154,6 +2154,14 @@ describe('tags-input directive', () => {
             expect(autocompleteObj.getOptions()).toEqual({ option1: 1, option2: 2, option3: true });
         });
 
+        it('returns the scope for custom templates', () => {
+            // Arrange
+            isolateScope.templateScope = { prop: 'foobar', method: jasmine.createSpy().and.returnValue(42) };
+
+            // Act/Assert
+            expect(autocompleteObj.getTemplateScope()).toBe(isolateScope.templateScope);
+        });
+
         it('subscribe for an event', () => {
             // Arrange
             let callback = angular.noop;
