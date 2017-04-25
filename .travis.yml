@@ -2,6 +2,7 @@ language: node_js
 node_js:
   - '6'
 before_install:
+  - rvm install 2.3.0
   - gem install sass
 script: npm run travis
 sudo: false
