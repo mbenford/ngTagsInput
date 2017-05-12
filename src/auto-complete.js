@@ -45,7 +45,9 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                     }
                     return tiUtil.defaultComparer(a, b);
                 });
-                return !foundItem || foundItem.type !== item.type;
+
+                var foundItemType = foundItem && foundItem.type ? foundItem.type : "FREE_TEXT";
+                return !foundItem || foundItemType !== item.type;
             });
         };
 
@@ -201,7 +203,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             };
 
             scope.track = function(item) {
-                return item[options.tagsInput.keyProperty || options.tagsInput.displayProperty] + (item.hasChildren || '');
+                return item[options.tagsInput.keyProperty || options.tagsInput.displayProperty] + (item.type || 'unknown') + (item.hasChildren || '');
             };
 
             tagsInput
