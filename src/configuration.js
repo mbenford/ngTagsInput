@@ -25,7 +25,8 @@ tagsInput.provider('tagsInputConfig', function() {
      * @returns {object} The service itself for chaining purposes.
      */
     this.setDefaults = function(directive, defaults) {
-        globalDefaults[directive] = defaults;
+        var baseDefaults = globalDefaults[directive] || {};
+        globalDefaults[directive] = Object.assign({}, baseDefaults, defaults);
         return this;
     };
 
