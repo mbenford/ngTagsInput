@@ -10,7 +10,8 @@ module.exports = function(grunt) {
             ['<%= files.spec.src %>']
         ],
         options: {
-            jshintrc: '.jshintrc'
+            jshintrc: '.jshintrc',
+            reporterOutput: ''
         }
     };
 };
