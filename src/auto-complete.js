@@ -46,7 +46,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                     return tiUtil.defaultComparer(a, b);
                 });
 
-                var foundItemType = foundItem && foundItem.type ? foundItem.type : "FREE_TEXT";
+                var foundItemType = foundItem && foundItem.type ? foundItem.type : 'FREE_TEXT';
                 return !foundItem || foundItemType !== item.type;
             });
         };

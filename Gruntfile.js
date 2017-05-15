@@ -22,7 +22,7 @@ module.exports = function(grunt) {
         websiteConfigFile: '<%= websiteDirectory %>/_config.yml',
 
         files: {
-            js: {
+                js: {
                 src: [
                     'src/constants.js',
                     'src/init.js',
