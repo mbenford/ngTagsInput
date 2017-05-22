@@ -52,7 +52,9 @@ following markup:
 <div ng-non-bindable>
 
 ```html
+{% raw %}
 <tags-input ng-model="tags" placeholder="{{placeholder}}"></tags-input>
+{% endraw %}
 ```
 
 </div>
