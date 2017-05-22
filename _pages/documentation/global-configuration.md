@@ -56,7 +56,7 @@ following markup:
 <tags-input ng-model="tags" placeholder="{{placeholder}}"></tags-input>
 ```
 
-<div>
+</div>
 {% endraw %}
 
 If the `placeholder` property is set by the time the markup is compiled by Angular, then its value will be used by the
