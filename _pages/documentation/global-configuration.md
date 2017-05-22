@@ -49,7 +49,6 @@ As you know, Angular makes it very easy to bind expressions to elements by using
 want to bind an expression to some option of ngTagsInput, but it may not work as you'd expect. For instance, consider the
 following markup:
 
-{% raw %}
 <div ng-non-bindable>
 
 ```html
@@ -57,7 +56,6 @@ following markup:
 ```
 
 </div>
-{% endraw %}
 
 If the `placeholder` property is set by the time the markup is compiled by Angular, then its value will be used by the
 `tagsInput` directive. But if that value later changes, it won't be used by the directive. That happens because **all**
