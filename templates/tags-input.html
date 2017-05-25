@@ -1,11 +1,24 @@
 <div class="host" tabindex="-1" ng-click="eventHandlers.host.click()" ti-transclude-append>
   <div class="tags" ng-class="{focused: hasFocus}">
     <ul class="tag-list">
-      <li class="tag-item"
-          ng-repeat="tag in tagList.items track by track(tag)"
+      <li ng-repeat="tag in tagList.items track by track(tag)"
           ng-class="getTagClass(tag, $index)"
-          ng-click="eventHandlers.tag.click(tag)">
-        <ti-tag-item scope="templateScope" data="::tag"></ti-tag-item>
+          ng-click="eventHandlers.tag.click(tag)"
+          ng-dblclick="eventHandlers.tag.dblclick(tag)">
+        <ti-tag-item class="tag-item" scope="templateScope" data="tag" ng-hide="tag.editable"></ti-tag-item>
+        <input class="input"
+               autocomplete="off"
+               ng-model="editingTag.text"
+               ng-model-options="{getterSetter: true}"
+               ng-click="$event.stopPropagation();"
+               ng-if="tag.editable"
+               ng-keydown="eventHandlers.input.keydown($event)"
+               ng-blur="eventHandlers.input.editBlur($event,tag)"
+               ng-paste="eventHandlers.input.paste($event)"
+               ng-disabled="disabled"
+               ng-class="{'invalid-tag': editingTag.invalid}"
+               ti-selectall='true'
+               ti-autosize="">
       </li>
     </ul>
     <input class="input"

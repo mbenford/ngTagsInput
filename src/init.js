@@ -6,6 +6,7 @@ import AutocompleteDirective from './auto-complete';
 import AutocompleteMatchDirective from './auto-complete-match';
 import AutosizeDirective from './autosize';
 import BindAttributesDirective from './bind-attrs';
+import SelectallDirective from './selectall';
 import TranscludeAppendDirective from './transclude-append';
 import TagsInputConfigurationProvider from './configuration';
 import UtilService from './util';
@@ -19,6 +20,7 @@ angular.module('ngTagsInput', [])
     .directive('tiAutosize', AutosizeDirective)
     .directive('tiBindAttrs', BindAttributesDirective)
     .directive('tiTranscludeAppend', TranscludeAppendDirective)
+    .directive('tiSelectall', SelectallDirective)
     .factory('tiUtil', UtilService)
     .constant('tiConstants', Constants)
     .provider('tagsInputConfig', TagsInputConfigurationProvider)

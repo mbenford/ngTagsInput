@@ -52,6 +52,8 @@
  *    promise is returned, the tag will not be removed.
  * @param {expression=} [onTagRemoved=NA] Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  * @param {expression=} [onTagClicked=NA] Expression to evaluate upon clicking an existing tag. The clicked tag is available as $tag.
+ * @param {boolean=} [allowDblclickToEdit=false] Flag indicating that allow double click to edit current tag.
+ * @param {string=} [inputSplitPattern=null] Regular expression that split edit input tags.
  */
 export default function TagsInputDirective($timeout, $document, $window, $q, tagsInputConfig, tiUtil, tiConstants) {
   'ngInject';
@@ -59,7 +61,7 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
   function TagList(options, events, onTagAdding, onTagRemoving) {
     let self = {};
 
-    let getTagText = tag =>tiUtil.safeToString(tag[options.displayProperty]);
+    let getTagText = tag => tiUtil.safeToString(tag[options.displayProperty]);
     let setTagText = (tag, text) => {
       tag[options.displayProperty] = text;
     };
@@ -67,10 +69,10 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
     let canAddTag = tag => {
       let tagText = getTagText(tag);
       let valid = tagText &&
-                  tagText.length >= options.minLength &&
-                  tagText.length <= options.maxLength &&
-                  options.allowedTagsPattern.test(tagText) &&
-                  !tiUtil.findInObjectArray(self.items, tag, options.keyProperty || options.displayProperty);
+        tagText.length >= options.minLength &&
+        tagText.length <= options.maxLength &&
+        options.allowedTagsPattern.test(tagText) &&
+        !tiUtil.findInObjectArray(self.items, tag, options.keyProperty || options.displayProperty);
 
       return $q.when(valid && onTagAdding({ $tag: tag })).then(tiUtil.promisifyValue);
     };
@@ -85,6 +87,10 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
       return self.add(tag);
     };
 
+    self.addTextArr = textArr => {
+      textArr.forEach(text => self.addText(text));
+    }
+
     self.add = tag => {
       let tagText = getTagText(tag);
 
@@ -95,7 +101,7 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
       setTagText(tag, tagText);
 
       return canAddTag(tag)
-        .then(() =>{
+        .then(() => {
           self.items.push(tag);
           events.trigger('tag-added', { $tag: tag });
         })
@@ -201,6 +207,8 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
         allowLeftoverText: [Boolean, false],
         addFromAutocompleteOnly: [Boolean, false],
         spellcheck: [Boolean, true],
+        allowDblclickToEdit: [Boolean, false],
+        inputSplitPattern: [RegExp, null],
         useStrings: [Boolean, false]
       });
 
@@ -209,22 +217,22 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
         tiUtil.handleUndefinedResult($scope.onTagRemoving, true));
 
       this.registerAutocomplete = () => ({
-        addTag: function(tag) {
+        addTag: function (tag) {
           return $scope.tagList.add(tag);
         },
-        getTags: function() {
+        getTags: function () {
           return $scope.tagList.items;
         },
-        getCurrentTagText: function() {
+        getCurrentTagText: function () {
           return $scope.newTag.text();
         },
-        getOptions: function() {
+        getOptions: function () {
           return $scope.options;
         },
-        getTemplateScope: function() {
+        getTemplateScope: function () {
           return $scope.templateScope;
         },
-        on: function(name, handler) {
+        on: function (name, handler) {
           $scope.events.on(name, handler, true);
           return this;
         }
@@ -263,6 +271,20 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
 
       ngModelCtrl.$isEmpty = value => !value || !value.length;
 
+      scope.isEditing = false;
+
+      scope.editingTag = {
+        text(value) {
+          if (angular.isDefined(value)) {
+            scope.editingText = value;
+            events.trigger('edit-input-change', value);
+          } else {
+            return scope.editingText || '';
+          }
+        },
+        invalid: null
+      };
+
       scope.newTag = {
         text(value) {
           if (angular.isDefined(value)) {
@@ -281,8 +303,8 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
       scope.getTagClass = (tag, index) => {
         let selected = tag === tagList.selected;
         return [
-          scope.tagClass({$tag: tag, $index: index, $selected: selected}),
-                    { selected: selected }
+          scope.tagClass({ $tag: tag, $index: index, $selected: selected }),
+          { selected: selected }
         ];
       };
 
@@ -337,6 +359,9 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
               }
             });
           },
+          editBlur($event, tag) {
+            events.trigger('edit-input-blur', tag);
+          },
           paste($event) {
             $event.getTextData = () => {
               let clipboardData = $event.clipboardData || ($event.originalEvent && $event.originalEvent.clipboardData);
@@ -356,6 +381,9 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
         tag: {
           click(tag) {
             events.trigger('tag-clicked', { $tag: tag });
+          },
+          dblclick(tag) {
+            events.trigger('tag-dblclicked', tag);
           }
         }
       };
@@ -365,6 +393,13 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
         .on('invalid-tag', scope.onInvalidTag)
         .on('tag-removed', scope.onTagRemoved)
         .on('tag-clicked', scope.onTagClicked)
+        .on('tag-dblclicked', (tag) => {
+          if (options.allowDblclickToEdit) {
+            scope.editingTag.text(tag.text);
+            tag.editable = true;
+            scope.isEditing = true;
+          }
+        })
         .on('tag-added', () => {
           scope.newTag.text('');
         })
@@ -394,10 +429,25 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
         })
         .on('input-blur', () => {
           if (options.addOnBlur && !options.addFromAutocompleteOnly) {
-            tagList.addText(scope.newTag.text());
+            let tags = scope.newTag.text().split(options.inputSplitPattern);
+            tagList.addTextArr(tags);
           }
           element.triggerHandler('blur');
           setElementValidity();
+        })
+        .on('edit-input-blur', tag => {
+          let editingText = scope.editingTag.text();
+          let tags = editingText.split(options.inputSplitPattern);
+          let firstTagText = tags.shift();
+          tag.text = firstTagText;
+          tagList.addTextArr(tags);
+          tag.editable = false;
+          scope.isEditing = false;
+          focusInput();
+        })
+        .on('edit-input-change', () => {
+          tagList.clearSelection();
+          scope.editingTag.invalid = null;
         })
         .on('input-keydown', event => {
           let key = event.keyCode;
@@ -414,12 +464,17 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
 
           let shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
           let shouldRemove = (key === tiConstants.KEYS.backspace || key === tiConstants.KEYS.delete) && tagList.selected;
-          let shouldEditLastTag = key === tiConstants.KEYS.backspace && scope.newTag.text().length === 0 && options.enableEditingLastTag;
+          let shouldEditLastTag = key === tiConstants.KEYS.backspace && scope.newTag.text().length === 0 && options.enableEditingLastTag && !scope.isEditing;
           let shouldSelect = (key === tiConstants.KEYS.backspace || key === tiConstants.KEYS.left || key === tiConstants.KEYS.right) &&
             scope.newTag.text().length === 0 && !options.enableEditingLastTag;
 
           if (shouldAdd) {
-            tagList.addText(scope.newTag.text());
+            if (scope.isEditing) {
+              element.find('input')[0].blur();
+              return;
+            }
+            let tags = scope.newTag.text().split(options.inputSplitPattern);
+            tagList.addTextArr(tags);
           }
           else if (shouldEditLastTag) {
             tagList.selectPrior();
@@ -451,9 +506,7 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
             let tags = data.split(options.pasteSplitPattern);
 
             if (tags.length > 1) {
-              tags.forEach(tag => {
-                tagList.addText(tag);
-              });
+              tagList.addTextArr(tags);
               event.preventDefault();
             }
           }
@@ -461,3 +514,4 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
     }
   };
 }
+
