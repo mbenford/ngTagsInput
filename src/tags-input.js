@@ -286,7 +286,7 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
         ];
       };
 
-      scope.$watch('tags', value => {
+      scope.$watchCollection('tags', value => {
         if (value) {
           tagList.items = tiUtil.makeObjectArray(value, options.displayProperty);
           if (options.useStrings) {
