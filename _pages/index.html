@@ -24,7 +24,7 @@ priority: 1.00
             <div class="col-inner">
               <p>Try it yourself!</p>
               <tags-input class="tags-input-home" ng-model="vm.tags" placeholder="Add a superhero" replace-spaces-with-dashes="false" display-property="name">
-                  <auto-complete source="loadItems($query)" min-length="1" debounce-delay="0" load-on-down-arrow="true"
+                  <auto-complete source="vm.loadItems($query)" min-length="1" debounce-delay="0" load-on-down-arrow="true"
                                  max-results-to-show="50" template="home-template"></auto-complete>
               </tags-input>
               <p class="text-right"><small>Check out the <a href="{{ site.github.url }}/demos">demos page</a> to see more examples.</small></p>
