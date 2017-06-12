@@ -69,7 +69,7 @@ directive's name and what options should be watched:
 
 ```javascript
 app.config(function(tagsInputConfigProvider) {
-  tagsInputProvider.setActiveInterpolation('tagsInput', { placeholder: true });
+  tagsInputConfigProvider.setActiveInterpolation('tagsInput', { placeholder: true });
 });
 ```
 
