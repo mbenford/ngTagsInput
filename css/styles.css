@@ -88,6 +88,10 @@ h3 {
     background-color: #999;
 }
 
+.type-regexp {
+    background-color: #5a54bd;
+}
+
 .methods {
     padding-left: 0;
 }
