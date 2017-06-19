@@ -289,7 +289,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             };
         },
         link: function(scope, element, attrs, ngModelCtrl) {
-            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.delete, KEYS.left, KEYS.right],
+            var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.delete, KEYS.left, KEYS.right, KEYS.single_quote],
                 tagList = scope.tagList,
                 events = scope.events,
                 options = scope.options,
@@ -488,7 +488,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                         addKeys = {},
                         shouldAdd, shouldRemove, shouldSelect, shouldEditLastTag;
 
-                    if (tiUtil.isModifierOn(event) || hotkeys.indexOf(key) === -1) {
+                    if (hotkeys.indexOf(key) === -1) {
                         return;
                     }
 
@@ -505,13 +505,23 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                     addKeys[KEYS.comma] = options.addOnComma;
                     addKeys[KEYS.space] = options.addOnSpace;
 
+                    var text = scope.newTag.text();
+                    var singleQuote = false;
+                    if (key === KEYS.single_quote) {
+                        if (text.trim().startsWith('"')) {
+                            text = text.trim().slice(1);
+                            singleQuote = true;
+                        }
+                    }
+
                     shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
+                    shouldAdd = shouldAdd || singleQuote;
                     shouldRemove = (key === KEYS.backspace || key === KEYS.delete) && tagList.selected;
                     shouldEditLastTag = key === KEYS.backspace && scope.newTag.text().length === 0 && options.enableEditingLastTag;
                     shouldSelect = (key === KEYS.backspace || key === KEYS.left || key === KEYS.right) && scope.newTag.text().length === 0 && !options.enableEditingLastTag;
 
                     if (shouldAdd) {
-                        tagList.addText(scope.newTag.text());
+                        tagList.addText(text);
                     }
                     else if (shouldEditLastTag) {
                         tagList.selectPrior();
