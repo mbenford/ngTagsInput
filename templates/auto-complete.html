@@ -1,4 +1,4 @@
-<div class="autocomplete" ng-if="suggestionList.visible" ng-style="suggestionList.overlay && {position: 'fixed', width: suggestionList.width}">
+<div class="autocomplete" ng-if="suggestionList.visible" ng-style="suggestionList.setOverlayStyle()">
   <ul class="suggestion-list">
     <li class="suggestion-item"
         ng-repeat="item in suggestionList.items track by track(item)"
