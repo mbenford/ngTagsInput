@@ -65,6 +65,10 @@ export default function AutocompleteDirective($document, $timeout, $sce, $q, tag
       if(options.overlay) {
         self.overlay = true;
         self.width = element.closest('tags-input').width();
+        self.overlayStyle = {
+          position: 'fixed',
+          width: self.width
+        }
       }
       if (options.selectFirstMatch) {
         self.select(0);
