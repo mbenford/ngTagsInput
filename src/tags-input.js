@@ -134,6 +134,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 });
         };
 
+        self.removeAll = function() {
+          self.items = [];
+        }
+
         self.remove = function(index) {
             var tag = self.items[index];
 
@@ -192,6 +196,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             tags: '=ngModel',
             text: '=?',
             hasFocus: '=',
+            shouldRemoveTagsOnInputLostFocus: '=',
             placeholder: '=',
             onStartSearch: '&',
             onInputFocused: '&',
@@ -313,6 +318,16 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             };
 
             scope.placeholderCopy = scope.placeholder;
+            scope.shouldRemoveTagsOnInputLostFocus = false;
+
+            scope.$watch('shouldRemoveTagsOnInputLostFocus', function(value) {
+                scope.shouldRemoveTagsOnInputLostFocus = value
+
+                if (scope.shouldRemoveTagsOnInputLostFocus) {
+                    scope.tagList.removeAll();
+                    scope.tags = tagList.items;
+                }
+            });
 
             scope.$watch('placeholder', function(value) {
                 scope.placeholderCopy = scope.placeholder;
@@ -427,22 +442,6 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 .on('tag-added', function() {
                     scope.newTag.text('');
                 })
-                .on('tag-selected', function() {
-                    $timeout(function() {
-                        var liElement = element.find('.selected');
-                        var hostContainerElement = liElement.parent().parent().parent();
-                        if ((liElement.offset().left < hostContainerElement.offset().left) ||
-                            liElement.offset().left > (hostContainerElement.offset().left + hostContainerElement.width())) {
-                            hostContainerElement.animate({
-                                scrollLeft: liElement.offset().left - liElement.parent().parent().offset().left
-                            });
-                        }
-                        var editable = liElement.find('[contenteditable]');
-                        if (editable.length > 0) {
-                            editable.get(0).focus();
-                        }
-                    }, 100);
-                  })
                 .on('tag-added tag-removed', function() {
                     scope.tags = tagList.items;
                     // Ideally we should be able call $setViewValue here and let it in turn call $setDirty and $validate
@@ -450,15 +449,6 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                     // Unfortunately this won't trigger any registered $parser and there's no safe way to do it.
                     ngModelCtrl.$setDirty();
                     focusInput();
-
-                    $timeout(function() {
-                        var input = element.find('input');
-                        if ((input.position().left + input.width()) > input.parent().parent().width()) {
-                            input.parent().parent().animate({
-                                scrollLeft: input.offset().left - 30 - input.parent().offset().left
-                            });
-                        }
-                    }, 100);
                 })
                 .on('invalid-tag', function() {
                     scope.newTag.invalid = true;
