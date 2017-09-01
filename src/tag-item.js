@@ -34,15 +34,6 @@ tagsInput.directive('tiTagItem', function(tiUtil) {
             scope.$watch('$parent.$index', function(value) {
                 scope.$index = value;
             });
-
-            element.parent().click(function() {
-                var hostContainerElement = element.parent().parent().parent().parent();
-                if (element.offset().left < hostContainerElement.offset().left) {
-                    hostContainerElement.animate({
-                        scrollLeft: element.parent().offset().left - element.parent().parent().parent().offset().left
-                    });
-                }
-            });            
         }
     };
 });
