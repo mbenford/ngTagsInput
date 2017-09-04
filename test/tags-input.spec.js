@@ -643,6 +643,17 @@ describe('tags-input directive', () => {
         // Assert
         expect($scope.tags).toBeUndefined();
       });
+
+      it('adds a new tag when the tab key is pressed and the input has text', () => {
+        // Arrange
+        isolateScope.newTag.text('foo');
+  
+        // Act
+        newTag('foo', constants.KEYS.tab);
+        
+        // Assert
+        expect($scope.tags).toEqual([{ text: 'foo' }]);
+      });
     });
 
     describe('option is off', () => {
