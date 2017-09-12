@@ -5,7 +5,7 @@
   <script type="text/javascript" src="lib/angular.js"></script>
   <script type="text/javascript" src="lib/ng-stats.min.js"></script>
   <script type="text/javascript" src="../build/ng-tags-input.min.js"></script>
-  <link rel="stylesheet" href="../build/ng-tags-input.min.css"/>
+  <link rel="stylesheet" href="http://mbenford.github.io/ngTagsInput/css/ng-tags-input.min.css"/>
 
   <style>
     .stats {
@@ -23,7 +23,7 @@
 </head>
 
 <body ng-controller="Ctrl">
-  <tags-input ng-model="tags" add-on-blur="false" ng-focus="focus()" ng-blur="blur()" add-on-paste="true" paste-split-pattern="[,;|]" spellcheck="false" display-property="name" template="tag-template">
+  <tags-input ng-model="tags" add-on-blur="false" ng-focus="focus()" ng-blur="blur()" add-on-paste="true" paste-split-pattern="[,;|]" spellcheck="false" display-property="name" template="tag-template" dragtag="true">
       <auto-complete source="loadItems($query)" min-length="1" load-on-down-arrow="true" load-on-focus="true" load-on-empty="true" template="autocomplete-template"></auto-complete>
   </tags-input>
 

@@ -18,7 +18,9 @@ tags-input {
       outline: none;
       @include box-shadow($tags-outline-box-shadow);
     }
-
+    .tag-item-dragtag {
+	  cursor:move;
+    }
     .tag-list {
       margin: 0;
       padding: 0;
