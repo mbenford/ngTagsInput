@@ -243,18 +243,20 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 tiUtil.handleUndefinedResult($scope.onTagAdding, true),
                 tiUtil.handleUndefinedResult($scope.onTagRemoving, true));
 
-            this.fireSearch = function() {
+            this.fireSearch = function(forceSearch) {
                 if ($scope.newTag.text()) {
                     $scope.tagList.add({text: $scope.newTag.text()});
                 }
 
                 $timeout(function() {
-                    if ($scope.tagList.items.length > 0 && $scope.onStartSearch) {
+                    if (($scope.tagList.items.length > 0 || forceSearch) && $scope.onStartSearch) {
                         $scope.onStartSearch();
                         $element.find('input').blur();
                     }
                 });
             };
+
+            $scope.fireSearch = this.fireSearch;
 
             this.registerAutocomplete = function() {
                 var input = $element.find('input');
@@ -294,6 +296,17 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
             };
         },
         link: function(scope, element, attrs, ngModelCtrl) {
+            var parentCtrl = scope.$parent.tagsInputParentCtrl;
+
+            if (parentCtrl) {
+              parentCtrl.proceedWithSearchFromSearchButton = function () {
+                 console.log("search from search button")
+                 if (scope.fireSearch) {
+                   scope.fireSearch(true)
+                 }
+              }
+            }
+
             var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.delete, KEYS.left, KEYS.right, KEYS.single_quote],
                 tagList = scope.tagList,
                 events = scope.events,
