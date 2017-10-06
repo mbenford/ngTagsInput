@@ -76,7 +76,7 @@ export default function AutocompleteDirective($document, $timeout, $sce, $q, tag
       lastPromise = promise;
 
       promise.then(items => {
-        if (promise !== lastPromise) {
+        if (promise !== lastPromise || !items || !items.data) {
           return;
         }
 
