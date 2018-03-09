@@ -258,6 +258,20 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
 
             $scope.fireSearch = this.fireSearch;
 
+            this.handleSearchStarted = function() {
+                if ($scope.newTag.text()) {
+                    $scope.tagList.add({text: $scope.newTag.text()});
+                }
+
+                $timeout(function() {
+                    if ($scope.tagList.items.length > 0) {
+                        $element.find('input').blur();
+                    }
+                });
+            }
+
+            $scope.handleSearchStarted = this.handleSearchStarted;
+
             this.registerAutocomplete = function() {
                 var input = $element.find('input');
 
@@ -455,7 +469,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
                 .on('tag-added', function() {
                     scope.newTag.text('');
                 })
-                .on('tag-added tag-removed', function() {
+                .on('tag-removed', function() {
                     scope.tags = tagList.items;
                     // Ideally we should be able call $setViewValue here and let it in turn call $setDirty and $validate
                     // automatically, but since the model is an array, $setViewValue does nothing and it's up to us to do it.

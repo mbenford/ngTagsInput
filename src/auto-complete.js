@@ -260,6 +260,9 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                         }
                         else if (key === KEYS.enter || key === KEYS.tab) {
                             handled = scope.addSuggestion();
+
+                            tagsInputCtrl.handleSearchStarted();
+                            handled = true;
                         }
                     }
                     else {
