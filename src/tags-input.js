@@ -292,12 +292,10 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
           if (options.useStrings) {
             return;
           }
-
-          scope.tags = tagList.items;
-        }
-        else {
+        } else {
           tagList.items = [];
         }
+        scope.tags = tagList.items;
       });
 
       scope.$watch('tags.length', () => {
