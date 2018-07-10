@@ -107,7 +107,7 @@ describe('tags-input directive', () => {
       compile();
 
       // Assert
-      expect($scope.tags).toBeUndefined();
+      expect($scope.tags).toEqual([]);
     });
 
     it('renders the correct number of tags', () => {
@@ -301,7 +301,7 @@ describe('tags-input directive', () => {
       newTag('');
 
       // Assert
-      expect($scope.tags).toBeUndefined();
+      expect($scope.tags).toEqual([]);
       expect(isolateScope.newTag.invalid).toBeFalsy();
     });
 
@@ -501,7 +501,7 @@ describe('tags-input directive', () => {
       newTag('foo', constants.KEYS.enter);
 
       // Assert
-      expect($scope.tags).toBeUndefined();
+      expect($scope.tags).toEqual([]);
     });
 
     it('initializes the option to true', () => {
@@ -533,7 +533,7 @@ describe('tags-input directive', () => {
       newTag('foo', constants.KEYS.space);
 
       // Assert
-      expect($scope.tags).toBeUndefined();
+      expect($scope.tags).toEqual([]);
     });
 
     it('initializes the option to false', () => {
@@ -565,7 +565,7 @@ describe('tags-input directive', () => {
       newTag('foo', constants.KEYS.comma);
 
       // Assert
-      expect($scope.tags).toBeUndefined();
+      expect($scope.tags).toEqual([]);
     });
 
     it('initializes the option to true', () => {
@@ -641,7 +641,7 @@ describe('tags-input directive', () => {
         $timeout.flush();
 
         // Assert
-        expect($scope.tags).toBeUndefined();
+        expect($scope.tags).toEqual([]);
       });
     });
 
@@ -655,7 +655,7 @@ describe('tags-input directive', () => {
         getInput().triggerHandler('blur');
 
         // Assert
-        expect($scope.tags).toBeUndefined();
+        expect($scope.tags).toEqual([]);
       });
     });
   });
@@ -733,7 +733,7 @@ describe('tags-input directive', () => {
           getInput().trigger(event);
 
           // Assert
-          expect($scope.tags).toBeUndefined();
+          expect($scope.tags).toEqual([]);
           expect(eventData.preventDefault).not.toHaveBeenCalled();
         });
       });
@@ -749,7 +749,7 @@ describe('tags-input directive', () => {
       getInput().trigger(event);
 
       // Assert
-      expect($scope.tags).toBeUndefined();
+      expect($scope.tags).toEqual([]);
       expect(eventData.preventDefault).not.toHaveBeenCalled();
     });
 
@@ -922,7 +922,7 @@ describe('tags-input directive', () => {
       newTag('foobar.com');
 
       // Assert
-      expect($scope.tags).toBeUndefined();
+      expect($scope.tags).toEqual([]);
     });
 
     it('initializes the option to .+', () => {
@@ -964,7 +964,7 @@ describe('tags-input directive', () => {
       newTag('foo');
 
       // Assert
-      expect($scope.tags).toBeUndefined();
+      expect($scope.tags).toEqual([]);
       expect(getInput()).toHaveClass('invalid-tag');
     });
   });
@@ -1009,7 +1009,7 @@ describe('tags-input directive', () => {
       newTag('foobar');
 
       // Assert
-      expect($scope.tags).toBeUndefined();
+      expect($scope.tags).toEqual([]);
       expect(getInput()).toHaveClass('invalid-tag');
     });
   });
@@ -1479,7 +1479,7 @@ describe('tags-input directive', () => {
         newTag('foo', constants.KEYS.enter);
 
         // Assert
-        expect($scope.tags).toBeUndefined();
+        expect($scope.tags).toEqual([]);
       });
 
       it('does not add a tag when the comma key is pressed', () => {
@@ -1487,7 +1487,7 @@ describe('tags-input directive', () => {
         newTag('foo', constants.KEYS.comma);
 
         // Assert
-        expect($scope.tags).toBeUndefined();
+        expect($scope.tags).toEqual([]);
       });
 
       it('does not add a tag when the space key is pressed', () => {
@@ -1495,7 +1495,7 @@ describe('tags-input directive', () => {
         newTag('foo', constants.KEYS.space);
 
         // Assert
-        expect($scope.tags).toBeUndefined();
+        expect($scope.tags).toEqual([]);
       });
 
       it('does not add a tag when the element loses focus', () => {
@@ -1506,7 +1506,7 @@ describe('tags-input directive', () => {
         isolateScope.events.trigger('input-blur');
 
         // Assert
-        expect($scope.tags).toBeUndefined();
+        expect($scope.tags).toEqual([]);
       });
     });
   });
