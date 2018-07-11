@@ -104,28 +104,24 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, $q, tags
 
             return canAddTag(tag)
                 .then(function() {
-                    if (self.items.length > 0 && !self.items[self.items.length - 1].type && !tag.type && tag.text && !tag.id) {
-                        self.items[self.items.length - 1].text = self.items[self.items.length - 1].text + ' ' + tag.text;
-                    } else {
-                        if (self.items.length > 0 && !self.items[self.items.length - 1].type && !self.items[self.items.length - 1].id &&
-                          self.items[self.items.length - 1].type === tag.type &&
-                          self.items[self.items.length - 1].text) {
+                  if (self.items.length > 0 && !self.items[self.items.length - 1].type && !self.items[self.items.length - 1].id &&
+                    self.items[self.items.length - 1].type === tag.type &&
+                    self.items[self.items.length - 1].text) {
 
-                            // Remove suffix of the previous tag if it matches prefix of the current tag (WA-1693)
-                            var tags1 = self.items[self.items.length - 1].text.split(' ');
-                            var tags2 = tag.text.split(' ');
-                            if (tags1[tags1.length - 1].toLowerCase() === tags2[0].toLowerCase()) {
-                                tags1.splice(-1);
-                            }
-                            if (tags1.length > 0) {
-                                self.items[self.items.length - 1].text = tags1.join(' ');
-                            } else {
-                                self.items.splice(-1);
-                            }
-                        }
-                        self.items.push(tag);
+                    // Remove suffix of the previous tag if it matches prefix of the current tag (WA-1693)
+                    var tags1 = self.items[self.items.length - 1].text.split(' ');
+                    var tags2 = tag.text.split(' ');
+                    if (tags1[tags1.length - 1].toLowerCase() === tags2[0].toLowerCase()) {
+                      tags1.splice(-1);
                     }
-                    events.trigger('tag-added', {$tag: tag});
+                    if (tags1.length > 0) {
+                      self.items[self.items.length - 1].text = tags1.join(' ');
+                    } else {
+                      self.items.splice(-1);
+                    }
+                  }
+                  self.items.push(tag);
+                  events.trigger('tag-added', {$tag: tag});
                 })
                 .catch(function() {
                     if (tagText) {
