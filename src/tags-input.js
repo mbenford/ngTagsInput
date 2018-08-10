@@ -451,8 +451,12 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
             let tags = data.split(options.pasteSplitPattern);
 
             if (tags.length > 1) {
-              tags.forEach(tag => {
-                tagList.addText(tag);
+              var added = [];
+              tags.forEach(function(tag) {
+                  if(added.indexOf(tag) < 0) {
+                      tagList.addText(tag);
+                      added.push(tag);
+                  }
               });
               event.preventDefault();
             }
