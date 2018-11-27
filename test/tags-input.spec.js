@@ -1749,7 +1749,9 @@ describe('tags-input directive', () => {
       newTag('foo');
 
       // Assert
-      expect($scope.callback).toHaveBeenCalledWith({ text: 'foo' });
+      $timeout(function() {
+        expect($scope.callback).toHaveBeenCalledWith({ text: 'foo' });
+      });
     });
   });
 
@@ -1763,7 +1765,9 @@ describe('tags-input directive', () => {
       newTag('foo');
 
       // Assert
-      expect($scope.callback).toHaveBeenCalledWith({ text: 'foo' });
+      $timeout(function() {
+        expect($scope.callback).toHaveBeenCalledWith({ text: 'foo' });
+      });
     });
   });
 
@@ -1784,7 +1788,9 @@ describe('tags-input directive', () => {
       getRemoveButton(0).click();
 
       // Assert
-      expect($scope.tags).toEqual([{ text: 'PERMANENT' }]);
+      $timeout(function() {
+        expect($scope.tags).toEqual([{ text: 'PERMANENT' }]);
+      });
     });
 
     it('removes a tag if the on-tag-removing callback allows it (promise result)', () => {
@@ -1801,7 +1807,9 @@ describe('tags-input directive', () => {
       getRemoveButton(1).click();
 
       // Assert
-      expect($scope.tags).toEqual([{ text: 'foo' }, { text: 'PERMANENT' }, { text: 'bar' }]);
+      $timeout(function() {
+        expect($scope.tags).toEqual([{ text: 'foo' }, { text: 'PERMANENT' }, { text: 'bar' }]);
+      });
     });
   });
 
@@ -1816,7 +1824,9 @@ describe('tags-input directive', () => {
       getRemoveButton(0).click();
 
       // Assert
-      expect($scope.callback).toHaveBeenCalledWith({ text: 'Tag1' });
+      $timeout(function() {
+        expect($scope.callback).toHaveBeenCalledWith({ text: 'Tag1' });
+      });
     });
 
     it('calls the provided callback when the last tag is removed by pressing backspace twice', () => {
@@ -1830,7 +1840,9 @@ describe('tags-input directive', () => {
       sendBackspace();
 
       // Assert
-      expect($scope.callback).toHaveBeenCalledWith({ text: 'Tag2' });
+      $timeout(function() {
+        expect($scope.callback).toHaveBeenCalledWith({ text: 'Tag2' });
+      });
     });
   });
 
@@ -1845,7 +1857,9 @@ describe('tags-input directive', () => {
       getTag(1).click();
 
       // Assert
-      expect($scope.callback).toHaveBeenCalledWith({ text: 'Tag2' });
+      $timeout(function() {
+        expect($scope.callback).toHaveBeenCalledWith({ text: 'Tag2' });
+      });
     });
 
     it('doesn\'t call the provided callback when the remove button is clicked', () => {
@@ -1858,7 +1872,9 @@ describe('tags-input directive', () => {
       getRemoveButton(1).click();
 
       // Assert
-      expect($scope.callback).not.toHaveBeenCalled();
+      $timeout(function() {
+        expect($scope.callback).not.toHaveBeenCalled();
+      });
     });
   });
 
@@ -1960,6 +1976,20 @@ describe('tags-input directive', () => {
       expect(getTagText(0)).toBe('Tag1');
       expect(getTagText(1)).toBe('Tag2');
       expect(getTagText(2)).toBe('Tag3');
+    });
+
+    it('calls the provided callback with just tag name when a new tag is added', () => {
+      // Arrange
+      $scope.callback = jasmine.createSpy();
+      compile('use-strings="true" on-tag-added="callback($tag)"');
+
+      // Act
+      newTag('foo');
+
+      // Assert
+      $timeout(function() {
+        expect($scope.callback).toHaveBeenCalledWith('foo');
+      });
     });
   });
 
