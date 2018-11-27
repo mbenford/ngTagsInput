@@ -1991,6 +1991,34 @@ describe('tags-input directive', () => {
         expect($scope.callback).toHaveBeenCalledWith('foo');
       });
     });
+
+    it('calls the provided callback when a tag is removed by clicking the remove button', () => {
+      // Arrange
+      $scope.callback = jasmine.createSpy();
+      compile('use-strings="true" on-tag-removed="callback($tag)"');
+
+      // Act
+      getRemoveButton(0).click();
+
+      // Assert
+      $timeout(function() {
+        expect($scope.callback).toHaveBeenCalledWith('Tag1');
+      });
+    });
+
+    it('calls the provided callback when a tag is clicked', () => {
+      // Arrange
+      $scope.callback = jasmine.createSpy();
+      compile('use-strings="true" on-tag-clicked="callback($tag)"');
+
+      // Act
+      getTag(1).click();
+
+      // Assert
+      $timeout(function() {
+        expect($scope.callback).toHaveBeenCalledWith('Tag2');
+      });
+    });
   });
 
   describe('ng-disabled support', () => {
