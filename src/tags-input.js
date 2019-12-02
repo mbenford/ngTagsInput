@@ -113,6 +113,8 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
         self.clearSelection();
         events.trigger('tag-removed', { $tag: tag });
         return tag;
+      }).catch(() => {
+        //can't remove tag
       });
     };
 
@@ -314,6 +316,9 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
 
       scope.eventHandlers = {
         input: {
+          textInput: function($event) {
+              events.trigger('text-input', $event);
+          },
           keydown($event) {
             events.trigger('input-keydown', $event);
           },
@@ -398,6 +403,24 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
           }
           element.triggerHandler('blur');
           setElementValidity();
+        })
+        .on('text-input', function(event) {
+          // on mobile keydown doesn't provide keyCodes for space or comma (most keys really),
+          // this will translate it so proper handling is triggered if those are pressed
+
+          let originalKey = event.originalEvent.data;
+          let keyCode = null;
+
+          if (originalKey === " ") {
+            keyCode = tiConstants.KEYS.space;
+          } else if (originalKey === ",") {
+            keyCode = tiConstants.KEYS.comma;
+          }
+
+          if (keyCode) {
+            event.keyCode = keyCode;
+            events.trigger('input-keydown', event);
+          }
         })
         .on('input-keydown', event => {
           let key = event.keyCode;

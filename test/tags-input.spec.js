@@ -87,6 +87,13 @@ describe('tags-input directive', () => {
     return event;
   }
 
+  function sendTextInput(data, properties) {
+    let event = jQuery.Event('textInput', angular.extend( { originalEvent: {data: data} }, properties || {}));
+    getInput().trigger(event);
+
+    return event;
+  }
+
   function sendBackspace() {
     let event = sendKeyDown(constants.KEYS.backspace);
 
@@ -566,6 +573,31 @@ describe('tags-input directive', () => {
 
       // Assert
       expect($scope.tags).toBeUndefined();
+    });
+
+    it('initializes the option to true', () => {
+      // Arrange/Act
+      compile();
+
+      // Assert
+      expect(isolateScope.options.addOnComma).toBe(true);
+    });
+  });
+
+  describe('add-on-comma option nokeypress', () => {
+    it('adds a new tag when the comma key is pressed and the option is true with no keypress event', () => {
+      // Arrange
+      compile('add-on-comma="true"');
+
+      // Act
+      let tag = 'foo';
+      tag.split('').forEach((char, index) => {
+        sendKeyPress(tag.charCodeAt(index));
+      });
+      sendTextInput(',');
+
+      // Assert
+      expect($scope.tags).toEqual([{ text: 'foo' }]);
     });
 
     it('initializes the option to true', () => {

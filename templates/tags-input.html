@@ -13,6 +13,7 @@
            ng-model="newTag.text"
            ng-model-options="{getterSetter: true}"
            ng-keydown="eventHandlers.input.keydown($event)"
+           ng-on-text_input="eventHandlers.input.textInput($event)"
            ng-focus="eventHandlers.input.focus($event)"
            ng-blur="eventHandlers.input.blur($event)"
            ng-paste="eventHandlers.input.paste($event)"
