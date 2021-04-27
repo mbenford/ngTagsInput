@@ -99,7 +99,7 @@ describe('autoComplete directive', () => {
   }
 
   function generateSuggestions(count) {
-    return range(count, index => ({text: 'Item' + (index + 1)}));
+    return { data: range(count, index => ({text: 'Item' + (index + 1)})) };
   }
 
   function loadSuggestions(countOrItems, text) {
@@ -133,11 +133,11 @@ describe('autoComplete directive', () => {
       compile();
 
       tagsInput.getTags.and.returnValue([{ text: 'Item-3' }]);
-      loadSuggestions([
+      loadSuggestions({ data: [
         { text: 'Item 1'},
         { text: 'Item 2'},
         { text: 'Item 3'},
-      ]);
+      ]});
 
       // Assert
       expect(getSuggestions().length).toBe(2);
@@ -148,7 +148,7 @@ describe('autoComplete directive', () => {
     it('renders all elements returned by the load function that aren\'t already added ($http promise)', () => {
       // Act
       tagsInput.getTags.and.returnValue([{ text: 'Item3' }]);
-      loadSuggestions({ data: generateSuggestions(3)});
+      loadSuggestions(generateSuggestions(3));
 
       // Assert
       expect(getSuggestions().length).toBe(2);
@@ -200,11 +200,11 @@ describe('autoComplete directive', () => {
       compile();
 
       // Act
-      loadSuggestions([
+      loadSuggestions({ data: [
         { label: 'Item1' },
         { label: 'Item2' },
         { label: 'Item3' },
-      ]);
+      ] });
 
       // Assert
       expect(getSuggestions().length).toBe(3);
@@ -226,7 +226,7 @@ describe('autoComplete directive', () => {
       suggestionList.visible = true;
 
       // Act
-      loadSuggestions([]);
+      loadSuggestions({ data: [] });
 
       // Assert
       expect(isSuggestionsBoxVisible()).toBe(false);
@@ -436,9 +436,9 @@ describe('autoComplete directive', () => {
       $timeout.flush();
 
       // Now we resolve each promise which was previously created
-      deferred1.resolve([{ text: 'Item1' }]);
-      deferred2.resolve([{ text: 'Item2' }]);
-      deferred3.resolve([{ text: 'Item3' }]);
+      deferred1.resolve({ data: [{ text: 'Item1' }] });
+      deferred2.resolve({ data: [{ text: 'Item2' }] });
+      deferred3.resolve({ data: [{ text: 'Item3' }] });
 
       $scope.$digest();
 
@@ -463,7 +463,7 @@ describe('autoComplete directive', () => {
 
     it('converts an array of strings into an array of objects', () => {
       // Arrange/Act
-      loadSuggestions(['Item1', 'Item2', 'Item3']);
+      loadSuggestions({ data: ['Item1', 'Item2', 'Item3'] });
 
       // Assert
       expect(suggestionList.items).toEqual([
@@ -843,13 +843,13 @@ describe('autoComplete directive', () => {
       compile('highlight-matched-text="true"', 'min-length="1"');
 
       // Act
-      loadSuggestions([
+      loadSuggestions({ data: [
         { text: 'a' },
         { text: 'ab' },
         { text: 'ba' },
         { text: 'aba' },
         { text: 'bab' }
-      ], 'a');
+      ] }, 'a');
 
       // Assert
       expect(getSuggestionText(0)).toBe('<em>a</em>');
@@ -864,7 +864,7 @@ describe('autoComplete directive', () => {
       compile('highlight-matched-text="true"', 'min-length="1"');
 
       // Act
-      loadSuggestions([{ text: 'a**b++c..' }], 'a**b++c..');
+      loadSuggestions({ data: [{ text: 'a**b++c..' }] }, 'a**b++c..');
 
       // Assert
       expect(getSuggestionText(0)).toBe('<em>a**b++c..</em>');
@@ -875,13 +875,13 @@ describe('autoComplete directive', () => {
       compile('highlight-matched-text="true"', 'min-length="0"');
 
       // Act
-      loadSuggestions([
+      loadSuggestions({ data: [
         { text: 'a' },
         { text: 'ab' },
         { text: 'ba' },
         { text: 'aba' },
         { text: 'bab' }
-      ], '');
+      ] }, '');
 
       // Assert
       expect(getSuggestionText(0)).toBe('a');
@@ -896,13 +896,13 @@ describe('autoComplete directive', () => {
       compile('highlight-matched-text="false"', 'min-length="1"');
 
       // Act
-      loadSuggestions([
+      loadSuggestions({ data: [
         { text: 'a' },
         { text: 'ab' },
         { text: 'ba' },
         { text: 'aba' },
         { text: 'bab' }
-      ], 'a');
+      ] }, 'a');
 
       // Assert
       expect(getSuggestionText(0)).toBe('a');
@@ -914,11 +914,11 @@ describe('autoComplete directive', () => {
 
     it('encodes HTML characters in suggestions list', () => {
       // Act
-      loadSuggestions([
+      loadSuggestions({ data: [
         { text: '<Item 1>' },
         { text: 'Item <2>' },
         { text: 'Item &3' }
-      ]);
+      ] });
 
       // Assert
       expect(getSuggestionText(0)).toBe('&lt;Item 1&gt;');
@@ -931,11 +931,11 @@ describe('autoComplete directive', () => {
       compile('highlight-matched-text="true"', 'min-length="1"');
 
       // Act
-      loadSuggestions([
+      loadSuggestions({ data: [
         { text: '<Item 1>' },
         { text: 'Item <2>' },
         { text: 'Item &3' }
-      ], '>');
+      ] }, '>');
 
       // Assert
       expect(getSuggestionText(0)).toBe('&lt;Item 1<em>&gt;</em>');
@@ -948,11 +948,11 @@ describe('autoComplete directive', () => {
       compile('highlight-matched-text="true"', 'min-length="1"');
 
       // Act
-      loadSuggestions([
+      loadSuggestions({ data: [
         { text: 'a&a' },
         { text: '&a' },
         { text: 'a&' }
-      ], 'a');
+      ] }, 'a');
 
       // Assert
       expect(getSuggestionText(0)).toBe('<em>a</em>&amp;<em>a</em>');
@@ -1037,11 +1037,11 @@ describe('autoComplete directive', () => {
       compile('display-property="label"');
 
       // Act
-      loadSuggestions([
+      loadSuggestions({ data: [
         { text: '1', label: 'Item1' },
         { text: '2', label: 'Item2' },
         { text: '3', label: 'Item3' }
-      ]);
+      ]});
 
       // Assert
       expect(getSuggestions().length).toBe(3);
@@ -1086,11 +1086,11 @@ describe('autoComplete directive', () => {
       compile('template="customTemplate"');
 
       // Act
-      loadSuggestions([
+      loadSuggestions({ data: [
         { id: 1, text: 'Item1' },
         { id: 2, text: 'Item2' },
         { id: 3, text: 'Item3' }
-      ]);
+      ] });
 
       // Assert
       expect(getSuggestionContent(0)).toBe('<span>1</span><span>Item1</span>');
@@ -1103,11 +1103,11 @@ describe('autoComplete directive', () => {
       compile();
 
       // Act
-      loadSuggestions([
+      loadSuggestions({ data: [
         { id: 1, text: 'Item1', image: 'item1.jpg' },
         { id: 2, text: 'Item2', image: 'item2.jpg' },
         { id: 3, text: 'Item3', image: 'item3.jpg' }
-      ]);
+      ] });
 
       // Assert
       expect(getSuggestionScope(0).data).toEqual({ id: 1, text: 'Item1', image: 'item1.jpg' });
