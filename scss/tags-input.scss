@@ -78,7 +78,7 @@ tags-input {
 
   }
 
-  &.ng-invalid .tags {
+  &.ng-invalid.ng-dirty .tags {
     @include box-shadow($tags-outline-box-shadow-invalid);
   }
 
