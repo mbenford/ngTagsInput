@@ -1,3 +1,5 @@
+# ⚠ This project is no longer maintained
+
 # ngTagsInput 
 
 [![Travis](https://img.shields.io/travis/mbenford/ngTagsInput.svg?style=flat)](https://travis-ci.org/mbenford/ngTagsInput)
