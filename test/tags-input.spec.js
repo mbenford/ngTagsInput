@@ -56,8 +56,22 @@ describe('tags-input directive', () => {
     return getTag(index).find('ti-tag-item > ng-include > a').first();
   }
 
-  function getInput() {
-    return element.find('input');
+  function getEditInput() {
+    return getInput('li > input');
+  }
+
+  function getInput(selector) {
+    selector = selector || 'input';
+    return element.find(selector);
+  }
+
+  function editTag(tag, key) {
+    let editSelector = 'li > input';
+    key = key || constants.KEYS.enter;
+    for (var i = 0; i < tag.length; i++) {
+      sendKeyPress(tag.charCodeAt(i), editSelector);
+    }
+    sendKeyDown(key, editSelector);
   }
 
   function newTag(tag, key) {
@@ -70,9 +84,9 @@ describe('tags-input directive', () => {
     sendKeyDown(key);
   }
 
-  function sendKeyPress(charCode) {
-    let input = getInput();
-    let event = jQuery.Event('keypress', {charCode: charCode});
+  function sendKeyPress(charCode, selector) {
+    let input = getInput(selector);
+    let event = jQuery.Event('keypress', { charCode: charCode });
 
     input.trigger(event);
     if (!event.isDefaultPrevented()) {
@@ -80,25 +94,25 @@ describe('tags-input directive', () => {
     }
   }
 
-  function sendKeyDown(keyCode, properties) {
-    let event = jQuery.Event('keydown', angular.extend({keyCode: keyCode}, properties || {}));
-    getInput().trigger(event);
+  function sendKeyDown(keyCode, properties, selector) {
+    let event = jQuery.Event('keydown', angular.extend({ keyCode: keyCode }, properties || {}));
+    getInput(selector).trigger(event);
 
     return event;
   }
 
-  function sendBackspace() {
+  function sendBackspace(selector) {
     let event = sendKeyDown(constants.KEYS.backspace);
 
     if (!event.isDefaultPrevented()) {
-      let input = getInput();
+      let input = getInput(selector);
       let value = input.val();
       changeInputValue(value.substr(0, value.length - 1));
     }
   }
 
-  function changeInputValue(value) {
-    changeElementValue(getInput(), value);
+  function changeInputValue(value, selector) {
+    changeElementValue(getInput(selector), value);
   }
 
   describe('basic features', () => {
@@ -113,9 +127,9 @@ describe('tags-input directive', () => {
     it('renders the correct number of tags', () => {
       // Arrange
       $scope.tags = [
-        { text: 'Tag1 '},
-        { text: ' Tag2'},
-        { text: ' Tag3 '}
+        { text: 'Tag1 ' },
+        { text: ' Tag2' },
+        { text: ' Tag3 ' }
       ];
 
       // Act
@@ -934,6 +948,33 @@ describe('tags-input directive', () => {
     });
   });
 
+  describe('input-split-pattern option', () => {
+    it('initializes the option to null', () => {
+      //Arrange/Act
+      compile();
+      //Assert
+      expect(isolateScope.options.inputSplitPattern).toEqual(null);
+    });
+
+    it('splits the input text into tags using the provided pattern', () => {
+      // Arrange
+      compile('input-split-pattern="\\s+|,|-"');
+      // Act
+      newTag('Tag1 Tag2,Tag3-Tag4');
+
+      // Assert
+      expect($scope.tags).toEqual([{
+        text: 'Tag1'
+      }, {
+        text: 'Tag2'
+      }, {
+        text: 'Tag3'
+      }, {
+        text: 'Tag4'
+      }]);
+    });
+  });
+
   describe('min-length option', () => {
     it('initializes the option to 3', () => {
       // Arrange/Act
@@ -966,6 +1007,65 @@ describe('tags-input directive', () => {
       // Assert
       expect($scope.tags).toBeUndefined();
       expect(getInput()).toHaveClass('invalid-tag');
+    });
+  });
+
+  describe('allow-dblclick-to-edit option', () => {
+    beforeEach(() => {
+      $scope.tags = [{
+        text: 'Tag1'
+      }, {
+        text: 'Tag2'
+      }, {
+        text: 'Tag3'
+      }];
+    });
+
+    it('initializes the option to false', () => {
+      // Arrange/Act
+      compile();
+      // Assert
+      expect(isolateScope.options.allowDblclickToEdit).toBe(false);
+    });
+
+
+    describe('option is on', () => {
+      beforeEach(() => {
+        compile('add-on-enter="true" allow-dblclick-to-edit="true"');
+      });
+
+      describe('double click action', () => {
+        it('trigger dblclick and validate edit input value', () => {
+          // Arrange/Act
+          getTag(1).dblclick();
+          $scope.$digest();
+
+          // Assert
+          expect(getEditInput().val()).toBe('Tag2');
+        });
+
+        it('updated edit input value to current tag with blur', () => {
+          // Arrange/Act
+          getTag(1).dblclick();
+          $scope.$digest();
+          changeElementValue(getEditInput(), 'EditedTag');
+          getEditInput().blur();
+
+          // Assert
+          expect(getTagText(1)).toBe('EditedTag');
+        });
+
+        it('updated edit input value to current tag with keypress', () => {
+          // Arrange/Act
+          getTag(1).dblclick();
+          $scope.$digest();
+          changeElementValue(getEditInput(), '');
+          editTag('EditedTag');
+
+          //Assert
+          expect(getEditInput().val()).toBe('EditedTag');
+        });
+      });
     });
   });
 
@@ -1321,7 +1421,7 @@ describe('tags-input directive', () => {
 
     it('renders tags with duplicate labels but different keys', () => {
       // Arrange
-      $scope.tags= [
+      $scope.tags = [
         { id: 1, text: 'Tag' },
         { id: 2, text: 'Tag' }
       ];
@@ -1336,7 +1436,7 @@ describe('tags-input directive', () => {
 
     it('fails to render tags with duplicate keys', () => {
       // Arrange
-      $scope.tags= [
+      $scope.tags = [
         { id: 1, text: 'Tag' },
         { id: 1, text: 'Tag' }
       ];
@@ -2150,6 +2250,14 @@ describe('tags-input directive', () => {
       expect(autocompleteObj.getOptions()).toEqual({ option1: 1, option2: 2, option3: true });
     });
 
+    it('return current scope', () => {
+      // Arrange
+      isolateScope.templateScope = $scope;
+
+      // Act/Assert
+      expect(autocompleteObj.getTemplateScope()).toEqual($scope);
+    });
+
     it('returns the scope for custom templates', () => {
       // Arrange
       isolateScope.templateScope = { prop: 'foobar', method: jasmine.createSpy().and.returnValue(42) };
@@ -2181,10 +2289,10 @@ describe('tags-input directive', () => {
 
         // Act/Assert
         hotkeys.forEach(hotkey => {
-          expect(sendKeyDown(hotkey, {shiftKey: true}).isDefaultPrevented()).toBe(false);
-          expect(sendKeyDown(hotkey, {altKey: true}).isDefaultPrevented()).toBe(false);
-          expect(sendKeyDown(hotkey, {ctrlKey: true}).isDefaultPrevented()).toBe(false);
-          expect(sendKeyDown(hotkey, {metaKey: true}).isDefaultPrevented()).toBe(false);
+          expect(sendKeyDown(hotkey, { shiftKey: true }).isDefaultPrevented()).toBe(false);
+          expect(sendKeyDown(hotkey, { altKey: true }).isDefaultPrevented()).toBe(false);
+          expect(sendKeyDown(hotkey, { ctrlKey: true }).isDefaultPrevented()).toBe(false);
+          expect(sendKeyDown(hotkey, { metaKey: true }).isDefaultPrevented()).toBe(false);
         });
       });
     });
@@ -2211,6 +2319,21 @@ describe('tags-input directive', () => {
 
         // Act/Assert
         expect(sendKeyDown(constants.KEYS.backspace).isDefaultPrevented()).toBe(true);
+      });
+    });
+
+    describe('unexist options', () => {
+      it('make use nuexist option', () => {
+        // Arrange
+        compile('nuexist="true"');
+        $scope.$digest();
+
+        // Act
+        isolateScope.events.trigger('option-change', { name: 'nuexist' });
+        $scope.$digest();
+
+        // Assert
+        expect(isolateScope.options.nuexist).toBeUndefined();
       });
     });
   });
