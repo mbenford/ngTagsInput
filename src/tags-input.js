@@ -52,6 +52,8 @@
  *    promise is returned, the tag will not be removed.
  * @param {expression=} [onTagRemoved=NA] Expression to evaluate upon removing an existing tag. The removed tag is available as $tag.
  * @param {expression=} [onTagClicked=NA] Expression to evaluate upon clicking an existing tag. The clicked tag is available as $tag.
+ * @param {boolean=} [dragtag=false] Whether or not the labels can be dragged to be ordered differently
+ * @param {expression=} [onTagDragged=NA] Expression to evaluate upon a dropping a dragged tag. The clicked tag is available as $tag.
  */
 export default function TagsInputDirective($timeout, $document, $window, $q, tagsInputConfig, tiUtil, tiConstants) {
   'ngInject';
@@ -115,6 +117,13 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
         return tag;
       });
     };
+    
+    self.reorder = (prevOffset, newOffset) => {
+      if(prevOffset<0 || newOffset<0 || prevOffset > self.items.length || newOffset > self.items.length || prevOffset==newOffset) return;
+      self.items.splice(newOffset, 0, self.items.splice(prevOffset, 1)[0]);
+      self.clearSelection();
+      events.trigger('tag-dragged');
+    };
 
     self.select = index => {
       if (index < 0) {
@@ -168,6 +177,7 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
       onTagRemoving: '&',
       onTagRemoved: '&',
       onTagClicked: '&',
+      onTagDragged: '&'
     },
     replace: false,
     transclude: true,
@@ -201,7 +211,8 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
         allowLeftoverText: [Boolean, false],
         addFromAutocompleteOnly: [Boolean, false],
         spellcheck: [Boolean, true],
-        useStrings: [Boolean, false]
+        useStrings: [Boolean, false],
+        dragtag: [Boolean, false]
       });
 
       $scope.tagList = new TagList($scope.options, $scope.events,
@@ -280,10 +291,12 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
 
       scope.getTagClass = (tag, index) => {
         let selected = tag === tagList.selected;
-        return [
+        var ret = [
           scope.tagClass({$tag: tag, $index: index, $selected: selected}),
                     { selected: selected }
         ];
+        if(options.dragtag)ret.push('tag-item-dragtag')
+        return ret;
       };
 
       scope.$watch('tags', value => {
@@ -351,11 +364,98 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
               return;
             }
             focusInput();
+          },
+          mousemove(event){
+            if(options.dragtag && scope.draggedElement){
+              var zoomFactor =  window.innerWidth / window.outerWidth//accounting for browser zoom in/out
+              scope.draggedElement.elem.style.left=zoomFactor*(event.screenX - scope.draggedElement.x)+'px';
+              scope.draggedElement.elem.style.top=zoomFactor*(event.screenY - scope.draggedElement.y)+'px';
+            }
           }
         },
         tag: {
           click(tag) {
             events.trigger('tag-clicked', { $tag: tag });
+          },
+          mousedown(event){
+            if(options.dragtag){
+              var target = event.target || event.srcElement || event.currentTarget;
+              if(target.tagName=='A')return;//if you hit the A, don't do this 
+              while(target.tagName!='LI')target = target.parentElement  //go up parents until you find the LI
+              target.style.position='relative';
+              scope.draggedElement = {'elem':target,'x':event.screenX,'y':event.screenY}
+              
+              //console.log('pick up element at '+scope.draggedElement.x+" "+scope.draggedElement.y)
+    
+              event.preventDefault();
+              event.stopImmediatePropagation();
+            }
+          },
+          mouseup(event){
+            if(options.dragtag && scope.draggedElement){
+              //console.log('put down element at '+event.screenX+" "+event.screenY)
+              
+              var listHolder = scope.draggedElement.elem.parentElement
+              var allElems = listHolder.getElementsByTagName("LI")
+              var prevOffset = -1;
+              var newOffset = -1;
+ 
+               //find elem's offset
+              for(var i=0;i<allElems.length;i++){
+                if(allElems[i].style.position=='relative')
+                  prevOffset = i;
+              }
+                             
+              
+              //which coordinate do you want to consider for elem? top left? center? mouse position?  .... this does the midpoint
+              var elem_x =  scope.draggedElement.elem.offsetLeft + scope.draggedElement.elem.offsetWidth/2
+              var elem_y =  scope.draggedElement.elem.offsetTop + scope.draggedElement.elem.offsetHeight/2
+              
+              for(var i=0;i<allElems.length;i++){
+                if(i==prevOffset)continue;//don't consider yourself
+                
+                var x_lo = allElems[i].offsetLeft
+                var x_hi = allElems[i].offsetLeft + allElems[i].offsetWidth
+                var y_lo = allElems[i].offsetTop
+                var y_hi = allElems[i].offsetTop + allElems[i].offsetHeight
+                
+                //it's the end of the list OR the next one's upper bound is greater than current low bound
+                var end_of_line = i==allElems.length-1 || allElems[i+1].offsetTop > y_hi
+                
+                //option 1: elem's position is inside the bounding box of this considered element
+                if(x_lo <= elem_x && elem_x <= x_hi && y_lo <= elem_y && elem_y <= y_hi ){
+                  newOffset=i;
+                  break;
+                }
+                
+                //option 2: elem's y is within bounding box AND x is greater AND it's end of the line
+                if( y_lo <= elem_y && elem_y <= y_hi   && elem_x > x_hi && end_of_line){
+                  newOffset=i;
+                  break;
+                }
+                
+                //option 3: the last line is empty, and you drop it there, so it has to consider the last element, and elem_y is higher than the y val
+                if(i==allElems.length-1 && elem_y > y_hi){
+                  newOffset=i;
+                  break;
+                }
+                
+                //option 4: you drop it to the left of a guy that's on the beginning of the line
+                if((i==0 || allElems[i-1].offsetTop < y_lo) && y_lo < elem_y && elem_y <y_hi && elem_x < x_lo){
+                  newOffset=i;
+                  break;
+                }
+              }
+              
+              if(prevOffset!=-1 && newOffset!=-1 && newOffset!=prevOffset){
+                //console.log('moving:'+prevOffset+" to:"+newOffset)
+                tagList.reorder(prevOffset,newOffset);
+              }
+              
+              //undo the "temp" stuff to be ready for the next one ...
+              scope.draggedElement.elem.style.position='static'
+              scope.draggedElement = null
+            }
           }
         }
       };
