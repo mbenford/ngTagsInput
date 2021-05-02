@@ -448,7 +448,12 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
         .on('input-paste', event => {
           if (options.addOnPaste) {
             let data = event.getTextData();
-            let tags = data.split(options.pasteSplitPattern);
+
+            let tags = data
+              .split(options.pasteSplitPattern)
+              .filter((element, index, array) =>
+                  array.indexOf(element, index + 1) === -1
+              );
 
             if (tags.length > 1) {
               tags.forEach(tag => {

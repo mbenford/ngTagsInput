@@ -723,6 +723,24 @@ describe('tags-input directive', () => {
           expect(eventData.preventDefault).toHaveBeenCalled();
         });
 
+        it('removes duplicate tags from split text (' + name + ')', () => {
+          // Arrange
+          compile('add-on-paste="true"');
+          setup('tag1, tag2, tag2, tag3');
+
+          // Act
+          let event = jQuery.Event('paste', eventData);
+          getInput().trigger(event);
+
+          // Assert
+          expect($scope.tags).toEqual([
+            { text: 'tag1' },
+            { text: 'tag2' },
+            { text: 'tag3' }
+          ]);
+          expect(eventData.preventDefault).toHaveBeenCalled();
+        });
+
         it('doesn\'t split the pasted text into tags if there is just one tag (' + name + ')', () => {
           // Arrange
           compile('add-on-paste="true"');
