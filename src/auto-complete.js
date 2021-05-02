@@ -25,6 +25,8 @@
  *    gains focus. The current input value is available as $query.
  * @param {boolean=} [selectFirstMatch=true] Flag indicating that the first match will be automatically selected once
  *    the suggestion list is shown.
+ * @param {boolean=} [overlay=false] Flag indicating whether suggession list should overlay the primary container
+ * (like, for example, a table) or should be inside it
  * @param {expression=} [matchClass=NA] Expression to evaluate for each match in order to get the CSS classes to be used.
  *    The expression is provided with the current match as $match, its index as $index and its state as $selected. The result
  *    of the evaluation must be one of the values supported by the ngClass directive (either a string, an array or an object).
@@ -60,6 +62,14 @@ export default function AutocompleteDirective($document, $timeout, $sce, $q, tag
     };
 
     self.show = () => {
+      if(options.overlay) {
+        self.overlay = true;
+        self.width = element.closest('tags-input').width();
+        self.overlayStyle = {
+          position: 'fixed',
+          width: self.width
+        }
+      }
       if (options.selectFirstMatch) {
         self.select(0);
       }
@@ -157,6 +167,7 @@ export default function AutocompleteDirective($document, $timeout, $sce, $q, tag
         loadOnEmpty: [Boolean, false],
         loadOnFocus: [Boolean, false],
         selectFirstMatch: [Boolean, true],
+        overlay: [Boolean, false],
         displayProperty: [String, '']
       });
 
@@ -179,6 +190,11 @@ export default function AutocompleteDirective($document, $timeout, $sce, $q, tag
       let events = scope.events;
 
       options.tagsInput = tagsInput.getOptions();
+      
+      //Keep height of auto-complete container zero as it gives un-necessary scroll when inside an element like, for example, table.
+      element.css({
+        height:0
+      });
 
       let shouldLoadSuggestions = value => value && value.length >= options.minLength || !value && options.loadOnEmpty;
 
