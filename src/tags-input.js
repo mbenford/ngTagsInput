@@ -243,7 +243,7 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
       });
     },
     link(scope, element, attrs, ngModelCtrl) {
-      let hotkeys = [tiConstants.KEYS.enter, tiConstants.KEYS.comma, tiConstants.KEYS.space, tiConstants.KEYS.backspace,
+      let hotkeys = [tiConstants.KEYS.enter, tiConstants.KEYS.tab, tiConstants.KEYS.comma, tiConstants.KEYS.space, tiConstants.KEYS.backspace,
         tiConstants.KEYS.delete, tiConstants.KEYS.left, tiConstants.KEYS.right];
       let tagList = scope.tagList;
       let events = scope.events;
@@ -411,6 +411,10 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
             [tiConstants.KEYS.comma]: options.addOnComma,
             [tiConstants.KEYS.space]: options.addOnSpace
           };
+
+          if (key === tiConstants.KEYS.tab && scope.newTag.text().length > 0) {
+            addKeys[tiConstants.KEYS.tab] = options.addOnBlur;
+          }
 
           let shouldAdd = !options.addFromAutocompleteOnly && addKeys[key];
           let shouldRemove = (key === tiConstants.KEYS.backspace || key === tiConstants.KEYS.delete) && tagList.selected;
