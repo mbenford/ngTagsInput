@@ -97,11 +97,11 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
       return canAddTag(tag)
         .then(() =>{
           self.items.push(tag);
-          events.trigger('tag-added', { $tag: tag });
+          events.trigger('tag-added', { $tag: options.useStrings ? getTagText(tag) : tag });
         })
         .catch(() => {
           if (tagText) {
-            events.trigger('invalid-tag', { $tag: tag });
+            events.trigger('invalid-tag', { $tag: options.useStrings ? getTagText(tag) : tag });
           }
         });
     };
@@ -111,7 +111,7 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
       return canRemoveTag(tag).then(() => {
         self.items.splice(index, 1);
         self.clearSelection();
-        events.trigger('tag-removed', { $tag: tag });
+        events.trigger('tag-removed', { $tag: options.useStrings ? getTagText(tag) : tag });
         return tag;
       });
     };
@@ -143,7 +143,7 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
       self.index = -1;
     };
 
-    self.getItems = () => options.useStrings ? self.items.map(getTagText) : self.items;
+    self.getItems = () => options.useStrings ? self.items.map(getTagText) : self.items.slice();
 
     self.clearSelection();
 
@@ -286,7 +286,7 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
         ];
       };
 
-      scope.$watch('tags', value => {
+      scope.$watchCollection('tags', value => {
         if (value) {
           tagList.items = tiUtil.makeObjectArray(value, options.displayProperty);
           if (options.useStrings) {
@@ -361,15 +361,24 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
       };
 
       events
-        .on('tag-added', scope.onTagAdded)
-        .on('invalid-tag', scope.onInvalidTag)
-        .on('tag-removed', scope.onTagRemoved)
-        .on('tag-clicked', scope.onTagClicked)
+        .on('tag-added', function($tag) { $timeout(function() { scope.onTagAdded($tag); }); })
+        .on('invalid-tag', function($tag) { $timeout(function() { scope.onInvalidTag($tag); }); })
+        .on('tag-removed', function($tag) { $timeout(function() { scope.onTagRemoved($tag); }); })
+        .on('tag-clicked', function($tag) { $timeout(function() { scope.onTagClicked($tag); }); })
         .on('tag-added', () => {
           scope.newTag.text('');
         })
         .on('tag-added tag-removed', () => {
-          scope.tags = tagList.getItems();
+          var items = tagList.getItems();
+
+          if(!scope.tags) {
+            scope.tags = [];
+          } else {
+            scope.tags.length = 0;
+          }
+
+          Array.prototype.push.apply(scope.tags, items);
+
           // Ideally we should be able call $setViewValue here and let it in turn call $setDirty and $validate
           // automatically, but since the model is an array, $setViewValue does nothing and it's up to us to do it.
           // Unfortunately this won't trigger any registered $parser and there's no safe way to do it.
