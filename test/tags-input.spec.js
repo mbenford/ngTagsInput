@@ -847,6 +847,29 @@ describe('tags-input directive', () => {
       // Assert
       expect(isolateScope.options.placeholder).toBe('Add a tag');
     });
+
+    it('clears the placeholder if there is at least one tag', () => {
+      // Arrange
+      compile();
+
+      // Act
+      newTag('foo');
+
+      // Assert
+      expect(getInput().attr('placeholder')).toBe('');
+    });
+
+    it('restores the placeholder when there are no tags', () => {
+      // Arrange
+      compile();
+
+      // Act
+      newTag('foo');
+      getRemoveButton(0).click();
+
+      // Assert
+      expect(getInput().attr('placeholder')).toBe('Add a tag');
+    });
   });
 
   describe('remove-tag-symbol option', () => {

@@ -303,6 +303,9 @@ export default function TagsInputDirective($timeout, $document, $window, $q, tag
       scope.$watch('tags.length', () => {
         setElementValidity();
 
+        // show placeholder only if there are no tags and no input
+        input.attr('placeholder', tagList.items.length === 0 && input.val() === '' ? options.placeholder : '');
+
         // ngModelController won't trigger validators when the model changes (because it's an array),
         // so we need to do it ourselves. Unfortunately this won't trigger any registered formatter.
         ngModelCtrl.$validate();
